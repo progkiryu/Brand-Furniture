@@ -1,0 +1,16 @@
+{
+  "appId": "bf.brand-furniture.erp",
+  "files": ["dist-electron", "dist-react"],
+  "extraResources": ["dist-electron/preload.cjs"],
+  "icon": "./flower.jpg",
+  "mac": {
+    "target": "dmg"
+  },
+  "linux": {
+    "target": "Applmage",
+    "category": "Utility"
+  },
+  "win": {
+    "target": ["portable", "msi"]
+  }
+}
