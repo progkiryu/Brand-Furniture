@@ -1,4 +1,3 @@
-#React + Vite + Electron + TS
+React + Vite + Electron + TS
 
-Run command after cloning:
-npm i --save-dev electron electron-builder cross-env npm-run-all
+Make sure to run "npm i" before running in development mode or building the application.
