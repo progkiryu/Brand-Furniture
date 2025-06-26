@@ -27,7 +27,7 @@
     "@types/react-dom": "^19.1.2",
     "@vitejs/plugin-react": "^4.4.1",
     "cross-env": "^7.0.3",
-    "electron": "^37.0.0",
+    "electron": "^37.1.0",
     "electron-builder": "^26.0.12",
     "eslint": "^9.25.0",
     "eslint-plugin-react-hooks": "^5.2.0",
@@ -37,5 +37,16 @@
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.30.1",
     "vite": "^6.3.5"
-  }
+  },
+  "description": "This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/progkiryu/Brand-Furniture.git"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/progkiryu/Brand-Furniture/issues"
+  },
+  "homepage": "https://github.com/progkiryu/Brand-Furniture#readme"
 }
