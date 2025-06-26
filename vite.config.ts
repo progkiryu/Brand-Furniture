@@ -10,6 +10,8 @@ export default defineConfig({
   },
   server: {
     port: 5555,
+    // make sure to remove this line if trying to run ipc within react components
+    // the callbacks are made twice if used
     strictPort: true,
   },
 });

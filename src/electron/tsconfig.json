@@ -5,6 +5,7 @@
     "target": "ESNext", // user ESM Syntax - import etc.
     "module": "NodeNext", // tell Ts to require ESM Syntax
     "outDir": "../../dist-electron", // define generated Js output
-    "skipLibCheck": true // ignore errors from dependencies
+    "skipLibCheck": true, // ignore errors from dependencies
+    "types": ["../../types"]
   }
 }
