@@ -2,6 +2,7 @@ import { app, BrowserWindow } from "electron";
 import path from "path";
 import { isDev } from "./util.js";
 import { getPreloadPath } from "./pathResolver.js";
+import { getOrders } from "./order.js"
 
 app.on("ready", () => {
   // create browser window
@@ -23,4 +24,6 @@ app.on("ready", () => {
     // Open HTML file when app is built
     mainWindow.loadFile(path.join(app.getAppPath(), "/dist-react/index.html"));
   }
+
+  getOrders();
 });
