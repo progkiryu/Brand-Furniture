@@ -2,9 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 
 import dotenv from "dotenv";
-dotenv.config({
-    path: "../../.env"
-});
+dotenv.config();
 
 const app = express();
 const PORT = process.env.USER_PORT || 8000;
