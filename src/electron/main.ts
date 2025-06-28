@@ -2,7 +2,6 @@ import { app, BrowserWindow } from "electron";
 import path from "path";
 import { isDev } from "./util.js";
 import { getPreloadPath } from "./pathResolver.js";
-import { mongoConnect } from "./database.js";
 
 app.on("ready", () => {
   // create browser window
@@ -24,6 +23,4 @@ app.on("ready", () => {
     // Open HTML file when app is built
     mainWindow.loadFile(path.join(app.getAppPath(), "/dist-react/index.html"));
   }
-
-  mongoConnect();
 });
