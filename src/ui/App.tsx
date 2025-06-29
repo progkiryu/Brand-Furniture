@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
-import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [ orders, setOrders ] = useState([]); 
 
   async function getOrders() {
     try {
-      const orders: Order = await window.orders.getOrders();
-      console.log(orders);
+      const result: any = await window.orders.getOrders();
+      setOrders(result);
     }
     catch (err) {
       console.log(err);
@@ -20,13 +19,18 @@ function App() {
 
   return (
     <>
-      <h1>are we cooked?</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          hol up, let him cook
-        </button>
-        <h3> times cooked: {count} </h3>
-      </div>
+      <h1>welcome, bud!</h1>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Order Name</th>
+            <th>Order Description</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
     </>
   );
 }
