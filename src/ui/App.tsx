@@ -4,8 +4,18 @@ import "./App.css";
 function App() {
   const [count, setCount] = useState(0);
 
+  async function getOrders() {
+    try {
+      const orders = await window.orders.getOrders();
+      console.log(orders);
+    }
+    catch (err) {
+      console.log(err);
+    }
+  }
+
   useEffect(() => {
-    window.api.greeting();
+    getOrders();
   }, []);
 
   return (

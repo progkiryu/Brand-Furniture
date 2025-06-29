@@ -16,7 +16,7 @@ export function mongoConnect() {
     mongoose.connect(MONGO_URL).then(() => {
         console.log("Successful connection!");
         app.listen(PORT, () => {
-            console.log(`MongoDB server running on port ${PORT}`);
+            console.log(`MongoDB server running on port ${PORT}!`);
         })
     }).catch((err) => console.log(err));
 }

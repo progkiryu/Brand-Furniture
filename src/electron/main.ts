@@ -2,7 +2,9 @@ import { app, BrowserWindow } from "electron";
 import path from "path";
 import { isDev } from "./util.js";
 import { getPreloadPath } from "./pathResolver.js";
-import { getOrders } from "./order.js"
+import { mongoConnect } from "./database.js";
+import { getOrders } from "./dataHandlers/order.js"
+import { getClients } from "./dataHandlers/client.js";
 
 app.on("ready", () => {
   // create browser window
@@ -25,5 +27,8 @@ app.on("ready", () => {
     mainWindow.loadFile(path.join(app.getAppPath(), "/dist-react/index.html"));
   }
 
+  mongoConnect();
+  
   getOrders();
+  //getClients();
 });

@@ -1,5 +1,5 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
-contextBridge.exposeInMainWorld("api", {
-    greeting: () => console.log("Hello World!")
-} satisfies Window["api"] );
+contextBridge.exposeInMainWorld("orders", {
+    getOrders: () => ipcRenderer.invoke("getOrders"),
+} satisfies Window["orders"] );

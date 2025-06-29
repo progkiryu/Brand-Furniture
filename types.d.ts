@@ -1,5 +1,10 @@
+type Order = {
+    orderName: string,
+    orderDesc: string
+}
+
 interface Window {
-    api: {
-        greeting: () => void;
+    orders: {
+        getOrders: () => Promise<Order>;
     }
 }
