@@ -6,7 +6,7 @@ function App() {
 
   async function getOrders() {
     try {
-      const orders = await window.orders.getOrders();
+      const orders: Order = await window.orders.getOrders();
       console.log(orders);
     }
     catch (err) {
