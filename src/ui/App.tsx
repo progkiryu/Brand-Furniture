@@ -1,38 +1,33 @@
-import { useEffect } from "react";
+import './App.css'
+import '@mantine/core/styles.css';
+import { MantineProvider } from '@mantine/core';
+import HomePage from '../pages/HomePage.tsx'
+import SchedulePage from '../pages/SchedulePage.tsx'
+import AnalyticsPage from '../pages/AnalyticsPage.tsx'
+import SettingsPage from '../pages/SettingsPage.tsx'
+import NavBar from '../components/home-page/NavBar.tsx';
+import {Routes, Route} from 'react-router-dom'
+
 
 function App() {
-  //const [ orders, setOrders ] = useState([]); 
-
-  async function getOrders() {
-    try {
-      const result: any = await window.orders.getOrders();
-      console.log(result[0]);
-    }
-    catch (err) {
-      console.log(err);
-    }
-  }
-
-  useEffect(() => {
-    getOrders();
-  }, []);
 
   return (
     <>
-      <h1>welcome, bud!</h1>
+      <div className="page-container">
+        <NavBar/>
+        <Routes>
+          <Route path='/' element={<HomePage/>}/>
+          <Route path='/dashboard' element={<HomePage/>}/>
+          <Route path='/schedule' element={<MantineProvider><SchedulePage/></MantineProvider>}/>
+          <Route path='/analytics' element={<AnalyticsPage/>}/>
+          <Route path='/settings' element={<SettingsPage/>}/>
+        </Routes>
+      </div>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Order Name</th>
-            <th>Order Description</th>
-          </tr>
-        </thead>
-        <tbody>
-        </tbody>
-      </table>
+        
+      
     </>
-  );
+  )
 }
 
 export default App;
