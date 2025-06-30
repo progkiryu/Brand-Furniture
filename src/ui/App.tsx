@@ -11,7 +11,6 @@ function App() {
         jobsArray.push(row._doc);
       });
       setJobs(jobsArray);
-      console.log(jobsArray);
     }
     catch (err) {
       throw err;
