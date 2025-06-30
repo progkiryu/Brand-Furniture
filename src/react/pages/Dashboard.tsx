@@ -13,9 +13,6 @@ function Dashboard() {
         </div>
         <div id="dashboard-first-container">
           <div id="dashboard-second-container">
-            <div id="timeline-container">
-              <h1>Timeline</h1>
-            </div>
             <div id="schedule-container">
               <h1>Schedule</h1>
               <Table />

@@ -15,14 +15,9 @@
     flex-direction: column
 }
 
-#timeline-container {
-    background-color: red;
-    height: 50vh
-}
-
 #schedule-container {
     background-color: blue;
-    height: 40vh
+    height: 90vh
 }
 
 #analytics-container {
