@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import logo from '/Users/namtruong/Desktop/Projects/Electron-Practice/src/assets/dashboard-page/Brand+Furniture+Logo_Web.png';
 import {NavLink} from 'react-router-dom'
-import { Burger } from '@mantine/core';
+//import { Burger } from '@mantine/core';
 
 function NavBar() {
   const [expanded, setExpanded] = useState(true);
@@ -13,7 +12,7 @@ function NavBar() {
             {expanded ? '<' : '>' }
         </button>
         <NavLink to='/'>
-            {expanded && (<NavLink to="/"><img src={logo}/></NavLink>)}
+            {expanded && (<NavLink to="/"></NavLink>)}
         </NavLink>
         <ul className="dbp-navbar">
           <NavLink to='/dashboard'><li>{expanded ? 'Dashboard' : 'D'}</li></NavLink>
