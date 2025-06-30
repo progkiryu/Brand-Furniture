@@ -5,6 +5,11 @@ function Help() {
     return (
         <>
             <Navbar />
+            <div id="first-container">
+                <div id="header-container">
+                    <h1>Help</h1>
+                </div>
+            </div>
         </>
     )
 }
