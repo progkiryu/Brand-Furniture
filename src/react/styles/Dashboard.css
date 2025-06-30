@@ -1,0 +1,36 @@
+#dashboard-first-container {
+    height: 90vh;
+    display: flex
+}
+
+#dashboard-second-container {
+    width: 60%;
+    display: flex;
+    flex-direction: column
+}
+
+#dashboard-third-container {
+    width: 40%;
+    display: flex;
+    flex-direction: column
+}
+
+#timeline-container {
+    background-color: red;
+    height: 50vh
+}
+
+#schedule-container {
+    background-color: blue;
+    height: 40vh
+}
+
+#analytics-container {
+    background-color: yellow;
+    height: 40vh
+}
+
+#notifications-container {
+    background-color: orange;
+    height: 50vh
+}
