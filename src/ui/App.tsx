@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 
 function App() {
-  const [ orders, setOrders ] = useState([]); 
+  //const [ orders, setOrders ] = useState([]); 
 
   async function getOrders() {
     try {
       const result: any = await window.orders.getOrders();
-      setOrders(result);
+      console.log(result[0]);
     }
     catch (err) {
       console.log(err);
