@@ -1,11 +1,14 @@
+import { ipcMain } from "electron";
 import schemas from "../schema.js";
 
-export async function getClients() {
-    try {
-        const [clients] = await schemas.Client.find();
-        console.log(clients);
-    }
-    catch (err) {
-        console.log(err);
-    }
+export function clientHandler() {
+    ipcMain.handle("getOrders", async () => {
+        try {
+            const clients = await schemas.Client.find<Array<Client>>();
+            return clients;
+        }
+        catch (err) {
+            throw err;
+        }
+    });
 }

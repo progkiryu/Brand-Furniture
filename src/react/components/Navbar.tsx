@@ -6,9 +6,8 @@ function Navbar() {
             <h1>Brand.</h1>
             <Link to="/Dashboard">Dashboard</Link>
             <Link to="/Schedule">Schedule</Link>
-            <Link to="/Timeline">Timeline</Link>
             <Link to="/Analytics">Analytics</Link>
-            <Link to="/Settings">Settings</Link>  
+            <Link to="/Help">Help</Link>  
         </div>
     )
 }

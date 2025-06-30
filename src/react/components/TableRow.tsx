@@ -1,13 +1,9 @@
 import "../styles/Global.css"
 
-function TableRow(order: any) {
-    const { id, orderName, orderDesc } = order;
+function TableRow() {
 
     return (
         <tr>
-            <td>{id}</td>
-            <td>{orderName}</td>
-            <td>{orderDesc}</td>
         </tr>
     )
 }

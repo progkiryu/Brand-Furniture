@@ -1,3 +1,4 @@
+import "../styles/Global.css"
 import Navbar from "../components/Navbar";
 
 function Help() {
@@ -8,4 +9,4 @@ function Help() {
     )
 }
 
-export default Help()
+export default Help;

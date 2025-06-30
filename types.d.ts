@@ -47,5 +47,8 @@ type Client = {
 interface Window {
     jobs: {
         getJobs: () => Promise<Array<Job>>;
+    },
+    orders: {
+        getClients: () => Promise<Array<Client>>;
     }
 }
