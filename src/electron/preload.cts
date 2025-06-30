@@ -1,5 +1,5 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
-contextBridge.exposeInMainWorld("orders", {
-    getOrders: () => ipcRenderer.invoke("getOrders"),
-} satisfies Window["orders"] );
+contextBridge.exposeInMainWorld("jobs", {
+    getJobs: () => ipcRenderer.invoke("getJobs"),
+} satisfies Window["jobs"] );

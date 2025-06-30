@@ -3,8 +3,7 @@ import path from "path";
 import { isDev } from "./util.js";
 import { getPreloadPath } from "./pathResolver.js";
 import { mongoConnect } from "./database.js";
-import { getOrders } from "./dataHandlers/order.js"
-import { getClients } from "./dataHandlers/client.js";
+import { jobHandler } from "./dataHandlers/job.js"
 
 app.on("ready", () => {
   // create browser window
@@ -29,6 +28,6 @@ app.on("ready", () => {
 
   mongoConnect();
   
-  getOrders();
+  jobHandler();
   //getClients();
 });

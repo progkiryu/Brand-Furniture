@@ -1,37 +1,52 @@
 import { useState, useEffect } from "react";
 
 function App() {
-  const [ orders, setOrders ] = useState([]); 
+  const [ jobs, setJobs ] = useState([]); 
 
   async function getOrders() {
     try {
-      const result: any = await window.orders.getOrders();
-      setOrders(result);
+      const rows: any = await window.jobs.getJobs();
+      const jobsArray: any = [];
+      rows.forEach((row: any) => {
+        jobsArray.push(row._doc);
+      });
+      setJobs(jobsArray);
+      console.log(jobsArray);
     }
     catch (err) {
-      console.log(err);
+      throw err;
     }
   }
 
   useEffect(() => {
-    getOrders();
+    const retrieve = async () => {
+      try {
+        await getOrders();
+      }
+      catch (err) {
+        console.log(err);
+      }
+    }
+    retrieve();
   }, []);
 
   return (
-    <>
-      <h1>welcome, bud!</h1>
-
-      <table>
+    <table>
         <thead>
           <tr>
-            <th>Order Name</th>
-            <th>Order Description</th>
+            <th>Due Date</th>
           </tr>
         </thead>
         <tbody>
+        {
+          jobs.map((job: Job) => {
+              return <tr key={job.invoiceId}>
+                  <td>{job.dueDate.toString()}</td>
+              </tr>
+          })
+        } 
         </tbody>
-      </table>
-    </>
+    </table>
   );
 }
 
