@@ -3,6 +3,7 @@ import HPOrder from '../components/home-page/HPOrder.tsx'
 // import HPMonthlyProgress from '../components/home-page/HPMonthlyProgress.tsx'
 import HPJobAnalytics from '../components/home-page/HPJobAnalytics.tsx'
 import HPNotifications from '../components/home-page/HPNotifications.tsx'
+import Table from "../components/Table.tsx";
 
 function HomePage(){
     return(
@@ -13,6 +14,7 @@ function HomePage(){
                     <HPHeader/>
                     <div className="dbp-uo-ja-n-es-container">
                         <HPOrder/>
+                        <Table />
                         <div className="dbp-ja-n-es-container">
                             <HPJobAnalytics/>
                             <HPNotifications/>

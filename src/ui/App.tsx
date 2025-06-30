@@ -1,7 +1,7 @@
 import './App.css'
 import '@mantine/core/styles.css';
 import { MantineProvider } from '@mantine/core';
-import HomePage from '../pages/HomePage.tsx'
+import HomePage from '../pages/Dashboard.tsx'
 import SchedulePage from '../pages/SchedulePage.tsx'
 import AnalyticsPage from '../pages/AnalyticsPage.tsx'
 import SettingsPage from '../pages/SettingsPage.tsx'
