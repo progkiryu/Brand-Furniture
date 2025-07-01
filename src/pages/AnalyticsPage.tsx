@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import LineChartComponent from "../components/analytics-page/LineChartComponent";
 import OrderTypeDistributionChart from "../components/analytics-page/OrderTypeDistribution";
 
-
 export default function AnalyticsPage() {
     return (
         <div className="analytics-page" 
