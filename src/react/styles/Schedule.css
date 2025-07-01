@@ -128,36 +128,36 @@
 } */
 
 #first-container {
-    display: flex;
-    flex-direction: column;
-    background-color: lightblue;
-    height: 100vh;
-    flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: lightblue;
+  height: 100vh;
+  flex: 1;
 }
 
 #schedule-first-container {
-    display: flex;
-    background-color: purple;
-    justify-content: space-around;
-    align-items: center;
-    flex: 1;
+  display: flex;
+  background-color: purple;
+  justify-content: space-around;
+  align-items: center;
+  flex: 1;
 }
 
 #search-container {
-    background-color: lightgreen;
+  background-color: lightgreen;
 }
 
 #filter-container {
-    background-color: lightyellow;
+  background-color: lightyellow;
     
 }
 
 #order-container {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    flex: 4;
-    overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  flex: 4;
+  overflow: hidden;
 }
 
 
