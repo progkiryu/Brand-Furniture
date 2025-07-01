@@ -4,10 +4,12 @@ import type { Job } from '../types/jobTypes'; // Import Job type
 interface AddJobFormModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onAddJob: (job: Omit<Job, 'subJobs'>) => void; // Omit subJobs as it will be empty initially
+    // Update onAddJob to accept the full Job type structure, but without subJobs
+    onAddJob: (job: Omit<Job, 'subJobs'>) => void;
 }
 
 const AddJobFormModal: React.FC<AddJobFormModalProps> = ({ isOpen, onClose, onAddJob }) => {
+    // No need for jobId state here as it will be generated.
     const [invoiceId, setInvoiceId] = useState<string>('');
     const [clientName, setClientName] = useState<string>('');
     const [jobName, setJobName] = useState<string>('');
@@ -23,8 +25,12 @@ const AddJobFormModal: React.FC<AddJobFormModalProps> = ({ isOpen, onClose, onAd
             return;
         }
 
+        // Generate a unique jobId for the new entry
+        const newUniqueJobId = crypto.randomUUID();
+
         const newJob = {
-            id: parseInt(invoiceId), // Convert to number
+            jobId: newUniqueJobId, // Use the generated unique ID
+            invoiceId: parseInt(invoiceId), // Convert to number as per Job interface
             client: clientName,
             name: jobName,
             due: dueDate,
@@ -48,11 +54,11 @@ const AddJobFormModal: React.FC<AddJobFormModalProps> = ({ isOpen, onClose, onAd
                     <div className="form-group">
                         <label htmlFor="invoiceId">Invoice ID:</label>
                         <input
-                            type="number" // Use number type for ID
+                            type="number" // Use number type for Invoice ID input
                             id="invoiceId"
                             value={invoiceId}
                             onChange={(e) => setInvoiceId(e.target.value)}
-                            required
+                            required // Make it required
                         />
                     </div>
                     <div className="form-group">
@@ -82,7 +88,7 @@ const AddJobFormModal: React.FC<AddJobFormModalProps> = ({ isOpen, onClose, onAd
                             id="dueDate"
                             value={dueDate}
                             onChange={(e) => setDueDate(e.target.value)}
-                            required
+                            required // Make it required
                         />
                     </div>
                     <button type="submit">Add Job</button>
