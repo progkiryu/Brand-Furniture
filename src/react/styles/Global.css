@@ -1,0 +1,30 @@
+body {
+    margin: 0
+}
+
+table, th, td {
+    border: 1px solid black
+}
+
+#root {
+    display: flex;
+    height: 100vh
+}
+
+#navBar-container {
+    background-color: green;
+    width: 20%;
+    display: flex;
+    flex-direction: column
+}
+
+#header-container {
+    background-color: purple;
+    height: 10vh
+}
+
+#first-container {
+    width: 80%;
+    display: flex;
+    flex-direction: column
+}

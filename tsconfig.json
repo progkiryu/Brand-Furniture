@@ -1,4 +1,7 @@
 {
+  "compilerOptions": {
+    "types": ["./types"]
+  },
   "files": [],
   "exclude": ["src/electron"],
   "references": [

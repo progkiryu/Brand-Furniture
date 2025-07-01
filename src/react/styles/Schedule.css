@@ -1,0 +1,20 @@
+#schedule-first-container {
+    height: 20vh;
+    display: flex
+}
+
+#search-container {
+    background-color: yellow;
+    width: 60%
+}
+
+#filter-container {
+    background-color: blue;
+    width: 40%
+}
+
+#order-container {
+    background-color: red;
+    height: 70vh
+}
+
