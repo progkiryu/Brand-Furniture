@@ -2,8 +2,14 @@ import "../styles/Dashboard.css";
 import "../styles/Global.css";
 import Navbar from "../components/Navbar";
 import JobTable from "../components/JobTable";
+import { useState, useEffect } from "react";
 
 function Dashboard() {
+
+  useEffect(() => {
+    
+  }, []);
+
   return (
     <>
       <Navbar />

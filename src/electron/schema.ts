@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const taskSchema = new mongoose.Schema({
+const taskSchema = new mongoose.Schema<Task>({
     taskNo: Number,
     desc: String,
     specs: String,
@@ -9,12 +9,12 @@ const taskSchema = new mongoose.Schema({
     royalty: String
 });
 
-const jobSchema = new mongoose.Schema({
+const jobSchema = new mongoose.Schema<Job>({
     invoiceId: String,
     dueDate: Date
 });
 
-const frameSchema = new mongoose.Schema({
+const frameSchema = new mongoose.Schema<Frame>({
     frameId: String,
     supplier: String,
     desc: String,
@@ -23,7 +23,7 @@ const frameSchema = new mongoose.Schema({
     receiveDate: String
 });
 
-const cushionSchema = new mongoose.Schema({
+const cushionSchema = new mongoose.Schema<Cushion>({
     cushionId: String,
     supplier: String,
     type: String,
@@ -33,7 +33,7 @@ const cushionSchema = new mongoose.Schema({
     receiveDate: String
 });
 
-const upholsterSchema = new mongoose.Schema({
+const upholsterSchema = new mongoose.Schema<Upholster>({
     upholsterId: String,
     supplier: String,
     desc: String,
@@ -42,7 +42,7 @@ const upholsterSchema = new mongoose.Schema({
     receiveDate: String
 });
 
-const clientSchema = new mongoose.Schema({
+const clientSchema = new mongoose.Schema<Client>({
     name: String
 });
 

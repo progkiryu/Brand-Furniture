@@ -51,4 +51,16 @@ interface Window {
     orders: {
         getClients: () => Promise<Array<Client>>;
     }
+    tasks: {
+        getTasks: () => Promise<Array<Task>>;
+    }
+    frame: {
+        getFrames: () => Promise<Array<Frame>>;
+    }
+    upholster: {
+        getUpholstery: () => Promise<Array<Upholster>>;
+    }
+    cushion: {
+        getCushions: () => Promise<Array<Cushion>>;
+    }
 }
