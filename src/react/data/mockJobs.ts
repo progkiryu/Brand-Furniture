@@ -1,12 +1,14 @@
 import type { Job, SubJob, FrameUpholstery, Cushion } from '../types/jobTypes';
 
 export const mockJobs: Job[] = [{
-    id: 2826,
+    jobId: '507f1f77bcf86cd799439011',
+    invoiceId: 2826,
     client: 'FAF Woodwork',
     name: 'H064 Exterior Bench',
     due: '2025-10-06',
     subJobs: [
     { 
+
         id: 1, 
         jobdetail: 'Custom banquette for garden 2524mmL (RHF) 2900mm (middle straight cushions) 2109mmL (LHF) 7533mm',
         note: 'NEED TO ORDER OUTDOOR FOAM & BACK CUSHIONS FILLS FROM SHARNI PLUS FABRIC 2 Sheets DFMED 220mm Templates to be supplied by FAF',
@@ -99,7 +101,8 @@ export const mockJobs: Job[] = [{
 
 // new job here
 {
-    id: 2835,
+    jobId: '66bd44f91e6a9e9d1b3c77cf',
+    invoiceId: 2835,
     client: 'FAF Woodwork',
     name: '7 Thompson St, Tamarama',
     due: '2025-10-06',
@@ -201,7 +204,8 @@ export const mockJobs: Job[] = [{
     ],
 },
 {
-    id: 2812,
+    jobId: '66bd4591c5f4d0872ae71f6b',
+    invoiceId: 2812,
     client: 'Mobilia',
     name: '25 Bourke St, Alexandra Banquette seats only for public spaces',
     due: '2025-02-24',
