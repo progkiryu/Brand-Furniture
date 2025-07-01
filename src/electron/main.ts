@@ -42,10 +42,6 @@ appDB.listen(PORT, () => {
 });
 // ---------------------------------------------------
 
-// Local DB setup
-// import { mongoConnect } from "./database.js";
-// mongoConnect();
-
 app.on("ready", () => {
   // create browser window
   const mainWindow = new BrowserWindow({
