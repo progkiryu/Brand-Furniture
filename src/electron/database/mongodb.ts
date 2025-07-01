@@ -9,7 +9,6 @@ appDB.use(express.json());
 appDB.use(express.urlencoded({ extended: false }));
 appDB.use(cors());
 appDB.use(cookieParser());
-dotenv.config();
 
 dotenv.config();
 
