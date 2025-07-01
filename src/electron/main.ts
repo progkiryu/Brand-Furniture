@@ -1,11 +1,16 @@
 import { app, BrowserWindow } from "electron";
 import path from "path";
 import { isDev } from "./util.js";
+import { connectMongoDB } from "./database/mongodb.js";
+import { jobHandler } from "./dataHandlers/job.js";
+import { clientHandler } from "./dataHandlers/client.js";
 import { getPreloadPath } from "./pathResolver.js";
 
-import { mongoConnect } from "./database.js";
-import { jobHandler } from "./dataHandlers/job.js"
-import { clientHandler } from "./dataHandlers/client.js";
+connectMongoDB();
+
+// Local DB setup
+// import { mongoConnect } from "./database.js";
+// mongoConnect();
 
 app.on("ready", () => {
   // create browser window
@@ -25,8 +30,8 @@ app.on("ready", () => {
       // security purposes
       nodeIntegration: false,
       contextIsolation: true,
-      preload: getPreloadPath()
-    }
+      preload: getPreloadPath(),
+    },
   });
 
   if (isDev()) {
@@ -37,8 +42,6 @@ app.on("ready", () => {
     mainWindow.loadFile(path.join(app.getAppPath(), "/dist-react/index.html"));
   }
 
-  mongoConnect();
-  
   jobHandler();
   clientHandler();
 });
