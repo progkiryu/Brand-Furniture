@@ -106,7 +106,7 @@ function JobTable({ searchTerm, jobs }: JobTableProps) { // Destructure jobs fro
         const lowerCaseSearchTerm = searchTerm.toLowerCase();
 
         const filtered = jobs.filter(job => { // Filter the 'jobs' prop
-            if (String(job.id).toLowerCase().includes(lowerCaseSearchTerm)) {
+            if (String(job.invoiceId).toLowerCase().includes(lowerCaseSearchTerm)) {
                 return true;
             }
             if (job.client.toLowerCase().includes(lowerCaseSearchTerm)) {
@@ -132,7 +132,8 @@ function JobTable({ searchTerm, jobs }: JobTableProps) { // Destructure jobs fro
     // This data transformation can stay here as it's directly used by showSubJobList
     const allSubJobs = jobs.flatMap((job) => // Use the 'jobs' prop
         job.subJobs.map((subjob) => ({
-            jobId: job.id,
+            jobId: job.jobId,
+            invoiceId: job.invoiceId,
             jobName: job.name,
             jobDue: job.due,
             jobClient: job.client,
@@ -140,14 +141,16 @@ function JobTable({ searchTerm, jobs }: JobTableProps) { // Destructure jobs fro
         }))
     );
 
-    const showSubJobList = (currentJobId: number) => {
+    const showSubJobList = (currentJobId: String) => {
         const filteredSubJobs = allSubJobs.filter(
             (subjob) => subjob.jobId === currentJobId
         );
 
         return filteredSubJobs.map((sj, index) => (
             // A separate SubJobItem component could be created if these paragraphs grow complex
+            // <p className="sp-sub-job" key={`${sj.jobId}-${sj.id || index}-${index}`}>{sj.jobdetail}</p>
             <p className="sp-sub-job" key={`${sj.jobId}-${sj.id || index}-${index}`}>{sj.jobdetail}</p>
+
         ));
     };
 
@@ -167,7 +170,8 @@ function JobTable({ searchTerm, jobs }: JobTableProps) { // Destructure jobs fro
                 <tbody>
                     {displayedJobs.map((job) => (
                         <JobTableRow
-                            key={job.id} // Important for list rendering
+                            // key={job.id} // Important for list rendering
+                            key={job.jobId}
                             job={job}
                             showSubJobList={showSubJobList} // Pass the function down
                         />

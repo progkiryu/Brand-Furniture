@@ -1,5 +1,3 @@
-// src/types/jobTypes.ts
-
 export interface FrameUpholstery {
   supplier: string;
   description: string;
@@ -34,7 +32,8 @@ export interface SubJob {
 }
 
 export interface Job {
-  id: number;
+  jobId: string;
+  invoiceId: number;
   client: string;
   name: string;
   due: string;
