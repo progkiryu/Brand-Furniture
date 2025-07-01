@@ -1,8 +1,20 @@
-function Searchbar() {
-    return (
-        <input type="text" placeholder="...">
-        </input>
-    )
+import React from 'react';
+
+interface SearchBarProps {
+    searchTerm: string;
+    onSearchChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export default Searchbar;
+function SearchBar({ searchTerm, onSearchChange }: SearchBarProps) {
+    return (
+        <input
+            type="search"
+            placeholder="Search"
+            value={searchTerm}
+            onChange={onSearchChange}
+        />
+    );
+}
+
+export default SearchBar;
+

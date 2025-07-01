@@ -1,7 +1,7 @@
 import "../styles/Dashboard.css";
 import "../styles/Global.css";
 import Navbar from "../components/Navbar";
-import Table from "../components/Table";
+import JobTable from "../components/JobTable";
 
 function Dashboard() {
   return (
@@ -15,7 +15,6 @@ function Dashboard() {
           <div id="dashboard-second-container">
             <div id="schedule-container">
               <h1>Schedule</h1>
-              <Table />
             </div>
           </div>
           <div id="dashboard-third-container">

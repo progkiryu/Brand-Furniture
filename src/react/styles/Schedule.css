@@ -1,4 +1,4 @@
-#schedule-first-container {
+/* #schedule-first-container {
     height: 20vh;
     display: flex
 }
@@ -16,5 +16,224 @@
 #order-container {
     background-color: red;
     height: 70vh
+} */
+
+/* .sp-right-container {
+  display: flex;
+  flex-direction: column;
+  background-color: lightblue;
+  height: 100vh;
+  flex: 1;
 }
 
+.sp-actions-container {
+  display: flex;
+  background-color: purple;
+  justify-content: space-around;
+  align-items: center;
+  flex: 1;
+
+}
+
+.sp-search-container input {
+  width: 500px;
+}
+
+.sp-schedule-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  flex: 4;
+  overflow: hidden;
+}
+
+.sp-schedule-container table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+.sp-schedule-container th{
+  text-align: center;
+}
+
+.sp-schedule-container th:nth-child(1), td:nth-child(1),
+.sp-schedule-container th:nth-child(2), td:nth-child(2),
+.sp-schedule-container th:nth-child(3), td:nth-child(3),
+.sp-schedule-container th:nth-child(4), td:nth-child(4){
+  width: 100px;
+  text-align: center;
+}
+
+.sp-schedule-container th:nth-child(5){
+  width: 900px;
+}
+
+.sp-schedule-container td:nth-child(6){
+  text-align: center;
+}
+
+.sp-jobs-container{
+  overflow-y: auto;
+}
+
+.sp-jobs-container table{
+  width: 100%;
+  background-color: white;
+
+}
+
+.sp-jobs-container tbody td:last-child{
+  background-color: #888888;
+}
+
+.sp-jobs-container tbody td:last-child input{
+  all: unset;
+  background-color: orange;
+  border-radius: 5px;
+  width: 50px;
+}
+
+.sp-jobs-container tbody td:last-child input:hover{
+  opacity: 50%;
+  color: white;
+}
+
+.sp-jobs-container thead {
+  position: sticky; 
+  top: 0; 
+  background-color: #888888; 
+  z-index: 1; 
+
+}
+
+.sp-sub-jobs-container {
+  background-color: white;
+  height: 100px;
+  overflow-y: scroll;
+
+}
+
+.sp-sub-jobs-container input {
+  width: 100%;
+}
+
+.sp-sub-job {
+  background-color: red;
+  border-radius: 5px;
+  margin: 5px 0px;
+}
+
+.sp-sub-job:hover {
+  opacity: 50%;
+} */
+
+#first-container {
+  display: flex;
+  flex-direction: column;
+  background-color: lightblue;
+  height: 100vh;
+  flex: 1;
+}
+
+#schedule-first-container {
+  display: flex;
+  background-color: purple;
+  justify-content: space-around;
+  align-items: center;
+  flex: 1;
+}
+
+#search-container {
+  background-color: lightgreen;
+}
+
+#filter-container {
+  background-color: lightyellow;
+    
+}
+
+#order-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  flex: 4;
+  overflow: hidden;
+}
+
+
+.sp-schedule-container th{
+  text-align: center;
+}
+
+.sp-schedule-container th:nth-child(1), td:nth-child(1),
+.sp-schedule-container th:nth-child(2), td:nth-child(2),
+.sp-schedule-container th:nth-child(3), td:nth-child(3),
+.sp-schedule-container th:nth-child(4), td:nth-child(4){
+  width: 100px;
+  text-align: center;
+}
+
+.sp-schedule-container th:nth-child(5){
+  width: 900px;
+}
+
+.sp-jobs-container{
+  overflow-y: auto;
+}
+
+.sp-jobs-container table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+.sp-jobs-container table{
+  width: 100%;
+  background-color: white;
+
+}
+
+.sp-jobs-container tbody td:last-child{
+  background-color: #888888;
+}
+
+.sp-jobs-container tbody td:last-child input{
+  all: unset;
+  background-color: orange;
+  border-radius: 5px;
+  width: 50px;
+  text-align: center;
+}
+
+.sp-jobs-container tbody td:last-child input:hover{
+  opacity: 50%;
+  color: white;
+}
+
+.sp-jobs-container thead {
+  position: sticky; 
+  top: 0; 
+  background-color: #888888; 
+  z-index: 1; 
+
+}
+
+.sp-sub-jobs-container {
+  background-color: white;
+  height: 100px;
+  overflow-y: scroll;
+
+}
+
+.sp-sub-jobs-container input {
+  width: 100%;
+}
+
+.sp-sub-job {
+  background-color: red;
+  border-radius: 5px;
+  margin: 5px 0px;
+}
+
+.sp-sub-job:hover {
+  opacity: 50%;
+}
