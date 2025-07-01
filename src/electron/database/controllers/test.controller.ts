@@ -11,7 +11,8 @@ import { TestModel } from "../models/test.model.js";
 // export const updateTestById = (id: string, values: Record<string, any>) =>
 //   TestModel.findByIdAndUpdate(id, values);
 
-export const registerTest = async (
+// Create new 'Test'
+export const postCreateTest = async (
   req: express.Request,
   res: express.Response
 ) => {
@@ -39,3 +40,21 @@ export const registerTest = async (
     return;
   }
 };
+
+// Get all Tests
+export const getAllTests = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  try {
+    const tests = await TestModel.find({});
+    res.status(200).json(tests).end();
+    return;
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(400);
+    return;
+  }
+};
+
+//
