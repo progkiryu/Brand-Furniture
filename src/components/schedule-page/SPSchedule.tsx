@@ -1,17 +1,17 @@
 import { useState } from 'react';
-import {
-  Table,
-  Modal,
-  Tabs,
-  Text,
-  Group,
-  Badge,
-  ActionIcon,
-  Accordion,
-  Button,
-  AccordionItem,
-} from '@mantine/core';
-import { IconPlus, IconTrash } from '@tabler/icons-react';
+// import {
+//   Table,
+//   Modal,
+//   Tabs,
+//   Text,
+//   Group,
+//   Badge,
+//   ActionIcon,
+//   Accordion,
+//   Button,
+//   AccordionItem,
+// } from '@mantine/core';
+//import { IconPlus, IconTrash } from "@tabler/icons-react";
 
 // Import interfaces from the new types file
 // import type { Job, FrameUpholstery, Cushion, SubJob } from '/Users/namtruong/Desktop/Projects/Electron-Practice/src/types/jobTypes.ts'
