@@ -1,4 +1,4 @@
-import type { Job, SubJob, FrameUpholstery, Cushion } from '../types/jobTypes';
+import type { Job } from '../types/jobTypes';
 
 export const mockJobs: Job[] = [{
     jobId: '507f1f77bcf86cd799439011',
@@ -8,7 +8,6 @@ export const mockJobs: Job[] = [{
     due: '2025-10-06',
     subJobs: [
     { 
-
         id: 1, 
         jobdetail: 'Custom banquette for garden 2524mmL (RHF) 2900mm (middle straight cushions) 2109mmL (LHF) 7533mm',
         note: 'NEED TO ORDER OUTDOOR FOAM & BACK CUSHIONS FILLS FROM SHARNI PLUS FABRIC 2 Sheets DFMED 220mm Templates to be supplied by FAF',

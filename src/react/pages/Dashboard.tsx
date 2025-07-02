@@ -1,7 +1,6 @@
 import "../styles/Dashboard.css";
 import "../styles/Global.css";
 import Navbar from "../components/Navbar";
-import JobTable from "../components/JobTable";
 
 function Dashboard() {
   return (
