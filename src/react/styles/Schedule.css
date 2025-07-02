@@ -181,15 +181,20 @@
   overflow-y: auto;
 }
 
+.sp-jobs-container table{
+  width: 100%;
+  background-color: white;
+
+}
+
 .sp-jobs-container table, th, td {
   border: 1px solid black;
   border-collapse: collapse;
 }
 
-.sp-jobs-container table{
-  width: 100%;
-  background-color: white;
 
+.sp-jobs-container table tbody tr td:nth-child(5) {
+  width: 1000px
 }
 
 .sp-jobs-container tbody td:last-child{
