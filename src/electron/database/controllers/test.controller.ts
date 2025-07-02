@@ -43,7 +43,7 @@ export const postCreateTest = async (
 
 // Get all Tests
 export const getAllTests = async (
-  req: express.Request,
+  _req: express.Request,
   res: express.Response
 ) => {
   try {
