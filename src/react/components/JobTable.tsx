@@ -91,7 +91,7 @@
 import { useState, useEffect } from 'react';
 import type { Job } from '../types/jobTypes'; // Ensure Job and SubJob types are imported
 // Removed import of mockJobs as it's now passed via props
-
+import AddSubJobFormModal from "../components/AddSubJobFormModal";
 import JobTableRow from './JobTableRow'; // New component
 
 interface JobTableProps {
@@ -101,6 +101,7 @@ interface JobTableProps {
 
 function JobTable({ searchTerm, jobs }: JobTableProps) { // Destructure jobs from props
     const [displayedJobs, setDisplayedJobs] = useState<Job[]>(jobs); // Initialize with prop jobs
+    const [isAddSubJobModalOpen, setIsAddSubJobModalOpen] = useState(false);
 
     useEffect(() => {
         const lowerCaseSearchTerm = searchTerm.toLowerCase();
@@ -147,34 +148,51 @@ function JobTable({ searchTerm, jobs }: JobTableProps) { // Destructure jobs fro
         );
 
         return filteredSubJobs.map((sj, index) => (
-            <p className="sp-sub-job" key={`${sj.jobId}-${sj.id || index}-${index}`}>{sj.jobdetail}</p>
+            <p 
+                className="sp-sub-job" 
+                key={`${sj.jobId}-${sj.id || index}-${index}`}
+                onClick={() => setIsAddSubJobModalOpen(true)}
+            >
+                {sj.jobdetail}
+            </p>
         ));
     };
 
     return (
-        <div className="sp-jobs-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Invoice ID</th>
-                        <th>Client Name</th>
-                        <th>Job Name</th>
-                        <th>Due Date</th>
-                        <th>Job Component</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {displayedJobs.map((job) => (
-                        <JobTableRow
-                            key={job.jobId}
-                            job={job}
-                            showSubJobList={showSubJobList} // Pass the function down
-                        />
-                    ))}
-                </tbody>
-            </table>
-        </div>
+        <>
+            <div className="sp-jobs-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Invoice ID</th>
+                            <th>Client Name</th>
+                            <th>Job Name</th>
+                            <th>Due Date</th>
+                            <th>Job Component</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {displayedJobs.map((job) => (
+                            <JobTableRow
+                                key={job.jobId}
+                                job={job}
+                                showSubJobList={showSubJobList} // Pass the function down
+                            />
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            {/* Add Job Pop-up Modal */}
+            <AddSubJobFormModal
+                testString="Test String"
+                isOpen={isAddSubJobModalOpen}
+                onSubJobModalClose={() => setIsAddSubJobModalOpen(false)}
+                
+            />
+        </>
+        
     );
 }
 
