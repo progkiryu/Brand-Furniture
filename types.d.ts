@@ -1,15 +1,22 @@
 type Task = {
     taskNo: Number,
     desc: String,
-    specs: String,
-    other: String,
+    detailOther: String,
     attach: String,
-    royalty: String
+    royalty: String,
+    depositAmount: Number,
+    liaison: String,
+    adminOther: String,
+    label: String,
+    job: Number
 }
 
 type Job = {
+    jobNo: number,
     invoiceId: number,
-    dueDate: Date
+    dueDate: Date,
+    label: string,
+    tasks: Array<Number>
 }
 
 type Frame = {
@@ -19,6 +26,7 @@ type Frame = {
     orderDate: String,
     expectDate: String,
     receiveDate: String
+    task: number
 }
 
 type Cushion = {
@@ -29,6 +37,7 @@ type Cushion = {
     orderDate: String,
     expectDate: String,
     receiveDate: String
+    task: number
 }
 
 type Upholster = {
@@ -38,10 +47,12 @@ type Upholster = {
     orderDate: String,
     expectDate: String,
     receiveDate: String
+    task: number
 }
 
 type Client = {
     name: String
+    job: Array<Number>
 }
 
 interface Window {

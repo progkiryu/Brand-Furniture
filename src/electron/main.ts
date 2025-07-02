@@ -1,8 +1,6 @@
 import { app, BrowserWindow } from "electron";
 import path from "path";
 import { isDev } from "./util.js";
-import { jobHandler } from "./dataHandlers/job.js";
-import { clientHandler } from "./dataHandlers/client.js";
 import { getPreloadPath } from "./pathResolver.js";
 
 import express from "express";
@@ -21,7 +19,7 @@ appDB.use(cookieParser());
 
 dotenv.config();
 
-const MONGO_URI = process.env.MONGO_URI ? process.env.MONGO_URI : "";
+const MONGO_URI = process.env.MONGO_URI ? process.env.MONGO_URI : "mongodb+srv://admin2:Password123@cluster0.8t2fxy9.mongodb.net/?";
 const PORT = process.env.port || 5051;
 
 // Connect to mongoDB
@@ -71,7 +69,4 @@ app.on("ready", () => {
     // Open HTML file when app is built
     mainWindow.loadFile(path.join(app.getAppPath(), "/dist-react/index.html"));
   }
-
-  jobHandler();
-  clientHandler();
 });

@@ -3,15 +3,19 @@ import mongoose from "mongoose";
 const taskSchema = new mongoose.Schema({
     taskNo: Number,
     desc: String,
-    specs: String,
-    other: String,
+    detailOther: String,
     attach: String,
-    royalty: String
+    royalty: String,
+    depositAmount: Number,
+    liaison: String,
+    adminOther: String,
+    label: String
 });
 
 const jobSchema = new mongoose.Schema({
     invoiceId: String,
-    dueDate: Date
+    dueDate: Date,
+    label: String
 });
 
 const frameSchema = new mongoose.Schema({

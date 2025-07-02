@@ -79,7 +79,7 @@ import "../styles/Global.css";
 import "../styles/ModalForm.css"
 import "../styles/SubJobModalForm.css" // Ensure this CSS file exists or create it if needed
 import Navbar from "../components/Navbar";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import SearchBar from "../components/Searchbar";
 import JobTable from "../components/JobTable";
@@ -90,9 +90,16 @@ import {
     mockSubJobsData,
 } from '../data/mockJobs-erd'; // Corrected import path and names
 import type { Job, SubJob, NewJobDataForAdd } from '../types/jobTypes-erd'; // Corrected import path and names
+import SearchBar from "../components/Searchbar"; // New component
+import JobTable from "../components/JobTable"; // New component
+import AddJobFormModal from "../components/AddJobFormModal"; // New modal component
+import { mockJobs as initialJobsData } from '../data/mockJobs'; // Import initial data
+
+import { Link } from "../App";
 
 function Schedule() {
     const [searchTerm, setSearchTerm] = useState<string>('');
+    const [jobs, setJobs] = useState([]); // Manage jobs state here
     // Manage all top-level data arrays as state
     const [jobs, setJobs] = useState<Job[]>(mockJobsData);
     const [subJobs, setSubJobs] = useState<SubJob[]>(mockSubJobsData);
@@ -111,9 +118,20 @@ function Schedule() {
         const newJob: Job = { // Asserting type to Job
             ...newJobData,
         };
+        // @ts-ignore
         setJobs(prevJobs => [...prevJobs, newJob]);
         setIsAddJobModalOpen(false); // Close the modal after adding
     };
+
+    //useEffect(() => {
+        //fetch(`${Link}/jobs`)
+            //.then(res => res.json())
+            //.then(jobs => {
+                //console.log(jobs);
+                //setJobs(jobs)
+            //})
+            //.catch(err => console.log(err));
+    //}, []);
 
     // Handler for adding a new SubJob
     const handleAddSubJob = (newSubJobData: Omit<SubJob, 'jobId'> & { jobId: string }) => {

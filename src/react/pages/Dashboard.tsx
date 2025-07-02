@@ -1,8 +1,17 @@
 import "../styles/Dashboard.css";
 import "../styles/Global.css";
 import Navbar from "../components/Navbar";
+import { useEffect } from "react";
+import { Link } from "../App.tsx";
 
 function Dashboard() {
+  useEffect(() => {
+    fetch(`${Link}/tasks`)
+      .then(res => res.json())
+      .then(data => console.log(data))
+      .catch(err => console.log(err));
+  }, []);
+
   return (
     <>
       <Navbar />
