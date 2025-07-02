@@ -20,11 +20,15 @@ table, th, td {
 
 #header-container {
     background-color: purple;
+    z-index: 1000;
+    position: sticky;
+    top: 0;
     height: 10vh
 }
 
 #first-container {
     width: 80%;
     display: flex;
-    flex-direction: column
+    flex-direction: column;
+    overflow-y: auto;
 }
