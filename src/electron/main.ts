@@ -19,7 +19,7 @@ appDB.use(cookieParser());
 
 dotenv.config();
 
-const MONGO_URI = process.env.MONGO_URI ? process.env.MONGO_URI : "";
+const MONGO_URI = process.env.MONGO_URI ? process.env.MONGO_URI : "mongodb+srv://admin2:Password123@cluster0.8t2fxy9.mongodb.net/?";
 const PORT = process.env.port || 5051;
 
 // Connect to mongoDB
