@@ -1,6 +1,6 @@
 import React from "react";
 'use client';
-import { PieChart, Pie, Cell, Legend, Tooltip } from "recharts";
+import { PieChart, Pie, Cell, Tooltip } from "recharts";
 
 interface Props {
   dateRange: string;
@@ -59,7 +59,7 @@ const OrderTypeDistributionChart: React.FC<Props> = ({ dateRange }) => {
     <div style={{ display: "flex", justifyContent: "center" }}>
       <PieChart width={600} height={300}>
         <Pie data={data} dataKey='value' label>
-          {data.map((entry, index) => (
+          {data.map((_, index) => (
             <Cell key={`cell-${index}`} fill={COLOURS[index]} />
           ))}
         </Pie>
