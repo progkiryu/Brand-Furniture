@@ -47,16 +47,18 @@ import "../styles/Schedule.css";
 import "../styles/Global.css";
 import "../styles/ModalForm.css"
 import Navbar from "../components/Navbar";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import SearchBar from "../components/Searchbar"; // New component
 import JobTable from "../components/JobTable"; // New component
 import AddJobFormModal from "../components/AddJobFormModal"; // New modal component
 import { mockJobs as initialJobsData } from '../data/mockJobs'; // Import initial data
 
+import { Link } from "../App";
+
 function Schedule() {
     const [searchTerm, setSearchTerm] = useState<string>('');
-    const [jobs, setJobs] = useState(initialJobsData); // Manage jobs state here
+    const [jobs, setJobs] = useState([]); // Manage jobs state here
     const [isAddJobModalOpen, setIsAddJobModalOpen] = useState(false);
 
     // Handler for when the search input changes
@@ -71,9 +73,20 @@ function Schedule() {
             ...newJobData,
             subJobs: [], // Empty subJobs array
         };
+        // @ts-ignore
         setJobs(prevJobs => [...prevJobs, newJob]);
         setIsAddJobModalOpen(false); // Close the modal after adding
     };
+
+    //useEffect(() => {
+        //fetch(`${Link}/jobs`)
+            //.then(res => res.json())
+            //.then(jobs => {
+                //console.log(jobs);
+                //setJobs(jobs)
+            //})
+            //.catch(err => console.log(err));
+    //}, []);
 
     return (
         <>
