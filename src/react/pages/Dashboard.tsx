@@ -1,11 +1,9 @@
 import "../styles/Dashboard.css";
 import "../styles/Global.css";
 import Navbar from "../components/Navbar";
-import JobTable from "../components/JobTable";
 import UpcomingOrders from "../components/UpcomingOrders";
 import JobAnalytics from "../components/JobAnalytics";
 import NotificationsList from "../components/NotificationsList";
-
 
 function Dashboard() {
   return (
@@ -18,25 +16,42 @@ function Dashboard() {
         <div id="dashboard-first-container">
           <div id="dashboard-second-container">
             <div id="schedule-container">
-              <h1>Schedule</h1>
-              <UpcomingOrders /> {/* ADD:Upcoming orders table component */}
+              <div className="schedule-header">
+                <h1>Schedule</h1>
+                <div className="color-key">
+                  <div className="key-item">
+                    <span className="key-color production"></span> Production
+                  </div>
+                  <div className="key-item">
+                    <span className="key-color private"></span> Private
+                  </div>
+                  <div className="key-item">
+                    <span className="key-color residential"></span> Residential
+                  </div>
+                  <div className="key-item">
+                    <span className="key-color commercial"></span> Commercial
+                  </div>
+                </div>
+              </div>
+              <div className="upcoming-orders-scroll-container">
+                <UpcomingOrders />
+              </div>
             </div>
           </div>
           <div id="dashboard-third-container">
             <div id="analytics-container">
               <h1>Analytics</h1>
-              <JobAnalytics /> {/* ADD: Job analytics component */}
+              <JobAnalytics />
             </div>
             <div id="notifications-container">
               <h1>Notifications</h1>
-              <NotificationsList /> {/* ADD: Notifications list component */}
+              <NotificationsList />
             </div>
           </div>
         </div>
       </div>
     </>
-  )
-  
+  );
 }
 
 export default Dashboard;

@@ -15,9 +15,54 @@
     flex-direction: column
 }
 
+.schedule-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Space out title and key */
+    margin-bottom: 1rem;
+}
+
+.color-key {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.key-item {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.key-color {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    margin-right: 0.5rem;
+    border: 1px solid #555;
+    border-radius: 3px;
+}
+
+/* Colors matching your order row classes */
+.key-color.production {
+    background-color: #fecaca;
+}
+.key-color.private {
+    background-color: #bbf7d0;
+}
+.key-color.residential {
+    background-color: #fef9c3;
+}
+.key-color.commercial {
+    background-color: #d1d5fa;
+}
+
 #schedule-container {
-    background-color: blue;
-    height: 90vh
+    background-color: white; 
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 
 #analytics-container {
@@ -29,3 +74,61 @@
     background-color: orange;
     height: 50vh
 }
+
+
+#schedule-container {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; 
+}
+
+
+.upcoming-orders-scroll-container {
+    flex-grow: 1;        
+    overflow-y: auto;   
+    margin-top: 1rem;   
+}
+
+
+.upcoming-orders-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.upcoming-orders-table th,
+.upcoming-orders-table td {
+    padding: 1rem;
+    font-size: 1.25rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    word-wrap: break-word;
+    min-width: 80px;
+}
+
+
+.upcoming-orders-scroll-container::-webkit-scrollbar {
+    width: 8px;
+}
+.upcoming-orders-scroll-container::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+
+.order-row-production {
+    background-color: #fecaca; 
+}
+
+.order-row-private {
+    background-color: #bbf7d0; 
+}
+
+.order-row-residential {
+    background-color: #fef9c3; 
+}
+
+.order-row-commercial {
+    background-color: #d1d5fa; 
+}
+
+
