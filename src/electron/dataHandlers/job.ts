@@ -1,5 +1,5 @@
 import { ipcMain } from "electron";
-import schemas from "../schema.js";
+import schemas from "../database/models/schema.js";
 
 export function jobHandler() {
   ipcMain.handle("getJobs", async () => {
