@@ -81,9 +81,6 @@ import "../styles/SubJobModalForm.css" // Ensure this CSS file exists or create 
 import Navbar from "../components/Navbar";
 import { useState, useEffect } from 'react';
 
-import SearchBar from "../components/Searchbar";
-import JobTable from "../components/JobTable";
-import AddJobFormModal from "../components/AddJobFormModal";
 // Import all mock data arrays from the ERD-style mockJobs-erd.ts
 import {
     mockJobsData,
@@ -99,7 +96,7 @@ import { Link } from "../App";
 
 function Schedule() {
     const [searchTerm, setSearchTerm] = useState<string>('');
-    const [jobs, setJobs] = useState([]); // Manage jobs state here
+    // const [jobs, setJobs] = useState([]); // Manage jobs state here
     // Manage all top-level data arrays as state
     const [jobs, setJobs] = useState<Job[]>(mockJobsData);
     const [subJobs, setSubJobs] = useState<SubJob[]>(mockSubJobsData);
