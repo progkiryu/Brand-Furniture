@@ -1,11 +1,18 @@
 import React, { useState } from 'react';
-import type { Job } from '../types/jobTypes'; // Import Job type
+
+interface NewJobDataForAdd {
+    jobId: string;
+    invoiceId: number;
+    client: string;
+    name: string;
+    due: string;
+}
 
 interface AddJobFormModalProps {
     isOpen: boolean;
     onClose: () => void;
     // Update onAddJob to accept the full Job type structure, but without subJobs
-    onAddJob: (job: Omit<Job, 'subJobs'>) => void;
+    onAddJob: (job: NewJobDataForAdd) => void;
 }
 
 function AddJobFormModal({ isOpen, onClose, onAddJob }:AddJobFormModalProps) {
@@ -17,7 +24,8 @@ function AddJobFormModal({ isOpen, onClose, onAddJob }:AddJobFormModalProps) {
     if (!isOpen) return null; // Don't render if not open
 
     const handleSubmit = (event: React.FormEvent) => {
-        event.preventDefault();
+        event.preventDefault(); // Prevents the browser's default form submission (page reload)
+
         // Basic validation
         if (!invoiceId || !clientName || !jobName || !dueDate) {
             alert('Please fill in all fields.');

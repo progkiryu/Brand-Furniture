@@ -65,7 +65,7 @@ function Schedule() {
     };
 
     // Handler for adding a new job
-    const handleAddJob = (newJobData: { jobId: string; invoiceId: number; client: string; name: string; due: string;}) => {
+    const handleAddJob = (newJobData: {jobId: string; invoiceId: number; client: string; name: string; due: string;}) => {
         // Create a new Job object with empty subJobs as requested
         const newJob = {
             ...newJobData,
@@ -73,6 +73,7 @@ function Schedule() {
         };
         setJobs(prevJobs => [...prevJobs, newJob]);
         setIsAddJobModalOpen(false); // Close the modal after adding
+    
     };
 
     return (
