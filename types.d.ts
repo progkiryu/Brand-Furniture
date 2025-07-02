@@ -9,7 +9,8 @@ type Task = {
 
 type Job = {
     invoiceId: number,
-    dueDate: Date
+    dueDate: Date,
+    label: String
 }
 
 type Frame = {

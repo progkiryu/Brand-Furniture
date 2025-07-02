@@ -1,8 +1,6 @@
 import { app, BrowserWindow } from "electron";
 import path from "path";
 import { isDev } from "./util.js";
-import { jobHandler } from "./dataHandlers/job.js";
-import { clientHandler } from "./dataHandlers/client.js";
 import { getPreloadPath } from "./pathResolver.js";
 
 import express from "express";
@@ -71,7 +69,4 @@ app.on("ready", () => {
     // Open HTML file when app is built
     mainWindow.loadFile(path.join(app.getAppPath(), "/dist-react/index.html"));
   }
-
-  jobHandler();
-  clientHandler();
 });

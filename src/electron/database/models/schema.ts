@@ -11,7 +11,8 @@ const taskSchema = new mongoose.Schema({
 
 const jobSchema = new mongoose.Schema({
     invoiceId: String,
-    dueDate: Date
+    dueDate: Date,
+    label: String
 });
 
 const frameSchema = new mongoose.Schema({
