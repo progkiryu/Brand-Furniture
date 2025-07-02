@@ -1,4 +1,4 @@
-import type { Job, SubJob, FrameUpholstery, Cushion } from '../types/jobTypes';
+import type { Job } from '../types/jobTypes';
 
 export const mockJobs: Job[] = [{
     jobId: '507f1f77bcf86cd799439011',

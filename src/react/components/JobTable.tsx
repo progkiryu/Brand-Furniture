@@ -147,10 +147,7 @@ function JobTable({ searchTerm, jobs }: JobTableProps) { // Destructure jobs fro
         );
 
         return filteredSubJobs.map((sj, index) => (
-            // A separate SubJobItem component could be created if these paragraphs grow complex
-            // <p className="sp-sub-job" key={`${sj.jobId}-${sj.id || index}-${index}`}>{sj.jobdetail}</p>
             <p className="sp-sub-job" key={`${sj.jobId}-${sj.id || index}-${index}`}>{sj.jobdetail}</p>
-
         ));
     };
 
@@ -170,7 +167,6 @@ function JobTable({ searchTerm, jobs }: JobTableProps) { // Destructure jobs fro
                 <tbody>
                     {displayedJobs.map((job) => (
                         <JobTableRow
-                            // key={job.id} // Important for list rendering
                             key={job.jobId}
                             job={job}
                             showSubJobList={showSubJobList} // Pass the function down

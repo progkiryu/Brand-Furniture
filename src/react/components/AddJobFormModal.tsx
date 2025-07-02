@@ -8,8 +8,7 @@ interface AddJobFormModalProps {
     onAddJob: (job: Omit<Job, 'subJobs'>) => void;
 }
 
-const AddJobFormModal: React.FC<AddJobFormModalProps> = ({ isOpen, onClose, onAddJob }) => {
-    // No need for jobId state here as it will be generated.
+function AddJobFormModal({ isOpen, onClose, onAddJob }:AddJobFormModalProps) {
     const [invoiceId, setInvoiceId] = useState<string>('');
     const [clientName, setClientName] = useState<string>('');
     const [jobName, setJobName] = useState<string>('');
@@ -58,7 +57,7 @@ const AddJobFormModal: React.FC<AddJobFormModalProps> = ({ isOpen, onClose, onAd
                             id="invoiceId"
                             value={invoiceId}
                             onChange={(e) => setInvoiceId(e.target.value)}
-                            required // Make it required
+                            // required // Make it required
                         />
                     </div>
                     <div className="form-group">
