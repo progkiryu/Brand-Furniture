@@ -22,3 +22,13 @@
   align-items: center;
   justify-content: center;
 }
+
+.date-range-selector {
+  margin-top: 10px;
+  font-size: 16px;
+}
+
+.date-range-selector select {
+  margin-left: 8px;
+  padding: 5px;
+}
