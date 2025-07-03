@@ -20,14 +20,19 @@ export const insertTask = async (
     res: express.Response
 ) => {
     try {
-        const { taskNo, desc, specs, other, attach, royalty } = req.body;
+        const { taskNo, desc, detailOther, attach, royalty, depositAmount, liaison, adminOther, label, jobNo, isArchived } = req.body;
         const newTask = new schemas.Task({
             taskNo,
             desc,
-            specs,
-            other,
+            detailOther,
             attach,
-            royalty
+            royalty,
+            depositAmount,
+            liaison,
+            adminOther,
+            label,
+            jobNo,
+            isArchived
         });
         await newTask.save();
         res.status(200).json(newTask).end();

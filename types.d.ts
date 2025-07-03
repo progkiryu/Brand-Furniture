@@ -8,6 +8,7 @@ type Task = {
     liaison: String,
     adminOther: String,
     label: String,
+    isArchived: boolean,
     job: Number
 }
 
@@ -17,6 +18,7 @@ type Job = {
     dueDate: Date,
     label: string,
     tasks: Array<Number>
+    isPinned: boolean,
 }
 
 type Frame = {
