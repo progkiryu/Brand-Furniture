@@ -168,12 +168,13 @@
 .sp-schedule-container th:nth-child(1), td:nth-child(1),
 .sp-schedule-container th:nth-child(2), td:nth-child(2),
 .sp-schedule-container th:nth-child(3), td:nth-child(3),
-.sp-schedule-container th:nth-child(4), td:nth-child(4){
+.sp-schedule-container th:nth-child(4), td:nth-child(4),
+.sp-schedule-container th:nth-child(5), td:nth-child(5){
   width: 100px;
   text-align: center;
 }
 
-.sp-schedule-container th:nth-child(5){
+.sp-schedule-container th:nth-child(6){
   width: 900px;
 }
 
@@ -193,7 +194,7 @@
 }
 
 
-.sp-jobs-container table tbody tr td:nth-child(5) {
+.sp-jobs-container table tbody tr td:nth-child(6) {
   width: 1000px
 }
 

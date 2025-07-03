@@ -20,7 +20,6 @@ export interface SubJob {
   jobdetail: string;
   note: string;
   file: string;
-  label: string;
   frame: FrameUpholstery[];
   cushion: Cushion[];
   upholstery: FrameUpholstery[];
