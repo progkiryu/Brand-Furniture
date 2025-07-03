@@ -1,13 +1,6 @@
 import express from "express";
 import schemas from "../models/schema.js";
 
-// frameId: String,
-// supplier: String,
-// desc: String,
-// orderDate: String,
-// expectDate: String,
-// receiveDate: String
-
 // Get all frames
 export const getAllFrames = async (
   req: express.Request,
