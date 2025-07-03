@@ -85,7 +85,6 @@ type SubJob = {
     paidInFull: string;
     liaison: string;
     paymentNote: string;
-}
 
 
 type Frame = {

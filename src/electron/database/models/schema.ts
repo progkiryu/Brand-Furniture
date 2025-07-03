@@ -121,8 +121,6 @@ const upholsterySchema = new mongoose.Schema({
     receiveddate: String,
 });
 
-
-
 const Job = mongoose.model("Job", jobSchema);
 const SubJob = mongoose.model("Task", subJobSchema);
 const Frame = mongoose.model("Frame", frameSchema);

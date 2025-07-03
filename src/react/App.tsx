@@ -4,20 +4,20 @@ import Schedule from "./pages/Schedule";
 import Analytics from "./pages/Analytics";
 import Help from "./pages/Help";
 
-export const Link = `http://localhost:5051`;
+export const DBLink = `http://localhost:5051`;
 
 function App() {
-    return (
-        <Router>
-            <Routes>
-                <Route path="/" element={<Dashboard />}/>
-                <Route path="/Dashboard" element={<Dashboard />}/>
-                <Route path="/Schedule" element={<Schedule />}/>
-                <Route path="/Analytics" element={<Analytics />}/>
-                <Route path="/Help" element={<Help />}/>
-            </Routes>
-        </Router>
-    )
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/Dashboard" element={<Dashboard />} />
+        <Route path="/Schedule" element={<Schedule />} />
+        <Route path="/Analytics" element={<Analytics />} />
+        <Route path="/Help" element={<Help />} />
+      </Routes>
+    </Router>
+  );
 }
 
 export default App;

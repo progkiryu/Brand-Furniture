@@ -60,6 +60,7 @@ export const insertSubJob = async (
     res: express.Response
 ) => {
     try {
+
         const { jobId, subJobId,  subJobDetail, note, file, depositAmount, depositDate, paidInFull, liaison, paymentNote } = req.body;
         const newSubJob = new schemas.SubJob({
             jobId,

@@ -29,7 +29,7 @@
 //         };
 //         setJobs(prevJobs => [...prevJobs, newJob]);
 //         setIsAddJobModalOpen(false); // Close the modal after adding
-    
+
 //     };
 
 //     return (
@@ -61,7 +61,6 @@
 //                 onClose={() => setIsAddJobModalOpen(false)}
 //                 onAddJob={handleAddJob}
 //             />
-
 
 //         </>
 //     );
@@ -191,24 +190,21 @@
 // Schedule.tsx
 import "../styles/Schedule.css";
 import "../styles/Global.css";
-import "../styles/ModalForm.css"
-import "../styles/SubJobModalForm.css" // Ensure this CSS file exists or create it if needed
+import "../styles/ModalForm.css";
+import "../styles/SubJobModalForm.css"; // Ensure this CSS file exists or create it if needed
 import Navbar from "../components/Navbar";
-import { useState, useEffect } from 'react';
-
+// import { useState, useEffect } from 'react';
+import { useState } from "react";
 
 // Import all mock data arrays from the ERD-style mockJobs-erd.ts
-import {
-    mockJobsData,
-    mockSubJobsData,
-} from '../data/mockJobs-erd'; // Corrected import path and names
-import type { Job, SubJob, NewJobDataForAdd } from '../types/jobTypes-erd'; // Corrected import path and names
+import { mockJobsData, mockSubJobsData } from "../data/mockJobs-erd"; // Corrected import path and names
+import type { Job, SubJob, NewJobDataForAdd } from "../types/jobTypes-erd"; // Corrected import path and names
 import SearchBar from "../components/Searchbar"; // New component
 import JobTable from "../components/JobTable"; // New component
 import AddJobFormModal from "../components/AddJobFormModal"; // New modal component
-import { mockJobs as initialJobsData } from '../data/mockJobs'; // Import initial data
+// import { mockJobs as initialJobsData } from '../data/mockJobs'; // Import initial data
 
-import { Link } from "../App";
+// import { Link } from "../App";
 
 function Schedule() {
     const [searchTerm, setSearchTerm] = useState<string>('');
@@ -256,45 +252,52 @@ function Schedule() {
         };
         setSubJobs(prevSubJobs => [...prevSubJobs, newSubJob]);
     };
+    setSubJobs((prevSubJobs) => [...prevSubJobs, newSubJob]);
+  };
 
-
-    return (
-        <>
-            <Navbar />
-            <div id="first-container">
-                <div id="schedule-first-container">
-                    <div id="add-job-container">
-                        <button onClick={() => setIsAddJobModalOpen(true)} className="add-job-btn">
-                            Add Job
-                        </button>
-                    </div>
-                    <div id="search-container">
-                        <SearchBar searchTerm={searchTerm} onSearchChange={handleSearchChange} />
-                    </div>
-                    <div id="filter-container">
-                        <h1>Filter</h1>
-                    </div>
-                </div>
-                <div id="order-container">
-                    <h1>Orders</h1>
-                    {/* Pass both jobs and subJobs to JobTable */}
-                    <JobTable
-                        searchTerm={searchTerm}
-                        jobs={jobs}
-                        subJobs={subJobs} // Pass all subJobs for filtering and display
-                        onAddSubJob={handleAddSubJob} // Pass the handler for adding sub-jobs
-                    />
-                </div>
-            </div>
-
-            {/* Add Job Pop-up Modal */}
-            <AddJobFormModal
-                isOpen={isAddJobModalOpen}
-                onClose={() => setIsAddJobModalOpen(false)}
-                onAddJob={handleAddJob}
+  return (
+    <>
+      <Navbar />
+      <div id="first-container">
+        <div id="schedule-first-container">
+          <div id="add-job-container">
+            <button
+              onClick={() => setIsAddJobModalOpen(true)}
+              className="add-job-btn"
+            >
+              Add Job
+            </button>
+          </div>
+          <div id="search-container">
+            <SearchBar
+              searchTerm={searchTerm}
+              onSearchChange={handleSearchChange}
             />
-        </>
-    );
+          </div>
+          <div id="filter-container">
+            <h1>Filter</h1>
+          </div>
+        </div>
+        <div id="order-container">
+          <h1>Orders</h1>
+          {/* Pass both jobs and subJobs to JobTable */}
+          <JobTable
+            searchTerm={searchTerm}
+            jobs={jobs}
+            subJobs={subJobs} // Pass all subJobs for filtering and display
+            onAddSubJob={handleAddSubJob} // Pass the handler for adding sub-jobs
+          />
+        </div>
+      </div>
+
+      {/* Add Job Pop-up Modal */}
+      <AddJobFormModal
+        isOpen={isAddJobModalOpen}
+        onClose={() => setIsAddJobModalOpen(false)}
+        onAddJob={handleAddJob}
+      />
+    </>
+  );
 }
 
 export default Schedule;
