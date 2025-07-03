@@ -14,3 +14,25 @@ export const getAllJobs = async (
         throw err;
     }
 }
+
+export const insertJob = async (
+    req: express.Request,
+    res: express.Response
+) => {
+    try {
+        const { jobNo, invoiceId, dueDate, label, tasks, isPinned } = req.body;
+        const newJob = new schemas.Task({
+            jobNo,
+            invoiceId,
+            dueDate,
+            label,
+            tasks,
+            isPinned,
+        });
+        res.status(200).json(newJob).end();
+    }
+    catch (err) {
+        res.sendStatus(400);
+        throw err;
+    }
+}
