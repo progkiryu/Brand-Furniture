@@ -8,6 +8,10 @@ export const getAllFrames = async (
 ) => {
   try {
     const frames = await schemas.Frame.find({});
+    if (!frames) {
+      res.status(404).json({ message: "Failed to get frames" });
+      return;
+    }
     res.status(200).json(frames);
     return;
   } catch (err) {
@@ -26,7 +30,7 @@ export const getFrameById = async (
     const id = req.params.id;
     const frame = await schemas.Frame.findById(id);
     if (!frame) {
-      res.status(404).json({ message: `No frame found with id: ${id}` });
+      res.status(404).json({ message: `Failed to find frame with id: ${id}` });
       return;
     }
     res.status(200).json(frame);
@@ -44,6 +48,10 @@ export const postCreateFrame = async (
 ) => {
   try {
     const frame = await schemas.Frame.create(req.body);
+    if (!frame) {
+      res.status(404).json({ message: "Failed to create new Frame" });
+      return;
+    }
     res.status(200).json(frame);
   } catch (err) {
     console.error(err);
@@ -60,7 +68,7 @@ export const deleteFrameById = async (
     const id = req.params.id;
     const frame = await schemas.Frame.findByIdAndDelete(id);
     if (!frame) {
-      res.status(404).json({ message: `No frame found with id: ${id}` });
+      res.status(404).json({ message: `Failed to find frame with id: ${id}` });
       return;
     }
     res.status(200).json({ message: "Frame deleted successfully" });
@@ -79,10 +87,16 @@ export const putUpdateFrame = async (
     const id = req.body.id;
     const frame = await schemas.Frame.findByIdAndUpdate(id, req.body);
     if (!frame) {
-      res.status(404).json({ message: `No frame found with id: ${id}` });
+      res.status(404).json({ message: `Failed to find frame with id: ${id}` });
       return;
     }
     const updatedFrame = await schemas.Frame.findById(id);
+    if (!updatedFrame) {
+      res
+        .status(404)
+        .json({ message: `Failed to find updated frame with id: ${id}` });
+      return;
+    }
     res.status(200).json(updatedFrame);
   } catch (err) {
     console.error(err);

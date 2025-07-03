@@ -16,5 +16,5 @@ export default (router: express.Router) => {
   // Delete Routes
   router.delete("/cushion/deleteCushionById/:id", deleteCushionById);
   // Get Routes
-  router.get("/cushion/getUpdateCushion", putUpdateCushion);
+  router.get("/cushion/putUpdateCushion", putUpdateCushion);
 };

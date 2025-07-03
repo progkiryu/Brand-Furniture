@@ -57,9 +57,9 @@ const cushionSchema = new mongoose.Schema(
   }
 );
 
-const upholsterSchema = new mongoose.Schema(
+const upholsterySchema = new mongoose.Schema(
   {
-    upholsterId: String,
+    upholsteryId: String,
     supplier: String,
     desc: String,
     orderDate: String,
@@ -84,9 +84,9 @@ const Job = mongoose.model("Job", jobSchema);
 const Task = mongoose.model("Task", taskSchema);
 const Frame = mongoose.model("Frame", frameSchema);
 const Cushion = mongoose.model("Model", cushionSchema);
-const Upholster = mongoose.model("Upholster", upholsterSchema);
+const Upholstery = mongoose.model("Upholster", upholsterySchema);
 const Client = mongoose.model("Client", clientSchema);
 
-const schemas = { Job, Client, Task, Frame, Cushion, Upholster };
+const schemas = { Job, Client, Task, Frame, Cushion, Upholstery };
 
 export default schemas;
