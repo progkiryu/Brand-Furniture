@@ -21,7 +21,7 @@ export const insertJob = async (
 ) => {
     try {
         const { jobNo, invoiceId, dueDate, label, tasks, isPinned } = req.body;
-        const newJob = new schemas.Task({
+        const newJob = new schemas.SubJob({
             jobNo,
             invoiceId,
             dueDate,

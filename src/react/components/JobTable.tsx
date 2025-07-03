@@ -320,7 +320,7 @@ function JobTable({ searchTerm, jobs, subJobs, onAddSubJob }: JobTableProps) {
                     <tbody>
                         {displayedJobs.map((job) => (
                             <JobTableRow
-                                key={job.jobId}
+                                key={job._id}
                                 job={job}
                                 subJobsForJob={getSubJobsForJob(job.jobId)}
                                 // Pass both jobId and invoiceId to the click handler

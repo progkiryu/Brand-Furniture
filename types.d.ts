@@ -66,7 +66,7 @@
 
 
 type Job = {
-    jobId: string;
+    _id: any;
     invoiceId: number;
     client: string;
     name: string;
@@ -85,7 +85,7 @@ type SubJob = {
     paidInFull: string;
     liaison: string;
     paymentNote: string;
-
+}
 
 type Frame = {
     jobId: string;    // FK to Job

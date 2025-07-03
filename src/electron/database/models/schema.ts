@@ -78,7 +78,7 @@ const subJobSchema = new mongoose.Schema({
 
 
 const jobSchema = new mongoose.Schema({
-    jobId: String, // Primary Key for Job
+    _id: mongoose.Schema.Types.ObjectId,
     invoiceId: Number,
     client: String,
     name: String,
@@ -125,8 +125,8 @@ const Job = mongoose.model("Job", jobSchema);
 const SubJob = mongoose.model("Task", subJobSchema);
 const Frame = mongoose.model("Frame", frameSchema);
 const Cushion = mongoose.model("Model", cushionSchema);
-const Upholster = mongoose.model("Upholster", upholsterySchema);
+const Upholstery = mongoose.model("Upholster", upholsterySchema);
 
-const schemas = { Job, SubJob, Frame, Cushion, Upholster };
+const schemas = { Job, SubJob, Frame, Cushion, Upholstery };
 
 export default schemas;
