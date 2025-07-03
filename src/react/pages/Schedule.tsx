@@ -81,6 +81,7 @@ import "../styles/SubJobModalForm.css" // Ensure this CSS file exists or create 
 import Navbar from "../components/Navbar";
 import { useState, useEffect } from 'react';
 
+
 // Import all mock data arrays from the ERD-style mockJobs-erd.ts
 import {
     mockJobsData,
