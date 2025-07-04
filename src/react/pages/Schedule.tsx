@@ -316,7 +316,6 @@ import {
     mockJobsData,
     mockSubJobsData,
 } from '../data/mockJobs-erd'; // Corrected import path and names
-import type { Job, SubJob, NewJobDataForAdd } from '../types/jobTypes-erd'; // Corrected import path and names
 import SearchBar from "../components/Searchbar"; // New component
 import JobTable from "../components/JobTable"; // New component
 import AddJobFormModal from "../components/AddJobFormModal"; // New modal component

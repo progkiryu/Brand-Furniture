@@ -264,16 +264,13 @@ function JobTable({ searchTerm, jobs, subJobs, onAddSubJob }: JobTableProps) {
             if (job.due.toLowerCase().includes(lowerCaseSearchTerm)) {
                 return true;
             }
-            if (job.jobId.toLowerCase().includes(lowerCaseSearchTerm)) {
-                return true;
-            }
             if (job.type.toLowerCase().includes(lowerCaseSearchTerm)) {
                 return true;
             }
 
             // Search in associated SubJob properties
             // Find subJobs for the current job
-            const jobSpecificSubJobs = subJobs.filter(subjob => subjob.jobId === job.jobId);
+            const jobSpecificSubJobs = subJobs.filter(subjob => subjob.jobId === job._id);
             if (jobSpecificSubJobs.some(subjob =>
                 subjob.subJobDetail.toLowerCase().includes(lowerCaseSearchTerm)
             )) {
@@ -322,7 +319,7 @@ function JobTable({ searchTerm, jobs, subJobs, onAddSubJob }: JobTableProps) {
                             <JobTableRow
                                 key={job._id}
                                 job={job}
-                                subJobsForJob={getSubJobsForJob(job.jobId)}
+                                subJobsForJob={getSubJobsForJob(job._id)}
                                 // Pass both jobId and invoiceId to the click handler
                                 onAddSubJobClick={handleOpenAddSubJobModal}
                             />
