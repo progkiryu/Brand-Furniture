@@ -75,7 +75,7 @@ type Job = {
 }
 
 type SubJob = {
-    jobId: string; 
+    jobId: any; 
     subJobId: number;    
     subJobDetail: string;
     note: string;
@@ -131,3 +131,5 @@ interface Window {
         getClients: () => Promise<Array<Client>>;
     }
 }
+
+

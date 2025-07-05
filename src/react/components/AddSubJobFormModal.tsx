@@ -64,7 +64,7 @@
 
 // AddSubJobFormModal.tsx
 import React, { useState } from 'react';
-import type { SubJob } from '../types/jobTypes-erd'; // Import SubJob type
+// import type { SubJob } from '../types/jobTypes-erd'; // Import SubJob type
 
 interface AddSubJobFormModalProps {
     isOpen: boolean;
@@ -231,3 +231,6 @@ function AddSubJobFormModal({ isOpen, onClose, jobId, invoiceId, onAddSubJob }: 
 }
 
 export default AddSubJobFormModal;
+
+
+

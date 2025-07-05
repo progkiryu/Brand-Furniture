@@ -7,3 +7,5 @@ contextBridge.exposeInMainWorld("jobs", {
 contextBridge.exposeInMainWorld("clients", {
     getClients: () => ipcRenderer.invoke("getClients")
 } satisfies Window["orders"]);
+
+
