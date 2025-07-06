@@ -12,7 +12,6 @@ export const mockJobs: Job[] = [{
         jobdetail: 'Custom banquette for garden 2524mmL (RHF) 2900mm (middle straight cushions) 2109mmL (LHF) 7533mm',
         note: 'NEED TO ORDER OUTDOOR FOAM & BACK CUSHIONS FILLS FROM SHARNI PLUS FABRIC 2 Sheets DFMED 220mm Templates to be supplied by FAF',
         file: '',
-        label: '',
         frame: [{
         supplier: 'FAF',
         description: 'null',
@@ -55,7 +54,6 @@ export const mockJobs: Job[] = [{
         jobdetail: '10 x Back cushions - 325mmH x 150mm thick Plain stitch with seams in corners 1 x 1039mmL 1x 1070mmL 1 x 441mmL 4 x 725mmL (along straight) 1 x 601mmL 2 x 1100mmL',
         note: '',
         file: '',
-        label: '',
         frame: [{
         supplier: 'FAF',
         description: 'null',
@@ -111,7 +109,6 @@ export const mockJobs: Job[] = [{
         jobdetail: 'Upholstered Custom Seat Built in Banquette - 1/2 donut shape Backs 495mmH x 75mm thick foam on front and 10mm on top Individual fluting with built in rake Seats 600mmD x 210mm thick 150mm foam on top with 210mmH x 50mmD profile Foam and Dacron included 50mm foam on back EN36-130 150mm foam on seat EN36-130',
         note: 'Seat & back substrates with built in rake to be supplied by FAF',
         file: '',
-        label: '',
         frame: [{
         supplier: 'FAF',
         description: 'null',
@@ -160,7 +157,6 @@ export const mockJobs: Job[] = [{
         jobdetail: '2 sliding Doors 850mmW x 540mmH - upholstered in Living area Frames to be supplied by FAF and discussed with Brand for clean finish',
         note: 'Substrates to be supplied by FAF',
         file: '',
-        label: '',
         frame: [{
             supplier: 'FAF',
             description: 'null',
@@ -214,7 +210,6 @@ export const mockJobs: Job[] = [{
         jobdetail: 'Loose Seat Cushions Front Foyer 5 seat cushions - various sizes - 11l/m Back Foyer 2 seat cushions - various sizes Specified fabric to be used on both sides though have advised Luke that one of the foyers may not be double sided',
         note: '75mm firm foam for commercial Top stitch & Border for all cushions to match other seating on site Velcro to be used to fix cushions to metal seat framing. Create patterns for all 8 seats Delivery & placement of 8 seat cushions',
         file: '',
-        label: '',
         frame: [{
             supplier: 'null',
             description: 'null',

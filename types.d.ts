@@ -1,48 +1,62 @@
-type Task = {
-    taskNo: Number,
-    desc: String,
-    specs: String,
-    other: String,
-    attach: String,
-    royalty: String
+type Job = {
+    _id: string;
+    invoiceId: number;
+    client: string;
+    name: string;
+    type: string; // Added 'type' as per your mock data
+    due: string;
+    isPinned: boolean;
 }
 
-type Job = {
-    invoiceId: number,
-    dueDate: Date
+type SubJob = {
+    jobId: string; 
+    subJobId: number;    
+    subJobDetail: string;
+    note: string;
+    file: string;
+    depositAmount: number;
+    depositDate: string;
+    paidInFull: string;
+    liaison: string;
+    paymentNote: string;
+    isArchived: boolean;
 }
 
 type Frame = {
-    frameId: String,
-    supplier: String,
-    desc: String,
-    orderDate: String,
-    expectDate: String,
-    receiveDate: String
+    jobId: string;    // FK to Job
+    subJobId: number; // FK to SubJob (SubJob's 'subJobId')
+    frameId: string;  // Unique MongoDB-style PK for Frame
+    supplier: string;
+    description: string;
+    ordereddate: string;
+    expecteddate: string;
+    receiveddate: string;
 }
 
 type Cushion = {
-    cushionId: String,
-    supplier: String,
-    type: String,
-    desc: String,
-    orderDate: String,
-    expectDate: String,
-    receiveDate: String
+    jobId: string;    // FK to Job
+    subJobId: number; // FK to SubJob (SubJob's 'subJobId')
+    cushionId: string; // Unique MongoDB-style PK for Cushion
+    supplier: string;
+    type: string;
+    description: string;
+    ordereddate: string;
+    expecteddate: string;
+    receiveddate: string;
 }
 
-type Upholster = {
-    upholsterId: String,
-    supplier: String,
-    desc: String,
-    orderDate: String,
-    expectDate: String,
-    receiveDate: String
+type Upholstery = {
+    jobId: string;    // FK to Job
+    subJobId: number; // FK to SubJob (SubJob's 'subJobId')
+    upholsteryId: string; // Unique MongoDB-style PK for Upholstery
+    supplier: string;
+    type: string; // Added 'type' as per your mock data
+    description: string;
+    ordereddate: string;
+    expecteddate: string;
+    receiveddate: string;
 }
 
-type Client = {
-    name: String
-}
 
 interface Window {
     jobs: {
