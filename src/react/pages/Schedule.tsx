@@ -310,27 +310,24 @@ import "../styles/SubJobModalForm.css" // Ensure this CSS file exists or create 
 import Navbar from "../components/Navbar";
 import { useState, useEffect } from 'react';
  
- 
-// Import all mock data arrays from the ERD-style mockJobs-erd.ts
-import {
-    mockJobsData,
-    mockSubJobsData,
-} from '../data/mockJobs-erd'; // Corrected import path and names
+
 import SearchBar from "../components/Searchbar"; // New component
 import JobTable from "../components/JobTable"; // New component
-import AddJobFormModal from "../components/AddJobFormModal"; // New modal component
-import { mockJobs as initialJobsData } from '../data/mockJobs'; // Import initial data
+import AddJobFormModel, { 
+    type NewJobDataForAdd, 
+    type AddJobFormModelProps 
+} from "../components/AddJobFormModel"; // New modal component
  
 import { DBLink } from "../App";
  
 function Schedule() {
     const [searchTerm, setSearchTerm] = useState<string>('');
-    const [jobs, setJobs] = useState([]); // Manage jobs state here
+    const [jobs, setJobs] = useState<Array<Job>>([]); // Manage jobs state here
     // Manage all top-level data arrays as state
-    const [subJobs, setSubJobs] = useState<SubJob[]>(mockSubJobsData);
+    const [subJobs, setSubJobs] = useState<Array<SubJob>>([]);
     
  
-    const [isAddJobModalOpen, setIsAddJobModalOpen] = useState(false);
+    const [isAddJobModelOpen, setIsAddJobModelOpen] = useState(false);
  
     // Handler for when the search input changes
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -345,7 +342,7 @@ function Schedule() {
         };
         // @ts-ignore
         setJobs(prevJobs => [...prevJobs, newJob]);
-        setIsAddJobModalOpen(false); // Close the modal after adding
+        setIsAddJobModelOpen(false); // Close the modal after adding
     };
  
     useEffect(() => {
@@ -377,7 +374,7 @@ function Schedule() {
             <div id="first-container">
                 <div id="schedule-first-container">
                     <div id="add-job-container">
-                        <button onClick={() => setIsAddJobModalOpen(true)} className="add-job-btn">
+                        <button onClick={() => setIsAddJobModelOpen(true)} className="add-job-btn">
                             Add Job
                         </button>
                     </div>
@@ -401,9 +398,9 @@ function Schedule() {
             </div>
  
             {/* Add Job Pop-up Modal */}
-            <AddJobFormModal
-                isOpen={isAddJobModalOpen}
-                onClose={() => setIsAddJobModalOpen(false)}
+            <AddJobFormModel
+                isOpen={isAddJobModelOpen}
+                onClose={() => setIsAddJobModelOpen(false)}
                 onAddJob={handleAddJob}
             />
         </>

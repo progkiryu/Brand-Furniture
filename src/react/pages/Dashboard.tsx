@@ -1,17 +1,21 @@
 import "../styles/Dashboard.css";
 import "../styles/Global.css";
 import Navbar from "../components/Navbar";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { DBLink } from "../App.tsx";
 
 function Dashboard() {
+
+  const [ subJobs, setSubJobs ] = useState<Array<SubJob>>([]);
   
   // retrieve sub-jobs by making a API fetch call
   useEffect(() => {
     fetch(`${DBLink}/subJob/getAllSubJobs`)
-      .then((res) => res.json())
-      .then((data) => console.log(data))
-      .catch((err) => console.log(err));
+      .then(res => res.json())
+      .then(data => setSubJobs(data))
+      .catch(err => console.log(err));
+
+    console.log(subJobs);
   }, []);
 
   return (

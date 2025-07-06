@@ -9,8 +9,8 @@ type Job = {
 }
 
 type SubJob = {
-    jobId: string; 
-    subJobId: number;    
+    _id: string;
+    jobId: string;   
     subJobDetail: string;
     note: string;
     file: string;
@@ -23,9 +23,9 @@ type SubJob = {
 }
 
 type Frame = {
+    _id: string;
     jobId: string;    // FK to Job
     subJobId: number; // FK to SubJob (SubJob's 'subJobId')
-    frameId: string;  // Unique MongoDB-style PK for Frame
     supplier: string;
     description: string;
     ordereddate: string;
@@ -34,9 +34,9 @@ type Frame = {
 }
 
 type Cushion = {
+    _id: string;
     jobId: string;    // FK to Job
     subJobId: number; // FK to SubJob (SubJob's 'subJobId')
-    cushionId: string; // Unique MongoDB-style PK for Cushion
     supplier: string;
     type: string;
     description: string;
@@ -46,9 +46,9 @@ type Cushion = {
 }
 
 type Upholstery = {
+    _id: string;
     jobId: string;    // FK to Job
     subJobId: number; // FK to SubJob (SubJob's 'subJobId')
-    upholsteryId: string; // Unique MongoDB-style PK for Upholstery
     supplier: string;
     type: string; // Added 'type' as per your mock data
     description: string;
@@ -59,10 +59,7 @@ type Upholstery = {
 
 
 interface Window {
-    jobs: {
-        getJobs: () => Promise<Array<Job>>;
-    },
-    orders: {
-        getClients: () => Promise<Array<Client>>;
+    electron: {
+        greeting: () => void;
     }
 }
