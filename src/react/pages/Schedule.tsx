@@ -1,77 +1,3 @@
-// import "../styles/Schedule.css";
-// import "../styles/Global.css";
-// import "../styles/ModalForm.css"
-// import "../styles/SubJobModalForm.css"
-// import Navbar from "../components/Navbar";
-// import { useState } from 'react';
-
-// import SearchBar from "../components/Searchbar"; // New component
-// import JobTable from "../components/JobTable"; // New component
-// import AddJobFormModal from "../components/AddJobFormModal"; // New modal component
-// import { mockJobs as initialJobsData } from '../data/mockJobs'; // Import initial data
-
-// function Schedule() {
-//     const [searchTerm, setSearchTerm] = useState<string>('');
-//     const [jobs, setJobs] = useState(initialJobsData); // Manage jobs state here
-//     const [isAddJobModalOpen, setIsAddJobModalOpen] = useState(false);
-
-//     // Handler for when the search input changes
-//     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-//         setSearchTerm(event.target.value);
-//     };
-
-//     // Handler for adding a new job
-//     const handleAddJob = (newJobData: {jobId: string; invoiceId: number; client: string; name: string; due: string;}) => {
-//         // Create a new Job object with empty subJobs as requested
-//         const newJob = {
-//             ...newJobData,
-//             subJobs: [], // Empty subJobs array
-//         };
-//         setJobs(prevJobs => [...prevJobs, newJob]);
-//         setIsAddJobModalOpen(false); // Close the modal after adding
-
-//     };
-
-//     return (
-//         <>
-//             <Navbar />
-//             <div id="first-container">
-//                 <div id="schedule-first-container">
-//                     <div id="add-job-container">
-//                         <button onClick={() => setIsAddJobModalOpen(true)} className="add-job-btn">
-//                             Add Job
-//                         </button>
-//                     </div>
-//                     <div id="search-container">
-//                         <SearchBar searchTerm={searchTerm} onSearchChange={handleSearchChange} />
-//                     </div>
-//                     <div id="filter-container">
-//                         <h1>Filter</h1>
-//                     </div>
-//                 </div>
-//                 <div id="order-container">
-//                     <h1>Orders</h1>
-//                     <JobTable searchTerm={searchTerm} jobs={jobs} /> {/* Pass jobs state to JobTable */}
-//                 </div>
-//             </div>
-
-//             {/* Add Job Pop-up Modal */}
-//             <AddJobFormModal
-//                 isOpen={isAddJobModalOpen}
-//                 onClose={() => setIsAddJobModalOpen(false)}
-//                 onAddJob={handleAddJob}
-//             />
-
-//         </>
-//     );
-// }
-
-// export default Schedule;
-
-
-
-
-
 // // Schedule.tsx
 import "../styles/Schedule.css";
 import "../styles/Global.css";
@@ -101,9 +27,9 @@ function Schedule() {
     const [searchTerm, setSearchTerm] = useState<string>('');
     // const [jobs, setJobs] = useState([]); // Manage jobs state here
     // Manage all top-level data arrays as state
-    const [jobs, setJobs] = useState([]);
+    // const [jobs, setJobs] = useState([]);
+    const [jobs, setJobs] = useState<Job[]>([]);
     const [subJobs, setSubJobs] = useState<SubJob[]>(mockSubJobsData);
-    // const [subJobs, setSubJobs] = useState<SubJob[]>(mockSubJobsData);
 
     useEffect(() => {
         fetch(`${DBLink}/jobs`)
@@ -114,6 +40,9 @@ function Schedule() {
             })
             .catch(err => console.log(err));
     }, []);
+
+
+
     
 
     const [isAddJobModalOpen, setIsAddJobModalOpen] = useState(false);
@@ -122,8 +51,6 @@ function Schedule() {
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
     };
-
-
 
     // Handler for adding a new Job
     const handleAddJob = (newJobData: NewJobDataForAdd) => {
