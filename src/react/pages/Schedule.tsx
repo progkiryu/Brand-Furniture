@@ -349,7 +349,7 @@ function Schedule() {
     };
  
     useEffect(() => {
-        fetch(`${DBLink}/jobs`)
+        fetch(`${DBLink}/job/getAllJobs`)
             .then(res => res.json())
             .then(jobs => {
                 console.log(jobs);

@@ -6,7 +6,7 @@ import { DBLink } from "../App.tsx";
 
 function Dashboard() {
   useEffect(() => {
-    fetch(`${DBLink}/tasks`)
+    fetch(`${DBLink}/subJob/getAllSubJobs`)
       .then((res) => res.json())
       .then((data) => console.log(data))
       .catch((err) => console.log(err));

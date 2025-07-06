@@ -1,77 +1,11 @@
-// type Task = {
-//     taskNo: Number,
-//     desc: String,
-//     detailOther: String,
-//     attach: String,
-//     royalty: String,
-//     depositAmount: Number,
-//     liaison: String,
-//     adminOther: String,
-//     label: String,
-//     job: Number
-// }
-
-// type Job = {
-//     jobNo: number,
-//     invoiceId: number,
-//     dueDate: Date,
-//     label: string,
-//     tasks: Array<Number>
-// }
-
-// type Frame = {
-//     frameId: String,
-//     supplier: String,
-//     desc: String,
-//     orderDate: String,
-//     expectDate: String,
-//     receiveDate: String
-//     task: number
-// }
-
-// type Cushion = {
-//     cushionId: String,
-//     supplier: String,
-//     type: String,
-//     desc: String,
-//     orderDate: String,
-//     expectDate: String,
-//     receiveDate: String
-//     task: number
-// }
-
-// type Upholster = {
-//     upholsterId: String,
-//     supplier: String,
-//     desc: String,
-//     orderDate: String,
-//     expectDate: String,
-//     receiveDate: String
-//     task: number
-// }
-
-// type Client = {
-//     name: String
-//     job: Array<Number>
-// }
-
-// interface Window {
-//     jobs: {
-//         getJobs: () => Promise<Array<Job>>;
-//     },
-//     orders: {
-//         getClients: () => Promise<Array<Client>>;
-//     }
-// }
-
-
 type Job = {
-    _id: any;
+    _id: string;
     invoiceId: number;
     client: string;
     name: string;
     type: string; // Added 'type' as per your mock data
     due: string;
+    isPinned: boolean;
 }
 
 type SubJob = {
@@ -85,6 +19,7 @@ type SubJob = {
     paidInFull: string;
     liaison: string;
     paymentNote: string;
+    isArchived: boolean;
 }
 
 type Frame = {
