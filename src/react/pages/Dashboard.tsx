@@ -4,8 +4,19 @@ import Navbar from "../components/Navbar";
 import UpcomingOrders from "../components/UpcomingJobComponents";
 import JobAnalytics from "../components/JobAnalytics";
 import NotificationsList from "../components/NotificationsList";
+import { useEffect } from "react";
+import { DBLink } from "../App.tsx";
 
 function Dashboard() {
+  
+  // retrieve sub-jobs by making a API fetch call
+  useEffect(() => {
+    fetch(`${DBLink}/subJob/getAllSubJobs`)
+      .then((res) => res.json())
+      .then((data) => console.log(data))
+      .catch((err) => console.log(err));
+  }, []);
+
   return (
     <>
       <Navbar />
