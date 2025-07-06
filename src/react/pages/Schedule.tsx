@@ -25,27 +25,10 @@ export interface NewJobDataForAdd {
 
 function Schedule() {
     const [searchTerm, setSearchTerm] = useState<string>('');
-    // const [jobs, setJobs] = useState([]); // Manage jobs state here
-    // Manage all top-level data arrays as state
-    // const [jobs, setJobs] = useState([]);
-    const [jobs, setJobs] = useState<Job[]>([]);
+    const [jobs, setJobs] = useState([]);
     const [subJobs, setSubJobs] = useState<SubJob[]>(mockSubJobsData);
-
-    useEffect(() => {
-        fetch(`${DBLink}/jobs`)
-            .then(res => res.json())
-            .then(jobs => {
-                console.log(jobs);
-                setJobs(jobs)
-            })
-            .catch(err => console.log(err));
-    }, []);
-
-
-
-    
-
     const [isAddJobModalOpen, setIsAddJobModalOpen] = useState(false);
+
 
     // Handler for when the search input changes
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,6 +45,17 @@ function Schedule() {
         setJobs(prevJobs => [...prevJobs, newJob]);
         setIsAddJobModalOpen(false); // Close the modal after adding
     };
+
+
+    useEffect(() => {
+        fetch(`${DBLink}/job/getAllJobs`)
+            .then(res => res.json())
+            .then(jobs => {
+                console.log(jobs);
+                setJobs(jobs)
+            })
+            .catch(err => console.log(err));
+    }, []);
 
     // Handler for adding a new SubJob
     const handleAddSubJob = (newSubJobData: Omit<SubJob, 'jobId'> & { jobId: string }) => {
