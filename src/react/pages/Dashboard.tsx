@@ -5,6 +5,8 @@ import { useEffect } from "react";
 import { DBLink } from "../App.tsx";
 
 function Dashboard() {
+  
+  // retrieve sub-jobs by making a API fetch call
   useEffect(() => {
     fetch(`${DBLink}/subJob/getAllSubJobs`)
       .then((res) => res.json())
