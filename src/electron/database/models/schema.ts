@@ -122,7 +122,7 @@ const upholsterySchema = new mongoose.Schema({
 });
 
 const Job = mongoose.model("Job", jobSchema);
-const SubJob = mongoose.model("Task", subJobSchema);
+const SubJob = mongoose.model("Subjob", subJobSchema);
 const Frame = mongoose.model("Frame", frameSchema);
 const Cushion = mongoose.model("Model", cushionSchema);
 const Upholstery = mongoose.model("Upholster", upholsterySchema);

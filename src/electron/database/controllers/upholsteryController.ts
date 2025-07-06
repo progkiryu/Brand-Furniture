@@ -27,7 +27,8 @@ export const getUpholsteryById = async (
   res: express.Response
 ) => {
   try {
-    const id = req.params.id;
+    const id = req.params.id.toString();
+
     const upholstery = await schemas.Upholstery.findById(id);
     if (!upholstery) {
       res
