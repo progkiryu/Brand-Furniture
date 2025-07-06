@@ -2,7 +2,7 @@ import "../styles/Dashboard.css";
 import "../styles/Global.css";
 import Navbar from "../components/Navbar";
 import { useEffect, useState } from "react";
-import UpcomingOrders from "../components/UpcomingOrders";
+import UpcomingOrders from "../components/UpcomingJobComponents";
 import JobAnalytics from "../components/JobAnalytics";
 import NotificationsList from "../components/NotificationsList";
 import { DBLink } from "../App.tsx";
@@ -32,8 +32,8 @@ function Dashboard() {
           <div id="dashboard-second-container">
             <div id="schedule-container">
               <div className="schedule-header">
-                <h1>Schedule</h1>
-                <div className="color-key">
+                <h1>Upcoming Job Components</h1>
+                {/* <div className="color-key">
                   <div className="key-item">
                     <span className="key-color production"></span> Production
                   </div>
@@ -46,7 +46,7 @@ function Dashboard() {
                   <div className="key-item">
                     <span className="key-color commercial"></span> Commercial
                   </div>
-                </div>
+                </div> */}
               </div>
               <div className="upcoming-orders-scroll-container">
                 <UpcomingOrders />

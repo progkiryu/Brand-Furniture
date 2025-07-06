@@ -1,24 +1,24 @@
 #dashboard-first-container {
     height: 90vh;
-    display: flex
+    display: flex;
 }
 
 #dashboard-second-container {
     width: 60%;
     display: flex;
-    flex-direction: column
+    flex-direction: column;
 }
 
 #dashboard-third-container {
     width: 40%;
     display: flex;
-    flex-direction: column
+    flex-direction: column;
 }
 
 .schedule-header {
     display: flex;
     align-items: center;
-    justify-content: space-between; /* Space out title and key */
+    justify-content: space-between;
     margin-bottom: 1rem;
 }
 
@@ -43,22 +43,13 @@
     border-radius: 3px;
 }
 
-/* Colors matching your order row classes */
-.key-color.production {
-    background-color: #fecaca;
-}
-.key-color.private {
-    background-color: #bbf7d0;
-}
-.key-color.residential {
-    background-color: #fef9c3;
-}
-.key-color.commercial {
-    background-color: #d1d5fa;
-}
+/* .key-color.production { background-color: #fecaca; }
+.key-color.private { background-color: #bbf7d0; }
+.key-color.residential { background-color: #fef9c3; }
+.key-color.commercial { background-color: #d1d5fa; } */
 
 #schedule-container {
-    background-color: white; 
+    background-color: white;
     height: 90vh;
     display: flex;
     flex-direction: column;
@@ -67,28 +58,23 @@
 
 #analytics-container {
     background-color: yellow;
-    height: 40vh
+    height: 40vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 #notifications-container {
     background-color: orange;
-    height: 50vh
+    height: 50vh;
 }
-
-
-#schedule-container {
-    display: flex;
-    flex-direction: column;
-    overflow: hidden; 
-}
-
 
 .upcoming-orders-scroll-container {
-    flex-grow: 1;        
-    overflow-y: auto;   
-    margin-top: 1rem;   
+    flex-grow: 1;
+    overflow-y: auto;
+    margin-top: 1rem;
 }
-
 
 .upcoming-orders-table {
     width: 100%;
@@ -106,7 +92,6 @@
     min-width: 80px;
 }
 
-
 .upcoming-orders-scroll-container::-webkit-scrollbar {
     width: 8px;
 }
@@ -115,20 +100,91 @@
     border-radius: 4px;
 }
 
-.order-row-production {
-    background-color: #fecaca; 
+/* .order-row-production { background-color: #fecaca; }
+.order-row-private { background-color: #bbf7d0; }
+.order-row-residential { background-color: #fef9c3; }
+.order-row-commercial { background-color: #d1d5fa; } */
+
+/* ----------------------------- */
+/* ANALYTICS CHART STYLING START */
+/* ----------------------------- */
+.job-analytics {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    height: 100%;
+    box-sizing: border-box;
 }
 
-.order-row-private {
-    background-color: #bbf7d0; 
+.analytics-title {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
 }
 
-.order-row-residential {
-    background-color: #fef9c3; 
+.analytics-charts {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
-.order-row-commercial {
-    background-color: #d1d5fa; 
+.chart {
+    position: relative;
+    width: 120px;
+    height: 120px;
+}
+
+.chart-svg {
+    width: 120px;
+    height: 120px;
+}
+
+.chart-percentage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.chart-segment.frames { stroke: #3b82f6; stroke-width: 4; fill: none; }
+.chart-segment.cushions { stroke: #facc15; stroke-width: 4; fill: none; }
+.chart-segment.upholstery { stroke: #f97316; stroke-width: 4; fill: none; }
+
+.analytics-legend {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+}
+
+.legend-color {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    margin-right: 0.5rem;
+}
+
+.legend-color.frames { background-color: #3b82f6; }
+.legend-color.cushions { background-color: #facc15; }
+.legend-color.upholstery { background-color: #f97316; }
+
+
+@media (max-width: 1200px) {
+  .chart { width: 60px; height: 60px; }
+  .chart-svg { width: 60px; height: 60px; }
+  .chart-percentage { font-size: 0.6rem; }
+  .legend-item { font-size: 0.6rem; }
 }
 
 
