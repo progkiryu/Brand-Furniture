@@ -113,7 +113,7 @@ import React, { useState } from 'react';
 
 // Define NewJobDataForAdd interface directly in this file
 interface NewJobDataForAdd {
-    jobId: string;
+    _id: any;
     invoiceId: number; // Changed from 'id' to 'invoiceId' for consistency
     client: string;
     name: string;
@@ -151,7 +151,7 @@ function AddJobFormModal({ isOpen, onClose, onAddJob }: AddJobFormModalProps) {
         const newUniqueJobId = crypto.randomUUID();
 
         const newJob: NewJobDataForAdd = {
-            jobId: newUniqueJobId,
+            _id: newUniqueJobId,
             invoiceId: parseInt(invoiceId), // Ensure it's 'invoiceId'
             client: clientName,
             name: jobName,

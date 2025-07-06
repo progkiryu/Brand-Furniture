@@ -1,12 +1,12 @@
 import express from "express";
 import schemas from "../models/schema.js";
 
-export const getAllTasks = async (
+export const getAllSubJobs = async (
     _: express.Request,
     res: express.Response
 ) => {
     try {
-        const tasks = await schemas.Task.find<Array<Task>>();
+        const tasks = await schemas.SubJob.find<Array<SubJob>>();
         res.status(200).json(tasks).end();
     }
     catch (err) {
@@ -21,7 +21,7 @@ export const insertTask = async (
 ) => {
     try {
         const { taskNo, desc, specs, other, attach, royalty } = req.body;
-        const newTask = new schemas.Task({
+        const newTask = new schemas.SubJob({
             taskNo,
             desc,
             specs,

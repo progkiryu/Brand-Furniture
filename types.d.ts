@@ -75,7 +75,7 @@ type Job = {
 }
 
 type SubJob = {
-    jobId: any; 
+    jobId: string; 
     subJobId: number;    
     subJobDetail: string;
     note: string;
