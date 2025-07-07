@@ -61,7 +61,7 @@ export const deleteJob = async (id: String) => {
 
 // Update a job
 export const updateJob = async (data: Job) => {
-  fetch(`${DBLink}/job/updateJob/${DBLink}`, {
+  fetch(`${DBLink}/job/updateJob`, {
     method: "PUT",
     mode: "cors",
     headers: { "Content-Type": "application/json" },
