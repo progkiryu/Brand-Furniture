@@ -8,7 +8,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import router from "./database/routes/index.js";
+import router from "./database/routes/router.js";
 
 // --------------------DB setup-----------------------
 const appDB = express();
@@ -19,7 +19,9 @@ appDB.use(cookieParser());
 
 dotenv.config();
 
-const MONGO_URI = process.env.MONGO_URI ? process.env.MONGO_URI : "mongodb+srv://admin2:Password123@cluster0.8t2fxy9.mongodb.net/?";
+const MONGO_URI = process.env.MONGO_URI
+  ? process.env.MONGO_URI
+  : "mongodb+srv://admin2:Password123@cluster0.8t2fxy9.mongodb.net/?";
 const PORT = process.env.port || 5051;
 
 // Connect to mongoDB

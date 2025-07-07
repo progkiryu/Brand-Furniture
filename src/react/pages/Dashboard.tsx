@@ -1,15 +1,24 @@
 import "../styles/Dashboard.css";
 import "../styles/Global.css";
 import Navbar from "../components/Navbar";
-import { useEffect } from "react";
-import { Link } from "../App.tsx";
+import { useEffect, useState } from "react";
+import UpcomingOrders from "../components/UpcomingJobComponents";
+import JobAnalytics from "../components/JobAnalytics";
+import NotificationsList from "../components/NotificationsList";
+import { DBLink } from "../App.tsx";
 
 function Dashboard() {
+
+  const [ subJobs, setSubJobs ] = useState<Array<SubJob>>([]);
+  
+  // retrieve sub-jobs by making a API fetch call
   useEffect(() => {
-    fetch(`${Link}/tasks`)
+    fetch(`${DBLink}/subJob/getAllSubJobs`)
       .then(res => res.json())
-      .then(data => console.log(data))
+      .then(data => setSubJobs(data))
       .catch(err => console.log(err));
+
+    console.log(subJobs);
   }, []);
 
   return (
@@ -22,22 +31,42 @@ function Dashboard() {
         <div id="dashboard-first-container">
           <div id="dashboard-second-container">
             <div id="schedule-container">
-              <h1>Schedule</h1>
+              <div className="schedule-header">
+                <h1>Upcoming Job Components</h1>
+                {/* <div className="color-key">
+                  <div className="key-item">
+                    <span className="key-color production"></span> Production
+                  </div>
+                  <div className="key-item">
+                    <span className="key-color private"></span> Private
+                  </div>
+                  <div className="key-item">
+                    <span className="key-color residential"></span> Residential
+                  </div>
+                  <div className="key-item">
+                    <span className="key-color commercial"></span> Commercial
+                  </div>
+                </div> */}
+              </div>
+              <div className="upcoming-orders-scroll-container">
+                <UpcomingOrders />
+              </div>
             </div>
           </div>
           <div id="dashboard-third-container">
             <div id="analytics-container">
               <h1>Analytics</h1>
+              <JobAnalytics />
             </div>
             <div id="notifications-container">
               <h1>Notifications</h1>
+              <NotificationsList />
             </div>
           </div>
         </div>
       </div>
     </>
-  )
-  
+  );
 }
 
 export default Dashboard;

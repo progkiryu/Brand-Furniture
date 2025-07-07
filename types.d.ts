@@ -1,65 +1,65 @@
-type Task = {
-    taskNo: Number,
-    desc: String,
-    detailOther: String,
-    attach: String,
-    royalty: String,
-    depositAmount: Number,
-    liaison: String,
-    adminOther: String,
-    label: String,
-    job: Number
+type Job = {
+    _id: string;
+    invoiceId: number;
+    client: string;
+    name: string;
+    type: string; // Added 'type' as per your mock data
+    due: string;
+    isPinned: boolean;
 }
 
-type Job = {
-    jobNo: number,
-    invoiceId: number,
-    dueDate: Date,
-    label: string,
-    tasks: Array<Number>
+type SubJob = {
+    _id: string;
+    jobId: string;   
+    subJobDetail: string;
+    note: string;
+    file: string;
+    depositAmount: number;
+    depositDate: string;
+    paidInFull: string;
+    liaison: string;
+    paymentNote: string;
+    isArchived: boolean;
 }
 
 type Frame = {
-    frameId: String,
-    supplier: String,
-    desc: String,
-    orderDate: String,
-    expectDate: String,
-    receiveDate: String
-    task: number
+    _id: string;
+    jobId: string;    // FK to Job
+    subJobId: number; // FK to SubJob (SubJob's 'subJobId')
+    supplier: string;
+    description: string;
+    ordereddate: string;
+    expecteddate: string;
+    receiveddate: string;
 }
 
 type Cushion = {
-    cushionId: String,
-    supplier: String,
-    type: String,
-    desc: String,
-    orderDate: String,
-    expectDate: String,
-    receiveDate: String
-    task: number
+    _id: string;
+    jobId: string;    // FK to Job
+    subJobId: number; // FK to SubJob (SubJob's 'subJobId')
+    supplier: string;
+    type: string;
+    description: string;
+    ordereddate: string;
+    expecteddate: string;
+    receiveddate: string;
 }
 
-type Upholster = {
-    upholsterId: String,
-    supplier: String,
-    desc: String,
-    orderDate: String,
-    expectDate: String,
-    receiveDate: String
-    task: number
+type Upholstery = {
+    _id: string;
+    jobId: string;    // FK to Job
+    subJobId: number; // FK to SubJob (SubJob's 'subJobId')
+    supplier: string;
+    type: string; // Added 'type' as per your mock data
+    description: string;
+    ordereddate: string;
+    expecteddate: string;
+    receiveddate: string;
 }
 
-type Client = {
-    name: String
-    job: Array<Number>
-}
 
 interface Window {
-    jobs: {
-        getJobs: () => Promise<Array<Job>>;
-    },
-    orders: {
-        getClients: () => Promise<Array<Client>>;
+    electron: {
+        greeting: () => void;
     }
 }
