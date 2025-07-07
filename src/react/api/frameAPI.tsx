@@ -51,7 +51,7 @@ export const deleteFrameById = async (id: String) => {
     .catch((err) => console.error(err));
 };
 
-export const putUpdateFrame = async (data: Frame) => {
+export const UpdateFrame = async (data: Frame) => {
   fetch(`${DBLink}/frame/putUpdateFrame`, {
     method: "PUT",
     mode: "cors",

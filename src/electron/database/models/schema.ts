@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const jobSchema = new mongoose.Schema(
   {
-    invoiceId: { type: String, require: true, unique: true },
+    invoiceId: { type: String, unique: true },
     client: { type: String, require: true },
     name: { type: String, require: true },
     type: { type: String, require: true }, // Added 'type' as per your mock data
@@ -21,8 +21,9 @@ const subJobSchema = new mongoose.Schema(
     subJobDetail: { type: String, require: true },
     note: { type: String, default: "" },
     file: { type: String, default: "" },
+    dueDate: { type: Date, require: false },
     depositAmount: { type: Number, default: 0 },
-    depositDate: { type: Date, require: true },
+    depositDate: { type: Date, require: false },
     paidInFull: { type: Boolean, default: false },
     liaison: { type: String, default: "" },
     paymentNote: { type: String, default: "" },

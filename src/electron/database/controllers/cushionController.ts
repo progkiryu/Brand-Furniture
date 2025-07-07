@@ -93,7 +93,7 @@ export const putUpdateCushion = async (
   res: express.Response
 ) => {
   try {
-    const id = req.body.id;
+    const id = req.body._id;
     const cushion = await schemas.Cushion.findByIdAndUpdate(id, req.body);
     if (!cushion) {
       res

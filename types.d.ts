@@ -1,56 +1,62 @@
 type Job = {
+  _id?: String;
   invoiceId: String;
   client: String;
   name: String;
   type: String; // Added 'type' as per your mock data
   due: String;
-  subJobList: String[];
-  isPinned: Boolean;
+  subJobList?: String[];
+  isPinned?: Boolean;
 };
 
 type SubJob = {
+  _id?: String;
   jobId: String;
   subJobDetail: String;
-  note: String;
-  file: String;
-  depositAmount: Number;
-  depositDate: Date;
-  paidInFull: Boolean;
-  liaison: String;
-  paymentNote: String;
-  frameList: String[];
-  cushionList: String[];
-  upholsteryList: String[];
-  isArchived: Boolean;
+  note?: String;
+  file?: String;
+  dueDate?: Date;
+  depositAmount?: Number;
+  depositDate?: Date;
+  paidInFull?: Boolean;
+  liaison?: String;
+  paymentNote?: String;
+  frameList?: String[];
+  cushionList?: String[];
+  upholsteryList?: String[];
+  isArchived?: Boolean;
 };
 
 type Frame = {
+  _id?: String;
   subJobId: String; // FK to SubJob (SubJob's 'subJobId')
-  supplier: String;
-  description: String;
-  orderedDate: Date;
-  expectedDate: Date;
-  receivedDate: Date;
+  supplier?: String;
+  description?: String;
+  orderedDate?: Date;
+  expectedDate?: Date;
+  receivedDate?: Date;
 };
 
 type Cushion = {
+  _id?: String;
   subJobId: String; // FK to SubJob (SubJob's 'subJobId')
-  supplier: String;
   type: String;
-  description: String;
-  orderedDate: Date;
-  expectedDate: Date;
-  receivedDate: Date;
+  supplier?: String;
+  description?: String;
+  orderedDate?: Date;
+  expectedDate?: Date;
+  receivedDate?: Date;
 };
 
 type Upholstery = {
+  _id?: String;
   subJobId: String; // FK to SubJob (SubJob's 'subJobId')
-  supplier: String;
   type: String;
-  description: String;
-  orderedDate: Date;
-  expectedDate: Date;
-  receivedDate: Date;
+  supplier?: String;
+  description?: String;
+  orderedDate?: Date;
+  expectedDate?: Date;
+  receivedDate?: Date;
 };
 
 interface Window {
@@ -59,5 +65,8 @@ interface Window {
   };
   orders: {
     getClients: () => Promise<Array<Client>>;
+  };
+  electron: {
+    greeting: () => void;
   };
 }
