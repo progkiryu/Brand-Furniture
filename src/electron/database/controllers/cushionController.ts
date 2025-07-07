@@ -3,7 +3,7 @@ import schemas from "../models/schema.js";
 
 // Get all cushions
 export const getAllCushions = async (
-  req: express.Request,
+  _: express.Request,
   res: express.Response
 ) => {
   try {

@@ -3,7 +3,7 @@ import schemas from "../models/schema.js";
 
 // Get all frames
 export const getAllFrames = async (
-  req: express.Request,
+  _: express.Request,
   res: express.Response
 ) => {
   try {
