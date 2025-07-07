@@ -2,7 +2,7 @@ import "../styles/Dashboard.css";
 import "../styles/Global.css";
 import Navbar from "../components/Navbar";
 import { useEffect, useState } from "react";
-import UpcomingOrders from "../components/UpcomingJobComponents";
+import SubJobTable from "../components/SubJobTable.tsx";
 import JobAnalytics from "../components/JobAnalytics";
 import NotificationsList from "../components/NotificationsList";
 import { DBLink } from "../App.tsx";
@@ -10,6 +10,7 @@ import { DBLink } from "../App.tsx";
 function Dashboard() {
 
   const [ subJobs, setSubJobs ] = useState<Array<SubJob>>([]);
+  const [ jobs, setJobs ] = useState<Array<Job>>([]);
   
   // retrieve sub-jobs by making a API fetch call
   useEffect(() => {
@@ -18,7 +19,10 @@ function Dashboard() {
       .then(data => setSubJobs(data))
       .catch(err => console.log(err));
 
-    console.log(subJobs);
+    fetch(`${DBLink}/job/getAllJobs`)
+      .then(res => res.json())
+      .then(data => setJobs(data))
+      .catch(err => console.log(err));
   }, []);
 
   return (
@@ -49,7 +53,7 @@ function Dashboard() {
                 </div> */}
               </div>
               <div className="upcoming-orders-scroll-container">
-                <UpcomingOrders />
+                <SubJobTable subJobsParams={subJobs} jobsParams={jobs} />
               </div>
             </div>
           </div>
