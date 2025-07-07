@@ -2,7 +2,7 @@ import "../styles/Dashboard.css";
 import "../styles/Global.css";
 import Navbar from "../components/Navbar";
 import { useEffect, useState } from "react";
-import UpcomingOrders from "../components/UpcomingJobComponents";
+import SubJobTable from "../components/SubJobTable.tsx";
 import JobAnalytics from "../components/JobAnalytics";
 import NotificationsList from "../components/NotificationsList";
 import { DBLink } from "../App.tsx";
@@ -20,6 +20,9 @@ import {
 
 function Dashboard() {
   const [subJobs, setSubJobs] = useState<Array<SubJob>>([]);
+  const [jobs, setJobs ] = useState<Array<Job>>([]);
+  const [allFrames, setAllFrames] = useState<Frame[]>([]);
+  const [frame, setFrame] = useState<Frame>();
 
   // ------------------------------TESTING------------------------------
   // REMOVE THIS LATER
@@ -33,9 +36,6 @@ function Dashboard() {
     subJobId: "1234567890",
     supplier: "Big Ounce",
   };
-
-  const [allFrames, setAllFrames] = useState<Frame[]>([]);
-  const [frame, setFrame] = useState<Frame>();
 
   const handleGetAllFrames = async () => {
     const allFrames = await getAllFrames();
@@ -79,16 +79,17 @@ function Dashboard() {
     console.log(frame);
   };
 
-  // ------------------------------TESTING------------------------------
-
   // retrieve sub-jobs by making a API fetch call
   useEffect(() => {
     fetch(`${DBLink}/subJob/getAllSubJobs`)
-      .then((res) => res.json())
-      .then((data) => setSubJobs(data))
-      .catch((err) => console.log(err));
+      .then(res => res.json())
+      .then(data => setSubJobs(data))
+      .catch(err => console.log(err));
 
-    console.log(subJobs);
+    fetch(`${DBLink}/job/getAllJobs`)
+      .then(res => res.json())
+      .then(data => setJobs(data))
+      .catch(err => console.log(err));
   }, []);
 
   return (
@@ -129,7 +130,7 @@ function Dashboard() {
                 </div> */}
               </div>
               <div className="upcoming-orders-scroll-container">
-                <UpcomingOrders />
+                <SubJobTable subJobsParams={subJobs} jobsParams={jobs} />
               </div>
             </div>
           </div>
