@@ -8,6 +8,7 @@ const jobSchema = new mongoose.Schema(
     type: { type: String, require: true }, // Added 'type' as per your mock data
     due: { type: Date, require: true },
     subJobList: { type: [String], default: [] },
+    isPinned: { type: Boolean, default: false },
   },
   {
     timestamps: true,
@@ -28,6 +29,7 @@ const subJobSchema = new mongoose.Schema(
     frameList: { type: [String], default: [] },
     cushionList: { type: [String], default: [] },
     upholsteryList: { type: [String], defailt: [] },
+    isArchived: { type: Boolean, default: false },
   },
   {
     timestamps: true,

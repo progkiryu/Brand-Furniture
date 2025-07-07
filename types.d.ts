@@ -5,6 +5,7 @@ type Job = {
   type: String; // Added 'type' as per your mock data
   due: String;
   subJobList: String[];
+  isPinned: Boolean;
 };
 
 type SubJob = {
@@ -20,6 +21,7 @@ type SubJob = {
   frameList: String[];
   cushionList: String[];
   upholsteryList: String[];
+  isArchived: Boolean;
 };
 
 type Frame = {
