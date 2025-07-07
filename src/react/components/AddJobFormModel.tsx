@@ -38,7 +38,6 @@ function AddJobFormModel({ isOpen, onClose, onAddJob }: AddJobFormModelProps) {
         }
 
         // const newUniqueJobId = generateMongoStyleId(); // Use MongoDB-style ID
-        const newUniqueJobId = crypto.randomUUID();
 
         const newJob: NewJobDataForAdd = {
             invoiceId: parseInt(invoiceId),

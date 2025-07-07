@@ -32,6 +32,8 @@ function Schedule() {
     const handleAddJob = (newJobData: NewJobDataForAdd) => {
         // newJobData already contains jobId, invoiceId, client, name, due, type
         const newJob: Job = { // Asserting type to Job
+            _id: 'random',
+            isPinned: false,
             ...newJobData,
         };
         // @ts-ignore

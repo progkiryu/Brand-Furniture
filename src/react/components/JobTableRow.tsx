@@ -95,14 +95,13 @@ function JobTableRow({ job, subJobsForJob, onAddSubJobClick }: JobTableRowProps)
             <td>{job.client}</td>
             <td>{job.name}</td>
             <td>{job.type}</td>
-            <td>{job.dueDate}</td>
-            {/* <td>{job.due}</td> */}
+            <td>{job.due}</td>
             <td>
                 <div className="sp-sub-jobs-container">
                     {subJobsForJob.map((subjob) => (
                         <p
                             className="sp-sub-job"
-                            key={`${subjob.jobId}-${subjob.subJobId}`}
+                            key={`${subjob.jobId}-${subjob._id}`}
                             // onClick={() => handleEditSubJob(subjob.jobId, subjob.subJobId)} // Placeholder for future edit
                         >
                             {subjob.subJobDetail}
@@ -112,7 +111,7 @@ function JobTableRow({ job, subJobsForJob, onAddSubJobClick }: JobTableRowProps)
                         type="button"
                         value="+"
                         // Pass both job.jobId and job.invoiceId
-                        onClick={() => onAddSubJobClick(job.jobId, job.invoiceId)}
+                        onClick={() => onAddSubJobClick(job._id, job.invoiceId)}
                     />
                 </div>
             </td>

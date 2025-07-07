@@ -1,6 +1,6 @@
 // AddSubJobFormModal.tsx
 import React, { useState } from 'react';
-// import type { SubJob } from '../types/jobTypes-erd'; // Import SubJob type
+
 
 interface AddSubJobFormModalProps {
     isOpen: boolean;
@@ -11,7 +11,6 @@ interface AddSubJobFormModalProps {
 }
 
 function AddSubJobFormModal({ isOpen, onClose, jobId, invoiceId, onAddSubJob }: AddSubJobFormModalProps) {
-    const [subJobId, setSubJobId] = useState<string>(''); // Will be converted to number
     const [subJobDetail, setSubJobDetail] = useState<string>('');
     const [note, setNote] = useState<string>('');
     const [file, setFile] = useState<string>('');
@@ -35,13 +34,9 @@ function AddSubJobFormModal({ isOpen, onClose, jobId, invoiceId, onAddSubJob }: 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
 
-        // Basic validation
-        if (!subJobDetail || !subJobId) { // Add other required fields as needed
-            alert('Please fill in required sub-job fields.');
-            return;
-        }
 
         const newSubJob: Omit<SubJob, 'jobId'> & { jobId: string } = {
+            _id: 'bullshit',
             jobId: jobId, // Use the jobId from propsinput subJobId to number
             subJobDetail: subJobDetail,
             note: note,
@@ -51,6 +46,7 @@ function AddSubJobFormModal({ isOpen, onClose, jobId, invoiceId, onAddSubJob }: 
             paidInFull: paidInFull,
             liaison: liaison,
             paymentNote: paymentNote,
+            isArchived: false,
             // Add other fields as needed
         };
 
@@ -58,7 +54,7 @@ function AddSubJobFormModal({ isOpen, onClose, jobId, invoiceId, onAddSubJob }: 
         onClose(); // Close the modal after submission
 
         // Reset form fields
-        setSubJobId('');
+
         setSubJobDetail('');
         setNote('');
         setFile('');
@@ -75,16 +71,6 @@ function AddSubJobFormModal({ isOpen, onClose, jobId, invoiceId, onAddSubJob }: 
                 <button onClick={onClose} className="sub-job-modal-close-btn">&times;</button>
                 <form onSubmit={handleSubmit} className="sub-job-modal-form">
                     <h2>Job Component for Invoice #{invoiceId}</h2>
-                    <div className="form-group">
-                        <label htmlFor="subJobId">Sub-Job ID:</label>
-                        <input
-                            type="number"
-                            id="subJobId"
-                            value={subJobId}
-                            onChange={(e) => setSubJobId(e.target.value)}
-                            required
-                        />
-                    </div>
                     <div className="form-group">
                         <label htmlFor="subJobDetail">Sub-Job Detail:</label>
                         <textarea
