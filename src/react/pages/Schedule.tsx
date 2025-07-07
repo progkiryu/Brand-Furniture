@@ -35,7 +35,6 @@ function Schedule() {
         const newJob: Job = { // Asserting type to Job
             ...newJobData,
         };
-        // @ts-ignore
         setJobs(prevJobs => [...prevJobs, newJob]);
         setIsAddJobModelOpen(false); // Close the modal after adding
     };

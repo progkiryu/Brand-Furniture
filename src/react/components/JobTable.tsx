@@ -50,6 +50,7 @@ function JobTable({ searchTerm, jobs, subJobs, onAddSubJob }: JobTableProps) {
             }
             return false;
         });
+        console.log(jobs)
         setDisplayedJobs(filteredJobs);
     }, [searchTerm, jobs, subJobs]);
 
