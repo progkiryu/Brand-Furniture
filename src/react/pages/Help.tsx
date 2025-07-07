@@ -14,7 +14,7 @@ function Help() {
           <h2>How to Use Threadline</h2>
 
           <div className="help-video-placeholder">
-            {/* Replace this with a real video embed later */}
+            {/* Replace this with a real vid later */}
             <div className="video-frame">
               <p style={{ color: "white" }}>Video Placeholder</p>
             </div>
