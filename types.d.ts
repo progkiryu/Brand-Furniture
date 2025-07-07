@@ -4,7 +4,7 @@ type Job = {
   client: String;
   name: String;
   type: String; // Added 'type' as per your mock data
-  due: String;
+  due: Date;
   subJobList?: String[];
   isPinned?: Boolean;
 };
