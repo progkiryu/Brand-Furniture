@@ -3,18 +3,34 @@ import AddSubJobFormModal from "../components/AddSubJobFormModal";
 import JobTableRow from './JobTableRow';
 
 
+export interface NewSubJobDataForAdd {
+    jobId: string; // SubJob now has jobId directly
+    subJobDetail: string;
+    note?: string;
+    file?: string;
+    dueDate?: Date;
+    depositAmount?: number;
+    depositDate?: Date;
+    paidInFull?: boolean;
+    liaison?: string;
+    paymentNote?: string;
+    isArchived?: boolean;
+}
+
+
 interface JobTableProps {
     searchTerm: string;
     jobs: Job[];
     subJobs: SubJob[]; // Accept all subJobs as a prop
-    onAddSubJob: (newSubJobData: Omit<SubJob, 'jobId'> & { jobId: string }) => void; // Handler for adding sub-jobs
+    // onAddSubJob: (NewSubJobDataForAdd: Omit<SubJob, 'jobId'> & { jobId: string }) => void; // Handler for adding sub-jobs
+    onAddSubJob: (jobId: string, newSubJobData: NewSubJobDataForAdd) => void;
 }
 
 function JobTable({ searchTerm, jobs, subJobs, onAddSubJob }: JobTableProps) {
     const [displayedJobs, setDisplayedJobs] = useState<Job[]>(jobs);
     const [isAddSubJobModalOpen, setIsAddSubJobModalOpen] = useState(false);
     // State to hold both jobId and invoiceId for the selected job
-    const [selectedJobInfoForSubJob, setSelectedJobInfoForSubJob] = useState<{ jobId: string; invoiceId: number } | null>(null);
+    const [selectedJobInfoForSubJob, setSelectedJobInfoForSubJob] = useState<{ jobId: string; invoiceId: string } | null>(null);
 
 
     useEffect(() => {
@@ -48,7 +64,6 @@ function JobTable({ searchTerm, jobs, subJobs, onAddSubJob }: JobTableProps) {
             }
             return false;
         });
-        console.log(jobs)
         setDisplayedJobs(filteredJobs);
     }, [searchTerm, jobs, subJobs]);
 
@@ -59,7 +74,7 @@ function JobTable({ searchTerm, jobs, subJobs, onAddSubJob }: JobTableProps) {
     };
 
     // Updated handler to receive both jobId and invoiceId
-    const handleOpenAddSubJobModal = (jobId: string, invoiceId: number) => {
+    const handleOpenAddSubJobModal = (jobId: string, invoiceId: string) => {
         setSelectedJobInfoForSubJob({ jobId, invoiceId });
         setIsAddSubJobModalOpen(true);
     };
