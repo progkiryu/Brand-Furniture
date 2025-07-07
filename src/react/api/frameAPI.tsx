@@ -5,6 +5,10 @@ export const getAllFrames = async () => {
   const frames = fetch(`${DBLink}/frame/getAllFrames`)
     .then((res) => res.json())
     .catch((err) => console.error(err));
+  if (!frames) {
+    alert("Error: Failed to retrieve frames.");
+    return;
+  }
   return frames;
 };
 
@@ -13,6 +17,10 @@ export const getFrameById = async (id: String) => {
   const frame = fetch(`${DBLink}/frame/getFrameById/${id}`)
     .then((res) => res.json())
     .catch((err) => console.error(err));
+  if (!frame) {
+    alert("Error: Failed to retrieve frame.");
+    return;
+  }
   return frame;
 };
 
@@ -28,7 +36,7 @@ export const createFrame = async (data: Frame) => {
       if (res.ok) {
         alert("Frame created successfully.");
       } else {
-        console.error("Failed to delete frame");
+        alert("Error: Failed to create frame.");
       }
     })
     .catch((err) => console.error(err));
@@ -51,6 +59,7 @@ export const deleteFrameById = async (id: String) => {
     .catch((err) => console.error(err));
 };
 
+// Update a frame
 export const UpdateFrame = async (data: Frame) => {
   fetch(`${DBLink}/frame/putUpdateFrame`, {
     method: "PUT",
