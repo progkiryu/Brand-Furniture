@@ -82,7 +82,7 @@ interface JobTableRowProps {
     job: any;
     subJobsForJob: SubJob[];
     // Update prop type to expect both jobId and invoiceId
-    onAddSubJobClick: (jobId: string, invoiceId: number) => void;
+    onAddSubJobClick: (jobId: string, invoiceId: string) => void;
 }
 
 function JobTableRow({ job, subJobsForJob, onAddSubJobClick }: JobTableRowProps) {
