@@ -1,65 +1,72 @@
 type Job = {
-    _id: string;
-    invoiceId: number;
-    client: string;
-    name: string;
-    type: string; // Added 'type' as per your mock data
-    due: string;
-    isPinned: boolean;
-}
+  _id?: String;
+  invoiceId: String;
+  client: String;
+  name: String;
+  type: String; // Added 'type' as per your mock data
+  due: String;
+  subJobList?: String[];
+  isPinned?: Boolean;
+};
 
 type SubJob = {
-    _id: string;
-    jobId: string;   
-    subJobDetail: string;
-    note: string;
-    file: string;
-    depositAmount: number;
-    depositDate: string;
-    paidInFull: string;
-    liaison: string;
-    paymentNote: string;
-    isArchived: boolean;
-}
+  _id?: String;
+  jobId: String;
+  subJobDetail: String;
+  note?: String;
+  file?: String;
+  dueDate?: Date;
+  depositAmount?: Number;
+  depositDate?: Date;
+  paidInFull?: Boolean;
+  liaison?: String;
+  paymentNote?: String;
+  frameList?: String[];
+  cushionList?: String[];
+  upholsteryList?: String[];
+  isArchived?: Boolean;
+};
 
 type Frame = {
-    _id: string;
-    jobId: string;    // FK to Job
-    subJobId: number; // FK to SubJob (SubJob's 'subJobId')
-    supplier: string;
-    description: string;
-    ordereddate: string;
-    expecteddate: string;
-    receiveddate: string;
-}
+  _id?: String;
+  subJobId: String; // FK to SubJob (SubJob's 'subJobId')
+  supplier?: String;
+  description?: String;
+  orderedDate?: Date;
+  expectedDate?: Date;
+  receivedDate?: Date;
+};
 
 type Cushion = {
-    _id: string;
-    jobId: string;    // FK to Job
-    subJobId: number; // FK to SubJob (SubJob's 'subJobId')
-    supplier: string;
-    type: string;
-    description: string;
-    ordereddate: string;
-    expecteddate: string;
-    receiveddate: string;
-}
+  _id?: String;
+  subJobId: String; // FK to SubJob (SubJob's 'subJobId')
+  type: String;
+  supplier?: String;
+  description?: String;
+  orderedDate?: Date;
+  expectedDate?: Date;
+  receivedDate?: Date;
+};
 
 type Upholstery = {
-    _id: string;
-    jobId: string;    // FK to Job
-    subJobId: number; // FK to SubJob (SubJob's 'subJobId')
-    supplier: string;
-    type: string; // Added 'type' as per your mock data
-    description: string;
-    ordereddate: string;
-    expecteddate: string;
-    receiveddate: string;
-}
-
+  _id?: String;
+  subJobId: String; // FK to SubJob (SubJob's 'subJobId')
+  type: String;
+  supplier?: String;
+  description?: String;
+  orderedDate?: Date;
+  expectedDate?: Date;
+  receivedDate?: Date;
+};
 
 interface Window {
-    electron: {
-        greeting: () => void;
-    }
+  jobs: {
+    getJobs: () => Promise<Array<Job>>;
+  };
+  orders: {
+    getClients: () => Promise<Array<Client>>;
+  };
+  electron: {
+    greeting: () => void;
+  };
 }
