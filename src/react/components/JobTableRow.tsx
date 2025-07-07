@@ -77,8 +77,6 @@
 
 
 // import type { Job, SubJob } from '../types/jobTypes-erd';
-import { DBLink } from "../App";
-import { useState, useEffect } from 'react';
 
 interface JobTableRowProps {
     job: any;

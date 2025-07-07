@@ -1,6 +1,4 @@
-// Denver's database
 import { useState, useEffect } from 'react';
-// import type { Job, SubJob } from '../types/jobTypes-erd';
 import AddSubJobFormModal from "../components/AddSubJobFormModal";
 import JobTableRow from './JobTableRow';
 
@@ -24,7 +22,7 @@ function JobTable({ searchTerm, jobs, subJobs, onAddSubJob }: JobTableProps) {
 
         const filteredJobs = jobs.filter(job => {
             // Search in Job properties
-            if (String(job.invoiceId).toLowerCase().includes(lowerCaseSearchTerm)) {
+            if (job.invoiceId.toLowerCase().includes(lowerCaseSearchTerm)) {
                 return true;
             }
             if (job.client.toLowerCase().includes(lowerCaseSearchTerm)) {
@@ -33,7 +31,7 @@ function JobTable({ searchTerm, jobs, subJobs, onAddSubJob }: JobTableProps) {
             if (job.name.toLowerCase().includes(lowerCaseSearchTerm)) {
                 return true;
             }
-            if (job.due.toLowerCase().includes(lowerCaseSearchTerm)) {
+            if (String(job.due).toLowerCase().includes(lowerCaseSearchTerm)) {
                 return true;
             }
             if (job.type.toLowerCase().includes(lowerCaseSearchTerm)) {
@@ -55,7 +53,7 @@ function JobTable({ searchTerm, jobs, subJobs, onAddSubJob }: JobTableProps) {
 
     // This function now filters the global subJobs array for the specific job
     // JOIN query to retrieve sub-jobs belong to a job with "currentJobId"
-    const getSubJobsForJob = (currentJobId: string) => {
+    const getSubJobsForJob = (currentJobId: String | undefined) => {
         return subJobs.filter(subjob => subjob.jobId === currentJobId);
     };
 
@@ -89,7 +87,7 @@ function JobTable({ searchTerm, jobs, subJobs, onAddSubJob }: JobTableProps) {
                     <tbody>
                         {displayedJobs.map((job) => (
                             <JobTableRow
-                                key={job._id}
+                                key={String(job._id)}
                                 job={job}
                                 subJobsForJob={getSubJobsForJob(job._id)}
                                 // Pass both jobId and invoiceId to the click handler
