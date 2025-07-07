@@ -3,11 +3,10 @@ import React, { useState } from 'react';
 
 // Define NewJobDataForAdd interface directly in this file
 export interface NewJobDataForAdd {
-    jobId: string;
-    invoiceId: number; // Changed from 'id' to 'invoiceId' for consistency
+    invoiceId: number;
     client: string;
     name: string;
-    type: string; // Added 'type' for consistency
+    type: string; // Added 'type' as per your mock data
     due: string;
 }
 
@@ -26,6 +25,7 @@ function AddJobFormModel({ isOpen, onClose, onAddJob }: AddJobFormModelProps) {
     const [dueDate, setDueDate] = useState<string>('');
 
 
+
     if (!isOpen) return null;
 
     const handleSubmit = (event: React.FormEvent) => {
@@ -41,11 +41,10 @@ function AddJobFormModel({ isOpen, onClose, onAddJob }: AddJobFormModelProps) {
         const newUniqueJobId = crypto.randomUUID();
 
         const newJob: NewJobDataForAdd = {
-            jobId: newUniqueJobId,
-            invoiceId: parseInt(invoiceId), // Ensure it's 'invoiceId'
+            invoiceId: parseInt(invoiceId),
             client: clientName,
             name: jobName,
-            type: jobType, // Include job type
+            type: jobType, // Added 'type' as per your mock data
             due: dueDate,
         };
 

@@ -106,8 +106,7 @@ function AddSubJobFormModal({ isOpen, onClose, jobId, invoiceId, onAddSubJob }: 
         }
 
         const newSubJob: Omit<SubJob, 'jobId'> & { jobId: string } = {
-            jobId: jobId, // Use the jobId from props
-            subJobId: parseInt(subJobId), // Parse the input subJobId to number
+            jobId: jobId, // Use the jobId from propsinput subJobId to number
             subJobDetail: subJobDetail,
             note: note,
             file: file,

@@ -315,7 +315,6 @@ import SearchBar from "../components/Searchbar"; // New component
 import JobTable from "../components/JobTable"; // New component
 import AddJobFormModel, { 
     type NewJobDataForAdd, 
-    type AddJobFormModelProps 
 } from "../components/AddJobFormModel"; // New modal component
  
 import { DBLink } from "../App";
