@@ -14,11 +14,11 @@ export const getAllCushions = async () => {
 
 // Get a particular cushion by ID
 export const getCushionById = async (id: String) => {
-  const cushion = fetch(`${DBLink}/frame/getCushionById/${id}`)
+  const cushion = fetch(`${DBLink}/cushion/getCushionById/${id}`)
     .then((res) => res.json())
     .catch((err) => console.error(err));
   if (!cushion) {
-    alert("Error: Failed to retrive frame.");
+    alert("Error: Failed to retrive cushion.");
     return;
   }
   return cushion;
@@ -67,6 +67,12 @@ export const updateCushion = async (data: Cushion) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   })
-    .then((res) => res.json())
+    .then((res) => {
+      if (res.ok) {
+        alert("Cushion updated successfully.");
+      } else {
+        alert("Error: Failed to update cushion.");
+      }
+    })
     .catch((err) => console.error(err));
 };

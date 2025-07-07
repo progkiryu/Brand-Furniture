@@ -67,6 +67,12 @@ export const UpdateFrame = async (data: Frame) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   })
-    .then((res) => res.json())
+    .then((res) => {
+      if (res.ok) {
+        alert("Frame updated successfully.");
+      } else {
+        alert("Error: Failed to update frame.");
+      }
+    })
     .catch((err) => console.log(err));
 };
