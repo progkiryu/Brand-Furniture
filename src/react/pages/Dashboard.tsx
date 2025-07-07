@@ -1,26 +1,110 @@
 import "../styles/Dashboard.css";
 import "../styles/Global.css";
 import Navbar from "../components/Navbar";
+import { useEffect, useState } from "react";
 import UpcomingOrders from "../components/UpcomingJobComponents";
 import JobAnalytics from "../components/JobAnalytics";
 import NotificationsList from "../components/NotificationsList";
-import { useEffect } from "react";
 import { DBLink } from "../App.tsx";
 
+// ------------------------------TESTING------------------------------
+// REMOVE THIS LATER
+import {
+  createFrame,
+  deleteFrameById,
+  getAllFrames,
+  getFrameById,
+  UpdateFrame,
+} from "../api/frameAPI.tsx";
+// ------------------------------TESTING------------------------------
+
 function Dashboard() {
-  
+  const [subJobs, setSubJobs] = useState<Array<SubJob>>([]);
+
+  // ------------------------------TESTING------------------------------
+  // REMOVE THIS LATER
+  const tempFrame: Frame = {
+    subJobId: "change 1",
+    supplier: "Big Ounce",
+    _id: "686b32490a06936ecbd0c992",
+  };
+
+  const tempFrameForCreation: Frame = {
+    subJobId: "1234567890",
+    supplier: "Big Ounce",
+  };
+
+  const [allFrames, setAllFrames] = useState<Frame[]>([]);
+  const [frame, setFrame] = useState<Frame>();
+
+  const handleGetAllFrames = async () => {
+    const allFrames = await getAllFrames();
+    setAllFrames(allFrames);
+    console.log("handleGetAllFrames: Done.");
+  };
+
+  const handleGetFrameById = async () => {
+    if (!tempFrame._id) {
+      tempFrame._id = "";
+    }
+    const frame = await getFrameById(tempFrame._id);
+    setFrame(frame);
+    console.log("handleGetFrameById: Done.");
+  };
+
+  const handleCreateFrame = async () => {
+    await createFrame(tempFrameForCreation);
+    console.log("handleCreateFrame: Done.");
+  };
+
+  const handleDeleteFrame = async () => {
+    if (!tempFrame._id) {
+      tempFrame._id = "";
+    }
+    await deleteFrameById(tempFrame._id);
+    console.log("handleDeleteFrame: Done.");
+  };
+
+  const handleUpdateFrame = async () => {
+    await UpdateFrame(tempFrame);
+    console.log("handleUpdateFrame: Done.");
+  };
+
+  const handleConsoleLogger = () => {
+    console.log("All Frames:");
+    allFrames.map((frame) => {
+      console.log(frame);
+    });
+    console.log("Single Frame:");
+    console.log(frame);
+  };
+
+  // ------------------------------TESTING------------------------------
+
   // retrieve sub-jobs by making a API fetch call
   useEffect(() => {
     fetch(`${DBLink}/subJob/getAllSubJobs`)
       .then((res) => res.json())
-      .then((data) => console.log(data))
+      .then((data) => setSubJobs(data))
       .catch((err) => console.log(err));
+
+    console.log(subJobs);
   }, []);
 
   return (
     <>
       <Navbar />
       <div id="first-container">
+        {/*------------------------------TESTING------------------------------*/}
+        {/* REMOVE THIS LATER */}
+        <button onClick={handleGetAllFrames}>getAllFrames</button>
+        <button onClick={handleGetFrameById}>getFrameById</button>
+        <button onClick={handleCreateFrame}>createFrame</button>
+        <button onClick={handleDeleteFrame}>deleteFrame</button>
+        <button onClick={handleUpdateFrame}>updateFrame</button>
+        <button onClick={handleConsoleLogger}>THE CONSOLE LOG BUTTON</button>
+        {/*------------------------------TESTING------------------------------*/}
+
         <div id="header-container">
           <h1>Dashboard</h1>
         </div>
