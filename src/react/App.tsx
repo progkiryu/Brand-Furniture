@@ -4,7 +4,7 @@ import Schedule from "./pages/Schedule";
 import Analytics from "./pages/Analytics";
 import Help from "./pages/Help";
 
-export const DBLink = `http://localhost:5051`;
+export const DBLink = `http://localhost:5050`;
 
 function App() {
   return (
