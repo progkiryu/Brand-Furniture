@@ -74,7 +74,7 @@ export const updateJob = async (
     const result = await schemas.Job.findByIdAndUpdate(id, req.body);
 
     if (!result) {
-      res.status(400).json({
+      res.status(404).json({
         message: `Failed to find job with ID: ${id}! Or could not process request.`,
       });
       return;
@@ -100,7 +100,7 @@ export const removeJob = async (
     const result = await schemas.Job.findByIdAndDelete<Job>(id);
 
     if (!result) {
-      res.status(400).json({
+      res.status(404).json({
         message: `Failed to find job with ID: ${id}! Or could not process request.`,
       });
       return;
