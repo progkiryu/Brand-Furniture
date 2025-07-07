@@ -84,7 +84,7 @@ export const putUpdateFrame = async (
   res: express.Response
 ) => {
   try {
-    const id = req.body.id;
+    const id = req.body._id;
     const frame = await schemas.Frame.findByIdAndUpdate(id, req.body);
     if (!frame) {
       res.status(404).json({ message: `Failed to find frame with id: ${id}` });
