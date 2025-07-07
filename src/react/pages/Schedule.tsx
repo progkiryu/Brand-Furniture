@@ -52,7 +52,6 @@ function Schedule() {
             
             ...newJobData,
         };
-        // @ts-ignore
         setJobs(prevJobs => [...prevJobs, newJob]);
         setIsAddJobModelOpen(false); // Close the modal after adding
     };
