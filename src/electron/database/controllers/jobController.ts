@@ -26,14 +26,12 @@ export const getJobById = async (
 
     if (!id) {
       res.status(404).json({ message: "Failed to provide ID!" });
-      return;
     }
 
     const job = await schemas.Job.findById<Job>(id);
 
     if (!job) {
       res.status(404).json({ message: `Failed to find job with ID: ${id}` });
-      return;
     }
 
     res.status(200).json(job).end();
@@ -68,7 +66,6 @@ export const updateJob = async (
 
     if (!id) {
       res.status(404).json({ message: "Failed to provide job ID!" });
-      return;
     }
 
     const result = await schemas.Job.findByIdAndUpdate(id, req.body);
@@ -77,7 +74,6 @@ export const updateJob = async (
       res.status(404).json({
         message: `Failed to find job with ID: ${id}! Or could not process request.`,
       });
-      return;
     }
     res.status(200).json(result).end();
   } catch (err) {
@@ -93,8 +89,7 @@ export const removeJob = async (
     const id = req.params.id;
 
     if (!id) {
-      res.status(404).json({ message: "Failed to provide job ID! " });
-      return;
+      res.status(404).json({ message: "Failed to provide job ID!" });
     }
 
     const result = await schemas.Job.findByIdAndDelete<Job>(id);
@@ -103,7 +98,6 @@ export const removeJob = async (
       res.status(404).json({
         message: `Failed to find job with ID: ${id}! Or could not process request.`,
       });
-      return;
     }
 
     res.status(200).json(result).end();
