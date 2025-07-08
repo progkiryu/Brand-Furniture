@@ -16,7 +16,7 @@ function AddJobFormModel({ isOpen, onClose, onAddJob }: AddJobFormModelProps) {
     const [clientName, setClientName] = useState<string>('');
     const [jobName, setJobName] = useState<string>('');
     const [jobType, setJobType] = useState<string>(''); // New state for job type
-    const [dueDate, setDueDate] = useState<Date>();
+    const [dueDate, setDueDate] = useState<string>('');
 
 
 
