@@ -28,14 +28,12 @@ export const getSubJobById = async (
       res
         .status(404)
         .json({ message: `Failed to find sub-job with ID: ${id}` });
-      return;
     }
     const subJob = await schemas.SubJob.findById<SubJob>(id);
     if (!subJob) {
       res
         .status(404)
         .json({ message: `Failed to find sub-job with ID: ${id}` });
-      return;
     }
     res.status(200).json(subJob).end();
   } catch (err) {
@@ -72,7 +70,6 @@ export const updateSubJob = async (
       res.status(404).json({
         message: `Failed to find sub-job with ID: ${id}! Or could not process request.`,
       });
-      return;
     }
     res.status(200).json(result).end();
   } catch (err) {
@@ -88,14 +85,12 @@ export const removeSubJob = async (
     const id = req.params.id;
     if (!id) {
       res.status(404).json({ message: "Failed to provide ID!" });
-      return;
     }
     const result = await schemas.SubJob.findByIdAndDelete(id);
     if (!result) {
       res.status(404).json({
         message: `Failed to find sub-job with ID: ${id}! Or could not process request.`,
       });
-      return;
     }
     res.status(200).json(result).end();
   } catch (err) {

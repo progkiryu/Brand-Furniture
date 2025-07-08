@@ -8,16 +8,13 @@ export const getAllUpholstery = async (
 ) => {
   try {
     const upholstery = await schemas.Upholstery.find({});
-    res.status(200).json(upholstery);
     if (!upholstery) {
       res.status(404).json({ message: `Failed to get upholstery` });
-      return;
     }
-    return;
+    res.status(200).json(upholstery);
   } catch (err) {
     console.error(err);
     res.sendStatus(400);
-    return;
   }
 };
 
@@ -34,10 +31,8 @@ export const getUpholsteryById = async (
       res
         .status(404)
         .json({ message: `Failed to find upholstery with id: ${id}` });
-      return;
     }
     res.status(200).json(upholstery);
-    return;
   } catch (err) {
     console.error(err);
     res.sendStatus(400);
@@ -53,14 +48,11 @@ export const postCreateUpholstry = async (
     const upholstery = await schemas.Upholstery.create(req.body);
     if (!upholstery) {
       res.status(404).json({ message: "Failed to create new Upholstery" });
-      return;
     }
     res.status(200).json(upholstery);
-    return;
   } catch (err) {
     console.error(err);
     res.sendStatus(400);
-    return;
   }
 };
 
@@ -76,13 +68,11 @@ export const deleteUpholstryById = async (
       res
         .status(404)
         .json({ message: `Failed to find upholstery with id: ${id}` });
-      return;
     }
     res.status(200).json({ message: "Upholstry deleted successfully" });
   } catch (err) {
     console.error(err);
     res.sendStatus(400);
-    return;
   }
 };
 
@@ -98,20 +88,16 @@ export const putUpdateUpholstry = async (
       res
         .status(404)
         .json({ message: `Failed to find upholstery with id: ${id}` });
-      return;
     }
     const updatedUpholstry = await schemas.Upholstery.findById(id);
     if (!updatedUpholstry) {
       res
         .status(404)
         .json({ message: `Failed to find updated upholstery with id: ${id}` });
-      return;
     }
     res.status(200).json(updatedUpholstry);
-    return;
   } catch (err) {
     console.error(err);
     res.sendStatus(400);
-    return;
   }
 };

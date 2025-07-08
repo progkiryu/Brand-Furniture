@@ -59,6 +59,13 @@ type Upholstery = {
   receivedDate?: Date;
 };
 
+type Notification = {
+  _id?: String;
+  notifTitle: String;
+  notifDesc: String;
+  time: Date;
+}
+
 interface Window {
   jobs: {
     getJobs: () => Promise<Array<Job>>;
