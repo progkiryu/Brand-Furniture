@@ -59,7 +59,7 @@ type Upholstery = {
   receivedDate?: Date;
 };
 
-type Notification = {
+type Notif = {
   _id?: String;
   notifTitle: String;
   notifDesc: String;

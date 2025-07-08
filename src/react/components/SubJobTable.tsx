@@ -7,8 +7,8 @@ interface SubJobProps {
 
 function SubJobTable({ subJobsParams, jobsParams }: SubJobProps) {
 
-  const [ subJobs, setSubJobs ] = useState<Array<SubJob>>([]);
-  const [ jobs, setJobs ] = useState<Array<Job>>([]);
+  const [ subJobs, setSubJobs ] = useState<Array<SubJob>>(subJobsParams);
+  const [ jobs, setJobs ] = useState<Array<Job>>(jobsParams);
 
   useEffect(() => {
     setSubJobs(subJobsParams);
