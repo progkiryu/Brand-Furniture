@@ -1,18 +1,32 @@
 #dashboard-first-container {
-    height: 90vh;
-    display: flex;
+  /* height: 90vh; */
+
+  display: flex;
+  gap: 2rem;
+  padding: 2rem;
+  /* width: 100%; */
+  box-sizing: border-box;
+  flex-grow: 1;
+  /* min-height: 0; */
 }
 
 #dashboard-second-container {
-    width: 60%;
+    flex: 5;
     display: flex;
     flex-direction: column;
+    gap: 2rem;
+    flex-grow: 1;
+    min-height: 0;
 }
 
 #dashboard-third-container {
-    width: 40%;
+    flex: 3;
     display: flex;
     flex-direction: column;
+    gap: 2rem;
+    overflow-y: auto;
+    flex-grow: 1;
+    min-height: 0;
 }
 
 .schedule-header {
@@ -48,33 +62,63 @@
 .key-color.residential { background-color: #fef9c3; }
 .key-color.commercial { background-color: #d1d5fa; } */
 
+#schedule-container,
+#analytics-container,
+#notifications-container {
+  background-color: #FFFFFF;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
 #schedule-container {
-    background-color: white;
-    height: 90vh;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
+    flex: 1;
+    /* height: auto;
+    flex-direction: column; */
 }
 
 #analytics-container {
-    background-color: yellow;
-    height: 40vh;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+  flex: 1 ;
 }
 
 #notifications-container {
-    background-color: orange;
-    height: 50vh;
+  flex: 1 ;
 }
 
 .upcoming-orders-scroll-container {
+  overflow-y: auto;
+  flex-grow: 1;
+  margin-top: 1rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  border-bottom: 1px solid #E0E1DD;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-size: 14px;
+}
+
+th {
+  background-color: #F8F9FA;
+  color: #415A77;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+/* .upcoming-orders-scroll-container {
     flex-grow: 1;
     overflow-y: auto;
     margin-top: 1rem;
-}
+} */
 
 .upcoming-orders-table {
     width: 100%;
@@ -128,6 +172,7 @@
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
+    flex-grow: 1;
 }
 
 .chart {
@@ -186,5 +231,3 @@
   .chart-percentage { font-size: 0.6rem; }
   .legend-item { font-size: 0.6rem; }
 }
-
-

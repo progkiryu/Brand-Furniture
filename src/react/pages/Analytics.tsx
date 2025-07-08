@@ -52,14 +52,16 @@ function Analytics() {
             dateRange={dateRange} />
           </div>
                 
-          <div className="line-charts">
+          <div className="jobVolume">
             <LineChartComponent 
             title={
               dateRange === "last6months"
-              ? `Job Completion ${getLabelPrefix(dateRange)}`
-              : `${getLabelPrefix(dateRange)} Job Completion`}
+              ? `Job Volume ${getLabelPrefix(dateRange)}`
+              : `${getLabelPrefix(dateRange)} Job Volume`}
             dateRange={dateRange} />
+          </div>
 
+          <div className="jobCompletion">
             <LineChartComponent 
             title={
               dateRange === "last6months"
