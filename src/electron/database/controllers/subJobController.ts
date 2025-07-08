@@ -46,12 +46,10 @@ export const insertSubJob = async (
   res: express.Response
 ) => {
   try {
-    // Search for the main job
+    // Check for mainJob ID
     const jobId = req.body.jobId;
     if (!jobId) {
-      res
-        .status(404)
-        .json({ message: "Subjob Creation: Failed to find main job." });
+      res.status(404).json({ message: "Subjob does not have a main JobID" });
     }
 
     // Assign main jobId to subJob
@@ -61,13 +59,11 @@ export const insertSubJob = async (
     // Create new subjob in database
     const subJob = await schemas.SubJob.create(tempSubJob);
     if (!subJob) {
-      res
-        .status(404)
-        .json({ message: "Subjob Creation: Failed to create subjob." });
+      res.status(404).json({ message: "Failed to create subjob." });
     }
     const subJobId = subJob._id.toString(); // Convert objectid to string
 
-    // Check if subJob id already exists within the main Job then add/remove
+    // Check if subJob id already exists within the mainJob then add/remove
     const updatedJob = await schemas.Job.updateMany({ _id: jobId }, [
       {
         $set: {
@@ -88,7 +84,7 @@ export const insertSubJob = async (
     ]);
     if (!updatedJob) {
       res.status(404).json({
-        message: "Subjob Creation: Failed to add subjob to main job.",
+        message: "Failed to add subjob to main job.",
       });
     }
     // Return newly created subjob
@@ -124,14 +120,51 @@ export const removeSubJob = async (
   res: express.Response
 ) => {
   try {
-    const id = req.params.id;
-    if (!id) {
-      res.status(404).json({ message: "Failed to provide ID!" });
+    // Check for subJob ID
+    const subJobId = req.params.id;
+    if (!subJobId) {
+      res.status(404).json({ message: "Failed to provide subjob ID." });
     }
-    const result = await schemas.SubJob.findByIdAndDelete(id);
+
+    // Get the subJob's mainJob ID
+    const subJob = await schemas.SubJob.findById(subJobId);
+    if (!subJob) {
+      res
+        .status(404)
+        .json({ message: `Failed to find sub-job with ID: ${subJobId}` });
+    }
+    const mainJobId = subJob?.jobId.toString();
+
+    // Check if subJob id already exists within the mainJob then add/remove
+    const updatedJob = await schemas.Job.updateMany({ _id: mainJobId }, [
+      {
+        $set: {
+          subJobList: {
+            $cond: [
+              { $in: [subJobId, "$subJobList"] },
+              {
+                $filter: {
+                  input: "$subJobList",
+                  cond: { $ne: ["$$this", subJobId] },
+                },
+              },
+              { $concatArrays: ["$subJobList", [subJobId]] },
+            ],
+          },
+        },
+      },
+    ]);
+    if (!updatedJob) {
+      res.status(404).json({
+        message: "Failed to remove subjob from main job.",
+      });
+    }
+
+    // Delete subJob
+    const result = await schemas.SubJob.findByIdAndDelete(subJobId);
     if (!result) {
       res.status(404).json({
-        message: `Failed to find sub-job with ID: ${id}! Or could not process request.`,
+        message: `Failed to delete subJob with ID: ${subJobId}! Or could not process request.`,
       });
     }
     res.status(200).json(result);
