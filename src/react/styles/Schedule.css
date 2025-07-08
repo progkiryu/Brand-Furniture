@@ -143,13 +143,8 @@
   flex: 1;
 }
 
-#search-container {
-  background-color: lightgreen;
-}
-
 #filter-container {
-  background-color: lightyellow;
-    
+  color: #1B263B;
 }
 
 #order-container {
@@ -199,8 +194,8 @@
 }
 
 .sp-jobs-container tbody td:last-child{
-  background-color: #1B263B;
-  color: #ACB7C3;
+  /* background-color: #1B263B;
+  color: #ACB7C3; */
 }
 
 .sp-jobs-container tbody td:last-child input{
@@ -237,7 +232,9 @@
 }
 
 .sp-sub-job {
-  background-color: red;
+  /* background-color reflects the production schedule progress key
+  background-color: #415A77;  */
+
   border-radius: 5px;
   margin: 5px 0px;
 }
