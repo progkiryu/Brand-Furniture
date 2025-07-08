@@ -4,16 +4,14 @@ import schemas from "../models/schema.js";
 export const getAllJobs = async (_: express.Request, res: express.Response) => {
   try {
     const jobs = await schemas.Job.find<Array<Job>>();
-
     if (!jobs) {
       res
         .status(404)
         .json({ message: "Error finding 'Jobs' MongoDB collection!" });
     }
-
-    res.status(200).json(jobs).end();
+    res.status(200).json(jobs);
   } catch (err) {
-    res.status(400).json(err).end();
+    res.status(400).json(err);
   }
 };
 
@@ -23,20 +21,16 @@ export const getJobById = async (
 ) => {
   try {
     const id = req.params.id;
-
     if (!id) {
       res.status(404).json({ message: "Failed to provide ID!" });
     }
-
     const job = await schemas.Job.findById<Job>(id);
-
     if (!job) {
       res.status(404).json({ message: `Failed to find job with ID: ${id}` });
     }
-
-    res.status(200).json(job).end();
+    res.status(200).json(job);
   } catch (err) {
-    res.status(400).json(err).end();
+    res.status(400).json(err);
   }
 };
 
@@ -46,14 +40,12 @@ export const insertJob = async (
 ) => {
   try {
     const result = await schemas.Job.create(req.body);
-
     if (!result) {
       throw new Error("Could not insert new Job!");
     }
-
-    res.status(200).json(result).end();
+    res.status(200).json(result);
   } catch (err) {
-    res.status(400).json(err).end();
+    res.status(400).json(err);
   }
 };
 
@@ -63,13 +55,10 @@ export const updateJob = async (
 ) => {
   try {
     const id = req.body._id;
-
     if (!id) {
       res.status(404).json({ message: "Failed to provide job ID!" });
     }
-
     const result = await schemas.Job.findByIdAndUpdate(id, req.body);
-
     if (!result) {
       res.status(404).json({
         message: `Failed to find job with ID: ${id}! Or could not process request.`,
@@ -87,19 +76,15 @@ export const removeJob = async (
 ) => {
   try {
     const id = req.params.id;
-
     if (!id) {
       res.status(404).json({ message: "Failed to provide job ID!" });
     }
-
     const result = await schemas.Job.findByIdAndDelete<Job>(id);
-
     if (!result) {
       res.status(404).json({
         message: `Failed to find job with ID: ${id}! Or could not process request.`,
       });
     }
-
     res.status(200).json(result).end();
   } catch (err) {
     res.status(400).json(err).end();
