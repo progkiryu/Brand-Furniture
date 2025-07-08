@@ -81,11 +81,11 @@ function Dashboard() {
   // };
 
   // // retrieve sub-jobs by making a API fetch call
-  // useEffect(() => {
-  //   fetch(`${DBLink}/subJob/getAllSubJobs`)
-  //     .then(res => res.json())
-  //     .then(data => setSubJobs(data))
-  //     .catch(err => console.log(err));
+  useEffect(() => {
+    fetch(`${DBLink}/subJob/getAllSubJobs`)
+      .then(res => res.json())
+      .then(data => setSubJobs(data))
+      .catch(err => console.log(err));
 
     fetch(`${DBLink}/job/getAllJobs`)
       .then(res => res.json())
