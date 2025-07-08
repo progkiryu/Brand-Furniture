@@ -81,12 +81,24 @@ const upholsterySchema = new mongoose.Schema(
   }
 );
 
+const notificationSchema = new mongoose.Schema(
+  {
+    notifTitle: { type: String, require: true },
+    notifDesc: { type: String, require: true},
+    time: { type: Date, required: true },
+  },
+  {
+    timestamps: true
+  }
+)
+
 const Job = mongoose.model("Job", jobSchema);
 const SubJob = mongoose.model("Subjob", subJobSchema);
 const Frame = mongoose.model("Frame", frameSchema);
 const Cushion = mongoose.model("Model", cushionSchema);
 const Upholstery = mongoose.model("Upholster", upholsterySchema);
+const Notification = mongoose.model("Notification", notificationSchema);
 
-const schemas = { Job, SubJob, Frame, Cushion, Upholstery };
+const schemas = { Job, SubJob, Frame, Cushion, Upholstery, Notification };
 
 export default schemas;

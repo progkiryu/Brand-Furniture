@@ -20,7 +20,6 @@ function SubJobTable({ subJobsParams, jobsParams }: SubJobProps) {
       <table className="orders-table">
         <thead>
           <tr>
-            <th>Job ID</th>
             <th>CLIENT</th>
             <th>JOB NAME</th>
             <th>JOB</th>
@@ -28,6 +27,25 @@ function SubJobTable({ subJobsParams, jobsParams }: SubJobProps) {
           </tr>
         </thead>
         <tbody>
+        {
+          subJobs.map((subJob: SubJob) => {
+            const job = jobs.filter(job => subJob.jobId === job._id);
+
+            let client = "N/A";
+            let name = "N/A"
+            if (job.length !== 0) {
+              client = String(job[0].client);
+              name = String(job[0].name);
+            }
+
+            return <tr key={String(subJob._id)}>
+              <td>{client}</td>
+              <td>{name}</td>
+              <td>{subJob.subJobDetail}</td>
+              <td>{subJob.dueDate ? String(subJob.dueDate) : "N/A"}</td>
+            </tr>
+          })
+        }
         </tbody>
       </table>
     </div>
