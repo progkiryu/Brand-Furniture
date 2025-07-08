@@ -127,17 +127,17 @@
   opacity: 50%;
 } */
 
-#first-container {
+/* #first-container {
   display: flex;
   flex-direction: column;
-  background-color: lightblue;
+  background-color: #E0E1DD;
   height: 100vh;
   flex: 1;
-}
+} */
 
 #schedule-first-container {
   display: flex;
-  background-color: purple;
+  background-color: #EFEFEE;
   justify-content: space-around;
   align-items: center;
   flex: 1;
@@ -199,12 +199,14 @@
 }
 
 .sp-jobs-container tbody td:last-child{
-  background-color: #888888;
+  background-color: #1B263B;
+  color: #ACB7C3;
 }
 
 .sp-jobs-container tbody td:last-child input{
   all: unset;
-  background-color: orange;
+  background-color: #1B263B;
+  color: #ACB7C3;
   border-radius: 5px;
   width: 50px;
   text-align: center;

@@ -24,73 +24,73 @@ function Dashboard() {
   const [allFrames, setAllFrames] = useState<Frame[]>([]);
   const [frame, setFrame] = useState<Frame>();
 
-  // ------------------------------TESTING------------------------------
-  // REMOVE THIS LATER
-  const tempFrame: Frame = {
-    subJobId: "change 1",
-    supplier: "Big Ounce",
-    _id: "686b32490a06936ecbd0c992",
-  };
+  // // ------------------------------TESTING------------------------------
+  // // REMOVE THIS LATER
+  // const tempFrame: Frame = {
+  //   subJobId: "change 1",
+  //   supplier: "Big Ounce",
+  //   _id: "686b32490a06936ecbd0c992",
+  // };
 
-  const tempFrameForCreation: Frame = {
-    subJobId: "1234567890",
-    supplier: "Big Ounce",
-  };
+  // const tempFrameForCreation: Frame = {
+  //   subJobId: "1234567890",
+  //   supplier: "Big Ounce",
+  // };
 
-  const handleGetAllFrames = async () => {
-    const allFrames = await getAllFrames();
-    setAllFrames(allFrames);
-    console.log("handleGetAllFrames: Done.");
-  };
+  // const handleGetAllFrames = async () => {
+  //   const allFrames = await getAllFrames();
+  //   setAllFrames(allFrames);
+  //   console.log("handleGetAllFrames: Done.");
+  // };
 
-  const handleGetFrameById = async () => {
-    if (!tempFrame._id) {
-      tempFrame._id = "";
-    }
-    const frame = await getFrameById(tempFrame._id);
-    setFrame(frame);
-    console.log("handleGetFrameById: Done.");
-  };
+  // const handleGetFrameById = async () => {
+  //   if (!tempFrame._id) {
+  //     tempFrame._id = "";
+  //   }
+  //   const frame = await getFrameById(tempFrame._id);
+  //   setFrame(frame);
+  //   console.log("handleGetFrameById: Done.");
+  // };
 
-  const handleCreateFrame = async () => {
-    await createFrame(tempFrameForCreation);
-    console.log("handleCreateFrame: Done.");
-  };
+  // const handleCreateFrame = async () => {
+  //   await createFrame(tempFrameForCreation);
+  //   console.log("handleCreateFrame: Done.");
+  // };
 
-  const handleDeleteFrame = async () => {
-    if (!tempFrame._id) {
-      tempFrame._id = "";
-    }
-    await deleteFrameById(tempFrame._id);
-    console.log("handleDeleteFrame: Done.");
-  };
+  // const handleDeleteFrame = async () => {
+  //   if (!tempFrame._id) {
+  //     tempFrame._id = "";
+  //   }
+  //   await deleteFrameById(tempFrame._id);
+  //   console.log("handleDeleteFrame: Done.");
+  // };
 
-  const handleUpdateFrame = async () => {
-    await UpdateFrame(tempFrame);
-    console.log("handleUpdateFrame: Done.");
-  };
+  // const handleUpdateFrame = async () => {
+  //   await UpdateFrame(tempFrame);
+  //   console.log("handleUpdateFrame: Done.");
+  // };
 
-  const handleConsoleLogger = () => {
-    console.log("All Frames:");
-    allFrames.map((frame) => {
-      console.log(frame);
-    });
-    console.log("Single Frame:");
-    console.log(frame);
-  };
+  // const handleConsoleLogger = () => {
+  //   console.log("All Frames:");
+  //   allFrames.map((frame) => {
+  //     console.log(frame);
+  //   });
+  //   console.log("Single Frame:");
+  //   console.log(frame);
+  // };
 
-  // retrieve sub-jobs by making a API fetch call
-  useEffect(() => {
-    fetch(`${DBLink}/subJob/getAllSubJobs`)
-      .then(res => res.json())
-      .then(data => setSubJobs(data))
-      .catch(err => console.log(err));
+  // // retrieve sub-jobs by making a API fetch call
+  // useEffect(() => {
+  //   fetch(`${DBLink}/subJob/getAllSubJobs`)
+  //     .then(res => res.json())
+  //     .then(data => setSubJobs(data))
+  //     .catch(err => console.log(err));
 
-    fetch(`${DBLink}/job/getAllJobs`)
-      .then(res => res.json())
-      .then(data => setJobs(data))
-      .catch(err => console.log(err));
-  }, []);
+  //   fetch(`${DBLink}/job/getAllJobs`)
+  //     .then(res => res.json())
+  //     .then(data => setJobs(data))
+  //     .catch(err => console.log(err));
+  // }, []);
 
   return (
     <>
@@ -98,12 +98,12 @@ function Dashboard() {
       <div id="first-container">
         {/*------------------------------TESTING------------------------------*/}
         {/* REMOVE THIS LATER */}
-        <button onClick={handleGetAllFrames}>getAllFrames</button>
+        {/* <button onClick={handleGetAllFrames}>getAllFrames</button>
         <button onClick={handleGetFrameById}>getFrameById</button>
         <button onClick={handleCreateFrame}>createFrame</button>
         <button onClick={handleDeleteFrame}>deleteFrame</button>
         <button onClick={handleUpdateFrame}>updateFrame</button>
-        <button onClick={handleConsoleLogger}>THE CONSOLE LOG BUTTON</button>
+        <button onClick={handleConsoleLogger}>THE CONSOLE LOG BUTTON</button> */}
         {/*------------------------------TESTING------------------------------*/}
 
         <div id="header-container">

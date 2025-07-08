@@ -1,5 +1,6 @@
 #dashboard-first-container {
   /* height: 90vh; */
+
   display: flex;
   gap: 2rem;
   padding: 2rem;

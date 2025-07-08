@@ -41,7 +41,7 @@ p {
     color: #FFFFFF;
     height: 100%;
     position: fixed;
-    left: 10px;
+    left: 0;
     top: 0;
     z-index: 1000;
 }
@@ -51,7 +51,8 @@ p {
     font-weight: bold;
     margin-bottom: 2rem;
     color: #FFFFFF;
-    /* text-align: center;
+    /* left: 10px;
+    text-align: center;
     width: 100%;
     box-sizing: border-box; */
 }
@@ -99,7 +100,7 @@ p {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    background-color: #F8F9FA;
+    background-color: #ACB7C3;
     min-height: 100%;
     overflow-y: auto;
 }
