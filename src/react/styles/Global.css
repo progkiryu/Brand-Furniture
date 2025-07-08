@@ -4,7 +4,6 @@ body {
     background-color: #E0E1DD;
     color: #0D1B2A;
     height: 100%;
-    overflow: hidden;
 }
 
 h1, h2, h3 {
@@ -35,15 +34,14 @@ p {
 
 #navBar-container {
     background-color: #0D1B2A;
-    width: 150px;
+    width: 200px;
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
     color: #FFFFFF;
-    padding: 2rem 1rem;
-    height: 100vh;
+    height: 100%;
     position: fixed;
-    left: 0;
+    left: 10px;
     top: 0;
     z-index: 1000;
 }
@@ -53,6 +51,9 @@ p {
     font-weight: bold;
     margin-bottom: 2rem;
     color: #FFFFFF;
+    /* text-align: center;
+    width: 100%;
+    box-sizing: border-box; */
 }
 
 #navBar-container a {
@@ -93,13 +94,13 @@ p {
 }
 
 #first-container {
-    margin-left: 150px;
+    margin-left: 200px;
     flex: 1;
     display: flex;
     flex-direction: column;
     overflow-y: auto;
     background-color: #F8F9FA;
-    min-height: 100vh;
+    min-height: 100%;
     overflow-y: auto;
 }
 

@@ -3,10 +3,10 @@
   display: flex;
   gap: 2rem;
   padding: 2rem;
-  width: 100%;
+  /* width: 100%; */
   box-sizing: border-box;
   flex-grow: 1;
-  min-height: 0;
+  /* min-height: 0; */
 }
 
 #dashboard-second-container {
@@ -69,25 +69,28 @@
   padding: 1.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 #schedule-container {
     flex: 1;
-    height: auto;
-    flex-direction: column;
+    /* height: auto;
+    flex-direction: column; */
 }
 
-#analytics-container,
+#analytics-container {
+  flex: 1 ;
+}
+
 #notifications-container {
-  width: 100%;
-  height: auto;
-  flex: 1 1 0%;
-  min-height: 0;
+  flex: 1 ;
 }
 
 .upcoming-orders-scroll-container {
   overflow-y: auto;
-  flex-grow: 1
+  flex-grow: 1;
+  margin-top: 1rem;
 }
 
 table {
@@ -110,11 +113,11 @@ th {
   z-index: 1;
 }
 
-.upcoming-orders-scroll-container {
+/* .upcoming-orders-scroll-container {
     flex-grow: 1;
     overflow-y: auto;
     margin-top: 1rem;
-}
+} */
 
 .upcoming-orders-table {
     width: 100%;
@@ -168,6 +171,7 @@ th {
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
+    flex-grow: 1;
 }
 
 .chart {
