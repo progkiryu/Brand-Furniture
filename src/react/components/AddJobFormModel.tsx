@@ -11,12 +11,12 @@ export interface AddJobFormModelProps {
 }
 
 
-function AddJobFormModel({ isOpen, onClose, onAddJob }: AddJobFormModelProps) {
+function AddJobFormModel({ isOpen, onClose, onAddJob}: AddJobFormModelProps) {
     const [invoiceId, setInvoiceId] = useState<string>('');
     const [clientName, setClientName] = useState<string>('');
     const [jobName, setJobName] = useState<string>('');
     const [jobType, setJobType] = useState<string>(''); // New state for job type
-    const [dueDate, setDueDate] = useState<Date>();
+    const [dueDate, setDueDate] = useState<string>('');
 
 
 
@@ -38,16 +38,16 @@ function AddJobFormModel({ isOpen, onClose, onAddJob }: AddJobFormModelProps) {
             client: clientName,
             name: jobName,
             type: jobType, // Added 'type' as per your mock data
-            due: dueDate,
+            due: new Date(dueDate),
         };
-
+        
         onAddJob(newJob);
         // Reset form fields
         setInvoiceId('');
         setClientName('');
         setJobName('');
         setJobType('');
-        setDueDate(undefined);
+        setDueDate('');
     };
 
 
@@ -107,7 +107,7 @@ function AddJobFormModel({ isOpen, onClose, onAddJob }: AddJobFormModelProps) {
                             type="date"
                             id="dueDate"
                             value={String(dueDate)}
-                            onChange={(e) => setDueDate(new Date(e.target.value))}
+                            onChange={(e) => setDueDate(e.target.value)}
                             required
                         />
                     </div>
