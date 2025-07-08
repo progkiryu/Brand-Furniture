@@ -1,14 +1,8 @@
 // AddJobFormModal.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import type { NewJobDataForAdd } from '../pages/Schedule'
 
 // Define NewJobDataForAdd interface directly in this file
-export interface NewJobDataForAdd {
-    invoiceId: String;
-    client: String;
-    name: String;
-    type: String; // Added 'type' as per your mock data
-    due: Date;
-}
 
 export interface AddJobFormModelProps {
     isOpen: boolean;
@@ -55,6 +49,9 @@ function AddJobFormModel({ isOpen, onClose, onAddJob }: AddJobFormModelProps) {
         setJobType('');
         setDueDate(undefined);
     };
+
+
+    
 
     return (
         <div className="modal-overlay" onClick={onClose}>
