@@ -38,7 +38,7 @@ function AddJobFormModel({ isOpen, onClose, onAddJob }: AddJobFormModelProps) {
             client: clientName,
             name: jobName,
             type: jobType, // Added 'type' as per your mock data
-            due: dueDate,
+            due: new Date(dueDate),
         };
 
         onAddJob(newJob);
@@ -47,7 +47,7 @@ function AddJobFormModel({ isOpen, onClose, onAddJob }: AddJobFormModelProps) {
         setClientName('');
         setJobName('');
         setJobType('');
-        setDueDate(undefined);
+        setDueDate('');
     };
 
 
@@ -107,7 +107,7 @@ function AddJobFormModel({ isOpen, onClose, onAddJob }: AddJobFormModelProps) {
                             type="date"
                             id="dueDate"
                             value={String(dueDate)}
-                            onChange={(e) => setDueDate(new Date(e.target.value))}
+                            onChange={(e) => setDueDate(e.target.value)}
                             required
                         />
                     </div>

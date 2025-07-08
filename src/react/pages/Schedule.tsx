@@ -108,14 +108,26 @@ function Schedule() {
         <>
             <Navbar />
             <div id="first-container">
+                <div id="header-container">
+                    <h1>Schedule</h1>
+                </div>
                 <div id="schedule-first-container">
                     <div id="add-job-container">
+                        <div id="search-container">
+                        <SearchBar searchTerm={searchTerm} onSearchChange={handleSearchChange} />
+                        </div>
+                        {/* <div className="dropdown-container">
+                            <Select
+                                options={jobTypeOptions}
+                                onChange={setSelectedJobType}
+                                value={selectedJobType}
+                                placeholder="Select Job Type"
+                                isClearable
+                            />
+                        </div> */}
                         <button onClick={() => setIsAddJobModelOpen(true)} className="add-job-btn">
                             Add Job
                         </button>
-                    </div>
-                    <div id="search-container">
-                        <SearchBar searchTerm={searchTerm} onSearchChange={handleSearchChange} />
                     </div>
                     <div id="filter-container">
                         <h1>Filter</h1>
