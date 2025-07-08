@@ -1,5 +1,5 @@
 // AddJobFormModal.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // Define NewJobDataForAdd interface directly in this file
 export interface NewJobDataForAdd {
@@ -55,6 +55,9 @@ function AddJobFormModel({ isOpen, onClose, onAddJob }: AddJobFormModelProps) {
         setJobType('');
         setDueDate(undefined);
     };
+
+
+    
 
     return (
         <div className="modal-overlay" onClick={onClose}>
