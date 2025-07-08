@@ -67,7 +67,7 @@ export const deleteFrameById = async (
     res.status(200).json({ message: "Frame deleted successfully" });
   } catch (err) {
     console.error(err);
-    res.sendStatus(500);
+    res.sendStatus(400);
   }
 };
 
@@ -91,6 +91,6 @@ export const putUpdateFrame = async (
     res.status(200).json(updatedFrame);
   } catch (err) {
     console.error(err);
-    res.sendStatus(500);
+    res.sendStatus(400);
   }
 };

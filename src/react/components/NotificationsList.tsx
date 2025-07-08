@@ -1,19 +1,23 @@
-import React from "react";
+import { useEffect, useState } from "react";
 
-const NotificationsList: React.FC = () => {
-  const notifications = [
-    { id: 1, title: "Order Due", message: "Order due in 2 days.", time: "9:41 AM" },
-    { id: 2, title: "Pinned Item", message: "It has been 6 days since you last pinned this order.", time: "9:41 AM" },
-    { id: 3, title: "Order Due", message: "Order due in 7 days.", time: "9:41 AM" },
-  ];
+interface NotifProp {
+  notifsParams: Array<Notif>
+}
+
+function NotificationsList({ notifsParams }: NotifProp) {
+  const [ displayedNotifs, setNotifs ] = useState<Array<Notif>>(notifsParams);
+
+  useEffect(() => {
+    setNotifs(notifsParams);
+  }, [notifsParams]);
 
   return (
     <div className="notifications-list">
-      {notifications.map((notif) => (
-        <div key={notif.id} className="notification-item" style={{ borderBottom: "1px solid #ccc", padding: "10px 0" }}>
-          <div style={{ fontWeight: "bold" }}>{notif.title}</div>
-          <div style={{ color: "#555" }}>{notif.message}</div>
-          <div style={{ fontSize: "0.8em", color: "#999" }}>{notif.time}</div>
+      {displayedNotifs.map((notif: Notif) => (
+        <div key={String(notif._id)} className="notification-item" style={{ borderBottom: "1px solid #ccc", padding: "10px 0" }}>
+          <div style={{ fontWeight: "bold" }}>{notif.notifTitle}</div>
+          <div style={{ color: "#555" }}>{notif.notifDesc}</div>
+          <div style={{ fontSize: "0.8em", color: "#999" }}>{String(notif.time)}</div>
         </div>
       ))}
     </div>

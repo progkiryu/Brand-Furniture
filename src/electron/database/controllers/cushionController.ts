@@ -71,7 +71,7 @@ export const deleteCushionById = async (
     res.status(200).json({ message: "Cushion deleted successfully" });
   } catch (err) {
     console.error(err);
-    res.sendStatus(500);
+    res.sendStatus(400);
   }
 };
 
@@ -97,6 +97,6 @@ export const putUpdateCushion = async (
     res.status(200).json(updatedCushion);
   } catch (err) {
     console.error(err);
-    res.sendStatus(500);
+    res.sendStatus(400);
   }
 };

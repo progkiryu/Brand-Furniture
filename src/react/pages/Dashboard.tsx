@@ -21,6 +21,7 @@ import {
 function Dashboard() {
   const [subJobs, setSubJobs] = useState<Array<SubJob>>([]);
   const [jobs, setJobs ] = useState<Array<Job>>([]);
+  const [notifs, setNotifs] = useState<Array<Notif>>([]);
   const [allFrames, setAllFrames] = useState<Frame[]>([]);
   const [frame, setFrame] = useState<Frame>();
 
@@ -86,11 +87,16 @@ function Dashboard() {
   //     .then(data => setSubJobs(data))
   //     .catch(err => console.log(err));
 
-  //   fetch(`${DBLink}/job/getAllJobs`)
-  //     .then(res => res.json())
-  //     .then(data => setJobs(data))
-  //     .catch(err => console.log(err));
-  // }, []);
+    fetch(`${DBLink}/job/getAllJobs`)
+      .then(res => res.json())
+      .then(data => setJobs(data))
+      .catch(err => console.log(err));
+
+    fetch(`${DBLink}/notifications/getAllNotifications`)
+      .then(res => res.json())
+      .then(data => setNotifs(data))
+      .catch(err => console.log(err));
+  }, []);
 
   return (
     <>
@@ -141,7 +147,7 @@ function Dashboard() {
             </div>
             <div id="notifications-container">
               <h1>Notifications</h1>
-              <NotificationsList />
+              <NotificationsList notifsParams={notifs} />
             </div>
           </div>
         </div>

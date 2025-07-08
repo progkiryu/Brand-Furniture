@@ -6,7 +6,7 @@ export const getAllNotifications = async (
     res: express.Response
 ) => {
     try {
-        const notifs = await schemas.Notification.find<Array<Notification>>();
+        const notifs = await schemas.Notif.find<Array<Notif>>();
         
         if (!notifs) {
             res
@@ -26,7 +26,7 @@ export const insertNotification = async (
     res: express.Response
 ) => {
     try {
-        const result = await schemas.Notification.create<Notification>(req.body);
+        const result = await schemas.Notif.create<Notif>(req.body);
 
         if (!result) {
             throw new Error("Could not insert new Notification!");
@@ -50,7 +50,7 @@ export const removeNotification = async (
             res.status(404).json({ message: "Failed to provide notification ID!"});
         }
 
-        const result = await schemas.Notification.findByIdAndDelete<Notification>();
+        const result = await schemas.Notif.findByIdAndDelete<Notif>();
 
         if (!result) {
             res.status(404).json({ message: `Failed to find job with ID: ${id}! Or could not process request.` });
