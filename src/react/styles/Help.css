@@ -1,0 +1,41 @@
+.help-content {
+  padding: 2rem;
+  margin: 0 auto;
+  max-width: 1000px;
+}
+
+.help-content h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+.help-video-placeholder {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.video-frame {
+  width: 80%;
+  height: 400px;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.help-notes h3 {
+  margin-top: 1.5rem;
+  font-size: 1.5rem;
+}
+
+.help-notes h4 {
+  margin-top: 1rem;
+  font-size: 1.2rem;
+}
+
+.help-notes ul {
+  list-style: disc;
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
+}

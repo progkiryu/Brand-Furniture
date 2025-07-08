@@ -10,19 +10,49 @@ import SearchBar from "../components/Searchbar"; // New component
 import JobTable from "../components/JobTable"; // New component
 import AddJobFormModel, { 
     type NewJobDataForAdd, 
-    type AddJobFormModelProps 
 } from "../components/AddJobFormModel"; // New modal component
  
 import { DBLink } from "../App";
+
+export interface NewSubJobDataForAdd {
+    jobId: string; // SubJob now has jobId directly
+    subJobDetail: string;
+    note?: string;
+    file?: string;
+    dueDate?: Date;
+    depositAmount?: number;
+    depositDate?: Date;
+    paidInFull?: boolean;
+    liaison?: string;
+    paymentNote?: string;
+    isArchived?: boolean;
+}
  
 function Schedule() {
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [jobs, setJobs] = useState<Array<Job>>([]); // Manage jobs state here
     // Manage all top-level data arrays as state
     const [subJobs, setSubJobs] = useState<Array<SubJob>>([]);
-    
- 
     const [isAddJobModelOpen, setIsAddJobModelOpen] = useState(false);
+
+    useEffect(() => {
+        fetch(`${DBLink}/job/getAllJobs`)
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                setJobs(data)
+            })
+            .catch(err => console.log(err));
+    }, []);
+
+    useEffect(() => {
+        fetch(`${DBLink}/subJob/getAllSubJobs`)
+        .then((res) => res.json())
+        .then((data) => setSubJobs(data))
+        .catch((err) => console.log(err));
+
+        console.log(subJobs);
+    }, []);
  
     // Handler for when the search input changes
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,25 +63,28 @@ function Schedule() {
     const handleAddJob = (newJobData: NewJobDataForAdd) => {
         // newJobData already contains jobId, invoiceId, client, name, due, type
         const newJob: Job = { // Asserting type to Job
+            
             ...newJobData,
         };
-        // @ts-ignore
         setJobs(prevJobs => [...prevJobs, newJob]);
         setIsAddJobModelOpen(false); // Close the modal after adding
     };
- 
-    useEffect(() => {
-        fetch(`${DBLink}/job/getAllJobs`)
-            .then(res => res.json())
-            .then(jobs => {
-                console.log(jobs);
-                setJobs(jobs)
-            })
-            .catch(err => console.log(err));
-    }, []);
+
  
     // Handler for adding a new SubJob
-    const handleAddSubJob = (newSubJobData: Omit<SubJob, 'jobId'> & { jobId: string }) => {
+    // const handleAddSubJob = (newSubJobData: Omit<SubJob, 'jobId'> & { jobId: string }) => {
+    //     // This function will be passed to JobTable and then to AddSubJobFormModal
+    //     // It needs the jobId to correctly associate the sub-job
+    //     const newSubJob: SubJob = {
+    //         ...newSubJobData,
+    //         // You might need to generate a unique subJobId here if it's not coming from the form
+    //         // For now, assuming subJobId is provided or will be generated in the modal
+    //     };
+    //     setSubJobs(prevSubJobs => [...prevSubJobs, newSubJob]);
+    // };
+
+
+    const handleAddSubJob = (jobId: string, newSubJobData: NewSubJobDataForAdd) => {
         // This function will be passed to JobTable and then to AddSubJobFormModal
         // It needs the jobId to correctly associate the sub-job
         const newSubJob: SubJob = {

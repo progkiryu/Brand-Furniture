@@ -3,12 +3,11 @@ import React, { useState } from 'react';
 
 // Define NewJobDataForAdd interface directly in this file
 export interface NewJobDataForAdd {
-    jobId: string;
-    invoiceId: number; // Changed from 'id' to 'invoiceId' for consistency
-    client: string;
-    name: string;
-    type: string; // Added 'type' for consistency
-    due: string;
+    invoiceId: String;
+    client: String;
+    name: String;
+    type: String; // Added 'type' as per your mock data
+    due: Date;
 }
 
 export interface AddJobFormModelProps {
@@ -23,7 +22,8 @@ function AddJobFormModel({ isOpen, onClose, onAddJob }: AddJobFormModelProps) {
     const [clientName, setClientName] = useState<string>('');
     const [jobName, setJobName] = useState<string>('');
     const [jobType, setJobType] = useState<string>(''); // New state for job type
-    const [dueDate, setDueDate] = useState<string>('');
+    const [dueDate, setDueDate] = useState<Date>();
+
 
 
     if (!isOpen) return null;
@@ -38,14 +38,12 @@ function AddJobFormModel({ isOpen, onClose, onAddJob }: AddJobFormModelProps) {
         }
 
         // const newUniqueJobId = generateMongoStyleId(); // Use MongoDB-style ID
-        const newUniqueJobId = crypto.randomUUID();
 
         const newJob: NewJobDataForAdd = {
-            jobId: newUniqueJobId,
-            invoiceId: parseInt(invoiceId), // Ensure it's 'invoiceId'
+            invoiceId: invoiceId,
             client: clientName,
             name: jobName,
-            type: jobType, // Include job type
+            type: jobType, // Added 'type' as per your mock data
             due: dueDate,
         };
 
@@ -55,7 +53,7 @@ function AddJobFormModel({ isOpen, onClose, onAddJob }: AddJobFormModelProps) {
         setClientName('');
         setJobName('');
         setJobType('');
-        setDueDate('');
+        setDueDate(undefined);
     };
 
     return (
@@ -63,8 +61,10 @@ function AddJobFormModel({ isOpen, onClose, onAddJob }: AddJobFormModelProps) {
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                 <button onClick={onClose} className="modal-close-btn">&times;</button>
                 <form onSubmit={handleSubmit} className="modal-form">
+
                     <h2>Add New Job</h2>
                     <div className="form-group">
+                        
                         <label htmlFor="invoiceId">Invoice ID:</label>
                         <input
                             type="number"
@@ -109,8 +109,8 @@ function AddJobFormModel({ isOpen, onClose, onAddJob }: AddJobFormModelProps) {
                         <input
                             type="date"
                             id="dueDate"
-                            value={dueDate}
-                            onChange={(e) => setDueDate(e.target.value)}
+                            value={String(dueDate)}
+                            onChange={(e) => setDueDate(new Date(e.target.value))}
                             required
                         />
                     </div>

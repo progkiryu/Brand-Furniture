@@ -1,22 +1,36 @@
-// Denver's database
 import { useState, useEffect } from 'react';
-// import type { Job, SubJob } from '../types/jobTypes-erd';
 import AddSubJobFormModal from "../components/AddSubJobFormModal";
 import JobTableRow from './JobTableRow';
+
+
+export interface NewSubJobDataForAdd {
+    jobId: string; // SubJob now has jobId directly
+    subJobDetail: string;
+    note?: string;
+    file?: string;
+    dueDate?: Date;
+    depositAmount?: number;
+    depositDate?: Date;
+    paidInFull?: boolean;
+    liaison?: string;
+    paymentNote?: string;
+    isArchived?: boolean;
+}
 
 
 interface JobTableProps {
     searchTerm: string;
     jobs: Job[];
     subJobs: SubJob[]; // Accept all subJobs as a prop
-    onAddSubJob: (newSubJobData: Omit<SubJob, 'jobId'> & { jobId: string }) => void; // Handler for adding sub-jobs
+    // onAddSubJob: (NewSubJobDataForAdd: Omit<SubJob, 'jobId'> & { jobId: string }) => void; // Handler for adding sub-jobs
+    onAddSubJob: (jobId: string, newSubJobData: NewSubJobDataForAdd) => void;
 }
 
 function JobTable({ searchTerm, jobs, subJobs, onAddSubJob }: JobTableProps) {
     const [displayedJobs, setDisplayedJobs] = useState<Job[]>(jobs);
     const [isAddSubJobModalOpen, setIsAddSubJobModalOpen] = useState(false);
     // State to hold both jobId and invoiceId for the selected job
-    const [selectedJobInfoForSubJob, setSelectedJobInfoForSubJob] = useState<{ jobId: string; invoiceId: number } | null>(null);
+    const [selectedJobInfoForSubJob, setSelectedJobInfoForSubJob] = useState<{ jobId: string; invoiceId: string } | null>(null);
 
 
     useEffect(() => {
@@ -24,7 +38,7 @@ function JobTable({ searchTerm, jobs, subJobs, onAddSubJob }: JobTableProps) {
 
         const filteredJobs = jobs.filter(job => {
             // Search in Job properties
-            if (String(job.invoiceId).toLowerCase().includes(lowerCaseSearchTerm)) {
+            if (job.invoiceId.toLowerCase().includes(lowerCaseSearchTerm)) {
                 return true;
             }
             if (job.client.toLowerCase().includes(lowerCaseSearchTerm)) {
@@ -33,7 +47,7 @@ function JobTable({ searchTerm, jobs, subJobs, onAddSubJob }: JobTableProps) {
             if (job.name.toLowerCase().includes(lowerCaseSearchTerm)) {
                 return true;
             }
-            if (job.due.toLowerCase().includes(lowerCaseSearchTerm)) {
+            if (String(job.due).toLowerCase().includes(lowerCaseSearchTerm)) {
                 return true;
             }
             if (job.type.toLowerCase().includes(lowerCaseSearchTerm)) {
@@ -55,12 +69,12 @@ function JobTable({ searchTerm, jobs, subJobs, onAddSubJob }: JobTableProps) {
 
     // This function now filters the global subJobs array for the specific job
     // JOIN query to retrieve sub-jobs belong to a job with "currentJobId"
-    const getSubJobsForJob = (currentJobId: string) => {
+    const getSubJobsForJob = (currentJobId: String | undefined) => {
         return subJobs.filter(subjob => subjob.jobId === currentJobId);
     };
 
     // Updated handler to receive both jobId and invoiceId
-    const handleOpenAddSubJobModal = (jobId: string, invoiceId: number) => {
+    const handleOpenAddSubJobModal = (jobId: string, invoiceId: string) => {
         setSelectedJobInfoForSubJob({ jobId, invoiceId });
         setIsAddSubJobModalOpen(true);
     };
@@ -89,7 +103,7 @@ function JobTable({ searchTerm, jobs, subJobs, onAddSubJob }: JobTableProps) {
                     <tbody>
                         {displayedJobs.map((job) => (
                             <JobTableRow
-                                key={job._id}
+                                key={String(job._id)}
                                 job={job}
                                 subJobsForJob={getSubJobsForJob(job._id)}
                                 // Pass both jobId and invoiceId to the click handler

@@ -3,7 +3,7 @@ import schemas from "../models/schema.js";
 
 // Get all upholstery
 export const getAllUpholstery = async (
-  req: express.Request,
+  _: express.Request,
   res: express.Response
 ) => {
   try {
@@ -92,7 +92,7 @@ export const putUpdateUpholstry = async (
   res: express.Response
 ) => {
   try {
-    const id = req.body.id;
+    const id = req.body._id;
     const upholstery = await schemas.Upholstery.findByIdAndUpdate(id, req.body);
     if (!upholstery) {
       res
