@@ -11,13 +11,10 @@ export const getAllSubJobs = async (
       res
         .status(404)
         .json({ message: "Error finding 'Subjobs' MongoDB collection!" });
-      return;
     }
     res.status(200).json(subJobs);
-    return;
   } catch (err) {
     res.status(400).json(err);
-    return;
   }
 };
 
@@ -39,10 +36,8 @@ export const getSubJobById = async (
         .json({ message: `Failed to find sub-job with ID: ${id}` });
     }
     res.status(200).json(subJob);
-    return;
   } catch (err) {
     res.status(400).json(err);
-    return;
   }
 };
 
@@ -119,10 +114,8 @@ export const updateSubJob = async (
       });
     }
     res.status(200).json(result);
-    return;
   } catch (err) {
     res.status(400).json(err);
-    return;
   }
 };
 
@@ -142,9 +135,7 @@ export const removeSubJob = async (
       });
     }
     res.status(200).json(result);
-    return;
   } catch (err) {
     res.status(400).json(err);
-    return;
   }
 };

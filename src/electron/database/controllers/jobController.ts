@@ -8,13 +8,10 @@ export const getAllJobs = async (_: express.Request, res: express.Response) => {
       res
         .status(404)
         .json({ message: "Error finding 'Jobs' MongoDB collection!" });
-      return;
     }
     res.status(200).json(jobs);
-    return;
   } catch (err) {
     res.status(400).json(err);
-    return;
   }
 };
 
@@ -32,10 +29,8 @@ export const getJobById = async (
       res.status(404).json({ message: `Failed to find job with ID: ${id}` });
     }
     res.status(200).json(job);
-    return;
   } catch (err) {
     res.status(400).json(err);
-    return;
   }
 };
 
@@ -49,10 +44,8 @@ export const insertJob = async (
       throw new Error("Could not insert new Job!");
     }
     res.status(200).json(result);
-    return;
   } catch (err) {
     res.status(400).json(err);
-    return;
   }
 };
 
