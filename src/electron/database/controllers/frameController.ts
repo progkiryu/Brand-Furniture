@@ -28,10 +28,8 @@ export const getFrameById = async (
     const frame = await schemas.Frame.findById(id);
     if (!frame) {
       res.status(404).json({ message: `Failed to find frame with id: ${id}` });
-      return;
     }
     res.status(200).json(frame);
-    return;
   } catch (err) {
     console.error(err);
     res.sendStatus(400);
@@ -47,7 +45,6 @@ export const postCreateFrame = async (
     const frame = await schemas.Frame.create(req.body);
     if (!frame) {
       res.status(404).json({ message: "Failed to create new Frame" });
-      return;
     }
     res.status(200).json(frame);
   } catch (err) {
@@ -66,7 +63,6 @@ export const deleteFrameById = async (
     const frame = await schemas.Frame.findByIdAndDelete(id);
     if (!frame) {
       res.status(404).json({ message: `Failed to find frame with id: ${id}` });
-      return;
     }
     res.status(200).json({ message: "Frame deleted successfully" });
   } catch (err) {
@@ -85,14 +81,12 @@ export const putUpdateFrame = async (
     const frame = await schemas.Frame.findByIdAndUpdate(id, req.body);
     if (!frame) {
       res.status(404).json({ message: `Failed to find frame with id: ${id}` });
-      return;
     }
     const updatedFrame = await schemas.Frame.findById(id);
     if (!updatedFrame) {
       res
         .status(404)
         .json({ message: `Failed to find updated frame with id: ${id}` });
-      return;
     }
     res.status(200).json(updatedFrame);
   } catch (err) {
