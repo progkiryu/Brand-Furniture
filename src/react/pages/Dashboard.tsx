@@ -20,7 +20,7 @@ import {
 
 function Dashboard() {
   const [subJobs, setSubJobs] = useState<Array<SubJob>>([]);
-  const [jobs, setJobs ] = useState<Array<Job>>([]);
+  const [jobs, setJobs] = useState<Array<Job>>([]);
   const [notifs, setNotifs] = useState<Array<Notif>>([]);
   const [allFrames, setAllFrames] = useState<Frame[]>([]);
   const [frame, setFrame] = useState<Frame>();
@@ -81,21 +81,21 @@ function Dashboard() {
   // };
 
   // // retrieve sub-jobs by making a API fetch call
-  // useEffect(() => {
-  //   fetch(`${DBLink}/subJob/getAllSubJobs`)
-  //     .then(res => res.json())
-  //     .then(data => setSubJobs(data))
-  //     .catch(err => console.log(err));
+  useEffect(() => {
+    fetch(`${DBLink}/subJob/getAllSubJobs`)
+      .then((res) => res.json())
+      .then((data) => setSubJobs(data))
+      .catch((err) => console.log(err));
 
     fetch(`${DBLink}/job/getAllJobs`)
-      .then(res => res.json())
-      .then(data => setJobs(data))
-      .catch(err => console.log(err));
+      .then((res) => res.json())
+      .then((data) => setJobs(data))
+      .catch((err) => console.log(err));
 
     fetch(`${DBLink}/notifications/getAllNotifications`)
-      .then(res => res.json())
-      .then(data => setNotifs(data))
-      .catch(err => console.log(err));
+      .then((res) => res.json())
+      .then((data) => setNotifs(data))
+      .catch((err) => console.log(err));
   }, []);
 
   return (
