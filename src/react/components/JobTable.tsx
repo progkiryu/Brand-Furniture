@@ -1,21 +1,8 @@
 import { useState, useEffect } from 'react';
 import AddSubJobFormModal from "../components/AddSubJobFormModal";
 import JobTableRow from './JobTableRow';
+import type { NewSubJobDataForAdd } from '../pages/Schedule'
 
-
-export interface NewSubJobDataForAdd {
-    jobId: string; // SubJob now has jobId directly
-    subJobDetail: string;
-    note?: string;
-    file?: string;
-    dueDate?: Date;
-    depositAmount?: number;
-    depositDate?: Date;
-    paidInFull?: boolean;
-    liaison?: string;
-    paymentNote?: string;
-    isArchived?: boolean;
-}
 
 
 interface JobTableProps {
