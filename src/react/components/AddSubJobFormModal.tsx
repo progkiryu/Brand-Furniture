@@ -149,7 +149,7 @@
 
 // AddSubJobFormModal.tsx
 import React, { useState } from 'react';
-import type {NewSubJobDataForAdd} from '../pages/Schedule'
+import type { NewSubJobDataForAdd } from '../pages/Schedule'
 
 
 // Define NewFrameDataForAdd locally

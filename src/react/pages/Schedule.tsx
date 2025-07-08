@@ -8,9 +8,7 @@ import { useState, useEffect } from 'react';
 
 import SearchBar from "../components/Searchbar"; // New component
 import JobTable from "../components/JobTable"; // New component
-import AddJobFormModel, { 
-    type NewJobDataForAdd, 
-} from "../components/AddJobFormModel"; // New modal component
+import AddJobFormModel from "../components/AddJobFormModel"; // New modal component
 
  
 import { DBLink } from "../App";
@@ -28,6 +26,15 @@ export interface NewSubJobDataForAdd {
     paymentNote?: string;
     isArchived?: boolean;
 }
+
+export interface NewJobDataForAdd {
+    invoiceId: String;
+    client: String;
+    name: String;
+    type: String; // Added 'type' as per your mock data
+    due: Date;
+}
+
  
 function Schedule() {
     const [searchTerm, setSearchTerm] = useState<string>('');
