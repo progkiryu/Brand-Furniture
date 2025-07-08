@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import AddSubJobFormModal from "../components/AddSubJobFormModal";
 import JobTableRow from './JobTableRow';
-import type { NewSubJobDataForAdd } from '../pages/Schedule'
 
 
 
@@ -10,7 +9,7 @@ interface JobTableProps {
     jobs: Job[];
     subJobs: SubJob[]; // Accept all subJobs as a prop
     // onAddSubJob: (NewSubJobDataForAdd: Omit<SubJob, 'jobId'> & { jobId: string }) => void; // Handler for adding sub-jobs
-    onAddSubJob: (jobId: string, newSubJobData: NewSubJobDataForAdd) => void;
+    onAddSubJob: (jobId: string, newSubJobData: SubJob) => void;
 }
 
 function JobTable({ searchTerm, jobs, subJobs, onAddSubJob }: JobTableProps) {
