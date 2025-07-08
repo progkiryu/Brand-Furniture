@@ -11,10 +11,13 @@ export const getAllSubJobs = async (
       res
         .status(404)
         .json({ message: "Error finding 'Subjobs' MongoDB collection!" });
+      return;
     }
-    res.status(200).json(subJobs).end();
+    res.status(200).json(subJobs);
+    return;
   } catch (err) {
-    res.status(400).json(err).end();
+    res.status(400).json(err);
+    return;
   }
 };
 
@@ -37,9 +40,11 @@ export const getSubJobById = async (
         .json({ message: `Failed to find sub-job with ID: ${id}` });
       return;
     }
-    res.status(200).json(subJob).end();
+    res.status(200).json(subJob);
+    return;
   } catch (err) {
-    res.status(400).json(err).end();
+    res.status(400).json(err);
+    return;
   }
 };
 
@@ -52,9 +57,11 @@ export const insertSubJob = async (
     if (!result) {
       throw new Error("Could not insert new Sub-job!");
     }
-    res.status(200).json(result).end();
+    res.status(200).json(result);
+    return;
   } catch (err) {
-    res.status(400).json(err).end();
+    res.status(400).json(err);
+    return;
   }
 };
 
@@ -74,9 +81,11 @@ export const updateSubJob = async (
       });
       return;
     }
-    res.status(200).json(result).end();
+    res.status(200).json(result);
+    return;
   } catch (err) {
-    res.status(400).json(err).end();
+    res.status(400).json(err);
+    return;
   }
 };
 
@@ -97,8 +106,10 @@ export const removeSubJob = async (
       });
       return;
     }
-    res.status(200).json(result).end();
+    res.status(200).json(result);
+    return;
   } catch (err) {
-    res.status(400).json(err).end();
+    res.status(400).json(err);
+    return;
   }
 };

@@ -10,14 +10,11 @@ export const getAllFrames = async (
     const frames = await schemas.Frame.find({});
     if (!frames) {
       res.status(404).json({ message: "Failed to get frames" });
-      return;
     }
     res.status(200).json(frames);
-    return;
   } catch (err) {
     console.error(err);
     res.sendStatus(400);
-    return;
   }
 };
 
@@ -74,7 +71,7 @@ export const deleteFrameById = async (
     res.status(200).json({ message: "Frame deleted successfully" });
   } catch (err) {
     console.error(err);
-    res.sendStatus(500);
+    res.sendStatus(400);
   }
 };
 
@@ -100,6 +97,6 @@ export const putUpdateFrame = async (
     res.status(200).json(updatedFrame);
   } catch (err) {
     console.error(err);
-    res.sendStatus(500);
+    res.sendStatus(400);
   }
 };

@@ -82,7 +82,7 @@ export const deleteCushionById = async (
     return;
   } catch (err) {
     console.error(err);
-    res.sendStatus(500);
+    res.sendStatus(400);
     return;
   }
 };
@@ -112,7 +112,7 @@ export const putUpdateCushion = async (
     return;
   } catch (err) {
     console.error(err);
-    res.sendStatus(500);
+    res.sendStatus(400);
     return;
   }
 };
