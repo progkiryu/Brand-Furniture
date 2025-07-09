@@ -3,9 +3,10 @@ interface JobTableRowProps {
     subJobsForJob: SubJob[];
     // Update prop type to expect both jobId and invoiceId
     onAddSubJobClick: (jobId: string, invoiceId: string) => void;
+    onEditJobClick: (job: Job) => void; 
 }
 
-function JobTableRow({ job, subJobsForJob, onAddSubJobClick }: JobTableRowProps) {
+function JobTableRow({ job, subJobsForJob, onAddSubJobClick, onEditJobClick }: JobTableRowProps) {
     
     return (
         <tr>
@@ -33,7 +34,13 @@ function JobTableRow({ job, subJobsForJob, onAddSubJobClick }: JobTableRowProps)
                     />
                 </div>
             </td>
-            <td><input type="button" value="Edit"></input></td>
+            <td>
+                <input 
+                    type="button" 
+                    value="Edit"
+                    onClick={() => onEditJobClick(job)} >
+                </input>
+            </td>
         </tr>
     );
 }
