@@ -13,7 +13,7 @@ function JobTableRow({ job, subJobsForJob, onAddSubJobClick }: JobTableRowProps)
             <td>{job.client}</td>
             <td>{job.name}</td>
             <td>{job.type}</td>
-            <td>{job.due}</td>
+            <td>{String(job.due)}</td>
             <td>
                 <div className="sp-sub-jobs-container">
                     {subJobsForJob.map((subjob) => (

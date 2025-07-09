@@ -12,29 +12,6 @@ import AddJobFormModel from "../components/AddJobFormModel"; // New modal compon
 
  
 import { DBLink } from "../App";
-
-export interface NewSubJobDataForAdd {
-    jobId: string; // SubJob now has jobId directly
-    subJobDetail: string;
-    note?: string;
-    file?: string;
-    dueDate?: Date;
-    depositAmount?: number;
-    depositDate?: Date;
-    paidInFull?: boolean;
-    liaison?: string;
-    paymentNote?: string;
-    isArchived?: boolean;
-}
-
-export interface NewJobDataForAdd {
-    invoiceId: String;
-    client: String;
-    name: String;
-    type: String; // Added 'type' as per your mock data
-    due: Date;
-}
-
  
 function Schedule() {
     const [searchTerm, setSearchTerm] = useState<string>('');
@@ -47,7 +24,7 @@ function Schedule() {
         fetch(`${DBLink}/job/getAllJobs`)
             .then(res => res.json())
             .then(data => {
-                console.log(data);
+                console.log(`the data: ${data}`);
                 setJobs(data)
             })
             .catch(err => console.log(err));
@@ -58,8 +35,6 @@ function Schedule() {
         .then((res) => res.json())
         .then((data) => setSubJobs(data))
         .catch((err) => console.log(err));
-
-        console.log(subJobs);
     }, []);
  
     // Handler for when the search input changes
@@ -68,14 +43,24 @@ function Schedule() {
     };
  
     // Handler for adding a new Job
-    const handleAddJob = (newJobData: NewJobDataForAdd) => {
-        // newJobData already contains jobId, invoiceId, client, name, due, type
-        const newJob: Job = { // Asserting type to Job
-            
-            ...newJobData,
-        };
-        setJobs(prevJobs => [...prevJobs, newJob]);
-        setIsAddJobModelOpen(false); // Close the modal after adding
+    const handleAddJob = async (newJobData: Job) => {
+        fetch(`${DBLink}/job/insertJob`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json;charset=UTF-8"
+            },
+            body: JSON.stringify(newJobData)
+        })
+        .then(res => res.json())
+        .then(data => {
+            setJobs(prevJobs => [...prevJobs, data])
+            setIsAddJobModelOpen(false);
+        })
+        .catch(err => console.log(err));
+
+
+ // Close the modal after adding
     };
 
  
@@ -92,7 +77,7 @@ function Schedule() {
     // };
 
 
-    const handleAddSubJob = (jobId: string, newSubJobData: NewSubJobDataForAdd) => {
+    const handleAddSubJob = (newSubJobData: SubJob) => {
         // This function will be passed to JobTable and then to AddSubJobFormModal
         // It needs the jobId to correctly associate the sub-job
         const newSubJob: SubJob = {
