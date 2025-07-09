@@ -31,6 +31,21 @@ export const getJobById = async (
   }
 };
 
+// WIP
+// export const getArchivedJobs = async (
+//   req: express.Request,
+//   res: express.Response
+// ) => {
+// try {
+//   const archivedJobs = await schemas.Job.find({});
+
+//   res.status(200).json(archivedJobs);
+// } catch (err) {
+//   console.error(err);
+//   res.status(400).json(err);
+// }
+// };
+
 export const insertJob = async (
   req: express.Request,
   res: express.Response
@@ -102,11 +117,13 @@ export const updateJob = async (
   res: express.Response
 ) => {
   try {
-    const id = req.body._id; 
+    const id = req.body._id;
     if (!id) {
       res.status(404).json({ message: "Failed to provide job ID!" });
     }
-    const result = await schemas.Job.findByIdAndUpdate(id, req.body, {new: true});
+    const result = await schemas.Job.findByIdAndUpdate(id, req.body, {
+      new: true,
+    });
     if (!result) {
       res.status(404).json({
         message: `Failed to find job with ID: ${id}! Or could not process request.`,

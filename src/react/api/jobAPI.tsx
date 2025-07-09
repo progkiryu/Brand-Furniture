@@ -43,7 +43,11 @@ export const createJob = async (data: Job) => {
 };
 
 // Get list of jobs within specified date range
-export const getFilteredJobsByDate = async (range: DateRange) => {
+export const getFilteredJobsByDate = async (startD: Date, endD: Date) => {
+  const range = {
+    startDate: startD,
+    endDate: endD,
+  };
   const jobs = fetch(`${DBLink}/job/getFilteredJobsByDate`, {
     method: "POST",
     mode: "cors",

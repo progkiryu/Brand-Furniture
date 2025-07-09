@@ -7,6 +7,7 @@ type Job = {
   due: Date;
   subJobList?: String[];
   isPinned?: Boolean;
+  isArchived?: Boolean;
 };
 
 type SubJob = {
@@ -24,7 +25,6 @@ type SubJob = {
   frameList?: String[];
   cushionList?: String[];
   upholsteryList?: String[];
-  isArchived?: Boolean;
   status?: String; // status of subjob (6 colours), default: "Unassigned"
 };
 
