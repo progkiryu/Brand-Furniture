@@ -120,7 +120,6 @@ function Schedule() {
                 method: "PUT",
                 mode: "cors",
                 headers: { "Content-Type": "application/json" },
-                // The redundant `_id` can be removed from the body
                 body: JSON.stringify({ _id: jobId, ...dataToSend }),
             });
 
