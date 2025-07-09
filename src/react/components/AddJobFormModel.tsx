@@ -1,13 +1,12 @@
 // AddJobFormModal.tsx
-import React, { useState, useEffect } from 'react';
-import type { NewJobDataForAdd } from '../pages/Schedule'
+import React, { useState } from 'react';
 
 // Define NewJobDataForAdd interface directly in this file
 
 export interface AddJobFormModelProps {
     isOpen: boolean;
     onClose: () => void;
-    onAddJob: (job: NewJobDataForAdd) => void;
+    onAddJob: (job: Job) => void;
 }
 
 
@@ -17,8 +16,6 @@ function AddJobFormModel({ isOpen, onClose, onAddJob}: AddJobFormModelProps) {
     const [jobName, setJobName] = useState<string>('');
     const [jobType, setJobType] = useState<string>(''); // New state for job type
     const [dueDate, setDueDate] = useState<string>('');
-
-
 
     if (!isOpen) return null;
 
@@ -33,7 +30,7 @@ function AddJobFormModel({ isOpen, onClose, onAddJob}: AddJobFormModelProps) {
 
         // const newUniqueJobId = generateMongoStyleId(); // Use MongoDB-style ID
 
-        const newJob: NewJobDataForAdd = {
+        const newJob: Job = {
             invoiceId: invoiceId,
             client: clientName,
             name: jobName,
@@ -48,7 +45,6 @@ function AddJobFormModel({ isOpen, onClose, onAddJob}: AddJobFormModelProps) {
         setJobName('');
         setJobType('');
         setDueDate('');
-    };
 
 
     
