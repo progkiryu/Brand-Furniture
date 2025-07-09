@@ -77,7 +77,7 @@ function Schedule() {
     // };
 
 
-    const handleAddSubJob = (newSubJobData: SubJob) => {
+    const handleAddSubJob = (jobId: string, newSubJobData: SubJob) => {
         // This function will be passed to JobTable and then to AddSubJobFormModal
         // It needs the jobId to correctly associate the sub-job
         const newSubJob: SubJob = {
