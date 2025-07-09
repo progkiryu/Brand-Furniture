@@ -39,7 +39,6 @@ function AddJobFormModel({ isOpen, onClose, onAddJob}: AddJobFormModelProps) {
         };
         
         onAddJob(newJob);
-        // Reset form fields
         setInvoiceId('');
         setClientName('');
         setJobName('');
@@ -102,7 +101,7 @@ function AddJobFormModel({ isOpen, onClose, onAddJob}: AddJobFormModelProps) {
                         <input
                             type="date"
                             id="dueDate"
-                            value={String(dueDate)}
+                            value={dueDate}
                             onChange={(e) => setDueDate(e.target.value)}
                             required
                         />
