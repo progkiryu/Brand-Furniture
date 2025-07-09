@@ -31,7 +31,9 @@ export const getFilteredJobsByDate = async (range: DateRange) => {
     mode: "cors",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(range),
-  });
+  })
+    .then((res) => res.json())
+    .catch((err) => console.error(err));
   if (!jobs) {
     alert("Error: Failed to find any jobs within date range.");
     return;
