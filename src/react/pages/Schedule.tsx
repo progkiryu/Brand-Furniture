@@ -103,6 +103,50 @@ function Schedule() {
         }
     };
 
+    const handleEditJobClick = (job: Job) => {
+        setJobToEdit(job); // Set the job to be edited
+        setIsEditJobModalOpen(true); // Open the edit modal
+    };
+
+    // Handler to update an existing Job
+    const handleUpdateJob = async (jobId: string, updatedData: UpdateJobData) => {
+        try {
+            // Convert Date object to ISO string for sending to backend if 'due' is updated
+            const dataToSend: UpdateJobData = { ...updatedData };
+            if (dataToSend.due) {
+                dataToSend.due = dataToSend.due.toISOString() as any; // Cast to any to bypass type error for string
+            }
+
+            const response = await fetch(`${DBLink}/job/updateJob/${jobId}`, { // Assuming updateJob takes ID in URL
+                method: "PUT", // Or PATCH, depending on your API
+                mode: "cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(dataToSend),
+            });
+
+            if (response.ok) {
+                const updatedJob: Job = await response.json(); // Assuming API returns the updated job
+                // Convert 'due' back to Date object for state
+                const processedUpdatedJob = {
+                    ...updatedJob,
+                    due: updatedJob.due ? new Date(updatedJob.due) : updatedJob.due
+                };
+                setJobs(prevJobs => prevJobs.map(job =>
+                    job._id === processedUpdatedJob._id ? processedUpdatedJob : job // Replace the job with the updated version
+                ));
+                alert("Job updated successfully.");
+                setIsEditJobModalOpen(false); // Close modal after update
+                setJobToEdit(null); // Clear jobToEdit state
+            } else {
+                const errorText = await response.text();
+                alert(`Error: Failed to update job. ${errorText}`);
+                console.error("Failed to update job:", response.status, errorText);
+            }
+        } catch (err) {
+            console.error("Error updating job:", err);
+            alert("Error: Failed to connect to the server or update job.");
+        }
+    };
     
 
     const handleAddSubJob = (jobId: string, newSubJobData: NewSubJobDataForAdd) => {

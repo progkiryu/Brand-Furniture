@@ -46,7 +46,7 @@ function AddJobFormModel({ isOpen, onClose, onAddJob}: AddJobFormModelProps) {
         setJobType('');
         setDueDate('');
 
-
+    }
     
 
     return (
