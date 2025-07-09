@@ -10,7 +10,7 @@ export interface AddJobFormModelProps {
 }
 
 
-function AddJobFormModel({ isOpen, onClose, onAddJob }: AddJobFormModelProps) {
+function AddJobFormModel({ isOpen, onClose, onAddJob}: AddJobFormModelProps) {
     const [invoiceId, setInvoiceId] = useState<string>('');
     const [clientName, setClientName] = useState<string>('');
     const [jobName, setJobName] = useState<string>('');
@@ -38,7 +38,6 @@ function AddJobFormModel({ isOpen, onClose, onAddJob }: AddJobFormModelProps) {
             due: new Date(dueDate),
         };
         
-
         onAddJob(newJob);
         // Reset form fields
         setInvoiceId('');
@@ -46,7 +45,6 @@ function AddJobFormModel({ isOpen, onClose, onAddJob }: AddJobFormModelProps) {
         setJobName('');
         setJobType('');
         setDueDate('');
-    };
 
 
     
@@ -104,7 +102,7 @@ function AddJobFormModel({ isOpen, onClose, onAddJob }: AddJobFormModelProps) {
                         <input
                             type="date"
                             id="dueDate"
-                            value={dueDate}
+                            value={String(dueDate)}
                             onChange={(e) => setDueDate(e.target.value)}
                             required
                         />

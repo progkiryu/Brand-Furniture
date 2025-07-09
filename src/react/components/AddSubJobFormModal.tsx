@@ -559,7 +559,7 @@ function AddSubJobFormModal({ isOpen, onClose, jobId, invoiceId, onAddSubJob }: 
                         )}
                     </div>
 
-                    <button type="submit">Add Sub-Job</button> {/* This button will submit the currently active tab's data (or all if combined) */}
+                    <button type="submit">Add Component</button> {/* This button will submit the currently active tab's data (or all if combined) */}
                 </form>
             </div>
         </div>

@@ -231,3 +231,16 @@ th {
   .chart-percentage { font-size: 0.6rem; }
   .legend-item { font-size: 0.6rem; }
 }
+
+
+
+@media (max-width: 987px) {
+  #dashboard-first-container {
+    flex-wrap: wrap; /* Wrap to next line below 987px */
+    flex-direction: column;
+  }
+  .job-analytics {
+    height: 300px;
+  }
+  
+}

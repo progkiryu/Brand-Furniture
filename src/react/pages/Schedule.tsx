@@ -41,41 +41,34 @@ function Schedule() {
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
     };
+
  
-    // Handler for adding a new Job
-    const handleAddJob = async (newJobData: Job) => {
-        fetch(`${DBLink}/job/insertJob`,
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json;charset=UTF-8"
-            },
-            body: JSON.stringify(newJobData)
-        })
-        .then(res => res.json())
-        .then(data => {
-            setJobs(prevJobs => [...prevJobs, data])
-            setIsAddJobModelOpen(false);
-        })
-        .catch(err => console.log(err));
+    const handleAddJob = async (newJobData: NewJobDataForAdd) => {
+        try {
+            const response = await fetch(`${DBLink}/job/insertJob`, {
+                method: "POST",
+                mode: "cors",
+                headers: { "Content-Type": "application/json" }, // Corrected content type
+                body: JSON.stringify(newJobData),
+            });
 
-
- // Close the modal after adding
+            if (response.ok) {
+                const addedJob: Job = await response.json(); // Assuming API returns the created job
+                setJobs(prevJobs => [...prevJobs, addedJob]);
+                alert("Job created successfully.");
+                setIsAddJobModelOpen(false); // Close the modal after adding
+            } else {
+                const errorText = await response.text(); // Read error response
+                alert(`Error: Failed to create job. ${errorText}`);
+                console.error("Failed to create job:", response.status, errorText);
+            }
+        } catch (err) {
+            console.error("Error creating job:", err);
+            alert("Error: Failed to connect to the server or create job.");
+        }
     };
 
- 
-    // Handler for adding a new SubJob
-    // const handleAddSubJob = (newSubJobData: Omit<SubJob, 'jobId'> & { jobId: string }) => {
-    //     // This function will be passed to JobTable and then to AddSubJobFormModal
-    //     // It needs the jobId to correctly associate the sub-job
-    //     const newSubJob: SubJob = {
-    //         ...newSubJobData,
-    //         // You might need to generate a unique subJobId here if it's not coming from the form
-    //         // For now, assuming subJobId is provided or will be generated in the modal
-    //     };
-    //     setSubJobs(prevSubJobs => [...prevSubJobs, newSubJob]);
-    // };
-
+    
 
     const handleAddSubJob = (newSubJobData: SubJob) => {
         // This function will be passed to JobTable and then to AddSubJobFormModal
