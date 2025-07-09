@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import AddSubJobFormModal from "../components/AddSubJobFormModal";
 import JobTableRow from './JobTableRow';
+import type { NewSubJobDataForAdd } from '../pages/Schedule';
 
 
 
@@ -9,10 +10,11 @@ interface JobTableProps {
     jobs: Job[];
     subJobs: SubJob[]; // Accept all subJobs as a prop
     // onAddSubJob: (NewSubJobDataForAdd: Omit<SubJob, 'jobId'> & { jobId: string }) => void; // Handler for adding sub-jobs
-    onAddSubJob: (jobId: string, newSubJobData: SubJob) => void;
+    onAddSubJob: (jobId: string, newSubJobData: NewSubJobDataForAdd) => void;
+    onEditJobClick: (job: Job) => void;
 }
 
-function JobTable({ searchTerm, jobs, subJobs, onAddSubJob }: JobTableProps) {
+function JobTable({ searchTerm, jobs, subJobs, onAddSubJob, onEditJobClick }: JobTableProps) {
     const [displayedJobs, setDisplayedJobs] = useState<Job[]>(jobs);
     const [isAddSubJobModalOpen, setIsAddSubJobModalOpen] = useState(false);
     // State to hold both jobId and invoiceId for the selected job
@@ -94,6 +96,7 @@ function JobTable({ searchTerm, jobs, subJobs, onAddSubJob }: JobTableProps) {
                                 subJobsForJob={getSubJobsForJob(job._id)}
                                 // Pass both jobId and invoiceId to the click handler
                                 onAddSubJobClick={handleOpenAddSubJobModal}
+                                onEditJobClick={onEditJobClick}
                             />
                         ))}
                     </tbody>
