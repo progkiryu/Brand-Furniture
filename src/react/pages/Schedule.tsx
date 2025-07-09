@@ -43,7 +43,7 @@ function Schedule() {
     };
 
  
-    const handleAddJob = async (newJobData: NewJobDataForAdd) => {
+    const handleAddJob = async (newJobData: Job) => {
         try {
             const response = await fetch(`${DBLink}/job/insertJob`, {
                 method: "POST",
