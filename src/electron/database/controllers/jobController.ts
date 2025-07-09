@@ -43,9 +43,9 @@ export const insertJob = async (
     if (!result) {
       throw new Error("Could not insert new Job!");
     }
-    res.status(200).json(result);
+    res.status(200).json(result).end();
   } catch (err) {
-    res.status(400).json(err);
+    res.status(400).json(err).end();
   }
 };
 
