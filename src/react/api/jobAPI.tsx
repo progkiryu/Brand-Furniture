@@ -29,7 +29,7 @@ export const createJob = async (data: Job) => {
   fetch(`${DBLink}/job/insertJob`, {
     method: "POST",
     mode: "cors",
-    headers: { "Content-Type": "application.json" },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   })
     .then((res) => {
