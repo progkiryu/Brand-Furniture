@@ -102,11 +102,11 @@ export const updateJob = async (
   res: express.Response
 ) => {
   try {
-    const id = req.body._id;
+    const id = req.body._id; 
     if (!id) {
       res.status(404).json({ message: "Failed to provide job ID!" });
     }
-    const result = await schemas.Job.findByIdAndUpdate(id, req.body);
+    const result = await schemas.Job.findByIdAndUpdate(id, req.body, {new: true});
     if (!result) {
       res.status(404).json({
         message: `Failed to find job with ID: ${id}! Or could not process request.`,

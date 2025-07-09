@@ -18,14 +18,47 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob }: EditJobFo
     const [dueDate, setDueDate] = useState<string>(''); // Keep as string for input type="date"
 
     // Effect to populate form fields when jobToEdit changes (i.e., modal opens for a new job)
+    // useEffect(() => {
+    //     if (jobToEdit) {
+    //         setInvoiceId(String(jobToEdit.invoiceId) || '');
+    //         setClientName(String(jobToEdit.client) || '');
+    //         setJobName(String(jobToEdit.name) || '');
+    //         setJobType(String(jobToEdit.type) || '');
+    //         // Format Date object to YYYY-MM-DD string for input type="date"
+    //         setDueDate(jobToEdit.due ? jobToEdit.due.toISOString().split('T')[0] : '');
+    //     } else {
+    //         // Reset fields if modal is closed or no job is being edited
+    //         setInvoiceId('');
+    //         setClientName('');
+    //         setJobName('');
+    //         setJobType('');
+    //         setDueDate('');
+    //     }
+    // }, [jobToEdit]); // Dependency array ensures this runs when jobToEdit changes
+
     useEffect(() => {
         if (jobToEdit) {
+            // Ensure values are strings for input fields
             setInvoiceId(String(jobToEdit.invoiceId) || '');
             setClientName(String(jobToEdit.client) || '');
             setJobName(String(jobToEdit.name) || '');
             setJobType(String(jobToEdit.type) || '');
-            // Format Date object to YYYY-MM-DD string for input type="date"
-            setDueDate(jobToEdit.due ? jobToEdit.due.toISOString().split('T')[0] : '');
+
+            // Robust check and conversion for 'due' date
+            if (jobToEdit.due instanceof Date) {
+                // If it's already a Date object, format it
+                setDueDate(jobToEdit.due.toISOString().split('T')[0]);
+            } else if (typeof jobToEdit.due === 'string') {
+                // If it's a string, try converting it to a Date object first
+                const potentialDate = new Date(jobToEdit.due);
+                if (!isNaN(potentialDate.getTime())) { // Check if the conversion resulted in a valid date
+                    setDueDate(potentialDate.toISOString().split('T')[0]);
+                } else {
+                    setDueDate(''); // If string is not a valid date, set to empty
+                }
+            } else {
+                setDueDate(''); // If it's null, undefined, or other, set to empty
+            }
         } else {
             // Reset fields if modal is closed or no job is being edited
             setInvoiceId('');
@@ -34,7 +67,7 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob }: EditJobFo
             setJobType('');
             setDueDate('');
         }
-    }, [jobToEdit]); // Dependency array ensures this runs when jobToEdit changes
+    }, [jobToEdit]); 
 
     if (!isOpen || !jobToEdit) return null; // Don't render if not open or no job to edit
 
@@ -65,6 +98,11 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob }: EditJobFo
             console.error("Job ID is missing for update.");
             alert("Cannot update job: ID is missing.");
         }
+        // setInvoiceId('');
+        // setClientName('');
+        // setJobName('');
+        // setJobType('');
+        // setDueDate('');
     };
 
     return (
@@ -72,7 +110,7 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob }: EditJobFo
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                 <button onClick={onClose} className="modal-close-btn">&times;</button>
                 <form onSubmit={handleSubmit} className="modal-form">
-                    <h2>Edit Job: {jobToEdit.name} || 'N/A'</h2> {/* Display job name in heading */}
+                    <h2>Edit Job: {jobToEdit.name} #{jobToEdit.invoiceId}</h2> {/* Display job name in heading */}
 
                     <div className="form-group">
                         <label htmlFor="invoiceId">Invoice ID:</label>
