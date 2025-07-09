@@ -25,7 +25,6 @@ export interface NewSubJobDataForAdd {
     paidInFull?: boolean;
     liaison?: string;
     paymentNote?: string;
-    isArchived?: boolean;
 }
 
 export interface NewJobDataForAdd {

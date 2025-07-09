@@ -230,7 +230,6 @@ function AddSubJobFormModal({ isOpen, onClose, jobId, invoiceId, onAddSubJob }: 
 
     // State for Admin Details (Admin Tab)
     const [adminNotes, setAdminNotes] = useState<string>('');
-    const [isArchived, setIsArchived] = useState<boolean>(false);
 
 
     // State to manage the active tab
@@ -265,7 +264,6 @@ function AddSubJobFormModal({ isOpen, onClose, jobId, invoiceId, onAddSubJob }: 
             paidInFull: paidInFull, // Boolean
             liaison: liaison,
             paymentNote: paymentNote,
-            isArchived: isArchived, // From Admin tab, but included here for initial creation
         };
 
         // Call the parent handler, passing the jobId and the new sub-job data
@@ -306,7 +304,6 @@ function AddSubJobFormModal({ isOpen, onClose, jobId, invoiceId, onAddSubJob }: 
         setUpholsteryReceivedDate('');
 
         setAdminNotes('');
-        setIsArchived(false);
 
         setActiveTab('detail'); // Reset to detail tab after submission
     };
@@ -545,15 +542,6 @@ function AddSubJobFormModal({ isOpen, onClose, jobId, invoiceId, onAddSubJob }: 
                                         onChange={(e) => setAdminNotes(e.target.value)}
                                         rows={4}
                                     ></textarea>
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="isArchived">Is Archived:</label>
-                                    <input
-                                        type="checkbox"
-                                        id="isArchived"
-                                        checked={isArchived}
-                                        onChange={(e) => setIsArchived(e.target.checked)}
-                                    />
                                 </div>
                             </div>
                         )}
