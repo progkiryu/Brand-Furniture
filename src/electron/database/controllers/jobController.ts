@@ -31,6 +31,21 @@ export const getJobById = async (
   }
 };
 
+export const insertJob = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  try {
+    const result = await schemas.Job.create(req.body);
+    if (!result) {
+      throw new Error("Could not insert new Job!");
+    }
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(400).json(err);
+  }
+};
+
 export const getFilteredJobsByDate = async (
   req: express.Request,
   res: express.Response
@@ -38,8 +53,6 @@ export const getFilteredJobsByDate = async (
   try {
     const startDate: String = req.body.startDate;
     const endDate: String = req.body.endDate;
-
-    // Check for date range
     if (!startDate || !endDate) {
       res.status(404).json({ message: "Failed to provide date range." });
     }
@@ -59,17 +72,27 @@ export const getFilteredJobsByDate = async (
   }
 };
 
-export const insertJob = async (
+export const getFilteredJobsByType = async (
   req: express.Request,
   res: express.Response
 ) => {
   try {
-    const result = await schemas.Job.create(req.body);
-    if (!result) {
-      throw new Error("Could not insert new Job!");
+    const type: String = req.body.type;
+    if (!type) {
+      res.status(404).json({ message: "Failed to provide job type." });
     }
-    res.status(200).json(result);
+
+    // Search for subJobs within specified range
+    const jobs = await schemas.Job.find({
+      type: { $in: type },
+    }).sort({ due: "ascending" }); // sort earliest due first
+    if (!jobs) {
+      res.status(404).json({ message: "Failed to find any filtered jobs." });
+    }
+
+    res.status(200).json(jobs);
   } catch (err) {
+    console.error(err);
     res.status(400).json(err);
   }
 };

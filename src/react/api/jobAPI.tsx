@@ -24,6 +24,24 @@ export const getJobById = async (id: String) => {
   return job;
 };
 
+// Create a new job
+export const createJob = async (data: Job) => {
+  fetch(`${DBLink}/job/insertJob`, {
+    method: "POST",
+    mode: "cors",
+    headers: { "Content-Type": "application.json" },
+    body: JSON.stringify(data),
+  })
+    .then((res) => {
+      if (res.ok) {
+        alert("Job created successfully.");
+      } else {
+        alert("Error: Failed to create job.");
+      }
+    })
+    .catch((err) => console.error(err));
+};
+
 // Get list of jobs within specified date range
 export const getFilteredJobsByDate = async (range: DateRange) => {
   const jobs = fetch(`${DBLink}/job/getFilteredJobsByDate`, {
@@ -41,22 +59,21 @@ export const getFilteredJobsByDate = async (range: DateRange) => {
   return jobs;
 };
 
-// Create a new job
-export const createJob = async (data: Job) => {
-  fetch(`${DBLink}/job/insertJob`, {
+// Get list of jobs with specific type. Note: must be exact match
+export const getFilteredJobsByType = async (type: String) => {
+  const jobs = fetch(`${DBLink}/job/getFilteredJobsByType`, {
     method: "POST",
     mode: "cors",
-    headers: { "Content-Type": "application.json" },
-    body: JSON.stringify(data),
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(type),
   })
-    .then((res) => {
-      if (res.ok) {
-        alert("Job created successfully.");
-      } else {
-        alert("Error: Failed to create job.");
-      }
-    })
+    .then((res) => res.json())
     .catch((err) => console.error(err));
+  if (!jobs) {
+    alert("Error: Failed to find jobs with matching types.");
+    return;
+  }
+  return jobs;
 };
 
 // Delete a job by Id
