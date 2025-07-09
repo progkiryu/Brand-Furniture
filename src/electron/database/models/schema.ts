@@ -31,6 +31,7 @@ const subJobSchema = new mongoose.Schema(
     cushionList: { type: [String], default: [] },
     upholsteryList: { type: [String], defailt: [] },
     isArchived: { type: Boolean, default: false },
+    status: { type: String, default: "Unassigned" }, // the 6 colours + unassigned
   },
   {
     timestamps: true,

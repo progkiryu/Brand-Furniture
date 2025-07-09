@@ -21,15 +21,40 @@ export const getJobById = async (
 ) => {
   try {
     const id = req.params.id;
-    if (!id) {
-      res.status(404).json({ message: "Failed to provide ID!" });
-    }
     const job = await schemas.Job.findById(id);
     if (!job) {
       res.status(404).json({ message: `Failed to find job with ID: ${id}` });
     }
     res.status(200).json(job);
   } catch (err) {
+    res.status(400).json(err);
+  }
+};
+
+export const getFilteredJobsByDate = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  try {
+    const startDate: String = req.body.startDate;
+    const endDate: String = req.body.endDate;
+
+    // Check for date range
+    if (!startDate || !endDate) {
+      res.status(404).json({ message: "Failed to provide date range." });
+    }
+
+    // Search for subJobs within specified range
+    const jobs = await schemas.Job.find({
+      due: { $gte: startDate, $lte: endDate },
+    }).sort({ due: "ascending" }); // sort earliest due first
+    if (!jobs) {
+      res.status(404).json({ message: "Failed to find any filtered jobs." });
+    }
+
+    res.status(200).json(jobs);
+  } catch (err) {
+    console.error(err);
     res.status(400).json(err);
   }
 };
@@ -75,11 +100,7 @@ export const removeJob = async (
   res: express.Response
 ) => {
   try {
-    // Check for provided ID
     const id = req.params.id;
-    if (!id) {
-      res.status(404).json({ message: "Failed to provide job ID!" });
-    }
 
     // Check if job exists
     const job = await schemas.Job.findById(id);

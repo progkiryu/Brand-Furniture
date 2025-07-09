@@ -24,6 +24,21 @@ export const getJobById = async (id: String) => {
   return job;
 };
 
+// Get list of jobs within specified date range
+export const getFilteredJobsByDate = async (range: DateRange) => {
+  const jobs = fetch(`${DBLink}/job/getFilteredJobsByDate`, {
+    method: "POST",
+    mode: "cors",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(range),
+  });
+  if (!jobs) {
+    alert("Error: Failed to find any jobs within date range.");
+    return;
+  }
+  return jobs;
+};
+
 // Create a new job
 export const createJob = async (data: Job) => {
   fetch(`${DBLink}/job/insertJob`, {

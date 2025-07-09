@@ -24,11 +24,6 @@ export const getSubJobById = async (
 ) => {
   try {
     const id = req.params.id;
-    if (!id) {
-      res
-        .status(404)
-        .json({ message: `Failed to find sub-job with ID: ${id}` });
-    }
     const subJob = await schemas.SubJob.findById<SubJob>(id);
     if (!subJob) {
       res
@@ -120,12 +115,7 @@ export const removeSubJob = async (
   res: express.Response
 ) => {
   try {
-    // Check for subJob ID
     const subJobId = req.params.id;
-    if (!subJobId) {
-      res.status(404).json({ message: "Failed to provide subjob ID." });
-    }
-
     // Get the subJob's mainJob ID
     const subJob = await schemas.SubJob.findById(subJobId);
     if (!subJob) {
