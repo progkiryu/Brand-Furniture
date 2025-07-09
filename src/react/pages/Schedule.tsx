@@ -90,16 +90,13 @@ function Schedule() {
             if (response.ok) {
                 const addedJob: Job = await response.json(); // Assuming API returns the created job
                 setJobs(prevJobs => [...prevJobs, addedJob]);
-                alert("Job created successfully.");
                 setIsAddJobModelOpen(false); // Close the modal after adding
             } else {
                 const errorText = await response.text(); // Read error response
-                alert(`Error: Failed to create job. ${errorText}`);
                 console.error("Failed to create job:", response.status, errorText);
             }
         } catch (err) {
             console.error("Error creating job:", err);
-            alert("Error: Failed to connect to the server or create job.");
         }
     };
 
@@ -138,17 +135,14 @@ function Schedule() {
                 setJobs(updatedJobsList);
 
 
-                alert("Job updated successfully.");
                 setIsEditJobModalOpen(false);
                 setJobToEdit(null);
             } else {
                 const errorText = await response.text();
-                alert(`Error: Failed to update job. ${errorText}`);
                 console.error("Failed to update job:", response.status, errorText);
             }
         } catch (err) {
             console.error("Error updating job:", err);
-            alert("Error: Failed to connect to the server or update job.");
         }
     };
 
