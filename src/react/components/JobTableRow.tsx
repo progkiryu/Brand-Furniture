@@ -14,7 +14,7 @@ function JobTableRow({ job, subJobsForJob, onAddSubJobClick, onEditJobClick }: J
             <td>{job.client}</td>
             <td>{job.name}</td>
             <td>{job.type}</td>
-            <td>{String(job.due)}</td>
+            <td key={`due-${job._id}`}>{String(job.due)}</td>
             <td>
                 <div className="sp-sub-jobs-container">
                     {subJobsForJob.map((subjob) => (
