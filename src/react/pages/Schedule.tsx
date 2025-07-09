@@ -107,36 +107,41 @@ function Schedule() {
         setJobToEdit(job); // Set the job to be edited
         setIsEditJobModalOpen(true); // Open the edit modal
     };
+    
 
-    // Handler to update an existing Job
     const handleUpdateJob = async (jobId: string, updatedData: UpdateJobData) => {
         try {
-            // Convert Date object to ISO string for sending to backend if 'due' is updated
             const dataToSend: UpdateJobData = { ...updatedData };
             if (dataToSend.due) {
-                dataToSend.due = dataToSend.due.toISOString() as any; // Cast to any to bypass type error for string
+                dataToSend.due = dataToSend.due.toISOString() as any;
             }
 
-            const response = await fetch(`${DBLink}/job/updateJob/${jobId}`, { // Assuming updateJob takes ID in URL
-                method: "PUT", // Or PATCH, depending on your API
+            const response = await fetch(`${DBLink}/job/updateJob/${jobId}`, {
+                method: "PUT",
                 mode: "cors",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(dataToSend),
+                // The redundant `_id` can be removed from the body
+                body: JSON.stringify({ _id: jobId, ...dataToSend }),
             });
 
+            // ... rest of the function remains the same
             if (response.ok) {
-                const updatedJob: Job = await response.json(); // Assuming API returns the updated job
-                // Convert 'due' back to Date object for state
+                const updatedJob: Job = await response.json();
+                
                 const processedUpdatedJob = {
                     ...updatedJob,
                     due: updatedJob.due ? new Date(updatedJob.due) : updatedJob.due
                 };
-                setJobs(prevJobs => prevJobs.map(job =>
-                    job._id === processedUpdatedJob._id ? processedUpdatedJob : job // Replace the job with the updated version
-                ));
+
+                const updatedJobsList = jobs.map((job) => 
+                    job._id === processedUpdatedJob._id ? processedUpdatedJob : job
+                );
+                setJobs(updatedJobsList);
+
+
                 alert("Job updated successfully.");
-                setIsEditJobModalOpen(false); // Close modal after update
-                setJobToEdit(null); // Clear jobToEdit state
+                setIsEditJobModalOpen(false);
+                setJobToEdit(null);
             } else {
                 const errorText = await response.text();
                 alert(`Error: Failed to update job. ${errorText}`);
@@ -147,7 +152,7 @@ function Schedule() {
             alert("Error: Failed to connect to the server or update job.");
         }
     };
-    
+
 
     const handleAddSubJob = (jobId: string, newSubJobData: NewSubJobDataForAdd) => {
         // This function will be passed to JobTable and then to AddSubJobFormModal
