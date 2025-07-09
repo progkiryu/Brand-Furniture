@@ -31,16 +31,15 @@ function Analytics() {
             <div id="first-container">
               <div id="header-container">
                 <h1>Analytics</h1>
+                <div className="date-range-selector">
+                <label htmlFor="range">View data for: </label>
+                <select id="range" value={dateRange} onChange={handleRangeChange}>
+                  <option value="lastweek">Last Week</option>
+                  <option value="lastmonth">Last Month</option>
+                  <option value="last6months">Last 6 Months</option>
+                </select>
               </div>
-
-              <div className="date-range-selector">
-            <label htmlFor="range">View data for: </label>
-            <select id="range" value={dateRange} onChange={handleRangeChange}>
-              <option value="lastweek">Last Week</option>
-              <option value="lastmonth">Last Month</option>
-              <option value="last6months">Last 6 Months</option>
-            </select>
-          </div>
+              </div>
 
           <div className="orderTypeDistribution">
             <h2>

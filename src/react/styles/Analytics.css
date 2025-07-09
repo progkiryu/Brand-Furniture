@@ -47,8 +47,10 @@
 .date-range-selector {
   margin-top: 10px;
   margin-bottom: 20px;
+  margin-left: 0px;
   color: #415A77;
   font-size: 16px;
+  padding: 0.2rem;
 }
 
 .date-range-selector select {

@@ -45,15 +45,17 @@ p {
     left: 0;
     top: 0;
     z-index: 1000;
-    text-transform: uppercase;
+    padding-top: 20px;
     /* align-items: center; */
 }
 
-#navBar-container .brand {
+#navBar-container h1 {
     font-size: 1.8rem;
     font-weight: bold;
     margin-bottom: 2rem;
     color: #FFFFFF;
+    text-align: center;
+    display: block;
     /* left: 10px;
     text-align: center;
     width: 100%;
