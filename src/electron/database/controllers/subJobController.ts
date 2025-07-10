@@ -165,45 +165,48 @@ export const removeSubJob = async (
 
     // -------------------- Delete Dependencies --------------------
     // Delete all child cushions
-    const removedCushions = await Promise.all(
-      subJob.cushionList.map(async (cushionId) => {
-        const cushion = await schemas.Cushion.findByIdAndDelete(cushionId);
-        return cushion;
-      })
-    );
-    if (!removedCushions) {
-      res.status(404).json({
-        message: `Error: Failed to delete cushions or could not process request.`,
-      });
-      return;
+    if (subJob.cushionList.length > 0) {
+      const cushions = await Promise.all(
+        subJob.cushionList.map(async (cushionId) => {
+          const cushion = await schemas.Cushion.findByIdAndDelete(cushionId);
+          return cushion;
+        })
+      );
+      if (!cushions) {
+        res
+          .status(404)
+          .json({ message: "Error: Failed to delete child cushions." });
+      }
     }
     // Delete all child frames
-    const removedFrames = await Promise.all(
-      subJob.frameList.map(async (frameId) => {
-        const frame = await schemas.Frame.findByIdAndDelete(frameId);
-        return frame;
-      })
-    );
-    if (!removedFrames) {
-      res.status(404).json({
-        message: `Error: Failed to delete frames or could not process request.`,
-      });
-      return;
+    if (subJob.frameList.length > 0) {
+      const frames = await Promise.all(
+        subJob.frameList.map(async (frameId) => {
+          const frame = await schemas.Frame.findByIdAndDelete(frameId);
+          return frame;
+        })
+      );
+      if (!frames) {
+        res
+          .status(404)
+          .json({ message: "Error: Failed to delete child frames." });
+      }
     }
     // Delete all child upholstery
-    const removedUpholstery = await Promise.all(
-      subJob.upholsteryList.map(async (upholsteryId) => {
-        const upholstery = await schemas.Upholstery.findByIdAndDelete(
-          upholsteryId
-        );
-        return upholstery;
-      })
-    );
-    if (!removedUpholstery) {
-      res.status(404).json({
-        message: `Error: Failed to delete upholstery or could not process request.`,
-      });
-      return;
+    if (subJob.upholsteryList.length > 0) {
+      const upholstery = await Promise.all(
+        subJob.upholsteryList.map(async (upholsteryId) => {
+          const upholstery = await schemas.Upholstery.findByIdAndDelete(
+            upholsteryId
+          );
+          return upholstery;
+        })
+      );
+      if (!upholstery) {
+        res
+          .status(404)
+          .json({ message: "Error: Failed to delete child upholstery." });
+      }
     }
     // -------------------------------------------------------------
 

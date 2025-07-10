@@ -173,22 +173,82 @@ export const removeJob = async (
     }
 
     // -------------------- Delete Dependencies --------------------
+    for (let i = 0; i < job.subJobList.length; i++) {
+      const subJobId = job.subJobList[i].toString();
+
+      // Find subjob
+      const subJob = await schemas.SubJob.findById(subJobId);
+      if (!subJob) {
+        res.status(404).json({
+          message: `Error: Failed to find sub-job with ID: ${subJobId}`,
+        });
+        return;
+      }
+      const mainJobId = subJob.jobId.toString();
+
+      // Delete all child cushions
+      if (subJob.cushionList.length > 0) {
+        const cushions = await Promise.all(
+          subJob.cushionList.map(async (cushionId) => {
+            const cushion = await schemas.Cushion.findByIdAndDelete(cushionId);
+            return cushion;
+          })
+        );
+        if (!cushions) {
+          res
+            .status(404)
+            .json({ message: "Error: Failed to delete child cushions." });
+        }
+      }
+      // Delete all child frames
+      if (subJob.frameList.length > 0) {
+        const frames = await Promise.all(
+          subJob.frameList.map(async (frameId) => {
+            const frame = await schemas.Frame.findByIdAndDelete(frameId);
+            return frame;
+          })
+        );
+        if (!frames) {
+          res
+            .status(404)
+            .json({ message: "Error: Failed to delete child frames." });
+        }
+      }
+      // Delete all child upholstery
+      if (subJob.upholsteryList.length > 0) {
+        const upholstery = await Promise.all(
+          subJob.upholsteryList.map(async (upholsteryId) => {
+            const upholstery = await schemas.Upholstery.findByIdAndDelete(
+              upholsteryId
+            );
+            return upholstery;
+          })
+        );
+        if (!upholstery) {
+          res
+            .status(404)
+            .json({ message: "Error: Failed to delete child upholstery." });
+        }
+      }
+    }
+
     // Delete all child subJobs
-    const removedSubJobs = await Promise.all(
-      job.subJobList.map(async (subJobId) => {
-        const subJob = await schemas.SubJob.findByIdAndDelete(subJobId);
-        return subJob;
-      })
-    );
-    if (!removedSubJobs) {
-      res.status(404).json({
-        message: `Error: Failed to delete subJobs or could not process request.`,
-      });
-      return;
+    if (job.subJobList.length > 0) {
+      const subJobs = await Promise.all(
+        job.subJobList.map(async (subJobId) => {
+          const subJob = await schemas.SubJob.findByIdAndDelete(subJobId);
+          return subJob;
+        })
+      );
+      if (!subJobs) {
+        res
+          .status(404)
+          .json({ message: "Error: Failed to delete child subJobs." });
+      }
     }
     // -------------------------------------------------------------
 
-    // Delete the job
+    // Finally, delete the job
     const result = await schemas.Job.findByIdAndDelete<Job>(id);
     if (!result) {
       res.status(404).json({
