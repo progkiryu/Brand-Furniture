@@ -25,6 +25,8 @@ type SubJob = {
   frameList?: String[];
   cushionList?: String[];
   upholsteryList?: String[];
+  status?: String; // status of subjob (5 colours), default: "Unassigned"
+  frameFormed?: Boolean; // seperate to the 5 colours
 };
 
 type Frame = {
@@ -64,7 +66,12 @@ type Notif = {
   notifTitle: String;
   notifDesc: String;
   time: Date;
-}
+};
+
+type DateRange = {
+  startDate: Date;
+  endDate: Date;
+};
 
 interface Window {
   jobs: {
