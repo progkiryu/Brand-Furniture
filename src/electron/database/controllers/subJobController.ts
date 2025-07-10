@@ -10,7 +10,8 @@ export const getAllSubJobs = async (
     if (!subJobs) {
       res
         .status(404)
-        .json({ message: "Error finding 'Subjobs' MongoDB collection!" });
+        .json({ message: "Error: Can not find 'Subjobs' MongoDB collection!" });
+      return;
     }
     res.status(200).json(subJobs);
   } catch (err) {
@@ -24,16 +25,12 @@ export const getSubJobById = async (
 ) => {
   try {
     const id = req.params.id;
-    if (!id) {
-      res
-        .status(404)
-        .json({ message: `Failed to find sub-job with ID: ${id}` });
-    }
     const subJob = await schemas.SubJob.findById<SubJob>(id);
     if (!subJob) {
       res
         .status(404)
-        .json({ message: `Failed to find sub-job with ID: ${id}` });
+        .json({ message: `Error: Failed to find sub-job with ID: ${id}` });
+      return;
     }
     res.status(200).json(subJob);
   } catch (err) {
@@ -46,20 +43,23 @@ export const insertSubJob = async (
   res: express.Response
 ) => {
   try {
-    // Check for mainJob ID
-    const jobId = req.body.jobId;
-    if (!jobId) {
-      res.status(404).json({ message: "Subjob does not have a main JobID" });
-    }
-
-    // Assign main jobId to subJob
+    // Create subjob for creation
     const tempSubJob: SubJob = req.body;
-    tempSubJob.jobId = jobId;
+
+    // Check for mainJob ID
+    const jobId = tempSubJob.jobId;
+    if (!jobId) {
+      res
+        .status(404)
+        .json({ message: "Error: Subjob does not have a main JobID" });
+      return;
+    }
 
     // Create new subjob in database
     const subJob = await schemas.SubJob.create(tempSubJob);
     if (!subJob) {
-      res.status(404).json({ message: "Failed to create subjob." });
+      res.status(404).json({ message: "Error: Failed to create subjob." });
+      return;
     }
     const subJobId = subJob._id.toString(); // Convert objectid to string
 
@@ -84,9 +84,11 @@ export const insertSubJob = async (
     ]);
     if (!updatedJob) {
       res.status(404).json({
-        message: "Failed to add subjob to main job.",
+        message: "Error: Failed to add subjob to main job.",
       });
+      return;
     }
+
     // Return newly created subjob
     res.status(200).json(subJob);
   } catch (err) {
@@ -101,13 +103,15 @@ export const updateSubJob = async (
   try {
     const id = req.body._id;
     if (!id) {
-      res.status(404).json({ message: "Failed to provide sub-job ID!" });
+      res.status(404).json({ message: "Error: Failed to provide sub-job ID!" });
+      return;
     }
     const result = await schemas.SubJob.findByIdAndUpdate(id, req.body);
     if (!result) {
       res.status(404).json({
-        message: `Failed to find sub-job with ID: ${id}! Or could not process request.`,
+        message: `Error: Failed to find sub-job with ID: ${id}! Or could not process request.`,
       });
+      return;
     }
     res.status(200).json(result);
   } catch (err) {
@@ -120,20 +124,16 @@ export const removeSubJob = async (
   res: express.Response
 ) => {
   try {
-    // Check for subJob ID
     const subJobId = req.params.id;
-    if (!subJobId) {
-      res.status(404).json({ message: "Failed to provide subjob ID." });
-    }
-
     // Get the subJob's mainJob ID
     const subJob = await schemas.SubJob.findById(subJobId);
     if (!subJob) {
-      res
-        .status(404)
-        .json({ message: `Failed to find sub-job with ID: ${subJobId}` });
+      res.status(404).json({
+        message: `Error: Failed to find sub-job with ID: ${subJobId}`,
+      });
+      return;
     }
-    const mainJobId = subJob?.jobId.toString();
+    const mainJobId = subJob.jobId.toString();
 
     // Check if subJob id already exists within the mainJob then add/remove
     const updatedJob = await schemas.Job.updateMany({ _id: mainJobId }, [
@@ -141,7 +141,9 @@ export const removeSubJob = async (
         $set: {
           subJobList: {
             $cond: [
-              { $in: [subJobId, "$subJobList"] },
+              {
+                $in: [subJobId, "$subJobList"],
+              },
               {
                 $filter: {
                   input: "$subJobList",
@@ -156,17 +158,67 @@ export const removeSubJob = async (
     ]);
     if (!updatedJob) {
       res.status(404).json({
-        message: "Failed to remove subjob from main job.",
+        message: "Error: Failed to remove subjob from main job.",
       });
+      return;
     }
 
-    // Delete subJob
+    // -------------------- Delete Dependencies --------------------
+    // Delete all child cushions
+    if (subJob.cushionList.length > 0) {
+      const cushions = await Promise.all(
+        subJob.cushionList.map(async (cushionId) => {
+          const cushion = await schemas.Cushion.findByIdAndDelete(cushionId);
+          return cushion;
+        })
+      );
+      if (!cushions) {
+        res
+          .status(404)
+          .json({ message: "Error: Failed to delete child cushions." });
+      }
+    }
+    // Delete all child frames
+    if (subJob.frameList.length > 0) {
+      const frames = await Promise.all(
+        subJob.frameList.map(async (frameId) => {
+          const frame = await schemas.Frame.findByIdAndDelete(frameId);
+          return frame;
+        })
+      );
+      if (!frames) {
+        res
+          .status(404)
+          .json({ message: "Error: Failed to delete child frames." });
+      }
+    }
+    // Delete all child upholstery
+    if (subJob.upholsteryList.length > 0) {
+      const upholstery = await Promise.all(
+        subJob.upholsteryList.map(async (upholsteryId) => {
+          const upholstery = await schemas.Upholstery.findByIdAndDelete(
+            upholsteryId
+          );
+          return upholstery;
+        })
+      );
+      if (!upholstery) {
+        res
+          .status(404)
+          .json({ message: "Error: Failed to delete child upholstery." });
+      }
+    }
+    // -------------------------------------------------------------
+
+    // Finally, delete the subjob
     const result = await schemas.SubJob.findByIdAndDelete(subJobId);
     if (!result) {
       res.status(404).json({
-        message: `Failed to delete subJob with ID: ${subJobId}! Or could not process request.`,
+        message: `Error: Failed to delete subJob with ID: ${subJobId}! Or could not process request.`,
       });
+      return;
     }
+
     res.status(200).json(result);
   } catch (err) {
     res.status(400).json(err);
