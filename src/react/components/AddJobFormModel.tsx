@@ -1,5 +1,5 @@
 // AddJobFormModal.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
 
 // Define NewJobDataForAdd interface directly in this file
 
@@ -16,6 +16,11 @@ function AddJobFormModel({ isOpen, onClose, onAddJob}: AddJobFormModelProps) {
     const [jobName, setJobName] = useState<string>('');
     const [jobType, setJobType] = useState<string>(''); // New state for job type
     const [dueDate, setDueDate] = useState<string>('');
+    const [depositAmount, setDepositAmount] = useState<string>('');
+    const [depositDate, setDepositDate] = useState<string>('');
+    const [paidInFull, setPaidInFull] = useState<string>(''); // Boolean for checkbox
+    const [liaison, setLiaison] = useState<string>('');
+    const [paymentNote, setPaymentNote] = useState<string>('');
 
     if (!isOpen) return null;
 
@@ -36,6 +41,12 @@ function AddJobFormModel({ isOpen, onClose, onAddJob}: AddJobFormModelProps) {
             name: jobName,
             type: jobType, // Added 'type' as per your mock data
             due: new Date(dueDate),
+            depositDate: new Date(depositDate),
+            depositAmount: new Number(depositAmount),
+            paidInFull: new Date(paidInFull),
+            liaison: liaison,
+            paymentNote: paymentNote,
+            
         };
         
         onAddJob(newJob);
@@ -44,7 +55,12 @@ function AddJobFormModel({ isOpen, onClose, onAddJob}: AddJobFormModelProps) {
         setJobName('');
         setJobType('');
         setDueDate('');
-        console.log("yo");
+        setDepositAmount('');
+        setDepositDate('');
+        setPaidInFull('');
+        setLiaison('');
+        setPaymentNote('');
+
     }
     
 
@@ -104,6 +120,55 @@ function AddJobFormModel({ isOpen, onClose, onAddJob}: AddJobFormModelProps) {
                             value={dueDate}
                             onChange={(e) => setDueDate(e.target.value)}
                             required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="depositAmount">Deposit Amount:</label>
+                        <input
+                            type="number"
+                            id="depositAmount"
+                            value={depositAmount}
+                            onChange={(e) => setDepositAmount(e.target.value)}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="depositDate">Deposit Date:</label>
+                        <input
+                            type="date"
+                            id="depositDate"
+                            value={depositDate}
+                            onChange={(e) => setDepositDate(e.target.value)}
+                            
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="paidInFull">Paid In Full:</label>
+                        <input
+                            type="date"
+                            id="paidInFull"
+                            value={paidInFull}
+                            onChange={(e) => setPaidInFull(e.target.value)}
+                            
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="liaison">Liaison:</label>
+                        <input
+                            type="text"
+                            id="liaison"
+                            value={liaison}
+                            onChange={(e) => setLiaison(e.target.value)}
+                           
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="paymentNote">Payment Notes:</label>
+                        <input
+                            type="text"
+                            id="paymentNote"
+                            value={paymentNote}
+                            onChange={(e) => setPaymentNote(e.target.value)}
+                            
                         />
                     </div>
                     <button type="submit">Add Job</button>
