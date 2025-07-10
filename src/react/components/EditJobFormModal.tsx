@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import type { UpdateJobData } from '../pages/Schedule';
+
 
 
 interface EditJobFormModalProps {
     isOpen: boolean;
     onClose: () => void;
     jobToEdit: Job | null; // The job object to be edited, or null if not editing
-    onUpdateJob: (jobId: string, updatedData: UpdateJobData) => void;
+    onUpdateJob: (jobId: string, updatedData: Job) => void;
 }
 
 function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob }: EditJobFormModalProps) {
@@ -90,7 +90,7 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob }: EditJobFo
         }
 
         // Construct updated job data
-        const updatedData: UpdateJobData = {
+        const updatedData: Job = {
             invoiceId: invoiceId,
             client: clientName,
             name: jobName,
