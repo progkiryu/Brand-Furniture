@@ -9,45 +9,8 @@ import { useState, useEffect } from 'react';
 import SearchBar from "../components/Searchbar"; // New component
 import JobTable from "../components/JobTable"; // New component
 import AddJobFormModel from "../components/AddJobFormModel"; // New modal component
-import EditJobFormModal from "../components/EditJobFormModal";
-
- 
+import EditJobFormModal from "../components/EditJobFormModal"; 
 import { DBLink } from "../App";
-
-export interface NewSubJobDataForAdd {
-    jobId: string; // SubJob now has jobId directly
-    subJobDetail: string;
-    note?: string;
-    file?: string;
-    dueDate?: Date;
-}
-
-export interface NewJobDataForAdd {
-    invoiceId: String;
-    client: String;
-    name: String;
-    type: String; // Added 'type' as per your mock data
-    due: Date;
-    depositAmount?: number;
-    depositDate?: Date;
-    paidInFull?: Date;
-    liaison?: string;
-    paymentNote?: string;
-}
-
-export interface UpdateJobData {
-    invoiceId?: string;
-    client?: string;
-    name?: string;
-    type?: string;
-    due?: Date;
-    depositAmount?: number;
-    depositDate?: Date;
-    paidInFull?: Date;
-    liaison?: string;
-    paymentNote?: string;
-    isPinned?: boolean; // Include optional fields that can be updated
-}
 
  
 function Schedule() {
@@ -67,13 +30,11 @@ function Schedule() {
                 setJobs(data)
             })
             .catch(err => console.log(err));
-    }, []);
 
-    useEffect(() => {
-        fetch(`${DBLink}/subJob/getAllSubJobs`)
-        .then((res) => res.json())
-        .then((data) => setSubJobs(data))
-        .catch((err) => console.log(err));
+            fetch(`${DBLink}/subJob/getAllSubJobs`)
+            .then((res) => res.json())
+            .then((data) => setSubJobs(data))
+            .catch((err) => console.log(err));
     }, []);
  
     // Handler for when the search input changes
@@ -110,9 +71,9 @@ function Schedule() {
     };
     
 
-    const handleUpdateJob = async (jobId: string, updatedData: UpdateJobData) => {
+    const handleUpdateJob = async (jobId: string, updatedData: Job) => {
         try {
-            const dataToSend: UpdateJobData = { ...updatedData };
+            const dataToSend: Job = { ...updatedData };
             if (dataToSend.due) {
                 dataToSend.due = dataToSend.due.toISOString() as any;
             }
@@ -151,7 +112,7 @@ function Schedule() {
     };
 
 
-    const handleAddSubJob = (jobId: string, newSubJobData: NewSubJobDataForAdd) => {
+    const handleAddSubJob = (jobId: string, newSubJobData: SubJob) => {
         // This function will be passed to JobTable and then to AddSubJobFormModal
         // It needs the jobId to correctly associate the sub-job
         const newSubJob: SubJob = {
