@@ -163,7 +163,51 @@ export const removeSubJob = async (
       return;
     }
 
-    // Delete the subjob
+    // -------------------- Delete Dependencies --------------------
+    // Delete all child cushions
+    const removedCushions = await Promise.all(
+      subJob.cushionList.map(async (cushionId) => {
+        const cushion = await schemas.Cushion.findByIdAndDelete(cushionId);
+        return cushion;
+      })
+    );
+    if (!removedCushions) {
+      res.status(404).json({
+        message: `Error: Failed to delete cushions or could not process request.`,
+      });
+      return;
+    }
+    // Delete all child frames
+    const removedFrames = await Promise.all(
+      subJob.frameList.map(async (frameId) => {
+        const frame = await schemas.Frame.findByIdAndDelete(frameId);
+        return frame;
+      })
+    );
+    if (!removedFrames) {
+      res.status(404).json({
+        message: `Error: Failed to delete frames or could not process request.`,
+      });
+      return;
+    }
+    // Delete all child upholstery
+    const removedUpholstery = await Promise.all(
+      subJob.upholsteryList.map(async (upholsteryId) => {
+        const upholstery = await schemas.Upholstery.findByIdAndDelete(
+          upholsteryId
+        );
+        return upholstery;
+      })
+    );
+    if (!removedUpholstery) {
+      res.status(404).json({
+        message: `Error: Failed to delete upholstery or could not process request.`,
+      });
+      return;
+    }
+    // -------------------------------------------------------------
+
+    // Finally, delete the subjob
     const result = await schemas.SubJob.findByIdAndDelete(subJobId);
     if (!result) {
       res.status(404).json({
