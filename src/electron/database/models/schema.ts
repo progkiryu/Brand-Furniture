@@ -9,6 +9,7 @@ const jobSchema = new mongoose.Schema(
     due: { type: Date, required: true },
     subJobList: { type: [String], default: [] },
     isPinned: { type: Boolean, default: false },
+    isArchived: { type: Boolean, default: false },
   },
   {
     timestamps: true,
@@ -30,7 +31,8 @@ const subJobSchema = new mongoose.Schema(
     frameList: { type: [String], default: [] },
     cushionList: { type: [String], default: [] },
     upholsteryList: { type: [String], defailt: [] },
-    isArchived: { type: Boolean, default: false },
+    status: { type: String, default: "Unassigned" }, // the 5 colours + unassigned
+    frameFormed: { type: Boolean, default: false }, // as discussed, seperate to 5 colours
   },
   {
     timestamps: true,
