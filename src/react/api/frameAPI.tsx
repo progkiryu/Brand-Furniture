@@ -6,7 +6,6 @@ export const getAllFrames = async () => {
     .then((res) => res.json())
     .catch((err) => console.error(err));
   if (!frames) {
-    alert("Error: Failed to retrieve frames.");
     return;
   }
   return frames;
@@ -18,7 +17,6 @@ export const getFrameById = async (id: String) => {
     .then((res) => res.json())
     .catch((err) => console.error(err));
   if (!frame) {
-    alert("Error: Failed to retrieve frame.");
     return;
   }
   return frame;
@@ -32,13 +30,7 @@ export const createFrame = async (data: Frame) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   })
-    .then((res) => {
-      if (res.ok) {
-        alert("Frame created successfully.");
-      } else {
-        alert("Error: Failed to create frame.");
-      }
-    })
+    .then((res) => res.json())
     .catch((err) => console.error(err));
 };
 
@@ -49,13 +41,7 @@ export const deleteFrameById = async (id: String) => {
     mode: "cors",
     headers: { "Content-Type": "application/json" },
   })
-    .then((res) => {
-      if (res.ok) {
-        alert("Frame deleted successfully.");
-      } else {
-        console.error("Failed to delete frame");
-      }
-    })
+    .then((res) => res.json())
     .catch((err) => console.error(err));
 };
 
@@ -67,12 +53,6 @@ export const UpdateFrame = async (data: Frame) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   })
-    .then((res) => {
-      if (res.ok) {
-        alert("Frame updated successfully.");
-      } else {
-        alert("Error: Failed to update frame.");
-      }
-    })
+    .then((res) => res.json())
     .catch((err) => console.log(err));
 };
