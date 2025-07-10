@@ -7,12 +7,14 @@ import {
   removeJob,
   getFilteredJobsByDate,
   getFilteredJobsByType,
+  getArchivedJobs,
 } from "../controllers/jobController.js";
 
 export default (router: express.Router) => {
   // Get Routes
   router.get("/job/getAllJobs", getAllJobs);
   router.get("/job/getJobById/:id", getJobById);
+  router.get("/job/getArchivedJobs", getArchivedJobs);
   // Post Routes
   router.post("/job/insertJob", insertJob);
   router.post("/job/getFilteredJobsByDate", getFilteredJobsByDate);

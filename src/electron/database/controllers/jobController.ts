@@ -31,20 +31,24 @@ export const getJobById = async (
   }
 };
 
-// WIP
-// export const getArchivedJobs = async (
-//   req: express.Request,
-//   res: express.Response
-// ) => {
-// try {
-//   const archivedJobs = await schemas.Job.find({});
+export const getArchivedJobs = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  try {
+    const archivedJobs = await schemas.Job.find({
+      isArchived: { $in: true },
+    }).sort({ due: "descending" }); // Sort latest first
+    if (!archivedJobs) {
+      res.status(404).json({ message: "Failed to retrive archived jobs." });
+    }
 
-//   res.status(200).json(archivedJobs);
-// } catch (err) {
-//   console.error(err);
-//   res.status(400).json(err);
-// }
-// };
+    res.status(200).json(archivedJobs);
+  } catch (err) {
+    console.error(err);
+    res.status(400).json(err);
+  }
+};
 
 export const insertJob = async (
   req: express.Request,

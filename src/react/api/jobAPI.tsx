@@ -24,6 +24,18 @@ export const getJobById = async (id: String) => {
   return job;
 };
 
+// Get all archived jobs
+export const getArchivedJobs = async () => {
+  const archivedJobs = fetch(`${DBLink}/job/getArchivedJobs`)
+    .then((res) => res.json())
+    .catch((err) => console.error(err));
+  if (!archivedJobs) {
+    alert("Error: Failed to retrieve archived jobs.");
+    return;
+  }
+  return archivedJobs;
+};
+
 // Create a new job
 export const createJob = async (data: Job) => {
   fetch(`${DBLink}/job/insertJob`, {
