@@ -110,9 +110,9 @@ export const deleteCushionById = async (
     // Get cushions' subJob ID
     const cushion = await schemas.Cushion.findById(cushionId);
     if (!cushion) {
-      res
-        .status(404)
-        .json({ message: `Failed to find cushion with ID: ${cushionId}` });
+      res.status(404).json({
+        message: `Error: Failed to find cushion with ID: ${cushionId}`,
+      });
       return;
     }
     const subJobId = cushion.subJobId.toString();
@@ -140,7 +140,7 @@ export const deleteCushionById = async (
     ]);
     if (!updatedSubJob) {
       res.status(404).json({
-        message: "Failed to remive cushion from subjob.",
+        message: "Error: Failed to remove cushion from subjob.",
       });
       return;
     }
@@ -148,9 +148,9 @@ export const deleteCushionById = async (
     // Delete the cushion.
     const result = await schemas.Cushion.findByIdAndDelete(cushionId);
     if (!result) {
-      res
-        .status(404)
-        .json({ message: `Failed to delete cushion with id: ${cushionId}}` });
+      res.status(404).json({
+        message: `Error: Failed to delete cushion with id: ${cushionId}}`,
+      });
       return;
     }
 

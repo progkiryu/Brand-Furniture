@@ -70,13 +70,13 @@ const cushionSchema = new mongoose.Schema(
 
 const upholsterySchema = new mongoose.Schema(
   {
-    subJobId: { type: String, require: true }, // FK to SubJob (SubJob's 'subJobId')
+    subJobId: { type: String, required: true }, // FK to SubJob (SubJob's 'subJobId')
     supplier: { type: String, default: "" },
-    type: { type: String, require: true },
+    type: { type: String, required: true },
     description: { type: String, default: "" },
-    orderedDate: { type: Date, require: false },
-    expectedDate: { type: Date, require: false },
-    receivedDate: { type: Date, require: false },
+    orderedDate: { type: Date, required: false },
+    expectedDate: { type: Date, required: false },
+    receivedDate: { type: Date, required: false },
   },
   {
     timestamps: true,
@@ -85,8 +85,8 @@ const upholsterySchema = new mongoose.Schema(
 
 const notifSchema = new mongoose.Schema(
   {
-    notifTitle: { type: String, require: true },
-    notifDesc: { type: String, require: true },
+    notifTitle: { type: String, required: true },
+    notifDesc: { type: String, required: true },
     time: { type: Date, required: true },
   },
   {
