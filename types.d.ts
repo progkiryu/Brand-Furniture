@@ -25,7 +25,8 @@ type SubJob = {
   frameList?: String[];
   cushionList?: String[];
   upholsteryList?: String[];
-  status?: String; // status of subjob (6 colours), default: "Unassigned"
+  status?: String; // status of subjob (5 colours), default: "Unassigned"
+  frameFormed?: Boolean; // seperate to the 5 colours
 };
 
 type Frame = {
