@@ -13,6 +13,7 @@ import EditJobFormModal from "../components/EditJobFormModal";
 
  
 import { DBLink } from "../App";
+import { deleteJob } from "../api/jobAPI";
 
 export interface NewSubJobDataForAdd {
     jobId: string; // SubJob now has jobId directly
@@ -21,34 +22,6 @@ export interface NewSubJobDataForAdd {
     file?: string;
     dueDate?: Date;
 }
-
-export interface NewJobDataForAdd {
-    invoiceId: String;
-    client: String;
-    name: String;
-    type: String; // Added 'type' as per your mock data
-    due: Date;
-    depositAmount?: number;
-    depositDate?: Date;
-    paidInFull?: Date;
-    liaison?: string;
-    paymentNote?: string;
-}
-
-export interface UpdateJobData {
-    invoiceId?: string;
-    client?: string;
-    name?: string;
-    type?: string;
-    due?: Date;
-    depositAmount?: number;
-    depositDate?: Date;
-    paidInFull?: Date;
-    liaison?: string;
-    paymentNote?: string;
-    isPinned?: boolean; // Include optional fields that can be updated
-}
-
  
 function Schedule() {
     const [searchTerm, setSearchTerm] = useState<string>('');
@@ -110,9 +83,9 @@ function Schedule() {
     };
     
 
-    const handleUpdateJob = async (jobId: string, updatedData: UpdateJobData) => {
+    const handleUpdateJob = async (jobId: string, updatedData: Job) => {
         try {
-            const dataToSend: UpdateJobData = { ...updatedData };
+            const dataToSend: Job = { ...updatedData };
             if (dataToSend.due) {
                 dataToSend.due = dataToSend.due.toISOString() as any;
             }
@@ -150,8 +123,21 @@ function Schedule() {
         }
     };
 
+    const handleDeleteJob = async (id: string) => {
+        try {
+            await deleteJob(id);
 
-    const handleAddSubJob = (jobId: string, newSubJobData: NewSubJobDataForAdd) => {
+            setJobs(jobs.filter(job => job._id !== id));
+            setIsEditJobModalOpen(false);
+            setJobToEdit(null);
+        }
+        catch (err) {
+            console.log("Error deleting job:", err);
+        }
+    }
+
+
+    const handleAddSubJob = (jobId: String, newSubJobData: NewSubJobDataForAdd) => {
         // This function will be passed to JobTable and then to AddSubJobFormModal
         // It needs the jobId to correctly associate the sub-job
         const newSubJob: SubJob = {
@@ -208,6 +194,7 @@ function Schedule() {
                 }}
                 jobToEdit={jobToEdit}
                 onUpdateJob={handleUpdateJob}
+                onDeleteJob={handleDeleteJob}
             />
         </>
     );

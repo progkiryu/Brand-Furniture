@@ -2,7 +2,7 @@ import "../styles/Dashboard.css";
 import "../styles/Global.css";
 import Navbar from "../components/Navbar";
 import { useEffect, useState } from "react";
-import SubJobTable from "../components/SubJobTable.tsx";
+import SubJobTable from "../components/DashboardTable.tsx";
 import JobAnalytics from "../components/JobAnalytics";
 import NotificationsList from "../components/NotificationsList";
 import { DBLink } from "../App.tsx";
@@ -136,7 +136,7 @@ function Dashboard() {
                 </div> */}
               </div>
               <div className="upcoming-orders-scroll-container">
-                <SubJobTable subJobsParams={subJobs} jobsParams={jobs} />
+                <SubJobTable jobsParams={jobs} />
               </div>
             </div>
           </div>

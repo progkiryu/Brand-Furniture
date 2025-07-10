@@ -10,7 +10,7 @@ function JobTableRow({ job, subJobsForJob, onAddSubJobClick, onEditJobClick }: J
     
     return (
         <tr key={`${job._id}`}>
-            <td>{job.invoiceId}</td>
+            <td>{job.invoiceId ? job.invoiceId : "N/A"}</td>
             <td>{job.client}</td>
             <td>{job.name}</td>
             <td>{job.type}</td>

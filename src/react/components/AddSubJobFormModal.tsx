@@ -190,7 +190,7 @@ interface AddSubJobFormModalProps {
     onClose: () => void;
     jobId: string | null; // The _id of the parent Job (now passed as jobId for SubJob)
     invoiceId: string | null; // The invoiceId of the parent Job (for display)
-    onAddSubJob: (jobId: string, newSubJobData: NewSubJobDataForAdd) => void; // Corrected prop type
+    onAddSubJob: (newSubJobData: NewSubJobDataForAdd) => void; // Corrected prop type
 }
 
 function AddSubJobFormModal({ isOpen, onClose, jobId, invoiceId, onAddSubJob }: AddSubJobFormModalProps) {
@@ -258,7 +258,7 @@ function AddSubJobFormModal({ isOpen, onClose, jobId, invoiceId, onAddSubJob }: 
         // Call the parent handler, passing the jobId and the new sub-job data
         // The parent (Schedule.tsx) will then handle inserting this new SubJob
         // and updating the parent Job's subJobList.
-        onAddSubJob(jobId, newSubJobData);
+        onAddSubJob(newSubJobData);
         onClose(); // Close the modal after submission
 
         // Reset all form fields across all tabs
