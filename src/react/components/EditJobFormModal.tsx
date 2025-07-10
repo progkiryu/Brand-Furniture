@@ -16,56 +16,65 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob }: EditJobFo
     const [jobName, setJobName] = useState<string>('');
     const [jobType, setJobType] = useState<string>('');
     const [dueDate, setDueDate] = useState<string>(''); // Keep as string for input type="date"
+    const [depositAmount, setDepositAmount] = useState<string>('');
+    const [depositDate, setDepositDate] = useState<string>('');
+    const [paidInFull, setPaidInFull] = useState<string>(''); // Boolean for checkbox
+    const [liaison, setLiaison] = useState<string>('');
+    const [paymentNote, setPaymentNote] = useState<string>('');
 
-    // Effect to populate form fields when jobToEdit changes (i.e., modal opens for a new job)
-    // useEffect(() => {
-    //     if (jobToEdit) {
-    //         setInvoiceId(String(jobToEdit.invoiceId) || '');
-    //         setClientName(String(jobToEdit.client) || '');
-    //         setJobName(String(jobToEdit.name) || '');
-    //         setJobType(String(jobToEdit.type) || '');
-    //         // Format Date object to YYYY-MM-DD string for input type="date"
-    //         setDueDate(jobToEdit.due ? jobToEdit.due.toISOString().split('T')[0] : '');
-    //     } else {
-    //         // Reset fields if modal is closed or no job is being edited
-    //         setInvoiceId('');
-    //         setClientName('');
-    //         setJobName('');
-    //         setJobType('');
-    //         setDueDate('');
-    //     }
-    // }, [jobToEdit]); // Dependency array ensures this runs when jobToEdit changes
+    const formatDateForInput = (dateValue: Date | string | null | undefined): string => {
+        if (!dateValue) return '';
+
+        let date: Date;
+        if (dateValue instanceof Date) {
+            date = dateValue;
+        } else if (typeof dateValue === 'string') {
+            date = new Date(dateValue);
+        } else {
+            return ''; // Invalid type
+        }
+
+        if (isNaN(date.getTime())) {
+            return ''; // Invalid date
+        }
+
+        // Return in YYYY-MM-DD format
+        return date.toISOString().split('T')[0];
+    };
+
 
     useEffect(() => {
         if (jobToEdit) {
-            // Ensure values are strings for input fields
+            // Basic text fields
             setInvoiceId(String(jobToEdit.invoiceId) || '');
             setClientName(String(jobToEdit.client) || '');
             setJobName(String(jobToEdit.name) || '');
             setJobType(String(jobToEdit.type) || '');
 
-            // Robust check and conversion for 'due' date
-            if (jobToEdit.due instanceof Date) {
-                // If it's already a Date object, format it
-                setDueDate(jobToEdit.due.toISOString().split('T')[0]);
-            } else if (typeof jobToEdit.due === 'string') {
-                // If it's a string, try converting it to a Date object first
-                const potentialDate = new Date(jobToEdit.due);
-                if (!isNaN(potentialDate.getTime())) { // Check if the conversion resulted in a valid date
-                    setDueDate(potentialDate.toISOString().split('T')[0]);
-                } else {
-                    setDueDate(''); // If string is not a valid date, set to empty
-                }
-            } else {
-                setDueDate(''); // If it's null, undefined, or other, set to empty
-            }
+            // Date fields: Convert to YYYY-MM-DD string for input type="date"
+            setDueDate(formatDateForInput(jobToEdit.due));
+            setDepositDate(formatDateForInput(jobToEdit.depositDate));
+            setPaidInFull(formatDateForInput(jobToEdit.paidInFull)); // Use new state variable
+
+            // Number fields: Convert to string
+            setDepositAmount(String(jobToEdit.depositAmount || '') || ''); // Handle potential undefined/null
+
+            // Other text fields
+            setLiaison(String(jobToEdit.liaison || '') || '');
+            setPaymentNote(String(jobToEdit.paymentNote || '') || '');
+
         } else {
-            // Reset fields if modal is closed or no job is being edited
+            // Reset all fields when modal is closed or no job is being edited
             setInvoiceId('');
             setClientName('');
             setJobName('');
             setJobType('');
             setDueDate('');
+            setDepositAmount('');
+            setDepositDate('');
+            setPaidInFull('');
+            setLiaison('');
+            setPaymentNote('');
         }
     }, [jobToEdit]); 
 
@@ -87,6 +96,11 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob }: EditJobFo
             name: jobName,
             type: jobType,
             due: new Date(dueDate), // Convert string date to Date object
+            depositDate: new Date(depositDate),
+            depositAmount: Number(depositAmount),
+            paidInFull: new Date(paidInFull),
+            liaison: liaison,
+            paymentNote: paymentNote,
         };
 
         // Call the parent handler to update the job
@@ -98,11 +112,6 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob }: EditJobFo
             console.error("Job ID is missing for update.");
             alert("Cannot update job: ID is missing.");
         }
-        // setInvoiceId('');
-        // setClientName('');
-        // setJobName('');
-        // setJobType('');
-        // setDueDate('');
     };
 
     return (
@@ -160,6 +169,55 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob }: EditJobFo
                             value={dueDate}
                             onChange={(e) => setDueDate(e.target.value)}
                             required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="depositAmount">Deposit Amount:</label>
+                        <input
+                            type="number"
+                            id="depositAmount"
+                            value={depositAmount}
+                            onChange={(e) => setDepositAmount(e.target.value)}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="depositDate">Deposit Date:</label>
+                        <input
+                            type="date"
+                            id="depositDate"
+                            value={depositDate}
+                            onChange={(e) => setDepositDate(e.target.value)}
+                            
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="paidInFull">Paid In Full:</label>
+                        <input
+                            type="date"
+                            id="paidInFull"
+                            value={paidInFull}
+                            onChange={(e) => setPaidInFull(e.target.value)}
+                            
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="liaison">Liaison:</label>
+                        <input
+                            type="text"
+                            id="liaison"
+                            value={liaison}
+                            onChange={(e) => setLiaison(e.target.value)}
+                           
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="paymentNote">Payment Notes:</label>
+                        <input
+                            type="text"
+                            id="paymentNote"
+                            value={paymentNote}
+                            onChange={(e) => setPaymentNote(e.target.value)}
+                            
                         />
                     </div>
 
