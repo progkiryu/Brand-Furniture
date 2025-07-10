@@ -20,11 +20,6 @@ export interface NewSubJobDataForAdd {
     note?: string;
     file?: string;
     dueDate?: Date;
-    depositAmount?: number;
-    depositDate?: Date;
-    paidInFull?: boolean;
-    liaison?: string;
-    paymentNote?: string;
 }
 
 export interface NewJobDataForAdd {
@@ -33,6 +28,11 @@ export interface NewJobDataForAdd {
     name: String;
     type: String; // Added 'type' as per your mock data
     due: Date;
+    depositAmount?: number;
+    depositDate?: Date;
+    paidInFull?: Date;
+    liaison?: string;
+    paymentNote?: string;
 }
 
 export interface UpdateJobData {
@@ -41,6 +41,11 @@ export interface UpdateJobData {
     name?: string;
     type?: string;
     due?: Date;
+    depositAmount?: number;
+    depositDate?: Date;
+    paidInFull?: Date;
+    liaison?: string;
+    paymentNote?: string;
     isPinned?: boolean; // Include optional fields that can be updated
 }
 

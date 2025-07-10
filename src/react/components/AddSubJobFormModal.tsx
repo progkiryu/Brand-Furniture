@@ -199,11 +199,6 @@ function AddSubJobFormModal({ isOpen, onClose, jobId, invoiceId, onAddSubJob }: 
     const [note, setNote] = useState<string>('');
     const [file, setFile] = useState<string>('');
     const [subJobDueDate, setSubJobDueDate] = useState<string>(''); // For SubJob's dueDate
-    const [depositAmount, setDepositAmount] = useState<string>('');
-    const [depositDate, setDepositDate] = useState<string>('');
-    const [paidInFull, setPaidInFull] = useState<boolean>(false); // Boolean for checkbox
-    const [liaison, setLiaison] = useState<string>('');
-    const [paymentNote, setPaymentNote] = useState<string>('');
 
     // State for Frame Details (Frame Tab)
     const [frameSupplier, setFrameSupplier] = useState<string>('');
@@ -228,12 +223,11 @@ function AddSubJobFormModal({ isOpen, onClose, jobId, invoiceId, onAddSubJob }: 
     const [upholsteryExpectedDate, setUpholsteryExpectedDate] = useState<string>('');
     const [upholsteryReceivedDate, setUpholsteryReceivedDate] = useState<string>('');
 
-    // State for Admin Details (Admin Tab)
-    const [adminNotes, setAdminNotes] = useState<string>('');
+   
 
 
     // State to manage the active tab
-    const [activeTab, setActiveTab] = useState<'detail' | 'frame' | 'cushion' | 'upholstery' | 'admin'>('detail');
+    const [activeTab, setActiveTab] = useState<'detail' | 'frame' | 'cushion' | 'upholstery' >('detail');
 
     if (!isOpen || !jobId || invoiceId === null) return null; // Ensure modal only renders if open and necessary IDs are provided
 
@@ -259,11 +253,6 @@ function AddSubJobFormModal({ isOpen, onClose, jobId, invoiceId, onAddSubJob }: 
             note: note,
             file: file,
             dueDate: subJobDueDate ? new Date(subJobDueDate) : undefined, // Convert to Date object or undefined
-            depositAmount: parseFloat(depositAmount || '0'), // Parse to number, default to 0
-            depositDate: depositDate ? new Date(depositDate) : undefined, // Convert to Date object or undefined
-            paidInFull: paidInFull, // Boolean
-            liaison: liaison,
-            paymentNote: paymentNote,
         };
 
         // Call the parent handler, passing the jobId and the new sub-job data
@@ -277,11 +266,6 @@ function AddSubJobFormModal({ isOpen, onClose, jobId, invoiceId, onAddSubJob }: 
         setNote('');
         setFile('');
         setSubJobDueDate('');
-        setDepositAmount('');
-        setDepositDate('');
-        setPaidInFull(false);
-        setLiaison('');
-        setPaymentNote('');
 
         setFrameSupplier('');
         setFrameDescription('');
@@ -302,8 +286,6 @@ function AddSubJobFormModal({ isOpen, onClose, jobId, invoiceId, onAddSubJob }: 
         setUpholsteryOrderedDate('');
         setUpholsteryExpectedDate('');
         setUpholsteryReceivedDate('');
-
-        setAdminNotes('');
 
         setActiveTab('detail'); // Reset to detail tab after submission
     };
@@ -344,13 +326,6 @@ function AddSubJobFormModal({ isOpen, onClose, jobId, invoiceId, onAddSubJob }: 
                             onClick={() => setActiveTab('upholstery')}
                         >
                             Upholstery
-                        </button>
-                        <button
-                            type="button"
-                            className={activeTab === 'admin' ? 'active' : ''}
-                            onClick={() => setActiveTab('admin')}
-                        >
-                            Admin
                         </button>
                     </div>
 
@@ -396,52 +371,7 @@ function AddSubJobFormModal({ isOpen, onClose, jobId, invoiceId, onAddSubJob }: 
                                         onChange={(e) => setSubJobDueDate(e.target.value)}
                                     />
                                 </div>
-                                <div className="form-group">
-                                    <label htmlFor="depositAmount">Deposit Amount:</label>
-                                    <input
-                                        type="number"
-                                        id="depositAmount"
-                                        value={depositAmount}
-                                        onChange={(e) => setDepositAmount(e.target.value)}
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="depositDate">Deposit Date:</label>
-                                    <input
-                                        type="date"
-                                        id="depositDate"
-                                        value={depositDate}
-                                        onChange={(e) => setDepositDate(e.target.value)}
-                                    />
-                                </div>
-                                {/* paidInFull is a boolean in types.d.ts, so changed to checkbox */}
-                                <div className="form-group">
-                                    <label htmlFor="paidInFull">Paid In Full:</label>
-                                    <input
-                                        type="checkbox"
-                                        id="paidInFull"
-                                        checked={paidInFull}
-                                        onChange={(e) => setPaidInFull(e.target.checked)}
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="liaison">Liaison:</label>
-                                    <input
-                                        type="text"
-                                        id="liaison"
-                                        value={liaison}
-                                        onChange={(e) => setLiaison(e.target.value)}
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="paymentNote">Payment Note:</label>
-                                    <textarea
-                                        id="paymentNote"
-                                        value={paymentNote}
-                                        onChange={(e) => setPaymentNote(e.target.value)}
-                                        rows={2}
-                                    ></textarea>
-                                </div>
+
                             </div>
                         )}
 
@@ -531,20 +461,6 @@ function AddSubJobFormModal({ isOpen, onClose, jobId, invoiceId, onAddSubJob }: 
                             </div>
                         )}
 
-                        {activeTab === 'admin' && (
-                            <div className="admin-section">
-                                <h3>Admin Details</h3>
-                                <div className="form-group">
-                                    <label htmlFor="adminNotes">Admin Notes:</label>
-                                    <textarea
-                                        id="adminNotes"
-                                        value={adminNotes}
-                                        onChange={(e) => setAdminNotes(e.target.value)}
-                                        rows={4}
-                                    ></textarea>
-                                </div>
-                            </div>
-                        )}
                     </div>
 
                     <button type="submit">Add Component</button> {/* This button will submit the currently active tab's data (or all if combined) */}
