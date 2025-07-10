@@ -232,8 +232,8 @@
 }
 
 .sp-sub-job {
-  /* background-color reflects the production schedule progress key
-  background-color: #415A77;  */
+  /* background-color reflects the production schedule progress key */
+  background-color: #FF0000; 
 
   border-radius: 5px;
   margin: 5px 0px;

@@ -29,7 +29,7 @@ function Analytics() {
         <>
             <Navbar />
             <div id="first-container">
-              <div id="header-container">
+              <div id="analytics-header-container">
                 <h1>Analytics</h1>
                 <div className="date-range-selector">
                 <label htmlFor="range">View data for: </label>
