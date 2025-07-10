@@ -1,20 +1,20 @@
 import express from "express";
 import {
-  deleteUpholstryById,
+  deleteUpholsteryById,
   getAllUpholstery,
   getUpholsteryById,
-  postCreateUpholstry,
-  putUpdateUpholstry,
+  postCreateUpholstery,
+  putUpdateUpholstery,
 } from "../controllers/upholsteryController.js";
 
 export default (router: express.Router) => {
   // Get Routes
-  router.get("/upholstry/getAllUpholstery", getAllUpholstery);
-  router.get("/upholstry/getUpholsteryById/:id", getUpholsteryById);
+  router.get("/upholstery/getAllUpholstery", getAllUpholstery);
+  router.get("/upholstery/getUpholsteryById/:id", getUpholsteryById);
   // Post Routes
-  router.get("/upholstry/postCreateUpholstry", postCreateUpholstry);
+  router.post("/upholstery/postCreateUpholstery", postCreateUpholstery);
   // Delete Routes
-  router.delete("/upholstry/deleteUpholstryById/:id", deleteUpholstryById);
+  router.delete("/upholstery/deleteUpholsteryById/:id", deleteUpholsteryById);
   // Put Routes
-  router.put("/upholstry/putUpdateUpholstry", putUpdateUpholstry);
+  router.put("/upholstery/putUpdateUpholstery", putUpdateUpholstery);
 };

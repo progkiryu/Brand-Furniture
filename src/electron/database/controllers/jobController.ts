@@ -8,6 +8,7 @@ export const getAllJobs = async (_: express.Request, res: express.Response) => {
       res
         .status(404)
         .json({ message: "Error finding 'Jobs' MongoDB collection!" });
+      return;
     }
     res.status(200).json(jobs);
   } catch (err) {
@@ -23,7 +24,10 @@ export const getJobById = async (
     const id = req.params.id;
     const job = await schemas.Job.findById(id);
     if (!job) {
-      res.status(404).json({ message: `Failed to find job with ID: ${id}` });
+      res
+        .status(404)
+        .json({ message: `Error: Failed to find job with ID: ${id}` });
+      return;
     }
     res.status(200).json(job);
   } catch (err) {
@@ -40,7 +44,10 @@ export const getArchivedJobs = async (
       isArchived: { $in: true },
     }).sort({ due: "descending" }); // Sort latest first
     if (!archivedJobs) {
-      res.status(404).json({ message: "Failed to retrive archived jobs." });
+      res
+        .status(404)
+        .json({ message: "Error: Failed to retrive archived jobs." });
+      return;
     }
 
     res.status(200).json(archivedJobs);
@@ -73,7 +80,8 @@ export const getFilteredJobsByDate = async (
     const startDate: String = req.body.startDate;
     const endDate: String = req.body.endDate;
     if (!startDate || !endDate) {
-      res.status(404).json({ message: "Failed to provide date range." });
+      res.status(404).json({ message: "Error: Failed to provide date range." });
+      return;
     }
 
     // Search for subJobs within specified range
@@ -81,7 +89,10 @@ export const getFilteredJobsByDate = async (
       due: { $gte: startDate, $lte: endDate },
     }).sort({ due: "ascending" }); // sort earliest due first
     if (!jobs) {
-      res.status(404).json({ message: "Failed to find any filtered jobs." });
+      res
+        .status(404)
+        .json({ message: "Error: Failed to find any filtered jobs." });
+      return;
     }
 
     res.status(200).json(jobs);
@@ -98,7 +109,8 @@ export const getFilteredJobsByType = async (
   try {
     const type: String = req.body.type;
     if (!type) {
-      res.status(404).json({ message: "Failed to provide job type." });
+      res.status(404).json({ message: "Error: Failed to provide job type." });
+      return;
     }
 
     // Search for subJobs within specified range
@@ -106,7 +118,10 @@ export const getFilteredJobsByType = async (
       type: { $in: type },
     }).sort({ due: "ascending" }); // sort earliest due first
     if (!jobs) {
-      res.status(404).json({ message: "Failed to find any filtered jobs." });
+      res
+        .status(404)
+        .json({ message: "Error: Failed to find any filtered jobs." });
+      return;
     }
 
     res.status(200).json(jobs);
@@ -123,15 +138,17 @@ export const updateJob = async (
   try {
     const id = req.body._id;
     if (!id) {
-      res.status(404).json({ message: "Failed to provide job ID!" });
+      res.status(404).json({ message: "Error: Failed to provide job ID!" });
+      return;
     }
     const result = await schemas.Job.findByIdAndUpdate(id, req.body, {
       new: true,
     });
     if (!result) {
       res.status(404).json({
-        message: `Failed to find job with ID: ${id}! Or could not process request.`,
+        message: `Error: Failed to find job with ID: ${id}! Or could not process request.`,
       });
+      return;
     }
     res.status(200).json(result);
   } catch (err) {
@@ -149,30 +166,95 @@ export const removeJob = async (
     // Check if job exists
     const job = await schemas.Job.findById(id);
     if (!job) {
-      res.status(404).json({ message: `Failed to find job with ID: ${id}` });
+      res
+        .status(404)
+        .json({ message: `Error: Failed to find job with ID: ${id}` });
       return;
     }
 
-    // Delete all subJobs
-    const removedSubJobs = await Promise.all(
-      job.subJobList.map(async (subJobId) => {
-        const subJob = await schemas.SubJob.findByIdAndDelete(subJobId);
-        return subJob;
-      })
-    );
-    if (!removedSubJobs) {
-      res.status(404).json({
-        message: `Failed to delete subJobs or could not process request.`,
-      });
-      return;
+    // -------------------- Delete Dependencies --------------------
+    for (let i = 0; i < job.subJobList.length; i++) {
+      const subJobId = job.subJobList[i].toString();
+
+      // Find subjob
+      const subJob = await schemas.SubJob.findById(subJobId);
+      if (!subJob) {
+        res.status(404).json({
+          message: `Error: Failed to find sub-job with ID: ${subJobId}`,
+        });
+        return;
+      }
+      const mainJobId = subJob.jobId.toString();
+
+      // Delete all child cushions
+      if (subJob.cushionList.length > 0) {
+        const cushions = await Promise.all(
+          subJob.cushionList.map(async (cushionId) => {
+            const cushion = await schemas.Cushion.findByIdAndDelete(cushionId);
+            return cushion;
+          })
+        );
+        if (!cushions) {
+          res
+            .status(404)
+            .json({ message: "Error: Failed to delete child cushions." });
+        }
+      }
+      // Delete all child frames
+      if (subJob.frameList.length > 0) {
+        const frames = await Promise.all(
+          subJob.frameList.map(async (frameId) => {
+            const frame = await schemas.Frame.findByIdAndDelete(frameId);
+            return frame;
+          })
+        );
+        if (!frames) {
+          res
+            .status(404)
+            .json({ message: "Error: Failed to delete child frames." });
+        }
+      }
+      // Delete all child upholstery
+      if (subJob.upholsteryList.length > 0) {
+        const upholstery = await Promise.all(
+          subJob.upholsteryList.map(async (upholsteryId) => {
+            const upholstery = await schemas.Upholstery.findByIdAndDelete(
+              upholsteryId
+            );
+            return upholstery;
+          })
+        );
+        if (!upholstery) {
+          res
+            .status(404)
+            .json({ message: "Error: Failed to delete child upholstery." });
+        }
+      }
     }
 
-    // Delete the job
+    // Delete all child subJobs
+    if (job.subJobList.length > 0) {
+      const subJobs = await Promise.all(
+        job.subJobList.map(async (subJobId) => {
+          const subJob = await schemas.SubJob.findByIdAndDelete(subJobId);
+          return subJob;
+        })
+      );
+      if (!subJobs) {
+        res
+          .status(404)
+          .json({ message: "Error: Failed to delete child subJobs." });
+      }
+    }
+    // -------------------------------------------------------------
+
+    // Finally, delete the job
     const result = await schemas.Job.findByIdAndDelete<Job>(id);
     if (!result) {
       res.status(404).json({
-        message: `Failed to find job with ID: ${id}! Or could not process request.`,
+        message: `Error: Failed to find job with ID: ${id}! Or could not process request.`,
       });
+      return;
     }
     res.status(200).json(result);
   } catch (err) {
