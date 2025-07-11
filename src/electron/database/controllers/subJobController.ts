@@ -38,6 +38,27 @@ export const getSubJobById = async (
   }
 };
 
+export const getSubJobsByJobId = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  try {
+    const jobId = req.params.jobid;
+    const subJobs = await schemas.SubJob.find({
+      jobId: { $in: jobId },
+    });
+    if (!subJobs) {
+      res.status(404).json({ message: "Error: Failed to retireve subjobs." });
+      return;
+    }
+
+    res.status(200).json(subJobs);
+  } catch (err) {
+    console.error(err);
+    res.status(400).json(err);
+  }
+};
+
 export const insertSubJob = async (
   req: express.Request,
   res: express.Response
@@ -92,6 +113,36 @@ export const insertSubJob = async (
     // Return newly created subjob
     res.status(200).json(subJob);
   } catch (err) {
+    res.status(400).json(err);
+  }
+};
+
+export const getFilteredSubJobsByStatus = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  try {
+    const status: String = req.body.status;
+    if (!status) {
+      res
+        .status(404)
+        .json({ message: "Error: Failed to provide status type." });
+      return;
+    }
+
+    const subJobs = await schemas.SubJob.find({
+      status: { $in: status },
+    });
+    if (!subJobs) {
+      res
+        .status(404)
+        .json({ message: "Error: Failed to find filtered subjobs." });
+      return;
+    }
+
+    res.status(200).json(subJobs);
+  } catch (err) {
+    console.error(err);
     res.status(400).json(err);
   }
 };

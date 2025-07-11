@@ -22,6 +22,19 @@ export const getUpholsteryById = async (id: String) => {
   return upholstery;
 };
 
+// Get upholstery list from subjob ID
+export const getUpholsteryBySubJobId = async (subJobId: String) => {
+  const upholstery = fetch(
+    `${DBLink}/upholstery/getUpholsteryBySubJobId/${subJobId}`
+  )
+    .then((res) => res.json())
+    .catch((err) => console.error(err));
+  if (!upholstery) {
+    return;
+  }
+  return upholstery;
+};
+
 // Create a new upholstery
 export const createUpholstery = async (data: Upholstery) => {
   fetch(`${DBLink}/upholstery/postCreateUpholstery`, {

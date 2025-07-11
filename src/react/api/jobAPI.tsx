@@ -2,14 +2,14 @@ import { DBLink } from "../App";
 
 // Get all jobs
 export const getAllJobs = async () => {
-  const jobs = fetch(`${DBLink}/job/getAllJobs`)
+  const allJobs = fetch(`${DBLink}/job/getAllJobs`)
     .then((res) => res.json())
     .catch((err) => console.error(err));
-  if (!jobs) {
+  if (!allJobs) {
     alert("Error: Failed to retrieve jobs.");
     return;
   }
-  return jobs;
+  return allJobs;
 };
 
 // Get a particular job by ID
@@ -22,6 +22,17 @@ export const getJobById = async (id: String) => {
     return;
   }
   return job;
+};
+
+// Get current jobs
+export const getCurrentJobs = async () => {
+  const currentJobs = fetch(`${DBLink}/job/getCurrentJobs`)
+    .then((res) => res.json())
+    .catch((err) => console.error(err));
+  if (!currentJobs) {
+    return;
+  }
+  return currentJobs;
 };
 
 // Get all archived jobs

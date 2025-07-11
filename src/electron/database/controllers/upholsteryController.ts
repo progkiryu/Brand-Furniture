@@ -19,7 +19,7 @@ export const getAllUpholstery = async (
   }
 };
 
-// Get upholstery by ID (url)
+// Get upholstery by ID
 export const getUpholsteryById = async (
   req: express.Request,
   res: express.Response
@@ -34,6 +34,28 @@ export const getUpholsteryById = async (
         .json({ message: `Failed to find upholstery with id: ${id}` });
       return;
     }
+    res.status(200).json(upholstery);
+  } catch (err) {
+    console.error(err);
+    res.status(400).json(err);
+  }
+};
+
+// Get upholstery by subJobId
+export const getUpholsteryBySubJobId = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  try {
+    const subJobId = req.params.subjobid;
+    const upholstery = await schemas.Upholstery.find({
+      subJobId: { $in: subJobId },
+    });
+    if (!upholstery) {
+      res.status(404).json({ message: "Error: Failed to retrieve upholstery" });
+      return;
+    }
+
     res.status(200).json(upholstery);
   } catch (err) {
     console.error(err);

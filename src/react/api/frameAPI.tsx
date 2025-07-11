@@ -22,6 +22,17 @@ export const getFrameById = async (id: String) => {
   return frame;
 };
 
+// Get frames by subJobId
+export const getFramesBySubJobId = async (subJobId: String) => {
+  const frames = fetch(`${DBLink}/frame/getFramesBySubJobId/${subJobId}`)
+    .then((res) => res.json())
+    .catch((err) => console.error(err));
+  if (!frames) {
+    return;
+  }
+  return frames;
+};
+
 // Create a new frame
 export const createFrame = async (data: Frame) => {
   fetch(`${DBLink}/frame/postCreateFrame`, {
