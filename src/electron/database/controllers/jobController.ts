@@ -3,14 +3,12 @@ import schemas from "../models/schema.js";
 
 export const getAllJobs = async (_: express.Request, res: express.Response) => {
   try {
-    const jobs = await schemas.Job.find();
-    if (!jobs) {
-      res
-        .status(404)
-        .json({ message: "Error finding 'Jobs' MongoDB collection!" });
+    const allJobs = await schemas.Job.find();
+    if (!allJobs) {
+      res.status(404).json({ message: "Error: Failed to get all jobs." });
       return;
     }
-    res.status(200).json(jobs);
+    res.status(200).json(allJobs);
   } catch (err) {
     res.status(400).json(err);
   }
@@ -35,8 +33,19 @@ export const getJobById = async (
   }
 };
 
+export const getJobs = async (_: express.Request, res: express.Response) => {
+  try {
+    const jobs = await schemas.Job.find({
+      isArchived: { $in: false },
+    }).sort({ due: "descending" }); // Sort latest first;
+  } catch (err) {
+    console.error(err);
+    res.status(400).json({ message: "Error: Failed to retrieve jobs." });
+  }
+};
+
 export const getArchivedJobs = async (
-  req: express.Request,
+  _: express.Request,
   res: express.Response
 ) => {
   try {
@@ -46,7 +55,7 @@ export const getArchivedJobs = async (
     if (!archivedJobs) {
       res
         .status(404)
-        .json({ message: "Error: Failed to retrive archived jobs." });
+        .json({ message: "Error: Failed to retrieve archived jobs." });
       return;
     }
 
