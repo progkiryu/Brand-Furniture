@@ -96,6 +96,36 @@ export const insertSubJob = async (
   }
 };
 
+export const getFilteredSubJobsByStatus = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  try {
+    const status: String = req.body.status;
+    if (!status) {
+      res
+        .status(404)
+        .json({ message: "Error: Failed to provide status type." });
+      return;
+    }
+
+    const subJobs = await schemas.SubJob.find({
+      status: { $in: status },
+    });
+    if (!subJobs) {
+      res
+        .status(404)
+        .json({ message: "Error: Failed to find filtered subjobs." });
+      return;
+    }
+
+    res.status(200).json(subJobs);
+  } catch (err) {
+    console.error(err);
+    res.status(400).json(err);
+  }
+};
+
 export const updateSubJob = async (
   req: express.Request,
   res: express.Response

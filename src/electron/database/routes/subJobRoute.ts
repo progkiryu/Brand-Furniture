@@ -5,6 +5,7 @@ import {
   insertSubJob,
   updateSubJob,
   removeSubJob,
+  getFilteredSubJobsByStatus,
 } from "../controllers/subJobController.js";
 
 export default (router: express.Router) => {
@@ -13,6 +14,7 @@ export default (router: express.Router) => {
   router.get("/subJob/getSubJobById/:id", getSubJobById);
   // Post Routes
   router.post("/subJob/insertSubJob", insertSubJob);
+  router.post("/subJob/getFilteredSubJobsByStatus", getFilteredSubJobsByStatus);
   // Put Routes
   router.put("/subJob/updateSubJob", updateSubJob);
   // Delete Routes

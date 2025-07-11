@@ -34,6 +34,22 @@ export const createSubJob = async (data: SubJob) => {
     .catch((err) => console.error(err));
 };
 
+// Get list of subjobs with filtered status. Exact matches.
+export const getFilteredSubJobsByStatus = async (status: String) => {
+  const subJobs = fetch(`${DBLink}/subJobs/getFilteredSubJobsByStatus`, {
+    method: "POST",
+    mode: "cors",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(status),
+  })
+    .then((res) => res.json())
+    .catch((err) => console.error(err));
+  if (!subJobs) {
+    return;
+  }
+  return subJobs;
+};
+
 // Delete a subjob by ID
 export const deleteSubJob = async (id: String) => {
   fetch(`${DBLink}/subJob/removeSubJob/${id}`, {

@@ -33,11 +33,22 @@ export const getJobById = async (
   }
 };
 
-export const getJobs = async (_: express.Request, res: express.Response) => {
+export const getCurrentJobs = async (
+  _: express.Request,
+  res: express.Response
+) => {
   try {
-    const jobs = await schemas.Job.find({
+    const currentJobs = await schemas.Job.find({
       isArchived: { $in: false },
     }).sort({ due: "descending" }); // Sort latest first;
+    if (!currentJobs) {
+      res
+        .status(404)
+        .json({ message: "Error: Failed to retrieve current jobs." });
+      return;
+    }
+
+    res.status(200).json(currentJobs);
   } catch (err) {
     console.error(err);
     res.status(400).json({ message: "Error: Failed to retrieve jobs." });

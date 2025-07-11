@@ -24,15 +24,15 @@ export const getJobById = async (id: String) => {
   return job;
 };
 
-// Get jobs
-export const getJobs = async () => {
-  const jobs = fetch(`${DBLink}/job/getJobs`)
+// Get current jobs
+export const getCurrentJobs = async () => {
+  const currentJobs = fetch(`${DBLink}/job/getCurrentJobs`)
     .then((res) => res.json())
     .catch((err) => console.error(err));
-  if (!jobs) {
+  if (!currentJobs) {
     return;
   }
-  return jobs;
+  return currentJobs;
 };
 
 // Get all archived jobs
