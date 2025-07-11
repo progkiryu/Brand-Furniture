@@ -22,6 +22,17 @@ export const getSubJobById = async (id: String) => {
   return subJob;
 };
 
+// Get list of subjobs by mainJob ID
+export const getSubJobsByJobId = async (jobId: String) => {
+  const subJobs = fetch(`${DBLink}/subJob/getSubJobsByJobId/${jobId}`)
+    .then((res) => res.json())
+    .catch((err) => console.error(err));
+  if (!subJobs) {
+    return;
+  }
+  return subJobs;
+};
+
 // Create a new subjob
 export const createSubJob = async (data: SubJob) => {
   fetch(`${DBLink}/subJob/insertSubJob`, {
