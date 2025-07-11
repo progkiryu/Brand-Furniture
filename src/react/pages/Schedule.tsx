@@ -10,6 +10,7 @@ import SearchBar from "../components/Searchbar"; // New component
 import JobTable from "../components/JobTable"; // New component
 import AddJobFormModel from "../components/AddJobFormModel"; // New modal component
 import EditJobFormModal from "../components/EditJobFormModal"; 
+
 import { DBLink } from "../App";
 
  
@@ -112,16 +113,38 @@ function Schedule() {
     };
 
 
-    const handleAddSubJob = (jobId: string, newSubJobData: SubJob) => {
-        // This function will be passed to JobTable and then to AddSubJobFormModal
-        // It needs the jobId to correctly associate the sub-job
-        const newSubJob: SubJob = {
-            ...newSubJobData,
-            // You might need to generate a unique subJobId here if it's not coming from the form
-            // For now, assuming subJobId is provided or will be generated in the modal
-        };
-        setSubJobs(prevSubJobs => [...prevSubJobs, newSubJob]);
+    // const handleAddSubJob = (newSubJobData: SubJob) => {
+    //     // This function will be passed to JobTable and then to AddSubJobFormModal
+    //     // It needs the jobId to correctly associate the sub-job
+    //     const newSubJob: SubJob = {
+    //         ...newSubJobData,
+    //         // You might need to generate a unique subJobId here if it's not coming from the form
+    //         // For now, assuming subJobId is provided or will be generated in the modal
+    //     };
+    //     setSubJobs(prevSubJobs => [...prevSubJobs, newSubJob]);
+    // };
+
+    const handleAddSubJob = async (newSubJobData: SubJob) => {
+        try {
+            const response = await fetch(`${DBLink}/subJob/insertSubJob`, {
+                method: "POST",
+                mode: "cors",
+                headers: { "Content-Type": "application/json" }, // Corrected content type
+                body: JSON.stringify(newSubJobData),
+            });
+
+            if (response.ok) {
+                const addedSubJob: SubJob = await response.json(); // Assuming API returns the created job
+                setSubJobs(prevJobs => [...prevJobs, addedSubJob]);
+            } else {
+                const errorText = await response.text(); // Read error response
+                console.error("Failed to create sub-job:", response.status, errorText);
+            }
+        } catch (err) {
+            console.error("Error creating sub-job:", err);
+        }
     };
+
  
  
     return (
