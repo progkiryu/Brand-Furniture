@@ -204,7 +204,6 @@ export const removeJob = async (
         });
         return;
       }
-      const mainJobId = subJob.jobId.toString();
 
       // Delete all child cushions
       if (subJob.cushionList.length > 0) {

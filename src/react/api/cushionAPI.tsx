@@ -22,6 +22,17 @@ export const getCushionById = async (id: String) => {
   return cushion;
 };
 
+// Get list of cushions from subJobId
+export const getCushionsBySubJobId = async (subJobId: String) => {
+  const cushions = fetch(`${DBLink}/cushions/getCushionsBySubJobId/${subJobId}`)
+    .then((res) => res.json())
+    .catch((err) => console.error(err));
+  if (!cushions) {
+    return;
+  }
+  return cushions;
+};
+
 // Create a new cushion
 export const createCushion = async (data: Cushion) => {
   fetch(`${DBLink}/cushion/postCreateCushion`, {
