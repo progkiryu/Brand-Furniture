@@ -5,8 +5,14 @@ type Job = {
   name: String;
   type: String; // Added 'type' as per your mock data
   due: Date;
+  depositAmount?: Number;
+  depositDate?: Date;
+  paidInFull?: Date;
+  liaison?: String;
+  paymentNote?: String;
   subJobList?: String[];
   isPinned?: Boolean;
+  isArchived?: Boolean;
 };
 
 type SubJob = {
@@ -16,15 +22,11 @@ type SubJob = {
   note?: String;
   file?: String;
   dueDate?: Date;
-  depositAmount?: Number;
-  depositDate?: Date;
-  paidInFull?: Boolean;
-  liaison?: String;
-  paymentNote?: String;
   frameList?: String[];
   cushionList?: String[];
   upholsteryList?: String[];
-  isArchived?: Boolean;
+  status?: String; // status of subjob (5 colours), default: "Unassigned"
+  frameFormed?: Boolean; // seperate to the 5 colours
 };
 
 type Frame = {
@@ -64,7 +66,12 @@ type Notif = {
   notifTitle: String;
   notifDesc: String;
   time: Date;
-}
+};
+
+type DateRange = {
+  startDate: Date;
+  endDate: Date;
+};
 
 interface Window {
   jobs: {

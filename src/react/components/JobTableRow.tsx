@@ -9,7 +9,7 @@ interface JobTableRowProps {
 function JobTableRow({ job, subJobsForJob, onAddSubJobClick, onEditJobClick }: JobTableRowProps) {
     
     return (
-        <tr>
+        <tr key={`${job._id}`}>
             <td>{job.invoiceId}</td>
             <td>{job.client}</td>
             <td>{job.name}</td>

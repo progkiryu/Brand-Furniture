@@ -266,6 +266,25 @@
     margin-bottom: 3px;
 }
 
+.frame-section, .cushion-section, .upholstery-section {
+    background-color: lightgrey;
+    padding: 30px;
+    border-radius: 10px;
+}
+
+.add-btn-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.add-btn-container input{
+    margin-top: 20px;
+    display: block;
+    width: 50px;
+    left: 100px;
+}
+
 
 /* Responsive adjustments */
 @media (max-width: 768px) {

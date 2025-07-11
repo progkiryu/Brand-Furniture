@@ -6,7 +6,6 @@ export const getAllUpholstery = async () => {
     .then((res) => res.json())
     .catch((err) => console.error(err));
   if (!upholstery) {
-    alert("Error: failed to retrieve upholstery.");
     return;
   }
   return upholstery;
@@ -18,7 +17,19 @@ export const getUpholsteryById = async (id: String) => {
     .then((res) => res.json())
     .catch((err) => console.error(err));
   if (!upholstery) {
-    alert("Error: Failed to retrieve upholstery");
+    return;
+  }
+  return upholstery;
+};
+
+// Get upholstery list from subjob ID
+export const getUpholsteryBySubJobId = async (subJobId: String) => {
+  const upholstery = fetch(
+    `${DBLink}/upholstery/getUpholsteryBySubJobId/${subJobId}`
+  )
+    .then((res) => res.json())
+    .catch((err) => console.error(err));
+  if (!upholstery) {
     return;
   }
   return upholstery;
@@ -32,13 +43,7 @@ export const createUpholstery = async (data: Upholstery) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   })
-    .then((res) => {
-      if (res.ok) {
-        alert("Upholstery created successfully.");
-      } else {
-        alert("Error: Failed to create upholstery.");
-      }
-    })
+    .then((res) => res.json())
     .catch((err) => console.error(err));
 };
 
@@ -49,13 +54,7 @@ export const deleteUpholstery = async (id: String) => {
     mode: "cors",
     headers: { "Content-Type": "application/json" },
   })
-    .then((res) => {
-      if (res.ok) {
-        alert("Upholstery deleted successfully.");
-      } else {
-        alert("Error: Failed to delete upholstery.");
-      }
-    })
+    .then((res) => res.json())
     .catch((err) => console.error(err));
 };
 
@@ -67,12 +66,6 @@ export const updateUpholstery = async (data: Upholstery) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   })
-    .then((res) => {
-      if (res.ok) {
-        alert("Upholstery updated successfully.");
-      } else {
-        alert("Error: Failed to update upholstery.");
-      }
-    })
+    .then((res) => res.json())
     .catch((err) => console.error(err));
 };

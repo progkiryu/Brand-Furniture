@@ -2,14 +2,14 @@ import { DBLink } from "../App";
 
 // Get all jobs
 export const getAllJobs = async () => {
-  const jobs = fetch(`${DBLink}/job/getAllJobs`)
+  const allJobs = fetch(`${DBLink}/job/getAllJobs`)
     .then((res) => res.json())
     .catch((err) => console.error(err));
-  if (!jobs) {
+  if (!allJobs) {
     alert("Error: Failed to retrieve jobs.");
     return;
   }
-  return jobs;
+  return allJobs;
 };
 
 // Get a particular job by ID
@@ -24,22 +24,74 @@ export const getJobById = async (id: String) => {
   return job;
 };
 
+// Get current jobs
+export const getCurrentJobs = async () => {
+  const currentJobs = fetch(`${DBLink}/job/getCurrentJobs`)
+    .then((res) => res.json())
+    .catch((err) => console.error(err));
+  if (!currentJobs) {
+    return;
+  }
+  return currentJobs;
+};
+
+// Get all archived jobs
+export const getArchivedJobs = async () => {
+  const archivedJobs = fetch(`${DBLink}/job/getArchivedJobs`)
+    .then((res) => res.json())
+    .catch((err) => console.error(err));
+  if (!archivedJobs) {
+    return;
+  }
+  return archivedJobs;
+};
+
 // Create a new job
 export const createJob = async (data: Job) => {
   fetch(`${DBLink}/job/insertJob`, {
     method: "POST",
     mode: "cors",
-    headers: { "Content-Type": "application.json" },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   })
-    .then((res) => {
-      if (res.ok) {
-        alert("Job created successfully.");
-      } else {
-        alert("Error: Failed to create job.");
-      }
-    })
+    .then((res) => res.json())
     .catch((err) => console.error(err));
+};
+
+// Get list of jobs within specified date range
+export const getFilteredJobsByDate = async (startD: Date, endD: Date) => {
+  const range = {
+    startDate: startD,
+    endDate: endD,
+  };
+  const jobs = fetch(`${DBLink}/job/getFilteredJobsByDate`, {
+    method: "POST",
+    mode: "cors",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(range),
+  })
+    .then((res) => res.json())
+    .catch((err) => console.error(err));
+  if (!jobs) {
+    return;
+  }
+  return jobs;
+};
+
+// Get list of jobs with specific type. Note: must be exact match
+export const getFilteredJobsByType = async (type: String) => {
+  const jobs = fetch(`${DBLink}/job/getFilteredJobsByType`, {
+    method: "POST",
+    mode: "cors",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(type),
+  })
+    .then((res) => res.json())
+    .catch((err) => console.error(err));
+  if (!jobs) {
+    return;
+  }
+  return jobs;
 };
 
 // Delete a job by Id
@@ -49,13 +101,7 @@ export const deleteJob = async (id: String) => {
     mode: "cors",
     headers: { "Content-Type": "application/json" },
   })
-    .then((res) => {
-      if (res.ok) {
-        alert("Job deleted successfully");
-      } else {
-        alert("Error: Failed to delete job");
-      }
-    })
+    .then((res) => res.json())
     .catch((err) => console.error(err));
 };
 
@@ -67,12 +113,6 @@ export const updateJob = async (data: Job) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   })
-    .then((res) => {
-      if (res.ok) {
-        alert("Job updated successfully.");
-      } else {
-        alert("Error: Failed to update job");
-      }
-    })
+    .then((res) => res.json())
     .catch((err) => console.error(err));
 };
