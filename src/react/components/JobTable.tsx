@@ -8,7 +8,7 @@ interface JobTableProps {
     jobs: Job[];
     subJobs: SubJob[]; // Accept all subJobs as a prop
     // onAddSubJob: (NewSubJobDataForAdd: Omit<SubJob, 'jobId'> & { jobId: string }) => void; // Handler for adding sub-jobs
-    onAddSubJob: (jobId: string, newSubJobData: SubJob) => void;
+    onAddSubJob: (newSubJobData: SubJob) => void;
     onEditJobClick: (job: Job) => void;
 }
 
