@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { FaEdit, FaThumbtack } from "react-icons/fa";
 
 interface DashboardTableProps {
   jobsParams: Array<Job>
@@ -13,31 +14,29 @@ function DashboardTable({ jobsParams }: DashboardTableProps) {
   }, [jobsParams]);
 
   return (
-    <div className="upcoming-job-components">
-      <table className="orders-table">
-        <thead>
-          <tr>
-            <th>INVOICE ID</th>
-            <th>CLIENT</th>
-            <th>NAME</th>
-            <th>TYPE</th>
-            <th>DUE DATE</th>
-          </tr>
-        </thead>
-        <tbody>
-        {
-          jobs.map((job: Job) => {
-            return <tr key={String(job._id)}>
-              <td>{job.invoiceId ? job.invoiceId : "N/A"}</td>
-              <td>{job.client}</td>
-              <td>{job.name}</td>
-              <td>{job.type}</td>
-              <td>{String(job.due)}</td>
-            </tr>
-          })
-        }
-        </tbody>
-      </table>
+    <div className="job-list">
+      <div className="job-list-header">
+        <span>Client</span>
+        <span>Invoice No.</span>
+        <span>Job Name</span>
+        <span>Job Type</span>
+        <span>Due</span>
+      </div>
+      {
+        jobs.map((job: Job) => 
+          (<div key={String(job._id)} className="job-list-row">
+            <span>{job.client}</span>
+            <span>{job.invoiceId}</span>
+            <span>{job.name}</span>
+            <span>{job.type}</span>
+            <span>{job.due.toLocaleDateString()}</span>
+            <span className="icon-wrapper-vertical">
+              <FaThumbtack className="icon-pin" />
+              <FaEdit className="icon-edit" />
+            </span>
+          </div>)
+        )
+      }
     </div>
   );
 };
