@@ -2,10 +2,11 @@ import "../styles/Dashboard.css";
 import "../styles/Global.css";
 import Navbar from "../components/Navbar";
 import { useEffect, useState } from "react";
-import SubJobTable from "../components/DashboardTable.tsx";
+import DashboardTable from "../components/DashboardTable.tsx";
 import JobAnalytics from "../components/JobAnalytics";
 import NotificationsList from "../components/NotificationsList";
-import { DBLink } from "../App.tsx";
+import { getAllJobs } from "../api/jobAPI.tsx";
+import { getAllNotifications  } from "../api/notificationAPI.tsx";
 
 // ------------------------------TESTING------------------------------
 // REMOVE THIS LATER
@@ -19,9 +20,8 @@ import {
 // ------------------------------TESTING------------------------------
 
 function Dashboard() {
-  const [subJobs, setSubJobs] = useState<Array<SubJob>>([]);
-  const [jobs, setJobs] = useState<Array<Job>>([]);
-  const [notifs, setNotifs] = useState<Array<Notif>>([]);
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [notifs, setNotifs] = useState<Notif[]>([]);
   const [allFrames, setAllFrames] = useState<Frame[]>([]);
   const [frame, setFrame] = useState<Frame>();
 
@@ -82,20 +82,23 @@ function Dashboard() {
 
   // // retrieve sub-jobs by making a API fetch call
   useEffect(() => {
-    fetch(`${DBLink}/subJob/getAllSubJobs`)
-      .then((res) => res.json())
-      .then((data) => setSubJobs(data))
-      .catch((err) => console.log(err));
-
-    fetch(`${DBLink}/job/getAllJobs`)
-      .then((res) => res.json())
-      .then((data) => setJobs(data))
-      .catch((err) => console.log(err));
-
-    fetch(`${DBLink}/notifications/getAllNotifications`)
-      .then((res) => res.json())
-      .then((data) => setNotifs(data))
-      .catch((err) => console.log(err));
+    const fetchData = async () => {
+      const jobsPromise = getAllJobs();
+      const notifPromise = getAllNotifications();
+      try {
+        const [jobData, notifData] = await Promise.all([
+          jobsPromise,
+          notifPromise
+        ]);
+        setJobs(jobData);
+        setNotifs(notifData);
+        
+      }
+      catch (err) {
+        console.error(err);
+      }
+    }
+    fetchData();
   }, []);
 
   return (
@@ -136,7 +139,7 @@ function Dashboard() {
                 </div> */}
               </div>
               <div className="upcoming-orders-scroll-container">
-                <SubJobTable jobsParams={jobs} />
+                <DashboardTable jobsParams={jobs}/>
               </div>
             </div>
           </div>

@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 
-interface SubJobProps {
+interface DashboardTableProps {
   jobsParams: Array<Job>
 }
 
-function SubJobTable({ jobsParams }: SubJobProps) {
+function DashboardTable({ jobsParams }: DashboardTableProps) {
 
   const [ jobs, setJobs ] = useState<Array<Job>>(jobsParams);
 
@@ -42,4 +42,4 @@ function SubJobTable({ jobsParams }: SubJobProps) {
   );
 };
 
-export default SubJobTable;
+export default DashboardTable;
