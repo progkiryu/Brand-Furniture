@@ -26,19 +26,6 @@ function AddFrameFormModal({ isOpen, onClose, subJobId, subJobDetail, onAddFrame
     const [expectedDate, setExpectedDate] = useState<string>('');
     const [receivedDate, setReceivedDate] = useState<string>('');
 
-    // Helper for Date Formatting (for input type="date")
-    const formatDateForInput = (dateValue: Date | string | null | undefined): string => {
-        if (!dateValue) return '';
-        let date: Date;
-        if (dateValue instanceof Date) {
-            date = dateValue;
-        } else if (typeof dateValue === 'string') {
-            date = new Date(dateValue);
-        } else {
-            return '';
-        }
-        return isNaN(date.getTime()) ? '' : date.toISOString().split('T')[0];
-    };
 
     // Reset form fields when modal opens/closes or subJobId changes
     useEffect(() => {

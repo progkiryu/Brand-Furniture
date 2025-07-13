@@ -7,7 +7,19 @@ interface SubJobTableProps {
 
 function SubJobTable({subJobsParam}: SubJobTableProps) {
     if (!subJobsParam || subJobsParam.length === 0) {
-        return <h1>No sub-jobs!</h1>
+        return <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Frames</th>
+                        <th>Cushions</th>
+                        <th>Upholstery</th>
+                    </tr>    
+                </thead>
+            </table>
+            <input type="button" value="Add Component"></input>
+        </div>
     }
 
     const [subJobs] = useState<SubJob[]>(subJobsParam);
@@ -33,6 +45,7 @@ function SubJobTable({subJobsParam}: SubJobTableProps) {
                 }
                 </tbody>
             </table>
+            <input type="button" value="Add Component"></input>
         </div>
     )
 }

@@ -20,7 +20,7 @@ import { DBLink } from "../App";
 // import { deleteJob } from "../api/jobAPI";
 import { getAllJobs } from "../api/jobAPI";
 import { getSubJobById } from "../api/subJobAPI";
- 
+
 
 import { useState, useEffect, useRef } from 'react';
 import AddCushionFormModal from "../components/AddCushionModal";
@@ -28,68 +28,54 @@ import AddCushionFormModal from "../components/AddCushionModal";
 
 function Schedule() {
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [jobs, setJobs] = useState<Array<Job>>([]); // Manage jobs state here
-  // Manage all top-level data arrays as state
-  const [subJobs, setSubJobs] = useState<Array<SubJob>>([]);
   const [cushions, setCushions] = useState<Array<Cushion>>([]);
-  const [isAddJobModelOpen, setIsAddJobModelOpen] = useState(false);
   const [isEditJobModalOpen, setIsEditJobModalOpen] = useState(false);
   const [jobToEdit, setJobToEdit] = useState<Job | null>(null);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isAddCushionModalOpen, setIsAddCushionModalOpen] = useState(false);
-    const [searchTerm, setSearchTerm] = useState<string>('');
-    const [jobs, setJobs] = useState<Job[]>([]); // Manage jobs state here
-    // Manage all top-level data arrays as state
-    const [subJobs, setSubJobs] = useState<SubJob[]>([]);
-    const [isAddJobModelOpen, setIsAddJobModelOpen] = useState<boolean>(false);
-    const [hasSelected, setSelected] = useState<boolean>(false);
-    // const [isEditJobModalOpen, setIsEditJobModalOpen] = useState(false);
-    // const [jobToEdit, setJobToEdit] = useState<Job | null>(null);
-    const [dropdownOpen, setDropdownOpen] = useState(false);
-    const dropdownRef = useRef<HTMLDivElement>(null);
+  const [jobs, setJobs] = useState<Job[]>([]); 
+  const [subJobs, setSubJobs] = useState<SubJob[]>([]);
+  const [isAddJobModelOpen, setIsAddJobModelOpen] = useState<boolean>(false);
+  const [hasSelected, setSelected] = useState<boolean>(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
 
 
-    useEffect(() => {
-        const fetchJobs = async () => {
-            const jobsPromise = getAllJobs();
-            try {
-                const [fetchJobs] = await Promise.all([jobsPromise]);
-                setJobs(fetchJobs);
-            }
-            catch (err) {
-                console.error("Could not fetch Jobs!");
-            }
-        }
-        fetchJobs();
-    }, []);
- 
-    // Handler for when the search input changes
-    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchTerm(event.target.value);
-    };
   useEffect(() => {
-    fetch(`${DBLink}/job/getAllJobs`)
-      .then(res => res.json())
-      .then(data => {
-        console.log(`the data: ${data}`);
-        setJobs(data)
-      })
-      .catch(err => console.log(err));
-
-    fetch(`${DBLink}/subJob/getAllSubJobs`)
-      .then((res) => res.json())
-      .then((data) => setSubJobs(data))
-      .catch((err) => console.log(err));
-
-    fetch(`${DBLink}/subJob/getAllCushions`)
-      .then((res) => res.json())
-      .then((data) => setCushions(data))
-      .catch((err) => console.log(err));
+    const fetchJobs = async () => {
+      const jobsPromise = getAllJobs();
+      try {
+        const [fetchJobs] = await Promise.all([jobsPromise]);
+        setJobs(fetchJobs);
+      }
+      catch (err) {
+        console.error("Could not fetch Jobs!");
+      }
+    }
+    fetchJobs();
   }, []);
 
-  
+  // useEffect(() => {
+  //   fetch(`${DBLink}/job/getAllJobs`)
+  //     .then(res => res.json())
+  //     .then(data => {
+  //       console.log(`the data: ${data}`);
+  //       setJobs(data)
+  //     })
+  //     .catch(err => console.log(err));
+
+  //   fetch(`${DBLink}/subJob/getAllSubJobs`)
+  //     .then((res) => res.json())
+  //     .then((data) => setSubJobs(data))
+  //     .catch((err) => console.log(err));
+
+  //   fetch(`${DBLink}/subJob/getAllCushions`)
+  //     .then((res) => res.json())
+  //     .then((data) => setCushions(data))
+  //     .catch((err) => console.log(err));
+  // }, []);
+
+
 
   // Handler for when the search input changes
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -181,24 +167,25 @@ function Schedule() {
       console.error("Failed to update job.");
     }
   };
-    const displayJobDetails = async (job: Job) => {
-        try {
-            if (job.subJobList && job.subJobList.length > 0) {
-                const subJobs = job.subJobList.map((subJobId: String) => {
-                    return getSubJobById(subJobId);
-                });
-                const fetchedSubJobs: SubJob[] = await Promise.all(subJobs);
-                setSubJobs(fetchedSubJobs);
-            }
-            else {
-                setSubJobs([]);
-            }
-            setSelected(true);
-        }
-        catch (err) {
-            console.log("Error deleting job:", err);
-        }
+
+  const displayJobDetails = async (job: Job) => {
+    try {
+      if (job.subJobList && job.subJobList.length > 0) {
+        const subJobs = job.subJobList.map((subJobId: String) => {
+          return getSubJobById(subJobId);
+        });
+        const fetchedSubJobs: SubJob[] = await Promise.all(subJobs);
+        setSubJobs(fetchedSubJobs);
+      }
+      else {
+        setSubJobs([]);
+      }
+      setSelected(true);
     }
+    catch (err) {
+      console.log("Error deleting job:", err);
+    }
+  }
 
 
   const handleAddSubJob = async (newSubJobData: SubJob) => {
@@ -222,7 +209,7 @@ function Schedule() {
     }
   };
 
-  const handleAddCushion = async (newCushionData : Cushion) => {
+  const handleAddCushion = async (newCushionData: Cushion) => {
     try {
       const response = await fetch(`${DBLink}/cushion/postCreateCushion`, {
         method: "POST",
@@ -335,42 +322,41 @@ function Schedule() {
             </div>
           </div>
 
-                </div>
-                <div id="order-container">
-                    <div id="job-list-container"> 
-                    {  
-                        <JobTable searchTerm={searchTerm}
-                        jobs={jobs}
-                        jobClicked={displayJobDetails}
-                        />
-                    }
-                    </div>
-                    <div id="job-detail-container">
-                    {    
-                        hasSelected && (<>
-                            <SubJobTable subJobsParam={subJobs}/>
-                            <button>Add Component</button>
-                        </>)
-                    }
-                    </div>
-                    {/* <h1>Orders</h1> */}
-                    {/* Pass both jobs and subJobs to JobTable */}
-                    {/* <JobTable
-                        searchTerm={searchTerm}
-                        jobs={jobs}
-                        subJobs={subJobs} // Pass all subJobs for filtering and display
-                        onAddSubJob={handleAddSubJob} // Pass the handler for adding sub-jobs
-                        onEditJobClick={handleEditJobClick}
-                    /> */}
-                </div>
-            </div>
- 
-            {/* Add Job Pop-up Modal */}
-            <AddJobFormModel
-                isOpen={isAddJobModelOpen}
-                onClose={() => setIsAddJobModelOpen(false)}
-                onAddJob={handleAddJob}
-            />
+        </div>
+        <div id="order-container">
+          <div id="job-list-container">
+            {
+              <JobTable searchTerm={searchTerm}
+                jobs={jobs}
+                jobClicked={displayJobDetails}
+              />
+            }
+          </div>
+          <div id="job-detail-container">
+            {
+              hasSelected && (<>
+                <SubJobTable subJobsParam={subJobs} />
+              </>)
+            }
+          </div>
+          {/* <h1>Orders</h1> */}
+          {/* Pass both jobs and subJobs to JobTable */}
+          {/* <JobTable
+              searchTerm={searchTerm}
+              jobs={jobs}
+              subJobs={subJobs} // Pass all subJobs for filtering and display
+              onAddSubJob={handleAddSubJob} // Pass the handler for adding sub-jobs
+              onEditJobClick={handleEditJobClick}
+          /> */}
+        </div>
+      </div>
+
+      {/* Add Job Pop-up Modal */}
+      <AddJobFormModel
+        isOpen={isAddJobModelOpen}
+        onClose={() => setIsAddJobModelOpen(false)}
+        onAddJob={handleAddJob}
+      />
 
       <EditJobFormModal
         isOpen={isEditJobModalOpen}
@@ -382,7 +368,7 @@ function Schedule() {
         onUpdateJob={handleUpdateJob}
       />
 
-      <AddCushionFormModal
+      {/* <AddCushionFormModal
         isOpen={isAddCushionModalOpen}
         onClose={() => {
           setIsAddCushionModalOpen(false);
@@ -390,7 +376,7 @@ function Schedule() {
         }}
         subJobId={selectedSubJobInfoForCushion?.subJobId || null}
         onAddCushion={handleAddCushion}
-      />
+      /> */}
     </>
   );
 }

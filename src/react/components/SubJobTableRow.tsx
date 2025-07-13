@@ -30,7 +30,8 @@ function SubJobTableRow({
     }, []);
 
 
-    return <tr key={String(subJobParam._id)}>
+    return (
+    <tr key={String(subJobParam._id)}>
         <td>
             <div>
                 <h2>Job</h2>
@@ -94,7 +95,7 @@ function SubJobTableRow({
         }
             <button>Add New Upholster</button>
         </td>
-    </tr>
+    </tr>)
 }
 
 export default SubJobTableRow;
