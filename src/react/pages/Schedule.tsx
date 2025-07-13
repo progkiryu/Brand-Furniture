@@ -3,25 +3,17 @@ import "../styles/Global.css";
 import "../styles/ModalForm.css"
 import "../styles/SubJobModalForm.css" // Ensure this CSS file exists or create it if needed
 import Navbar from "../components/Navbar";
-import { useState, useEffect } from 'react';
- 
+import { useState, useEffect, useRef } from 'react';
+
+
 
 import SearchBar from "../components/Searchbar"; // New component
 import JobTable from "../components/JobTable"; // New component
 import AddJobFormModel from "../components/AddJobFormModel"; // New modal component
-import EditJobFormModal from "../components/EditJobFormModal";
+import EditJobFormModal from "../components/EditJobFormModal"; 
 
- 
 import { DBLink } from "../App";
 import { deleteJob } from "../api/jobAPI";
-
-export interface NewSubJobDataForAdd {
-    jobId: string; // SubJob now has jobId directly
-    subJobDetail: string;
-    note?: string;
-    file?: string;
-    dueDate?: Date;
-}
  
 function Schedule() {
     const [searchTerm, setSearchTerm] = useState<string>('');
@@ -31,6 +23,10 @@ function Schedule() {
     const [isAddJobModelOpen, setIsAddJobModelOpen] = useState(false);
     const [isEditJobModalOpen, setIsEditJobModalOpen] = useState(false);
     const [jobToEdit, setJobToEdit] = useState<Job | null>(null);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
+
 
     useEffect(() => {
         fetch(`${DBLink}/job/getAllJobs`)
@@ -40,19 +36,34 @@ function Schedule() {
                 setJobs(data)
             })
             .catch(err => console.log(err));
-    }, []);
 
-    useEffect(() => {
-        fetch(`${DBLink}/subJob/getAllSubJobs`)
-        .then((res) => res.json())
-        .then((data) => setSubJobs(data))
-        .catch((err) => console.log(err));
+            fetch(`${DBLink}/subJob/getAllSubJobs`)
+            .then((res) => res.json())
+            .then((data) => setSubJobs(data))
+            .catch((err) => console.log(err));
     }, []);
  
     // Handler for when the search input changes
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
     };
+
+    useEffect(() => {
+  const handleClickOutside = (event: MouseEvent) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      setDropdownOpen(false);
+    }
+  };
+
+  if (dropdownOpen) {
+    document.addEventListener("mousedown", handleClickOutside);
+  }
+
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, [dropdownOpen]);
+
 
  
     const handleAddJob = async (newJobData: Job) => {
@@ -137,7 +148,7 @@ function Schedule() {
     }
 
 
-    const handleAddSubJob = (jobId: String, newSubJobData: NewSubJobDataForAdd) => {
+    const handleAddSubJob = (jobId: String, newSubJobData: SubJob) => {
         // This function will be passed to JobTable and then to AddSubJobFormModal
         // It needs the jobId to correctly associate the sub-job
         const newSubJob: SubJob = {
@@ -154,17 +165,89 @@ function Schedule() {
             <Navbar />
             <div id="first-container">
                 <div id="schedule-first-container">
-                    <div id="add-job-container">
-                        <button onClick={() => setIsAddJobModelOpen(true)} className="add-job-btn">
-                            Add Job
-                        </button>
-                    </div>
-                    <div id="search-container">
-                        <SearchBar searchTerm={searchTerm} onSearchChange={handleSearchChange} />
-                    </div>
-                    <div id="filter-container">
-                        <h1>Filter</h1>
-                    </div>
+                <div id="search-and-dropdown-container">
+                <div id="search-container">
+               <SearchBar searchTerm={searchTerm} onSearchChange={handleSearchChange} />
+            </div>
+
+             <div id="dropdown-wrapper" ref={dropdownRef}> 
+                 <div id="dropdown-bar" onClick={() => setDropdownOpen(!dropdownOpen)}>
+                 Sort & Filter
+                 <span className="dropdown-arrow">▼</span>
+                </div>
+
+               {dropdownOpen && (
+                  <div id="dropdown-panel">
+                 <div className="sort-option-group">
+                <strong>Invoice ID</strong>
+                 <label><input type="radio" name="invoice" /> Ascending</label>
+                 <label><input type="radio" name="invoice" /> Descending</label>
+                  </div>
+                <div className="sort-option-group">
+                <strong>Client</strong>
+                <label><input type="radio" name="client" /> Ascending</label>
+                <label><input type="radio" name="client" /> Descending</label>
+               </div>
+              <div className="sort-option-group">
+                <strong>Job Name</strong>
+                <label><input type="radio" name="jobname" /> Ascending</label>
+                <label><input type="radio" name="jobname" /> Descending</label>
+              </div>
+              <div className="sort-option-group">
+                <strong>Due Date</strong>
+                <label><input type="radio" name="duedate" /> Ascending</label>
+                <label><input type="radio" name="duedate" /> Descending</label>
+              </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+<div id="add-job-archive-wrapper">
+    <div id="add-job-container">
+        <button onClick={() => setIsAddJobModelOpen(true)} className="add-job-btn">
+            Add Job
+        </button>
+    </div>
+    <div id="archive-container">
+        <label>
+            <input type="checkbox" />
+            Archive
+        </label>
+    </div>
+</div>
+
+<div id="filter-container">
+    {/* filter-checkboxes stay unchanged here */}
+  <div className="filter-wrapper">
+    <div className="filter-column">
+      <label className="filter-item upholstery-cut">
+        <input type="checkbox" /> Upholstery Cut
+      </label>
+      <label className="filter-item body-upholstered">
+        <input type="checkbox" /> Body Upholstered
+      </label>
+      <label className="filter-item waiting-for-wrapping">
+        <input type="checkbox" /> Waiting for wrapping
+      </label>
+    </div>
+    <div className="filter-column">
+      <label className="filter-item upholstery-sewn">
+        <input type="checkbox" /> Upholstery Sewn
+      </label>
+      <label className="filter-item frame-foamed">
+        <input type="checkbox" /> Frame Foamed
+      </label>
+      <label className="filter-item complete">
+        <input type="checkbox" /> Complete
+      </label>
+      <label className="filter-item in-production">
+        <input type="checkbox" /> In Production
+      </label>
+    </div>
+  </div>
+</div>
+
                 </div>
                 <div id="order-container">
                     {/* <h1>Orders</h1> */}
