@@ -8,11 +8,10 @@ interface AddCushionFormModalProps {
     isOpen: boolean;
     onClose: () => void;
     subJobId: string; // Primitive string
-    subJobDetail: string; // For display in modal title
     onAddCushion: (newCushionData: Cushion) => void;
 }
 
-function AddCushionFormModal({ isOpen, onClose, subJobId, subJobDetail, onAddCushion }: AddCushionFormModalProps) {
+function AddCushionFormModal({ isOpen, onClose, subJobId, onAddCushion }: AddCushionFormModalProps) {
     const [type, setType] = useState<string>('');
     const [supplier, setSupplier] = useState<string>('');
     const [description, setDescription] = useState<string>('');
@@ -32,7 +31,7 @@ function AddCushionFormModal({ isOpen, onClose, subJobId, subJobDetail, onAddCus
             setExpectedDate('');
             setReceivedDate('');
         }
-    }, [isOpen, subJobId]);
+    }, [isOpen]);
 
     if (!isOpen) return null;
 
@@ -45,7 +44,7 @@ function AddCushionFormModal({ isOpen, onClose, subJobId, subJobDetail, onAddCus
             return;
         }
 
-        const newCushionData: Cushion = {
+        const newCushionData: Cushion  = {
             subJobId: new String(subJobId) as String,
             type: new String(type) as String, // Required, convert to String object
             supplier: supplier ? (new String(supplier) as String) : undefined,
@@ -64,7 +63,6 @@ function AddCushionFormModal({ isOpen, onClose, subJobId, subJobDetail, onAddCus
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                 <button onClick={onClose} className="modal-close-btn">&times;</button>
                 <form onSubmit={handleSubmit} className="modal-form">
-                    <h2>Add Cushion for Sub-Job: {subJobDetail}</h2>
 
                     <div className="form-group">
                         <label htmlFor="type">Type: *</label>
