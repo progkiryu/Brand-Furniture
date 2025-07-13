@@ -1,55 +1,40 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import SubJobTableRow from "./SubJobTableRow";
 
-interface SubJobProps {
-  subJobsParams: Array<SubJob>,
-  jobsParams: Array<Job>
+interface SubJobTableProps {
+    subJobsParam: SubJob[];
 }
 
-function SubJobTable({ subJobsParams, jobsParams }: SubJobProps) {
+function SubJobTable({subJobsParam}: SubJobTableProps) {
+    if (!subJobsParam || subJobsParam.length === 0) {
+        return <h1>No sub-jobs!</h1>
+    }
 
-  const [ subJobs, setSubJobs ] = useState<Array<SubJob>>(subJobsParams);
-  const [ jobs, setJobs ] = useState<Array<Job>>(jobsParams);
+    const [subJobs] = useState<SubJob[]>(subJobsParam);
 
-  useEffect(() => {
-    setSubJobs(subJobsParams);
-    setJobs(jobsParams);
-  }, [subJobsParams, jobsParams]);
-
-  return (
-    <div className="upcoming-job-components">
-      <table className="orders-table">
-        <thead>
-          <tr>
-            <th>CLIENT</th>
-            <th>JOB NAME</th>
-            <th>JOB</th>
-            <th>DUE</th>
-          </tr>
-        </thead>
-        <tbody>
-        {
-          subJobs.map((subJob: SubJob) => {
-            const job = jobs.filter(job => subJob.jobId === job._id);
-
-            let client = "N/A";
-            let name = "N/A"
-            if (job.length !== 0) {
-              client = String(job[0].client);
-              name = String(job[0].name);
-            }
-
-            return <tr key={String(subJob._id)}>
-              <td>{client}</td>
-              <td>{name}</td>
-              <td>{subJob.subJobDetail}</td>
-              <td>{subJob.dueDate ? String(subJob.dueDate) : "N/A"}</td>
-            </tr>
-          })
-        }
-        </tbody>
-      </table>
-    </div>
-  );
-};
+    return (
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Frames</th>
+                        <th>Cushions</th>
+                        <th>Upholstery</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {
+                    subJobs.map((subJob: SubJob) => {
+                        return (<SubJobTableRow key={String(subJob._id)}
+                            subJobParam={subJob}
+                        />)
+                    })
+                }
+                </tbody>
+            </table>
+        </div>
+    )
+}
 
 export default SubJobTable;

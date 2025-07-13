@@ -44,10 +44,17 @@
 
 #order-container {
   display: flex;
-  flex-direction: column;
   width: 100%;
   flex: 4;
   overflow: hidden;
+}
+
+#job-list-container {
+  width: 30%
+}
+
+#job-detail-container {
+  width: 70%
 }
 
 
