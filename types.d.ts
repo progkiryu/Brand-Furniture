@@ -1,7 +1,8 @@
 type Job = {
+  client: String;
+  poNumber: String;
   _id?: String;
   invoiceId: String;
-  client: String;
   name: String;
   type: String; // Added 'type' as per your mock data
   due: Date;
@@ -60,11 +61,12 @@ type Upholstery = {
 };
 
 type Notif = {
-  _id?: String;
-  notifTitle: String;
-  notifDesc: String;
-  time: Date;
+  icon?: "cart" | "pin";
+  title: string;
+  description: string;
+  time: string;
 }
+
 
 interface Window {
   jobs: {

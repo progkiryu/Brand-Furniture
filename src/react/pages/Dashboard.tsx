@@ -6,6 +6,7 @@ import SubJobTable from "../components/SubJobTable.tsx";
 import JobAnalytics from "../components/JobAnalytics";
 import NotificationsList from "../components/NotificationsList";
 import { DBLink } from "../App.tsx";
+import { FaEdit, FaThumbtack } from "react-icons/fa";
 
 // ------------------------------TESTING------------------------------
 // REMOVE THIS LATER
@@ -17,6 +18,35 @@ import {
   UpdateFrame,
 } from "../api/frameAPI.tsx";
 // ------------------------------TESTING------------------------------
+
+// type Notif = {
+//   icon?: React.ReactNode;
+//   title: string;
+//   description: string;
+//   time: string;
+// };
+
+const staticNotifs: Notif[] = [
+  {
+    icon: "cart",
+    title: "Order Due",
+    description: "Order due in 2 days.",
+    time: "9:41 AM",
+  },
+  {
+    icon: "pin",
+    title: "Pinned Item",
+    description: "It has been 6 days since you last pinned this order.",
+    time: "9:41 AM",
+  },
+  {
+    icon: "cart",
+    title: "Order Due",
+    description: "Order due in 7 days.",
+    time: "9:41 AM",
+  },
+];
+
 
 function Dashboard() {
   const [subJobs, setSubJobs] = useState<Array<SubJob>>([]);
@@ -92,10 +122,31 @@ function Dashboard() {
       .then((data) => setJobs(data))
       .catch((err) => console.log(err));
 
-    fetch(`${DBLink}/notifications/getAllNotifications`)
-      .then((res) => res.json())
-      .then((data) => setNotifs(data))
-      .catch((err) => console.log(err));
+    // fetch(`${DBLink}/notifications/getAllNotifications`)
+    //   .then((res) => res.json())
+    //   .then((data) => setNotifs(data))
+    //   .catch((err) => console.log(err));
+
+    const sampleNotifs: Notif[] = [
+  {
+    title: "Order Due",
+    description: "Order due in 2 days.",
+    time: "9:41 AM",
+  },
+  {
+    title: "Pinned Item",
+    description: "It has been 6 days since you last pinned this order.",
+    time: "9:41 AM",
+  },
+  {
+    title: "Order Due",
+    description: "Order due in 7 days.",
+    time: "9:41 AM",
+  },
+];
+
+setNotifs(sampleNotifs);
+
   }, []);
 
   return (
@@ -119,7 +170,8 @@ function Dashboard() {
           <div id="dashboard-second-container">
             <div id="schedule-container">
               <div className="schedule-header">
-                <h1>Upcoming Job Components</h1>
+                 <h1>Upcoming Jobs</h1>
+                <button className="add-job-button">Add Job</button>
                 {/* <div className="color-key">
                   <div className="key-item">
                     <span className="key-color production"></span> Production
@@ -136,18 +188,44 @@ function Dashboard() {
                 </div> */}
               </div>
               <div className="upcoming-orders-scroll-container">
-                <SubJobTable subJobsParams={subJobs} jobsParams={jobs} />
+                <div className="job-list">
+            <div className="job-list-header">
+              <span>Client</span>
+              <span>PO#</span>
+              <span>INV.</span>
+              <span>Job Name</span>
+              <span>Job Type</span>
+              <span>Due</span>
+            </div>
+
+{jobs.map((job) => (
+  <div key={String(job._id)} className="job-list-row">
+    <span>{job.client}</span>
+    <span>{job.poNumber || "—"}</span>
+    <span>{job.invoiceId || "—"}</span>
+    <span>{job.name}</span>
+    <span>{job.type}</span>
+    <span style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <span>{new Date(job.due).toLocaleDateString()}</span>
+      <span className="icon-wrapper-vertical">
+        <FaThumbtack className="icon-pin" />
+        <FaEdit className="icon-edit" />
+      </span>
+    </span>
+  </div>
+))}
+</div>
+
               </div>
             </div>
           </div>
           <div id="dashboard-third-container">
             <div id="analytics-container">
-              <h1>Analytics</h1>
               <JobAnalytics />
             </div>
             <div id="notifications-container">
               <h1>Notifications</h1>
-              <NotificationsList notifsParams={notifs} />
+              <NotificationsList notifsParams={staticNotifs} />
             </div>
           </div>
         </div>

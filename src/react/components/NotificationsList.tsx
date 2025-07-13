@@ -1,27 +1,38 @@
-import { useEffect, useState } from "react";
+import { FaShoppingCart, FaThumbtack } from "react-icons/fa";
+import React from "react";
 
-interface NotifProp {
-  notifsParams: Array<Notif>
+type Notif = {
+  icon?: "cart" | "pin";
+  title: string;
+  description: string;
+  time: string;
+};
+
+interface Props {
+  notifsParams: Notif[];
 }
 
-function NotificationsList({ notifsParams }: NotifProp) {
-  const [ displayedNotifs, setNotifs ] = useState<Array<Notif>>(notifsParams);
+const iconMap = {
+  cart: <FaShoppingCart className="notif-icon-svg" />,
+  pin: <FaThumbtack className="notif-icon-svg" />,
+};
 
-  useEffect(() => {
-    setNotifs(notifsParams);
-  }, [notifsParams]);
-
+export default function NotificationsList({ notifsParams }: Props) {
   return (
     <div className="notifications-list">
-      {displayedNotifs.map((notif: Notif) => (
-        <div key={String(notif._id)} className="notification-item" style={{ borderBottom: "1px solid #ccc", padding: "10px 0" }}>
-          <div style={{ fontWeight: "bold" }}>{notif.notifTitle}</div>
-          <div style={{ color: "#555" }}>{notif.notifDesc}</div>
-          <div style={{ fontSize: "0.8em", color: "#999" }}>{String(notif.time)}</div>
+      {notifsParams.map((notif, index) => (
+        <div key={index} className="notification-card">
+          <div className="notif-icon">
+            {iconMap[notif.icon ?? "cart"]}
+          </div>
+          <div className="notif-content">
+            <div className="notif-title">{notif.title}</div>
+            <div className="notif-desc">{notif.description}</div>
+          </div>
+          <div className="notif-time">{notif.time}</div>
         </div>
       ))}
     </div>
   );
-};
+}
 
-export default NotificationsList;
