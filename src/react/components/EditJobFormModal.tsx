@@ -7,9 +7,10 @@ interface EditJobFormModalProps {
     onClose: () => void;
     jobToEdit: Job | null; // The job object to be edited, or null if not editing
     onUpdateJob: (jobId: string, updatedData: Job) => void;
+    onDeleteJob: (jobId: string) => void;
 }
 
-function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob }: EditJobFormModalProps) {
+function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob, onDeleteJob }: EditJobFormModalProps) {
     // State for form fields, initialized with jobToEdit data
     const [invoiceId, setInvoiceId] = useState<string>('');
     const [clientName, setClientName] = useState<string>('');
@@ -113,6 +114,10 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob }: EditJobFo
             alert("Cannot update job: ID is missing.");
         }
     };
+
+    const handleDelete = () => {
+        onDeleteJob(String(jobToEdit._id));
+    }
 
     return (
         <div className="modal-overlay" onClick={onClose}>
@@ -222,6 +227,7 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob }: EditJobFo
                     </div>
 
                     <button type="submit">Update Job</button>
+                    <button id="delete-button" onClick={handleDelete}>Delete Job</button>
                 </form>
             </div>
         </div>

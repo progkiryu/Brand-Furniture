@@ -1,6 +1,6 @@
 type Job = {
   _id?: String;
-  invoiceId: String;
+  invoiceId?: String;
   client: String;
   name: String;
   type: String; // Added 'type' as per your mock data
