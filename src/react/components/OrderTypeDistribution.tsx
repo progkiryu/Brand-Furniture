@@ -9,30 +9,38 @@ interface Props {
 // dummy data generator based on date range
 const generateData = (range: string) => {
   switch (range) {
-    case "lastweek":
-      return [
-        { name: "Private", value: 7 },
-        { name: "Brand", value: 4 },
-        { name: "Residential", value: 5 },
-        { name: "Production", value: 3 },
-        { name: "Commercial", value: 6 },
-      ];
     case "last6months":
       return [
-        { name: "Private", value: 80 },
-        { name: "Brand", value: 40 },
+        { name: "Production", value: 80 },
+        { name: "Recovers", value: 40 },
         { name: "Residential", value: 60 },
-        { name: "Production", value: 35 },
+        { name: "Brand", value: 35 },
         { name: "Commercial", value: 70 },
+      ];
+    case "last12months":
+      return [
+        { name: "Production", value: 160 },
+        { name: "Recovers", value: 90 },
+        { name: "Residential", value: 110 },
+        { name: "Brand", value: 60 },
+        { name: "Commercial", value: 130 },
+      ];
+    case "last2years":
+      return [
+        { name: "Production", value: 320 },
+        { name: "Recovers", value: 180 },
+        { name: "Residential", value: 220 },
+        { name: "Brand", value: 120 },
+        { name: "Commercial", value: 260 },
       ];
     case "lastmonth":
     default:
       return [
-        { name: "Private", value: 27 },
-        { name: "Brand", value: 15 },
-        { name: "Residential", value: 19 },
-        { name: "Production", value: 15 },
-        { name: "Commercial", value: 23 },
+        { name: "Production", value: 7 },
+        { name: "Recovers", value: 4 },
+        { name: "Residential", value: 5 },
+        { name: "Brand", value: 3 },
+        { name: "Commercial", value: 6 },
       ];
   }
 };
