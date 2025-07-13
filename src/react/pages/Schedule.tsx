@@ -2,16 +2,22 @@ import "../styles/Schedule.css";
 import "../styles/Global.css";
 import "../styles/ModalForm.css"
 import "../styles/SubJobModalForm.css" // Ensure this CSS file exists or create it if needed
-import Navbar from "../components/Navbar";
-import { useState, useEffect } from 'react';
- 
 
+import { createJob } from "../api/jobAPI";
+import { updateJob } from "../api/jobAPI";
+import { getAllJobs } from "../api/jobAPI";
+ 
+import Navbar from "../components/Navbar";
 import SearchBar from "../components/Searchbar"; // New component
 import JobTable from "../components/JobTable"; // New component
 import AddJobFormModel from "../components/AddJobFormModel"; // New modal component
 import EditJobFormModal from "../components/EditJobFormModal"; 
 
+
+
 import { DBLink } from "../App";
+
+import { useState, useEffect } from 'react';
 
  
 function Schedule() {
@@ -45,24 +51,12 @@ function Schedule() {
 
  
     const handleAddJob = async (newJobData: Job) => {
-        try {
-            const response = await fetch(`${DBLink}/job/insertJob`, {
-                method: "POST",
-                mode: "cors",
-                headers: { "Content-Type": "application/json" }, // Corrected content type
-                body: JSON.stringify(newJobData),
-            });
-
-            if (response.ok) {
-                const addedJob: Job = await response.json(); // Assuming API returns the created job
-                setJobs(prevJobs => [...prevJobs, addedJob]);
-                setIsAddJobModelOpen(false); // Close the modal after adding
-            } else {
-                const errorText = await response.text(); // Read error response
-                console.error("Failed to create job:", response.status, errorText);
-            }
-        } catch (err) {
-            console.error("Error creating job:", err);
+        const addedJob = await createJob(newJobData);
+        if (addedJob) {
+            setJobs(prevJobs => [...prevJobs, addedJob]);
+            setIsAddJobModelOpen(false);
+        } else {
+            console.error("Failed to create job.");
         }
     };
 
@@ -72,57 +66,60 @@ function Schedule() {
     };
     
 
-    const handleUpdateJob = async (jobId: string, updatedData: Job) => {
-        try {
-            const dataToSend: Job = { ...updatedData };
-            if (dataToSend.due) {
-                dataToSend.due = dataToSend.due.toISOString() as any;
-            }
+    // const handleUpdateJob = async (jobId: string, updatedData: Job) => {
+    //     try {
+    //         const dataToSend: Job = { ...updatedData };
+    //         if (dataToSend.due) {
+    //             dataToSend.due = dataToSend.due.toISOString() as any;
+    //         }
 
-            const response = await fetch(`${DBLink}/job/updateJob/${jobId}`, {
-                method: "PUT",
-                mode: "cors",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ _id: jobId, ...dataToSend }),
-            });
+    //         const response = await fetch(`${DBLink}/job/updateJob/${jobId}`, {
+    //             method: "PUT",
+    //             mode: "cors",
+    //             headers: { "Content-Type": "application/json" },
+    //             body: JSON.stringify({ _id: jobId, ...dataToSend }),
+    //         });
 
-            // ... rest of the function remains the same
-            if (response.ok) {
-                const updatedJob: Job = await response.json();
+    //         // ... rest of the function remains the same
+    //         if (response.ok) {
+    //             const updatedJob: Job = await response.json();
                 
-                const processedUpdatedJob = {
-                    ...updatedJob,
-                    due: updatedJob.due ? new Date(updatedJob.due) : updatedJob.due
-                };
+    //             const processedUpdatedJob = {
+    //                 ...updatedJob,
+    //                 due: updatedJob.due ? new Date(updatedJob.due) : updatedJob.due
+    //             };
 
-                const updatedJobsList = jobs.map((job) => 
-                    job._id === processedUpdatedJob._id ? processedUpdatedJob : job
-                );
-                setJobs(updatedJobsList);
+    //             const updatedJobsList = jobs.map((job) => 
+    //                 job._id === processedUpdatedJob._id ? processedUpdatedJob : job
+    //             );
+    //             setJobs(updatedJobsList);
 
 
-                setIsEditJobModalOpen(false);
-                setJobToEdit(null);
-            } else {
-                const errorText = await response.text();
-                console.error("Failed to update job:", response.status, errorText);
-            }
-        } catch (err) {
-            console.error("Error updating job:", err);
+    //             setIsEditJobModalOpen(false);
+    //             setJobToEdit(null);
+    //         } else {
+    //             const errorText = await response.text();
+    //             console.error("Failed to update job:", response.status, errorText);
+    //         }
+    //     } catch (err) {
+    //         console.error("Error updating job:", err);
+    //     }
+    // };
+
+    const handleUpdateJob = async (jobId: string, updatedData: Job) => {
+        const updatedJobsList : Job[] = await updateJob(updatedData);
+        if (updatedJobsList){
+            setJobs(updatedJobsList);
+            setIsEditJobModalOpen(false);
+            setJobToEdit(null);
         }
+        else {
+            console.error("Failed to update job.");
+        }
+        
+            
     };
 
-
-    // const handleAddSubJob = (newSubJobData: SubJob) => {
-    //     // This function will be passed to JobTable and then to AddSubJobFormModal
-    //     // It needs the jobId to correctly associate the sub-job
-    //     const newSubJob: SubJob = {
-    //         ...newSubJobData,
-    //         // You might need to generate a unique subJobId here if it's not coming from the form
-    //         // For now, assuming subJobId is provided or will be generated in the modal
-    //     };
-    //     setSubJobs(prevSubJobs => [...prevSubJobs, newSubJob]);
-    // };
 
     const handleAddSubJob = async (newSubJobData: SubJob) => {
         try {

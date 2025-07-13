@@ -38,20 +38,26 @@ export const getArchivedJobs = async () => {
 
 // Create a new job
 export const createJob = async (data: Job) => {
-  fetch(`${DBLink}/job/insertJob`, {
-    method: "POST",
-    mode: "cors",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  })
-    .then((res) => {
-      if (res.ok) {
-        alert("Job created successfully.");
-      } else {
-        alert("Error: Failed to create job.");
-      }
-    })
-    .catch((err) => console.error(err));
+  try {
+    const res = await fetch(`${DBLink}/job/insertJob`, {
+      method: "POST",
+      mode: "cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    if (res.ok) {
+      const createdJob: Job = await res.json();
+      alert("Job created successfully.");
+      return createdJob;
+    } else {
+      alert("Error: Failed to create job.");
+      return null;
+    }
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
 };
 
 // Get list of jobs within specified date range
@@ -110,19 +116,77 @@ export const deleteJob = async (id: String) => {
 };
 
 // Update a job
+// export const updateJob = async (data: Job) => {
+//   fetch(`${DBLink}/job/updateJob`, {
+//     method: "PUT",
+//     mode: "cors",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify(data),
+//   })
+//     .then((res) => {
+//       if (res.ok) {
+//         alert("Job updated successfully.");
+//       } else {
+//         alert("Error: Failed to update job");
+//       }
+//     })
+//     .catch((err) => console.error(err));
+// };
+
+
+// export const updateJob = async (data: Job) => {
+//   try {
+//     const res = await fetch(`${DBLink}/job/updateJob`, {
+//       method: "PUT",
+//       mode: "cors",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify(data),
+//     });
+
+//     if (res.ok) {
+//       alert("Job updated successfully.");
+//       return res;
+//     } else {
+//       alert("Error: Failed to update job");
+//       return null;
+//     }
+//   } catch (err) {
+//     console.error("Error updating job:", err);
+//     return null;
+//   }
+// };
+
+
 export const updateJob = async (data: Job) => {
-  fetch(`${DBLink}/job/updateJob`, {
-    method: "PUT",
-    mode: "cors",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  })
-    .then((res) => {
-      if (res.ok) {
-        alert("Job updated successfully.");
-      } else {
-        alert("Error: Failed to update job");
-      }
-    })
-    .catch((err) => console.error(err));
+  try {
+    const res = await fetch(`${DBLink}/job/updateJob`, {
+      method: "PUT",
+      mode: "cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    if (res.ok) {
+      const updatedJob: Job = await res.json();
+
+      const jobs = await getAllJobs();
+                
+      const processedUpdatedJob = {
+          ...updatedJob,
+          due: updatedJob.due ? new Date(updatedJob.due) : updatedJob.due
+      };
+
+      const updatedJobsList = jobs.map((job : Job) => 
+          job._id === processedUpdatedJob._id ? processedUpdatedJob : job
+      );
+      alert("Job updated successfully.");
+      return updatedJobsList;
+    } else {
+      alert("Error: Failed to update job");
+      return null;
+    }
+  } catch (err) {
+    console.error("Error updating job:", err);
+    return null;
+  }
 };

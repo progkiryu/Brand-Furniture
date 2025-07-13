@@ -114,3 +114,4 @@ function JobTable({ searchTerm, jobs, subJobs, onAddSubJob, onEditJobClick }: Jo
 }
 
 export default JobTable;
+
