@@ -267,7 +267,7 @@ th {
 .job-list-header,
 .job-list-row {
   display: grid;
-  grid-template-columns: 1.2fr 1.1fr 1fr 2.4fr 1.4fr 1.9fr;
+  grid-template-columns: 1.2fr 1fr 2.4fr 1.4fr 1.9fr;
   padding: 0.8rem 1rem;
   font-size: 0.92rem;
   border-radius: 10px;
@@ -276,11 +276,11 @@ th {
 
 .job-list-header {
   font-weight: 600;
-  background-color: #f1f5f9;
+  background-color: #c2c5c7;
   color: #1e293b;
   font-size: 0.95rem;
   display: grid;
-  grid-template-columns: 1.2fr 1.1fr 1fr 2.4fr 1.4fr 1.9fr;
+  grid-template-columns: 1.2fr 1fr 2.4fr 1.4fr 1.9fr;
   padding: 0.8rem 1.5rem;
   border-radius: 10px;
   align-items: center;
@@ -294,7 +294,7 @@ th {
 }
 
 .job-list-row {
-  background-color: #f9fafb; 
+  background-color: #c5c5c8; 
   border: 1px solid #e5e7eb;
   border-radius: 12px;
   padding: 1.2rem 1.5rem;

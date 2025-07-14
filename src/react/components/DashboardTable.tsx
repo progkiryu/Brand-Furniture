@@ -31,10 +31,12 @@ function DashboardTable({ jobsParams }: DashboardTableProps) {
             <span>{job.invoiceId}</span>
             <span>{job.name}</span>
             <span>{job.type}</span>
-            <span>{String(job.due)}</span>
-            <span className="icon-wrapper-vertical">
-              <FaThumbtack className="icon-pin" />
-              <FaEdit className="icon-edit" />
+            <span style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span>{String(job.due)}</span>
+              <span className="icon-wrapper-vertical">
+                <FaThumbtack className="icon-pin" />
+                <FaEdit className="icon-edit" />
+              </span>
             </span>
           </div>)
         )
