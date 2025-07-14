@@ -12,12 +12,9 @@ import { FaEdit, FaThumbtack } from "react-icons/fa";
 import { getAllJobs } from "../api/jobAPI.tsx";
 import { getAllNotifications  } from "../api/notificationAPI.tsx";
 
-
 function Dashboard() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [notifs, setNotifs] = useState<Notif[]>([]);
-  const [allFrames, setAllFrames] = useState<Frame[]>([]);
-  const [frame, setFrame] = useState<Frame>();
 
   // retrieve sub-jobs by making a API fetch call
   useEffect(() => {

@@ -24,8 +24,8 @@ function Schedule() {
     const [subJobs, setSubJobs] = useState<SubJob[]>([]);
     const [isAddJobModelOpen, setIsAddJobModelOpen] = useState<boolean>(false);
     const [hasSelected, setSelected] = useState<boolean>(false);
-    // const [isEditJobModalOpen, setIsEditJobModalOpen] = useState(false);
-    // const [jobToEdit, setJobToEdit] = useState<Job | null>(null);
+    const [isEditJobModalOpen, setIsEditJobModalOpen] = useState(false);
+    const [jobToEdit, setJobToEdit] = useState<Job | null>(null);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -88,6 +88,11 @@ function Schedule() {
         } catch (err) {
             console.error("Error creating job:", err);
         }
+    };
+
+    const handleEditJobClick = (job: Job) => {
+        setJobToEdit(job); // Set the job to be edited
+        setIsEditJobModalOpen(true); // Open the edit modal
     };
 
     const displayJobDetails = async (job: Job) => {
@@ -228,15 +233,6 @@ function Schedule() {
                         </>)
                     }
                     </div>
-                    {/* <h1>Orders</h1> */}
-                    {/* Pass both jobs and subJobs to JobTable */}
-                    {/* <JobTable
-                        searchTerm={searchTerm}
-                        jobs={jobs}
-                        subJobs={subJobs} // Pass all subJobs for filtering and display
-                        onAddSubJob={handleAddSubJob} // Pass the handler for adding sub-jobs
-                        onEditJobClick={handleEditJobClick}
-                    /> */}
                 </div>
             </div>
  
