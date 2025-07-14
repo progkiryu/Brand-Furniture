@@ -6,10 +6,16 @@ import { getUpholsteryById } from "../api/upholsteryAPI";
 
 interface SubJobTableRowProps {
     subJobParam: SubJob;
+    onAddFrameClick: (subJobId: String, subJobDetail: String) => void; // New prop
+    onAddCushionClick: (subJobId: String, subJobDetail: String) => void; // New prop
+    onAddUpholsteryClick: (subJobId: String, subJobDetail: String) => void; // New prop
 }
 
 function SubJobTableRow({
-    subJobParam
+    subJobParam,
+    onAddFrameClick,
+    onAddCushionClick,
+    onAddUpholsteryClick,
 }: SubJobTableRowProps) {
 
     const [frames, setFrames] = useState<Frame[]>([]);
@@ -25,12 +31,27 @@ function SubJobTableRow({
                 const fetchedUpholstery: Upholstery[] = await Promise.all(awaitUpholstery);
                 setUpholstery(fetchedUpholstery);
             }
+            if (subJobParam.frameList && subJobParam.frameList.length > 0) {
+                const awaitFrames = subJobParam.frameList.map((frameId: String) => {
+                    return getFrameById(frameId);
+                })
+                const fetchedFrames: Frame[] = await Promise.all(awaitFrames);
+                setFrames(fetchedFrames);
+            }
+            if (subJobParam.cushionList && subJobParam.cushionList.length > 0) {
+                const awaitCushions = subJobParam.cushionList.map((cushionId: String) => {
+                    return getCushionById(cushionId);
+                })
+                const fetchedCushions: Cushion[] = await Promise.all(awaitCushions);
+                setCushions(fetchedCushions);
+            }
         }
         fetchComponents();
-    }, []);
+    }, [subJobParam.upholsteryList, subJobParam.frameList, subJobParam.cushionList]);
 
 
-    return <tr key={String(subJobParam._id)}>
+    return (
+    <tr key={String(subJobParam._id)}>
         <td>
             <div>
                 <h2>Job</h2>
@@ -60,7 +81,7 @@ function SubJobTableRow({
                 )
             })
         }
-            <button>Add New Frame</button>
+            <button onClick={() => onAddFrameClick(subJobParam._id as String, subJobParam.subJobDetail as String)}>Add New Frame</button> {/* Add onClick handler */}
         </td>
         <td>
         {
@@ -76,7 +97,7 @@ function SubJobTableRow({
                 )
             })
         }
-            <button>Add New Cushion</button>
+            <button onClick={() => onAddCushionClick(subJobParam._id as String, subJobParam.subJobDetail as String)}>Add New Cushion</button> {/* Add onClick handler */}
         </td>
         <td>
         {
@@ -92,9 +113,9 @@ function SubJobTableRow({
                 )
             })
         }
-            <button>Add New Upholster</button>
+            <button onClick={() => onAddUpholsteryClick(subJobParam._id as String, subJobParam.subJobDetail as String)}>Add New Upholstery</button> {/* Add onClick handler */}
         </td>
-    </tr>
+    </tr>)
 }
 
 export default SubJobTableRow;

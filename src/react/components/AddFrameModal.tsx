@@ -16,7 +16,7 @@ interface AddFrameFormModalProps {
     onClose: () => void;
     subJobId: string; // Primitive string, will convert to String object for backend
     subJobDetail: string; // For display in modal title
-    onAddFrame: (newFrameData: FrameForCreation) => void;
+    onAddFrame: (newFrameData: Frame) => void;
 }
 
 function AddFrameFormModal({ isOpen, onClose, subJobId, subJobDetail, onAddFrame }: AddFrameFormModalProps) {
@@ -26,19 +26,6 @@ function AddFrameFormModal({ isOpen, onClose, subJobId, subJobDetail, onAddFrame
     const [expectedDate, setExpectedDate] = useState<string>('');
     const [receivedDate, setReceivedDate] = useState<string>('');
 
-    // Helper for Date Formatting (for input type="date")
-    const formatDateForInput = (dateValue: Date | string | null | undefined): string => {
-        if (!dateValue) return '';
-        let date: Date;
-        if (dateValue instanceof Date) {
-            date = dateValue;
-        } else if (typeof dateValue === 'string') {
-            date = new Date(dateValue);
-        } else {
-            return '';
-        }
-        return isNaN(date.getTime()) ? '' : date.toISOString().split('T')[0];
-    };
 
     // Reset form fields when modal opens/closes or subJobId changes
     useEffect(() => {
@@ -62,13 +49,13 @@ function AddFrameFormModal({ isOpen, onClose, subJobId, subJobDetail, onAddFrame
             return;
         }
 
-        const newFrameData: FrameForCreation = {
+        const newFrameData: Frame = {
             subJobId: new String(subJobId) as String, // Convert primitive string to String object
             supplier: supplier ? (new String(supplier) as String) : undefined,
             description: description ? (new String(description) as String) : undefined,
             orderedDate: orderedDate ? new Date(orderedDate) : undefined,
             expectedDate: expectedDate ? new Date(expectedDate) : undefined,
-                        receivedDate: receivedDate ? new Date(receivedDate) : undefined,
+            receivedDate: receivedDate ? new Date(receivedDate) : undefined,
         };
 
         onAddFrame(newFrameData);
