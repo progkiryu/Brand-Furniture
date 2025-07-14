@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import "../styles/Analytics.css";
 import "../styles/Global.css";
 import Navbar from "../components/Navbar";
-import LineChartComponent from "../components/LineChartComponent";
+import JobVolume from "../components/JobVolume";
+import JobCompletion from "../components/JobCompletion";
 import OrderTypeDistributionChart from "../components/OrderTypeDistribution";
 
 function Analytics() {
@@ -58,7 +59,7 @@ function Analytics() {
           </div>
                 
           <div className="jobVolume">
-            <LineChartComponent 
+            <JobVolume 
             title={
               needsPrefixAtEnd
               ? `Job Volume ${getLabelPrefix(dateRange)}`
@@ -67,69 +68,13 @@ function Analytics() {
           </div>
 
           <div className="jobCompletion">
-            <LineChartComponent 
+            <JobCompletion 
             title={
               needsPrefixAtEnd
               ? `Job Completion ${getLabelPrefix(dateRange)}`
               : `${getLabelPrefix(dateRange)} Job Completion`}
             dateRange={dateRange} />
         </div>
-
-        {/* <div className="orderTypeDistribution">
-            <h2>
-              {dateRange === "last12months"
-              ? `Order Type Distribution ${getLabelPrefix(dateRange)}`
-            : `${getLabelPrefix(dateRange)} Order Type Distribution`}
-            </h2>
-            <OrderTypeDistributionChart 
-            dateRange={dateRange} />
-          </div>
-                
-          <div className="jobVolume">
-            <LineChartComponent 
-            title={
-              dateRange === "last12months"
-              ? `Job Volume ${getLabelPrefix(dateRange)}`
-              : `${getLabelPrefix(dateRange)} Job Volume`}
-            dateRange={dateRange} />
-          </div>
-
-          <div className="jobCompletion">
-            <LineChartComponent 
-            title={
-              dateRange === "last12months"
-              ? `Job Completion ${getLabelPrefix(dateRange)}`
-              : `${getLabelPrefix(dateRange)} Job Completion`}
-            dateRange={dateRange} />
-          </div>
-
-          <div className="orderTypeDistribution">
-            <h2>
-              {dateRange === "last2years"
-              ? `Order Type Distribution ${getLabelPrefix(dateRange)}`
-            : `${getLabelPrefix(dateRange)} Order Type Distribution`}
-            </h2>
-            <OrderTypeDistributionChart 
-            dateRange={dateRange} />
-          </div>
-                
-          <div className="jobVolume">
-            <LineChartComponent 
-            title={
-              dateRange === "last2years"
-              ? `Job Volume ${getLabelPrefix(dateRange)}`
-              : `${getLabelPrefix(dateRange)} Job Volume`}
-            dateRange={dateRange} />
-          </div>
-
-          <div className="jobCompletion">
-            <LineChartComponent 
-            title={
-              dateRange === "last2years"
-              ? `Job Completion ${getLabelPrefix(dateRange)}`
-              : `${getLabelPrefix(dateRange)} Job Completion`}
-            dateRange={dateRange} />
-          </div> */}
       </div>
     </>
   );
