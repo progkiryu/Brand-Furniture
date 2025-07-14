@@ -9,23 +9,7 @@ interface SubJobTableProps {
     onAddUpholsteryClick: (subJobId: String, subJobDetail: String) => void; // New prop
 }
 
-function SubJobTable({ subJobsParam, onAddComponentClick, onAddFrameClick, onAddCushionClick, onAddUpholsteryClick }: SubJobTableProps) {
-    if (!subJobsParam || subJobsParam.length === 0) {
-        return <div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Component</th>
-                        <th>Frames</th>
-                        <th>Cushions</th>
-                        <th>Upholstery</th>
-                    </tr>
-                </thead>
-            </table>
-            <input type="button" value="Add Component" onClick={onAddComponentClick}></input>
-        </div>
-    }
-
+function SubJobTable({subJobsParam, onAddComponentClick, onAddFrameClick, onAddCushionClick, onAddUpholsteryClick}: SubJobTableProps) {
     const [subJobs, setSubJobs] = useState<SubJob[]>(subJobsParam);
 
     useEffect(() => {

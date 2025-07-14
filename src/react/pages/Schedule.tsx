@@ -43,7 +43,9 @@ function Schedule() {
   const [jobToEdit, setJobToEdit] = useState<Job | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const [jobs, setJobs] = useState<Job[]>([]);
+  
+  const [hasSelected, setSelected] = useState<boolean>(false);
+  const [jobs, setJobs] = useState<Job[]>([]); 
   const [subJobs, setSubJobs] = useState<SubJob[]>([]);
   const [isAddJobModelOpen, setIsAddJobModelOpen] = useState<boolean>(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -178,6 +180,7 @@ function Schedule() {
       else {
         setSubJobs([]);
       }
+      setSelected(true);
     }
     catch (err) {
       console.log("Error deleting job:", err);
@@ -381,12 +384,15 @@ function Schedule() {
             }
           </div>
           <div id="job-detail-container">
-            <SubJobTable
-              subJobsParam={subJobs} onAddComponentClick={openAddSubJobModal}
-              onAddFrameClick={openAddFrameModal} // Pass to SubJobTable
-              onAddCushionClick={openAddCushionModal} // Pass to SubJobTable
-              onAddUpholsteryClick={openAddUpholsteryModal} // Pass to SubJobTable
-            />
+          {
+            hasSelected &&
+                <SubJobTable 
+                  subJobsParam={subJobs} onAddComponentClick={openAddSubJobModal} 
+                  onAddFrameClick={openAddFrameModal} // Pass to SubJobTable
+                  onAddCushionClick={openAddCushionModal} // Pass to SubJobTable
+                  onAddUpholsteryClick={openAddUpholsteryModal} // Pass to SubJobTable
+                />
+          }
           </div>
         </div>
         <div>
