@@ -6,14 +6,16 @@ import JobVolume from "../components/JobVolume";
 import JobCompletion from "../components/JobCompletion";
 import OrderTypeDistributionChart from "../components/OrderTypeDistribution";
 
+type DateRange = "lastmonth" | "last6months" | "last12months" | "last2years";
+
 function Analytics() {
-  const [dateRange, setDateRange] = useState("lastmonth");
+  const [dateRange, setDateRange] = useState<DateRange>("lastmonth");
 
   const handleRangeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setDateRange(event.target.value);
+    setDateRange(event.target.value as DateRange);
   };
 
-  const getLabelPrefix =(range: string) => {
+  const getLabelPrefix =(range: DateRange) => {
     switch (range) {
       case "lastmonth":
         return "Monthly";

@@ -1,8 +1,10 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
 
+type DateRange = "lastmonth" | "last6months" | "last12months" | "last2years";
+
 interface BarChartComponentProps {
   title: string;
-  dateRange: "lastmonth" | "last6months" | "last12months" | "last2years";
+  dateRange: DateRange;
 }
 
 const generateData = (range: string) => {
