@@ -1,4 +1,11 @@
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+} from "recharts";
 
 interface LineChartComponentProps {
   title: string;
@@ -14,9 +21,11 @@ const generateData = (range: string) => {
   }));
 };
 
-export default function LineChartComponent({ title, dateRange }: LineChartComponentProps) {
+export default function LineChartComponent({
+  title,
+  dateRange,
+}: LineChartComponentProps) {
   const data = generateData(dateRange);
-  console.log("Line chart data:", data);
 
   return (
     <div style={{ marginBottom: "40px" }}>

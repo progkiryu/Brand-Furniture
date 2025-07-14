@@ -47,11 +47,14 @@ export const createSubJob = async (data: SubJob) => {
 
 // Get list of subjobs with filtered status. Exact matches.
 export const getFilteredSubJobsByStatus = async (status: String) => {
+  const temp = {
+    status: status,
+  };
   const subJobs = fetch(`${DBLink}/subJobs/getFilteredSubJobsByStatus`, {
     method: "POST",
     mode: "cors",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(status),
+    body: JSON.stringify(temp),
   })
     .then((res) => res.json())
     .catch((err) => console.error(err));
