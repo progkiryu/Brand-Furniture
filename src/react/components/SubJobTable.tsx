@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SubJobTableRow from "./SubJobTableRow";
 
 interface SubJobTableProps {
@@ -26,7 +26,11 @@ function SubJobTable({subJobsParam, onAddComponentClick, onAddFrameClick, onAddC
         </div>
     }
 
-    const [subJobs] = useState<SubJob[]>(subJobsParam);
+    const [subJobs, setSubJobs] = useState<SubJob[]>(subJobsParam);
+
+    useEffect(() => {
+        setSubJobs(subJobsParam);
+    }, [subJobsParam])
 
     return (
         <div>
