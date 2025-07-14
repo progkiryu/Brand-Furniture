@@ -207,30 +207,37 @@ function Schedule() {
   };
 
   const handleAddCushion = async (newCushionData: Cushion) => {
-    try {
-      const response = await fetch(`${DBLink}/cushion/postCreateCushion`, {
-        method: "POST",
-        mode: "cors",
-        headers: { "Content-Type": "application/json" }, // Corrected content type
-        body: JSON.stringify(newCushionData),
-      });
-
-      if (response.ok) {
-        const addedCushion: Cushion = await response.json(); // Assuming API returns the created job
-        setCushions(prevCushions => [...prevCushions, addedCushion]);
-      } else {
-        const errorText = await response.text(); // Read error response
-        console.error("Failed to create cushion:", response.status, errorText);
-      }
-    } catch (err) {
-      console.error("Error creating cushion:", err);
+    const addedCushion = await createCushion(newCushionData);
+    if (addedCushion) {
+      // Update the subJob's cushionList
+      setSubJobs(prevSubJobs => prevSubJobs.map(subJob => {
+        if (subJob._id === addedCushion.subJobId) {
+          return {
+            ...subJob,
+            cushionList: [...(subJob.cushionList || []), addedCushion._id as String]
+          };
+        }
+        return subJob;
+      }));
+      setIsAddCushionModalOpen(false); // Close modal
+      setSelectedSubJobInfoForCushion(null); // Clear selected subjob info
+    } else {
+      console.error("Failed to create cushion.");
     }
   };
 
   const handleAddFrame = async (newFrameData: Frame) => { // New handler for AddFrameModal
     const addedFrame = await createFrame(newFrameData);
     if (addedFrame) {
-      setFrames(prevFrames => [...prevFrames, addedFrame]);
+      setSubJobs(prevSubJobs => prevSubJobs.map(subJob => {
+        if (subJob._id === addedFrame.subJobId) {
+          return {
+            ...subJob,
+            frameList: [...(subJob.frameList || []), addedFrame._id as String]
+          };
+        }
+        return subJob;
+      }));
     } else {
       console.error("Failed to create frame.");
     }
@@ -239,7 +246,15 @@ function Schedule() {
   const handleAddUpholstery = async (newUpholsteryData: Upholstery) => { // New handler for AddUpholsteryModal
     const addedUpholstery = await createUpholstery(newUpholsteryData);
     if (addedUpholstery) {
-      setUpholstery(prevUpholstery => [...prevUpholstery, addedUpholstery]);
+      setSubJobs(prevSubJobs => prevSubJobs.map(subJob => {
+        if (subJob._id === addedUpholstery.subJobId) {
+          return {
+            ...subJob,
+            upholsteryList: [...(subJob.upholsteryList || []), addedUpholstery._id as String]
+          };
+        }
+        return subJob;
+      }));
     } else {
       console.error("Failed to create upholstery.");
     }

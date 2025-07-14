@@ -33,10 +33,9 @@ function JobTable({ searchTerm, jobs, jobClicked }: JobTableProps) {
                 <table>
                     <tbody>
                         {displayedJobs.map((job) => (
-                            <tr key={String(job._id)}
-                                onClick={() => jobClicked(job)}
-                            >
-                                <td>{job.name}</td>
+                            <tr>
+                                <td key={String(job._id)}
+                                onClick={() => jobClicked(job)}>{job.name}</td>
                             </tr>
                         ))}
                     </tbody>
