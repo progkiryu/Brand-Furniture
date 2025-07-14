@@ -1,4 +1,6 @@
 type Job = {
+  client: String;
+  poNumber: String;
   _id?: String;
   invoiceId?: String;
   client: String;
@@ -63,6 +65,7 @@ type Upholstery = {
 
 type Notif = {
   _id?: String;
+  icon?: "cart" | "pin";
   notifTitle: String;
   notifDesc: String;
   time: Date;
@@ -74,12 +77,6 @@ type DateRange = {
 };
 
 interface Window {
-  jobs: {
-    getJobs: () => Promise<Array<Job>>;
-  };
-  orders: {
-    getClients: () => Promise<Array<Client>>;
-  };
   electron: {
     greeting: () => void;
   };
