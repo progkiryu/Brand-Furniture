@@ -1,12 +1,4 @@
 import { FaShoppingCart, FaThumbtack } from "react-icons/fa";
-import React from "react";
-
-type Notif = {
-  icon?: "cart" | "pin";
-  title: string;
-  description: string;
-  time: string;
-};
 
 interface Props {
   notifsParams: Notif[];
@@ -26,10 +18,10 @@ export default function NotificationsList({ notifsParams }: Props) {
             {iconMap[notif.icon ?? "cart"]}
           </div>
           <div className="notif-content">
-            <div className="notif-title">{notif.title}</div>
-            <div className="notif-desc">{notif.description}</div>
+            <div className="notif-title">{notif.notifTitle}</div>
+            <div className="notif-desc">{notif.notifDesc}</div>
           </div>
-          <div className="notif-time">{notif.time}</div>
+          <div className="notif-time">{String(notif.time)}</div>
         </div>
       ))}
     </div>

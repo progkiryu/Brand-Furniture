@@ -6,9 +6,6 @@ import DashboardTable from "../components/DashboardTable.tsx";
 import JobAnalytics from "../components/JobAnalytics";
 import NotificationsList from "../components/NotificationsList";
 
-import { DBLink } from "../App.tsx";
-import { FaEdit, FaThumbtack } from "react-icons/fa";
-
 import { getAllJobs } from "../api/jobAPI.tsx";
 import { getAllNotifications  } from "../api/notificationAPI.tsx";
 
@@ -76,7 +73,7 @@ function Dashboard() {
             </div>
             <div id="notifications-container">
               <h1>Notifications</h1>
-              <NotificationsList notifsParams={staticNotifs} />
+              <NotificationsList notifsParams={notifs} />
             </div>
           </div>
         </div>

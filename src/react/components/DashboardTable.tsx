@@ -1,3 +1,5 @@
+import "../styles/Dashboard.css"
+
 import { useEffect, useState } from "react";
 import { FaEdit, FaThumbtack } from "react-icons/fa";
 
