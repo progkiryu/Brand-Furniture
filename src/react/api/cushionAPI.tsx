@@ -34,15 +34,36 @@ export const getCushionsBySubJobId = async (subJobId: String) => {
 };
 
 // Create a new cushion
+// export const createCushion = async (data: Cushion) => {
+//   fetch(`${DBLink}/cushion/postCreateCushion`, {
+//     method: "POST",
+//     mode: "cors",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify(data),
+//   })
+//     .then((res) => res.json())
+//     .catch((err) => console.error(err));
+// };
+
 export const createCushion = async (data: Cushion) => {
-  fetch(`${DBLink}/cushion/postCreateCushion`, {
-    method: "POST",
-    mode: "cors",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  })
-    .then((res) => res.json())
-    .catch((err) => console.error(err));
+  try {
+    const res = await fetch(`${DBLink}/cushion/postCreateCushion`, {
+      method: "POST",
+      mode: "cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+
+    const newCushion = await res.json();
+    return newCushion;
+  } catch (err) {
+    console.error("Error creating cushion:", err);
+    return null;
+  }
 };
 
 // Delete a cushion by ID
