@@ -33,6 +33,7 @@ import { useState, useEffect, useRef } from 'react';
 
 
 function Schedule() {
+
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [cushions, setCushions] = useState<Array<Cushion>>([]); // Keep existing cushion state
   const [frames, setFrames] = useState<Array<Frame>>([]); // New state for frames
@@ -57,7 +58,6 @@ function Schedule() {
   const [selectedSubJobInfoForCushion, setSelectedSubJobInfoForCushion] = useState<{ subJobId: String | null, subJobDetail: String | null } | null>(null);
   const [selectedSubJobInfoForFrame, setSelectedSubJobInfoForFrame] = useState<{ subJobId: String | null, subJobDetail: String | null } | null>(null); // New state for selected subjob for frame
   const [selectedSubJobInfoForUpholstery, setSelectedSubJobInfoForUpholstery] = useState<{ subJobId: String | null, subJobDetail: String | null } | null>(null); // New state for selected subjob for upholstery
-
 
 
   useEffect(() => {
@@ -411,13 +411,19 @@ function Schedule() {
         </div>
       </div>
 
+          </div>
+        )}
+      </div>
+    </div>
+
+
       {/* Add Job Pop-up Modal */}
       <AddJobFormModel
         isOpen={isAddJobModelOpen}
         onClose={() => setIsAddJobModelOpen(false)}
         onAddJob={handleAddJob}
       />
-
+                
       <EditJobFormModal
         isOpen={isEditJobModalOpen}
         onClose={() => {
@@ -460,17 +466,9 @@ function Schedule() {
         onAddUpholstery={handleAddUpholstery}
       />
 
-      {/* <AddCushionFormModal
-        isOpen={isAddCushionModalOpen}
-        onClose={() => {
-          setIsAddCushionModalOpen(false);
-          setSelectedSubJobInfoForCushion(null);
-        }}
-        subJobId={selectedSubJobInfoForCushion?.subJobId || null}
-        onAddCushion={handleAddCushion}
-      /> */}
-    </>
-  );
+        </>
+    );
+
 }
 
 export default Schedule;

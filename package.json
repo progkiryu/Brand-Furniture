@@ -21,6 +21,7 @@
     "dev:mongo": "npx tsc -w & nodemon dist-mongodb/app.mjs"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.7.2",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.6.0",
@@ -29,8 +30,9 @@
     "mongoose": "^8.16.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-icons": "^5.5.0",
     "react-router-dom": "^7.6.3",
-    "recharts": "^3.0.2"
+    "recharts": "^3.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
