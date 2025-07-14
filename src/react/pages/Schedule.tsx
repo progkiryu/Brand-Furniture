@@ -31,7 +31,6 @@ import { createUpholstery } from "../api/upholsteryAPI";
 
 import { useState, useEffect, useRef } from 'react';
 
-
 function Schedule() {
 
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -49,7 +48,12 @@ function Schedule() {
   const [isAddJobModelOpen, setIsAddJobModelOpen] = useState<boolean>(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isAddSubJobModalOpen, setIsAddSubJobModalOpen] = useState(false); 
-  const [selectedJobForSubJob, setSelectedJobForSubJob] = useState<Job | null>(null); 
+  const [selectedJobForSubJob, setSelectedJobForSubJob] = useState<Job | null>(null);
+  
+  const [filterInvoiceID, setFilterInvoiceID] = useState<"asc" | "desc" | undefined>();
+  const [filterClient, setFilterClient] = useState<"asc" | "desc" | undefined>();
+  const [filterJobName, setFilterJobName] = useState<"asc" | "desc" | undefined>();
+  const [filterDueDate, setFilterDueDate] = useState<"asc" | "desc" | undefined>();
 
   const [isAddCushionModalOpen, setIsAddCushionModalOpen] = useState(false);
   const [isAddFrameModalOpen, setIsAddFrameModalOpen] = useState(false); // New state for AddFrameModal
@@ -288,8 +292,6 @@ function Schedule() {
     setIsAddUpholsteryModalOpen(true);
   };
 
-
-
   return (
     <>
       <Navbar />
@@ -310,40 +312,34 @@ function Schedule() {
                 <div id="dropdown-panel">
                   <div className="sort-option-group">
                     <strong>Invoice ID</strong>
-                    <label><input type="radio" name="invoice" /> Ascending</label>
-                    <label><input type="radio" name="invoice" /> Descending</label>
+                    <label><input type="radio" name="invoice" onClick={() => setFilterInvoiceID("asc")} /> Ascending</label>
+                    <label><input type="radio" name="invoice" onClick={() => setFilterInvoiceID("desc")} /> Descending</label>
                   </div>
                   <div className="sort-option-group">
                     <strong>Client</strong>
-                    <label><input type="radio" name="client" /> Ascending</label>
-                    <label><input type="radio" name="client" /> Descending</label>
+                    <label><input type="radio" name="client" onClick={() => setFilterClient("asc")}/> Ascending</label>
+                    <label><input type="radio" name="client" onClick={() => setFilterClient("desc")}/> Descending</label>
                   </div>
                   <div className="sort-option-group">
                     <strong>Job Name</strong>
-                    <label><input type="radio" name="jobname" /> Ascending</label>
-                    <label><input type="radio" name="jobname" /> Descending</label>
+                    <label><input type="radio" name="jobname" onClick={() => setFilterJobName("asc")}/>Ascending</label>
+                    <label><input type="radio" name="jobname" onClick={() => setFilterJobName("desc")}/> Descending</label>
                   </div>
                   <div className="sort-option-group">
                     <strong>Due Date</strong>
-                    <label><input type="radio" name="duedate" /> Ascending</label>
-                    <label><input type="radio" name="duedate" /> Descending</label>
+                    <label><input type="radio" name="duedate" onClick={() => setFilterDueDate("asc")}/> Ascending</label>
+                    <label><input type="radio" name="duedate" onClick={() => setFilterDueDate("desc")}/> Descending</label>
                   </div>
                 </div>
               )}
             </div>
           </div>
 
-          <div id="add-job-archive-wrapper">
+          <div id="add-job-wrapper">
             <div id="add-job-container">
               <button onClick={() => setIsAddJobModelOpen(true)} className="add-job-btn">
                 Add Job
               </button>
-            </div>
-            <div id="archive-container">
-              <label>
-                <input type="checkbox" />
-                Archive
-              </label>
             </div>
           </div>
 
@@ -385,6 +381,10 @@ function Schedule() {
               <JobTable searchTerm={searchTerm}
                 jobs={jobs}
                 jobClicked={displayJobDetails}
+                invoiceIDTerm={filterInvoiceID}
+                clientTerm={filterClient}
+                jobNameTerm={filterJobName}
+                dueDateTerm={filterDueDate}
               />
             }
           </div>

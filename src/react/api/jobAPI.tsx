@@ -92,11 +92,14 @@ export const getFilteredJobsByDate = async (startD: Date, endD: Date) => {
 
 // Get list of jobs with specific type. Note: must be exact match
 export const getFilteredJobsByType = async (type: String) => {
+  const temp = {
+    type: type
+  }
   const jobs = fetch(`${DBLink}/job/getFilteredJobsByType`, {
     method: "POST",
     mode: "cors",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(type),
+    body: JSON.stringify(temp),
   })
     .then((res) => res.json())
     .catch((err) => console.error(err));
