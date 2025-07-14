@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 
-
 interface JobTableProps {
     searchTerm: string;
     jobs: Job[];
@@ -33,7 +32,7 @@ function JobTable({ searchTerm, jobs, jobClicked }: JobTableProps) {
                 <table>
                     <tbody>
                         {displayedJobs.map((job) => (
-                            <tr>
+                            <tr key={String(job._id)}>
                                 <td key={String(job._id)}
                                 onClick={() => jobClicked(job)}>{job.name}</td>
                             </tr>
