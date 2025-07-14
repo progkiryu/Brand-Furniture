@@ -33,31 +33,31 @@ function SubJobTable({ subJobsParam, onAddComponentClick, onAddFrameClick, onAdd
     }, [subJobsParam])
 
     return (
-        <div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Component</th>
-                        <th>Frames</th>
-                        <th>Cushions</th>
-                        <th>Upholstery</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        subJobs.map((subJob: SubJob) => {
-                            return (<SubJobTableRow key={String(subJob._id)}
-                                subJobParam={subJob}
-                                onAddFrameClick={onAddFrameClick} // Pass the new prop
-                                onAddCushionClick={onAddCushionClick} // Pass the new prop
-                                onAddUpholsteryClick={onAddUpholsteryClick} // Pass the new prop
-                            />)
-                        })
-                    }
-                </tbody>
-            </table>
-            <input type="button" value="Add Component" onClick={onAddComponentClick}></input>
-        </div>
+    <>
+        <table>
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Frames</th>
+                    <th>Cushions</th>
+                    <th>Upholstery</th>
+                </tr>
+            </thead>
+            <tbody>
+            {
+                subJobs.map((subJob: SubJob) => {
+                    return (<SubJobTableRow key={String(subJob._id)}
+                        subJobParam={subJob}
+                        onAddFrameClick={onAddFrameClick} // Pass the new prop
+                        onAddCushionClick={onAddCushionClick} // Pass the new prop
+                        onAddUpholsteryClick={onAddUpholsteryClick} // Pass the new prop
+                    />)
+                })
+            }
+            </tbody>
+        </table>
+        <input type="button" value="Add Component" onClick={onAddComponentClick}></input> 
+    </>
     )
 }
 

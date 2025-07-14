@@ -58,7 +58,8 @@
 }
 
 #job-detail-container {
-  width: 70%
+  width: 70%;
+  overflow: scroll;
 }
 
 
