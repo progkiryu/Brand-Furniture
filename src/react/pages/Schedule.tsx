@@ -160,10 +160,10 @@ function Schedule() {
                 <label><input type="radio" name="duedate" /> Ascending</label>
                 <label><input type="radio" name="duedate" /> Descending</label>
               </div>
-              </div>
-            )}
           </div>
-        </div>
+        )}
+      </div>
+    </div>
 
 <div id="add-job-archive-wrapper">
     <div id="add-job-container">
