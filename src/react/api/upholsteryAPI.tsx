@@ -36,15 +36,36 @@ export const getUpholsteryBySubJobId = async (subJobId: String) => {
 };
 
 // Create a new upholstery
+// export const createUpholstery = async (data: Upholstery) => {
+//   fetch(`${DBLink}/upholstery/postCreateUpholstery`, {
+//     method: "POST",
+//     mode: "cors",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify(data),
+//   })
+//     .then((res) => res.json())
+//     .catch((err) => console.error(err));
+// };
+
 export const createUpholstery = async (data: Upholstery) => {
-  fetch(`${DBLink}/upholstery/postCreateUpholstery`, {
-    method: "POST",
-    mode: "cors",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  })
-    .then((res) => res.json())
-    .catch((err) => console.error(err));
+  try {
+    const res = await fetch(`${DBLink}/upholstery/postCreateUpholstery`, {
+      method: "POST",
+      mode: "cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+
+    const newUpholstery = await res.json();
+    return newUpholstery;
+  } catch (err) {
+    console.error("Error creating upholstery:", err);
+    return null;
+  }
 };
 
 // Delete a upholstery by ID

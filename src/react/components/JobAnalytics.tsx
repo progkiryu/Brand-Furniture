@@ -1,49 +1,39 @@
-import React from "react";
+import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
 
-const JobAnalytics: React.FC = () => {
+const pieData = [
+  { name: "Commercial", value: 23 },
+  { name: "Resident.", value: 19 },
+  { name: "Private", value: 27 },
+  { name: "Production", value: 15 },
+  { name: "Brand", value: 15 },
+];
+
+const COLORS = ["#4B9EFF", "#82ca9d", "#FF7979", "#FFCC66", "#91A6FF"];
+
+export default function JobAnalytics() {
   return (
-    <div className="job-analytics">
-      <h3 className="analytics-title">Job #876 Analytics</h3>
-
-      <div className="analytics-charts">
-        {/* Ordered Chart */}
-        <div className="chart">
-          <svg className="chart-svg" viewBox="0 0 36 36">
-            <circle cx="18" cy="18" r="16" className="chart-segment upholstery" strokeDasharray="33,67" />
-            <circle cx="18" cy="18" r="16" className="chart-segment cushions" strokeDasharray="33,67" strokeDashoffset="-33" />
-            <circle cx="18" cy="18" r="16" className="chart-segment frames" strokeDasharray="34,66" strokeDashoffset="-66" />
-          </svg>
-          <span className="chart-percentage">100%</span>
-        </div>
-
-        {/* Received Chart */}
-        <div className="chart">
-          <svg className="chart-svg" viewBox="0 0 36 36">
-            <circle cx="18" cy="18" r="16" className="chart-segment upholstery" strokeDasharray="28,72" />
-            <circle cx="18" cy="18" r="16" className="chart-segment cushions" strokeDasharray="28,72" strokeDashoffset="-28" />
-            <circle cx="18" cy="18" r="16" className="chart-segment frames" strokeDasharray="24,76" strokeDashoffset="-56" />
-          </svg>
-          <span className="chart-percentage">80%</span>
-        </div>
-      </div>
-
-      {/* Legend */}
-      <div className="analytics-legend">
-        <div className="legend-item">
-          <span className="legend-color frames"></span>
-          <span>Frames</span>
-        </div>
-        <div className="legend-item">
-          <span className="legend-color cushions"></span>
-          <span>Cushions</span>
-        </div>
-        <div className="legend-item">
-          <span className="legend-color upholstery"></span>
-          <span>Upholstery</span>
-        </div>
-      </div>
+    <div className="job-analytics" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem" }}>
+      <h3 style={{ fontSize: "1rem", fontWeight: "600", color: "#1e293b", margin: 0 }}>
+        Annual Job Type Distribution
+      </h3>
+      <PieChart width={320} height={320}>
+        <Pie
+          data={pieData}
+          cx="50%"
+          cy="50%"
+          outerRadius={110}
+          fill="#8884d8"
+          dataKey="value"
+          label
+        >
+          {pieData.map((entry, index) => (
+            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+          ))}
+        </Pie>
+        <Tooltip />
+        <Legend layout="horizontal" verticalAlign="bottom" />
+      </PieChart>
     </div>
   );
-};
+}
 
-export default JobAnalytics;

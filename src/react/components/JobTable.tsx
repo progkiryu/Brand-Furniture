@@ -5,9 +5,8 @@ interface JobTableProps {
     searchTerm: string;
     jobs: Job[];
     jobClicked: (job: Job) => Promise<void>;
-    // onAddSubJob: (NewSubJobDataForAdd: Omit<SubJob, 'jobId'> & { jobId: string }) => void; // Handler for adding sub-jobs
-    onAddSubJob: (newSubJobData: SubJob) => void;
-    onEditJobClick: (job: Job) => void;
+    // onAddSubJob: (newSubJobData: SubJob) => void;
+    // onEditJobClick: (job: Job) => void;
 }
 
 function JobTable({ searchTerm, jobs, jobClicked }: JobTableProps) {
@@ -48,3 +47,4 @@ function JobTable({ searchTerm, jobs, jobClicked }: JobTableProps) {
 }
 
 export default JobTable;
+

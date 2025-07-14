@@ -34,15 +34,36 @@ export const getFramesBySubJobId = async (subJobId: String) => {
 };
 
 // Create a new frame
+// export const createFrame = async (data: Frame) => {
+//   fetch(`${DBLink}/frame/postCreateFrame`, {
+//     method: "POST",
+//     mode: "cors",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify(data),
+//   })
+//     .then((res) => res.json())
+//     .catch((err) => console.error(err));
+// };
+
 export const createFrame = async (data: Frame) => {
-  fetch(`${DBLink}/frame/postCreateFrame`, {
-    method: "POST",
-    mode: "cors",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  })
-    .then((res) => res.json())
-    .catch((err) => console.error(err));
+  try {
+    const res = await fetch(`${DBLink}/frame/postCreateFrame`, {
+      method: "POST",
+      mode: "cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+
+    const newFrame = await res.json();
+    return newFrame;
+  } catch (err) {
+    console.error("Error creating frame:", err);
+    return null;
+  }
 };
 
 // Delete a frame by ID

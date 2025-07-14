@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 const jobSchema = new mongoose.Schema(
   {
     invoiceId: { type: String, unique: true },
+    poNumber: { type: String, default: "" },
     client: { type: String, required: true },
     name: { type: String, required: true },
     type: { type: String, required: true }, // Added 'type' as per your mock data
