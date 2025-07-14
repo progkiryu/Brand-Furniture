@@ -16,7 +16,7 @@ interface AddFrameFormModalProps {
     onClose: () => void;
     subJobId: string; // Primitive string, will convert to String object for backend
     subJobDetail: string; // For display in modal title
-    onAddFrame: (newFrameData: FrameForCreation) => void;
+    onAddFrame: (newFrameData: Frame) => void;
 }
 
 function AddFrameFormModal({ isOpen, onClose, subJobId, subJobDetail, onAddFrame }: AddFrameFormModalProps) {
@@ -49,13 +49,13 @@ function AddFrameFormModal({ isOpen, onClose, subJobId, subJobDetail, onAddFrame
             return;
         }
 
-        const newFrameData: FrameForCreation = {
+        const newFrameData: Frame = {
             subJobId: new String(subJobId) as String, // Convert primitive string to String object
             supplier: supplier ? (new String(supplier) as String) : undefined,
             description: description ? (new String(description) as String) : undefined,
             orderedDate: orderedDate ? new Date(orderedDate) : undefined,
             expectedDate: expectedDate ? new Date(expectedDate) : undefined,
-                        receivedDate: receivedDate ? new Date(receivedDate) : undefined,
+            receivedDate: receivedDate ? new Date(receivedDate) : undefined,
         };
 
         onAddFrame(newFrameData);

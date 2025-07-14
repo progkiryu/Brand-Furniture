@@ -13,6 +13,10 @@ import AddJobFormModel from "../components/AddJobFormModel"; // New modal compon
 // import EditJobFormModal from "../components/EditJobFormModal"; 
 import SubJobTable from "../components/SubJobTable";
 import EditJobFormModal from "../components/EditJobFormModal";
+import AddSubJobFormModal from "../components/AddSubJobFormModal";
+import AddFrameFormModal from "../components/AddFrameModal";
+import AddCushionFormModal from "../components/AddCushionModal";
+import AddUpholsteryFormModal from "../components/AddUpholsteryModal";
 
 
 
@@ -20,24 +24,39 @@ import { DBLink } from "../App";
 // import { deleteJob } from "../api/jobAPI";
 import { getAllJobs } from "../api/jobAPI";
 import { getSubJobById } from "../api/subJobAPI";
+import { createFrame } from "../api/frameAPI";
+import { createCushion } from "../api/cushionAPI";
+import { createUpholstery } from "../api/upholsteryAPI";
 
 
 import { useState, useEffect, useRef } from 'react';
-import AddCushionFormModal from "../components/AddCushionModal";
 
 
 function Schedule() {
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [cushions, setCushions] = useState<Array<Cushion>>([]);
+  const [cushions, setCushions] = useState<Array<Cushion>>([]); // Keep existing cushion state
+  const [frames, setFrames] = useState<Array<Frame>>([]); // New state for frames
+  const [upholstery, setUpholstery] = useState<Array<Upholstery>>([]); // New state for upholstery
+
   const [isEditJobModalOpen, setIsEditJobModalOpen] = useState(false);
   const [jobToEdit, setJobToEdit] = useState<Job | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const [isAddCushionModalOpen, setIsAddCushionModalOpen] = useState(false);
+  
   const [jobs, setJobs] = useState<Job[]>([]); 
   const [subJobs, setSubJobs] = useState<SubJob[]>([]);
   const [isAddJobModelOpen, setIsAddJobModelOpen] = useState<boolean>(false);
   const [hasSelected, setSelected] = useState<boolean>(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [isAddSubJobModalOpen, setIsAddSubJobModalOpen] = useState(false); 
+  const [selectedJobForSubJob, setSelectedJobForSubJob] = useState<Job | null>(null); 
+
+  const [isAddCushionModalOpen, setIsAddCushionModalOpen] = useState(false);
+  const [isAddFrameModalOpen, setIsAddFrameModalOpen] = useState(false); // New state for AddFrameModal
+  const [isAddUpholsteryModalOpen, setIsAddUpholsteryModalOpen] = useState(false); // New state for AddUpholsteryModal
+
+  const [selectedSubJobInfoForCushion, setSelectedSubJobInfoForCushion] = useState<{ subJobId: String | null, subJobDetail: String | null } | null>(null);
+  const [selectedSubJobInfoForFrame, setSelectedSubJobInfoForFrame] = useState<{ subJobId: String | null, subJobDetail: String | null } | null>(null); // New state for selected subjob for frame
+  const [selectedSubJobInfoForUpholstery, setSelectedSubJobInfoForUpholstery] = useState<{ subJobId: String | null, subJobDetail: String | null } | null>(null); // New state for selected subjob for upholstery
 
 
 
@@ -170,6 +189,7 @@ function Schedule() {
 
   const displayJobDetails = async (job: Job) => {
     try {
+      setSelectedJobForSubJob(job); 
       if (job.subJobList && job.subJobList.length > 0) {
         const subJobs = job.subJobList.map((subJobId: String) => {
           return getSubJobById(subJobId);
@@ -230,7 +250,42 @@ function Schedule() {
     }
   };
 
+  const handleAddFrame = async (newFrameData: Frame) => { // New handler for AddFrameModal
+    const addedFrame = await createFrame(newFrameData);
+    if (addedFrame) {
+      setFrames(prevFrames => [...prevFrames, addedFrame]);
+    } else {
+      console.error("Failed to create frame.");
+    }
+  };
 
+  const handleAddUpholstery = async (newUpholsteryData: Upholstery) => { // New handler for AddUpholsteryModal
+    const addedUpholstery = await createUpholstery(newUpholsteryData);
+    if (addedUpholstery) {
+      setUpholstery(prevUpholstery => [...prevUpholstery, addedUpholstery]);
+    } else {
+      console.error("Failed to create upholstery.");
+    }
+  };
+
+  const openAddSubJobModal = () => { // New function to open sub-job modal
+    setIsAddSubJobModalOpen(true); //
+  };
+
+  const openAddFrameModal = (subJobId: String, subJobDetail: String) => { // New function
+    setSelectedSubJobInfoForFrame({ subJobId, subJobDetail });
+    setIsAddFrameModalOpen(true);
+  };
+
+  const openAddCushionModal = (subJobId: String, subJobDetail: String) => { // Modified to accept subJobId and subJobDetail
+    setSelectedSubJobInfoForCushion({ subJobId, subJobDetail });
+    setIsAddCushionModalOpen(true);
+  };
+
+  const openAddUpholsteryModal = (subJobId: String, subJobDetail: String) => { // New function
+    setSelectedSubJobInfoForUpholstery({ subJobId, subJobDetail });
+    setIsAddUpholsteryModalOpen(true);
+  };
 
 
 
@@ -335,7 +390,12 @@ function Schedule() {
           <div id="job-detail-container">
             {
               hasSelected && (<>
-                <SubJobTable subJobsParam={subJobs} />
+                <SubJobTable 
+                  subJobsParam={subJobs} onAddComponentClick={openAddSubJobModal} 
+                  onAddFrameClick={openAddFrameModal} // Pass to SubJobTable
+                  onAddCushionClick={openAddCushionModal} // Pass to SubJobTable
+                  onAddUpholsteryClick={openAddUpholsteryModal} // Pass to SubJobTable
+                />
               </>)
             }
           </div>
@@ -366,6 +426,38 @@ function Schedule() {
         }}
         jobToEdit={jobToEdit}
         onUpdateJob={handleUpdateJob}
+      />
+
+      <AddSubJobFormModal // New AddSubJobFormModal component
+        isOpen={isAddSubJobModalOpen} //
+        onClose={() => setIsAddSubJobModalOpen(false)} //
+        jobId={selectedJobForSubJob?._id?.toString() || null} // Pass the jobId
+        invoiceId={selectedJobForSubJob?.invoiceId?.toString() || null} // Pass the invoiceId
+        onAddSubJob={handleAddSubJob} // Pass the handler for adding sub-jobs
+      />
+
+      <AddFrameFormModal // New AddFrameModal component
+        isOpen={isAddFrameModalOpen}
+        onClose={() => setIsAddFrameModalOpen(false)}
+        subJobId={selectedSubJobInfoForFrame?.subJobId?.toString() || ""}
+        subJobDetail={selectedSubJobInfoForFrame?.subJobDetail?.toString() || ""}
+        onAddFrame={handleAddFrame}
+      />
+
+      <AddCushionFormModal
+        isOpen={isAddCushionModalOpen}
+        onClose={() => setIsAddCushionModalOpen(false)}
+        subJobId={selectedSubJobInfoForCushion?.subJobId?.toString() || ""}
+        subJobDetail={selectedSubJobInfoForCushion?.subJobDetail?.toString() || ""}
+        onAddCushion={handleAddCushion}
+      />
+
+      <AddUpholsteryFormModal // New AddUpholsteryModal component
+        isOpen={isAddUpholsteryModalOpen}
+        onClose={() => setIsAddUpholsteryModalOpen(false)}
+        subJobId={selectedSubJobInfoForUpholstery?.subJobId?.toString() || ""}
+        subJobDetail={selectedSubJobInfoForUpholstery?.subJobDetail?.toString() || ""}
+        onAddUpholstery={handleAddUpholstery}
       />
 
       {/* <AddCushionFormModal

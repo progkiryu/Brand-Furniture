@@ -2,10 +2,14 @@ import { useState } from "react";
 import SubJobTableRow from "./SubJobTableRow";
 
 interface SubJobTableProps {
-    subJobsParam: SubJob[];
+    subJobsParam: SubJob[]; //
+    onAddComponentClick: () => void;
+    onAddFrameClick: (subJobId: String, subJobDetail: String) => void; // New prop
+    onAddCushionClick: (subJobId: String, subJobDetail: String) => void; // New prop
+    onAddUpholsteryClick: (subJobId: String, subJobDetail: String) => void; // New prop
 }
 
-function SubJobTable({subJobsParam}: SubJobTableProps) {
+function SubJobTable({subJobsParam, onAddComponentClick, onAddFrameClick, onAddCushionClick, onAddUpholsteryClick}: SubJobTableProps) {
     if (!subJobsParam || subJobsParam.length === 0) {
         return <div>
             <table>
@@ -18,7 +22,7 @@ function SubJobTable({subJobsParam}: SubJobTableProps) {
                     </tr>    
                 </thead>
             </table>
-            <input type="button" value="Add Component"></input>
+            <input type="button" value="Add Component" onClick={onAddComponentClick}></input> 
         </div>
     }
 
@@ -40,12 +44,15 @@ function SubJobTable({subJobsParam}: SubJobTableProps) {
                     subJobs.map((subJob: SubJob) => {
                         return (<SubJobTableRow key={String(subJob._id)}
                             subJobParam={subJob}
+                            onAddFrameClick={onAddFrameClick} // Pass the new prop
+                            onAddCushionClick={onAddCushionClick} // Pass the new prop
+                            onAddUpholsteryClick={onAddUpholsteryClick} // Pass the new prop
                         />)
                     })
                 }
                 </tbody>
             </table>
-            <input type="button" value="Add Component"></input>
+            <input type="button" value="Add Component" onClick={onAddComponentClick}></input> 
         </div>
     )
 }
