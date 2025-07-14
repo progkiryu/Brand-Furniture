@@ -73,29 +73,7 @@ function Schedule() {
     }
     fetchJobs();
   }, []);
-
-  // useEffect(() => {
-  //   fetch(`${DBLink}/job/getAllJobs`)
-  //     .then(res => res.json())
-  //     .then(data => {
-  //       console.log(`the data: ${data}`);
-  //       setJobs(data)
-  //     })
-  //     .catch(err => console.log(err));
-
-  //   fetch(`${DBLink}/subJob/getAllSubJobs`)
-  //     .then((res) => res.json())
-  //     .then((data) => setSubJobs(data))
-  //     .catch((err) => console.log(err));
-
-  //   fetch(`${DBLink}/subJob/getAllCushions`)
-  //     .then((res) => res.json())
-  //     .then((data) => setCushions(data))
-  //     .catch((err) => console.log(err));
-  // }, []);
-
-
-
+  
   // Handler for when the search input changes
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
@@ -381,7 +359,8 @@ function Schedule() {
         <div id="order-container">
           <div id="job-list-container">
             {
-              <JobTable searchTerm={searchTerm}
+              <JobTable 
+                searchTerm={searchTerm}
                 jobs={jobs}
                 jobClicked={displayJobDetails}
               />
