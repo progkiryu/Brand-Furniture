@@ -197,6 +197,9 @@ function Schedule() {
         console.log(fetchedSubJobs);
         setSubJobs(fetchedSubJobs);
       }
+      else {
+        setSubJobs([]);
+      }
     }
     catch (err) {
       console.log("Error deleting job:", err);
