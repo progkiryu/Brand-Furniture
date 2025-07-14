@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "../styles/Analytics.css";
 import "../styles/Global.css";
 import Navbar from "../components/Navbar";
-import JobVolume from "../components/JobVolume";
+// import JobVolume from "../components/JobVolume";
 import JobCompletion from "../components/JobCompletion";
 import OrderTypeDistributionChart from "../components/OrderTypeDistribution";
 
@@ -60,14 +60,14 @@ function Analytics() {
             dateRange={dateRange} />
           </div>
                 
-          <div className="jobVolume">
+          {/* <div className="jobVolume">
             <JobVolume 
             title={
               needsPrefixAtEnd
               ? `Job Volume ${getLabelPrefix(dateRange)}`
               : `${getLabelPrefix(dateRange)} Job Volume`}
             dateRange={dateRange} />
-          </div>
+          </div> */}
 
           <div className="jobCompletion">
             <JobCompletion 
