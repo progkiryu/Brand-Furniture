@@ -52,7 +52,7 @@ function SubJobTableRow({
 
     return (
         <tr key={String(subJobParam._id)}>
-            <td>
+            <td >
                 <div>
                     <h2>Job</h2>
                     <p>{subJobParam.subJobDetail}</p>

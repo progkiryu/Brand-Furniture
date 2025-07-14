@@ -23,7 +23,9 @@ import AddUpholsteryFormModal from "../components/AddUpholsteryModal";
 import { DBLink } from "../App";
 // import { deleteJob } from "../api/jobAPI";
 import { getAllJobs } from "../api/jobAPI";
+import { getAllSubJobs } from "../../electron/database/controllers/subJobController";
 import { getSubJobById } from "../api/subJobAPI";
+import { createSubJob } from "../api/subJobAPI";
 import { createFrame } from "../api/frameAPI";
 import { createCushion } from "../api/cushionAPI";
 import { createUpholstery } from "../api/upholsteryAPI";
@@ -43,9 +45,7 @@ function Schedule() {
   const [jobToEdit, setJobToEdit] = useState<Job | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  
-  const [hasSelected, setSelected] = useState<boolean>(false);
-  const [jobs, setJobs] = useState<Job[]>([]); 
+  const [jobs, setJobs] = useState<Job[]>([]);
   const [subJobs, setSubJobs] = useState<SubJob[]>([]);
   const [isAddJobModelOpen, setIsAddJobModelOpen] = useState<boolean>(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -73,7 +73,9 @@ function Schedule() {
       }
     }
     fetchJobs();
-  }, []);
+  }, [subJobs]);
+
+
 
   // Handler for when the search input changes
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -113,47 +115,6 @@ function Schedule() {
     setIsEditJobModalOpen(true); // Open the edit modal
   };
 
-
-  // const handleUpdateJob = async (jobId: string, updatedData: Job) => {
-  //     try {
-  //         const dataToSend: Job = { ...updatedData };
-  //         if (dataToSend.due) {
-  //             dataToSend.due = dataToSend.due.toISOString() as any;
-  //         }
-
-  //         const response = await fetch(`${DBLink}/job/updateJob/${jobId}`, {
-  //             method: "PUT",
-  //             mode: "cors",
-  //             headers: { "Content-Type": "application/json" },
-  //             body: JSON.stringify({ _id: jobId, ...dataToSend }),
-  //         });
-
-  //         // ... rest of the function remains the same
-  //         if (response.ok) {
-  //             const updatedJob: Job = await response.json();
-
-  //             const processedUpdatedJob = {
-  //                 ...updatedJob,
-  //                 due: updatedJob.due ? new Date(updatedJob.due) : updatedJob.due
-  //             };
-
-  //             const updatedJobsList = jobs.map((job) => 
-  //                 job._id === processedUpdatedJob._id ? processedUpdatedJob : job
-  //             );
-  //             setJobs(updatedJobsList);
-
-
-  //             setIsEditJobModalOpen(false);
-  //             setJobToEdit(null);
-  //         } else {
-  //             const errorText = await response.text();
-  //             console.error("Failed to update job:", response.status, errorText);
-  //         }
-  //     } catch (err) {
-  //         console.error("Error updating job:", err);
-  //     }
-  // };
-
   const handleUpdateJob = async (jobId: string, updatedData: Job) => {
     const updatedJobsList: Job[] = await updateJob(updatedData);
     if (updatedJobsList) {
@@ -180,32 +141,21 @@ function Schedule() {
       else {
         setSubJobs([]);
       }
-      setSelected(true);
     }
     catch (err) {
       console.log("Error deleting job:", err);
     }
   }
 
-
   const handleAddSubJob = async (newSubJobData: SubJob) => {
-    try {
-      const response = await fetch(`${DBLink}/subJob/insertSubJob`, {
-        method: "POST",
-        mode: "cors",
-        headers: { "Content-Type": "application/json" }, // Corrected content type
-        body: JSON.stringify(newSubJobData),
-      });
-
-      if (response.ok) {
-        const addedSubJob: SubJob = await response.json(); // Assuming API returns the created job
-        setSubJobs(prevSubJobs => [...prevSubJobs, addedSubJob]);
-      } else {
-        const errorText = await response.text(); // Read error response
-        console.error("Failed to create sub-job:", response.status, errorText);
-      }
-    } catch (err) {
-      console.error("Error creating sub-job:", err);
+    const addedSubJob = await createSubJob(newSubJobData);
+    if (addedSubJob) {
+      // Update the subJob's cushionList
+      setSubJobs(prevSubJobs => [...prevSubJobs, addedSubJob]);
+      setIsAddSubJobModalOpen(false); // Close modal
+      setSelectedJobForSubJob(null); // Clear selected subjob info
+    } else {
+      console.error("Failed to create cushion.");
     }
   };
 
@@ -377,6 +327,7 @@ function Schedule() {
           <div id="job-list-container">
             {
               <JobTable
+                key="job-table"
                 searchTerm={searchTerm}
                 jobs={jobs}
                 jobClicked={displayJobDetails}
@@ -384,15 +335,12 @@ function Schedule() {
             }
           </div>
           <div id="job-detail-container">
-          {
-            hasSelected &&
-                <SubJobTable 
-                  subJobsParam={subJobs} onAddComponentClick={openAddSubJobModal} 
-                  onAddFrameClick={openAddFrameModal} // Pass to SubJobTable
-                  onAddCushionClick={openAddCushionModal} // Pass to SubJobTable
-                  onAddUpholsteryClick={openAddUpholsteryModal} // Pass to SubJobTable
-                />
-          }
+            <SubJobTable
+              subJobsParam={subJobs} onAddComponentClick={openAddSubJobModal}
+              onAddFrameClick={openAddFrameModal} // Pass to SubJobTable
+              onAddCushionClick={openAddCushionModal} // Pass to SubJobTable
+              onAddUpholsteryClick={openAddUpholsteryModal} // Pass to SubJobTable
+            />
           </div>
         </div>
         <div>
