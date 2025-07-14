@@ -42,13 +42,13 @@ function Schedule() {
   const [isEditJobModalOpen, setIsEditJobModalOpen] = useState(false);
   const [jobToEdit, setJobToEdit] = useState<Job | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  
-  const [jobs, setJobs] = useState<Job[]>([]); 
+
+  const [jobs, setJobs] = useState<Job[]>([]);
   const [subJobs, setSubJobs] = useState<SubJob[]>([]);
   const [isAddJobModelOpen, setIsAddJobModelOpen] = useState<boolean>(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [isAddSubJobModalOpen, setIsAddSubJobModalOpen] = useState(false); 
-  const [selectedJobForSubJob, setSelectedJobForSubJob] = useState<Job | null>(null); 
+  const [isAddSubJobModalOpen, setIsAddSubJobModalOpen] = useState(false);
+  const [selectedJobForSubJob, setSelectedJobForSubJob] = useState<Job | null>(null);
 
   const [isAddCushionModalOpen, setIsAddCushionModalOpen] = useState(false);
   const [isAddFrameModalOpen, setIsAddFrameModalOpen] = useState(false); // New state for AddFrameModal
@@ -72,7 +72,7 @@ function Schedule() {
     }
     fetchJobs();
   }, []);
-  
+
   // Handler for when the search input changes
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
@@ -166,7 +166,7 @@ function Schedule() {
 
   const displayJobDetails = async (job: Job) => {
     try {
-      setSelectedJobForSubJob(job); 
+      setSelectedJobForSubJob(job);
       if (job.subJobList && job.subJobList.length > 0) {
         const subJobs = job.subJobList.map((subJobId: String) => {
           return getSubJobById(subJobId);
@@ -174,6 +174,9 @@ function Schedule() {
         const fetchedSubJobs: SubJob[] = await Promise.all(subJobs);
         console.log(fetchedSubJobs);
         setSubJobs(fetchedSubJobs);
+      }
+      else {
+        setSubJobs([]);
       }
     }
     catch (err) {
@@ -355,7 +358,7 @@ function Schedule() {
         <div id="order-container">
           <div id="job-list-container">
             {
-              <JobTable 
+              <JobTable
                 searchTerm={searchTerm}
                 jobs={jobs}
                 jobClicked={displayJobDetails}
@@ -363,12 +366,12 @@ function Schedule() {
             }
           </div>
           <div id="job-detail-container">
-                <SubJobTable 
-                  subJobsParam={subJobs} onAddComponentClick={openAddSubJobModal} 
-                  onAddFrameClick={openAddFrameModal} // Pass to SubJobTable
-                  onAddCushionClick={openAddCushionModal} // Pass to SubJobTable
-                  onAddUpholsteryClick={openAddUpholsteryModal} // Pass to SubJobTable
-                />
+            <SubJobTable
+              subJobsParam={subJobs} onAddComponentClick={openAddSubJobModal}
+              onAddFrameClick={openAddFrameModal} // Pass to SubJobTable
+              onAddCushionClick={openAddCushionModal} // Pass to SubJobTable
+              onAddUpholsteryClick={openAddUpholsteryModal} // Pass to SubJobTable
+            />
           </div>
         </div>
         <div>
@@ -377,7 +380,7 @@ function Schedule() {
             onClose={() => setIsAddJobModelOpen(false)}
             onAddJob={handleAddJob}
           />
-                      
+
           <EditJobFormModal
             isOpen={isEditJobModalOpen}
             onClose={() => {
