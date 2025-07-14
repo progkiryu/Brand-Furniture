@@ -39,24 +39,19 @@ function Analytics() {
 
   const processJobTypes = async () => {
     const endDate = new Date();
-    const startDate = new Date();
+    let startDate = new Date();
 
     let existFlag: boolean = false;
 
     // Get date range
-    switch (dateRange) {
-      case "last6months":
-        startDate.setMonth(startDate.getMonth() - 6);
-        break;
-      case "last12months":
-        startDate.setMonth(startDate.getMonth() - 12);
-        break;
-      case "last24months":
-        startDate.setMonth(startDate.getMonth() - 24);
-        break;
-      default:
-        startDate.setMonth(startDate.getMonth() - 6);
-        break;
+    if (dateRange === "last6months") {
+      startDate.setMonth(startDate.getMonth() - 6);
+    } else if (dateRange === "last12months") {
+      startDate.setFullYear(startDate.getFullYear() - 1);
+    } else if (dateRange === "last24months") {
+      startDate.setFullYear(startDate.getFullYear() - 2);
+    } else {
+      startDate.setMonth(startDate.getMonth() - 6);
     }
 
     // Get all the unique job types
@@ -90,12 +85,15 @@ function Analytics() {
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-
       await processJobTypes().then(() => setIsLoading(false));
     };
 
     fetchData();
-  }, []);
+  }, [dateRange]);
+
+  const logbutton = () => {
+    console.log(dateRange);
+  };
 
   return isLoading ? (
     <>
@@ -127,6 +125,7 @@ function Analytics() {
               ? `Order Type Distribution ${getLabelPrefix(dateRange)}`
               : `${getLabelPrefix(dateRange)} Order Type Distribution`}
           </h2>
+          <button onClick={logbutton}>button</button>
           <OrderTypeDistributionChart data={typeCountState} />
         </div>
 
