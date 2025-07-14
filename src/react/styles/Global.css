@@ -14,7 +14,6 @@ h1, h2, h3 {
 
 h1 {
     font-size: 1.5rem;
-    /* color: #0D1B2A; */
 }
 
 h2 {
@@ -56,10 +55,6 @@ p {
     color: #FFFFFF;
     text-align: center;
     display: block;
-    /* left: 10px;
-    text-align: center;
-    width: 100%;
-    box-sizing: border-box; */
 }
 
 #navBar-container a {
@@ -79,17 +74,6 @@ p {
 }
 
 #header-container {
-    /* background-color: #1B263B;
-    border-bottom: 1px solid #E0E1DD;
-    color: #FFFFFF;
-    z-index: 1000;
-    position: sticky;
-    top: 0;
-    height: 64px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 2rem; */
     font-size: 0.15rem;
     color: #1B263B;
     padding: 0.5rem;
@@ -98,7 +82,6 @@ p {
     border-bottom: 1px solid #E0E1DD;
     display: flex;
     box-sizing: border-box;
-    /* width: 100; */
 }
 
 #first-container {
@@ -111,9 +94,4 @@ p {
     min-height: 100%;
     overflow-y: auto;
 }
-
-/* .table-responsive-wrapper {
-    overflow-x: auto;
-    width: 100;
-} */
 
