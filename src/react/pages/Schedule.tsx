@@ -10,71 +10,39 @@ import { useState, useEffect, useRef } from 'react';
 import SearchBar from "../components/Searchbar"; // New component
 import JobTable from "../components/JobTable"; // New component
 import AddJobFormModel from "../components/AddJobFormModel"; // New modal component
-import EditJobFormModal from "../components/EditJobFormModal";
-
- 
+// import EditJobFormModal from "../components/EditJobFormModal"; 
+import SubJobTable from "../components/SubJobTable";
 import { DBLink } from "../App";
-
-export interface NewSubJobDataForAdd {
-    jobId: string; // SubJob now has jobId directly
-    subJobDetail: string;
-    note?: string;
-    file?: string;
-    dueDate?: Date;
-    depositAmount?: number;
-    depositDate?: Date;
-    paidInFull?: boolean;
-    liaison?: string;
-    paymentNote?: string;
-    isArchived?: boolean;
-}
-
-export interface NewJobDataForAdd {
-    invoiceId: String;
-    client: String;
-    name: String;
-    type: String; // Added 'type' as per your mock data
-    due: Date;
-}
-
-export interface UpdateJobData {
-    invoiceId?: string;
-    client?: string;
-    name?: string;
-    type?: string;
-    due?: Date;
-    isPinned?: boolean; // Include optional fields that can be updated
-}
-
+// import { deleteJob } from "../api/jobAPI";
+import { getAllJobs } from "../api/jobAPI";
+import { getSubJobById } from "../api/subJobAPI";
  
 function Schedule() {
     const [searchTerm, setSearchTerm] = useState<string>('');
-    const [jobs, setJobs] = useState<Array<Job>>([]); // Manage jobs state here
+    const [jobs, setJobs] = useState<Job[]>([]); // Manage jobs state here
     // Manage all top-level data arrays as state
-    const [subJobs, setSubJobs] = useState<Array<SubJob>>([]);
-    const [isAddJobModelOpen, setIsAddJobModelOpen] = useState(false);
-    const [isEditJobModalOpen, setIsEditJobModalOpen] = useState(false);
-    const [jobToEdit, setJobToEdit] = useState<Job | null>(null);
+    const [subJobs, setSubJobs] = useState<SubJob[]>([]);
+    const [isAddJobModelOpen, setIsAddJobModelOpen] = useState<boolean>(false);
+    const [hasSelected, setSelected] = useState<boolean>(false);
+    // const [isEditJobModalOpen, setIsEditJobModalOpen] = useState(false);
+    // const [jobToEdit, setJobToEdit] = useState<Job | null>(null);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
 
 
     useEffect(() => {
-        fetch(`${DBLink}/job/getAllJobs`)
-            .then(res => res.json())
-            .then(data => {
-                console.log(`the data: ${data}`);
-                setJobs(data)
-            })
-            .catch(err => console.log(err));
-    }, []);
-
-    useEffect(() => {
-        fetch(`${DBLink}/subJob/getAllSubJobs`)
-        .then((res) => res.json())
-        .then((data) => setSubJobs(data))
-        .catch((err) => console.log(err));
+        const fetchJobs = async () => {
+            const jobsPromise = getAllJobs();
+            try {
+                const [fetchJobs] = await Promise.all([jobsPromise]);
+                setJobs(fetchJobs);
+            }
+            catch (err) {
+                console.error("Could not fetch Jobs!");
+            }
+        }
+        fetchJobs();
     }, []);
  
     // Handler for when the search input changes
@@ -112,66 +80,37 @@ function Schedule() {
             if (response.ok) {
                 const addedJob: Job = await response.json(); // Assuming API returns the created job
                 setJobs(prevJobs => [...prevJobs, addedJob]);
-                alert("Job created successfully.");
                 setIsAddJobModelOpen(false); // Close the modal after adding
             } else {
                 const errorText = await response.text(); // Read error response
-                alert(`Error: Failed to create job. ${errorText}`);
                 console.error("Failed to create job:", response.status, errorText);
             }
         } catch (err) {
             console.error("Error creating job:", err);
-            alert("Error: Failed to connect to the server or create job.");
         }
     };
 
-    const handleEditJobClick = (job: Job) => {
-        setJobToEdit(job); // Set the job to be edited
-        setIsEditJobModalOpen(true); // Open the edit modal
-    };
-
-    // Handler to update an existing Job
-    const handleUpdateJob = async (jobId: string, updatedData: UpdateJobData) => {
+    const displayJobDetails = async (job: Job) => {
         try {
-            // Convert Date object to ISO string for sending to backend if 'due' is updated
-            const dataToSend: UpdateJobData = { ...updatedData };
-            if (dataToSend.due) {
-                dataToSend.due = dataToSend.due.toISOString() as any; // Cast to any to bypass type error for string
+            if (job.subJobList && job.subJobList.length > 0) {
+                const subJobs = job.subJobList.map((subJobId: String) => {
+                    return getSubJobById(subJobId);
+                });
+                const fetchedSubJobs: SubJob[] = await Promise.all(subJobs);
+                setSubJobs(fetchedSubJobs);
             }
-
-            const response = await fetch(`${DBLink}/job/updateJob/${jobId}`, { // Assuming updateJob takes ID in URL
-                method: "PUT", // Or PATCH, depending on your API
-                mode: "cors",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(dataToSend),
-            });
-
-            if (response.ok) {
-                const updatedJob: Job = await response.json(); // Assuming API returns the updated job
-                // Convert 'due' back to Date object for state
-                const processedUpdatedJob = {
-                    ...updatedJob,
-                    due: updatedJob.due ? new Date(updatedJob.due) : updatedJob.due
-                };
-                setJobs(prevJobs => prevJobs.map(job =>
-                    job._id === processedUpdatedJob._id ? processedUpdatedJob : job // Replace the job with the updated version
-                ));
-                alert("Job updated successfully.");
-                setIsEditJobModalOpen(false); // Close modal after update
-                setJobToEdit(null); // Clear jobToEdit state
-            } else {
-                const errorText = await response.text();
-                alert(`Error: Failed to update job. ${errorText}`);
-                console.error("Failed to update job:", response.status, errorText);
+            else {
+                setSubJobs([]);
             }
-        } catch (err) {
-            console.error("Error updating job:", err);
-            alert("Error: Failed to connect to the server or update job.");
+            setSelected(true);
         }
-    };
-    
+        catch (err) {
+            console.log("Error deleting job:", err);
+        }
+    }
 
-    const handleAddSubJob = (jobId: string, newSubJobData: NewSubJobDataForAdd) => {
+
+    const handleAddSubJob = (jobId: String, newSubJobData: SubJob) => {
         // This function will be passed to JobTable and then to AddSubJobFormModal
         // It needs the jobId to correctly associate the sub-job
         const newSubJob: SubJob = {
@@ -273,15 +212,31 @@ function Schedule() {
 
                 </div>
                 <div id="order-container">
+                    <div id="job-list-container"> 
+                    {  
+                        <JobTable searchTerm={searchTerm}
+                        jobs={jobs}
+                        jobClicked={displayJobDetails}
+                        />
+                    }
+                    </div>
+                    <div id="job-detail-container">
+                    {    
+                        hasSelected && (<>
+                            <SubJobTable subJobsParam={subJobs}/>
+                            <button>Add Component</button>
+                        </>)
+                    }
+                    </div>
                     {/* <h1>Orders</h1> */}
                     {/* Pass both jobs and subJobs to JobTable */}
-                    <JobTable
+                    {/* <JobTable
                         searchTerm={searchTerm}
                         jobs={jobs}
                         subJobs={subJobs} // Pass all subJobs for filtering and display
                         onAddSubJob={handleAddSubJob} // Pass the handler for adding sub-jobs
                         onEditJobClick={handleEditJobClick}
-                    />
+                    /> */}
                 </div>
             </div>
  
@@ -292,7 +247,7 @@ function Schedule() {
                 onAddJob={handleAddJob}
             />
 
-            <EditJobFormModal
+            {/* <EditJobFormModal
                 isOpen={isEditJobModalOpen}
                 onClose={() => {
                     setIsEditJobModalOpen(false);
@@ -300,7 +255,8 @@ function Schedule() {
                 }}
                 jobToEdit={jobToEdit}
                 onUpdateJob={handleUpdateJob}
-            />
+                onDeleteJob={handleDeleteJob}
+            /> */}
         </>
     );
 }

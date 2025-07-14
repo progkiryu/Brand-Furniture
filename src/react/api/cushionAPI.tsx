@@ -6,7 +6,6 @@ export const getAllCushions = async () => {
     .then((res) => res.json)
     .catch((err) => console.error(err));
   if (!cushions) {
-    alert("Error: Failed to retrive cushions.");
     return;
   }
   return cushions;
@@ -18,10 +17,20 @@ export const getCushionById = async (id: String) => {
     .then((res) => res.json())
     .catch((err) => console.error(err));
   if (!cushion) {
-    alert("Error: Failed to retrive cushion.");
     return;
   }
   return cushion;
+};
+
+// Get list of cushions from subJobId
+export const getCushionsBySubJobId = async (subJobId: String) => {
+  const cushions = fetch(`${DBLink}/cushions/getCushionsBySubJobId/${subJobId}`)
+    .then((res) => res.json())
+    .catch((err) => console.error(err));
+  if (!cushions) {
+    return;
+  }
+  return cushions;
 };
 
 // Create a new cushion
@@ -32,13 +41,7 @@ export const createCushion = async (data: Cushion) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   })
-    .then((res) => {
-      if (res.ok) {
-        alert("Cushion created successfully.");
-      } else {
-        alert("Error: Failed to create cushion.");
-      }
-    })
+    .then((res) => res.json())
     .catch((err) => console.error(err));
 };
 
@@ -49,13 +52,7 @@ export const deleteCushionById = async (id: String) => {
     mode: "cors",
     headers: { "Content-Type": "application/json" },
   })
-    .then((res) => {
-      if (res.ok) {
-        alert("Cushion deleted successfully.");
-      } else {
-        alert("Error: Failed to delete cushion.");
-      }
-    })
+    .then((res) => res.json())
     .catch((err) => console.log(err));
 };
 
@@ -67,12 +64,6 @@ export const updateCushion = async (data: Cushion) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   })
-    .then((res) => {
-      if (res.ok) {
-        alert("Cushion updated successfully.");
-      } else {
-        alert("Error: Failed to update cushion.");
-      }
-    })
+    .then((res) => res.json())
     .catch((err) => console.error(err));
 };

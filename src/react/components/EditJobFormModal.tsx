@@ -1,40 +1,83 @@
 import React, { useState, useEffect } from 'react';
-import type { UpdateJobData } from '../pages/Schedule';
+
 
 
 interface EditJobFormModalProps {
     isOpen: boolean;
     onClose: () => void;
     jobToEdit: Job | null; // The job object to be edited, or null if not editing
-    onUpdateJob: (jobId: string, updatedData: UpdateJobData) => void;
+    onUpdateJob: (jobId: string, updatedData: Job) => void;
+    onDeleteJob: (jobId: string) => void;
 }
 
-function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob }: EditJobFormModalProps) {
+function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob, onDeleteJob }: EditJobFormModalProps) {
     // State for form fields, initialized with jobToEdit data
     const [invoiceId, setInvoiceId] = useState<string>('');
     const [clientName, setClientName] = useState<string>('');
     const [jobName, setJobName] = useState<string>('');
     const [jobType, setJobType] = useState<string>('');
     const [dueDate, setDueDate] = useState<string>(''); // Keep as string for input type="date"
+    const [depositAmount, setDepositAmount] = useState<string>('');
+    const [depositDate, setDepositDate] = useState<string>('');
+    const [paidInFull, setPaidInFull] = useState<string>(''); // Boolean for checkbox
+    const [liaison, setLiaison] = useState<string>('');
+    const [paymentNote, setPaymentNote] = useState<string>('');
 
-    // Effect to populate form fields when jobToEdit changes (i.e., modal opens for a new job)
+    const formatDateForInput = (dateValue: Date | string | null | undefined): string => {
+        if (!dateValue) return '';
+
+        let date: Date;
+        if (dateValue instanceof Date) {
+            date = dateValue;
+        } else if (typeof dateValue === 'string') {
+            date = new Date(dateValue);
+        } else {
+            return ''; // Invalid type
+        }
+
+        if (isNaN(date.getTime())) {
+            return ''; // Invalid date
+        }
+
+        // Return in YYYY-MM-DD format
+        return date.toISOString().split('T')[0];
+    };
+
+
     useEffect(() => {
         if (jobToEdit) {
+            // Basic text fields
             setInvoiceId(String(jobToEdit.invoiceId) || '');
             setClientName(String(jobToEdit.client) || '');
             setJobName(String(jobToEdit.name) || '');
             setJobType(String(jobToEdit.type) || '');
-            // Format Date object to YYYY-MM-DD string for input type="date"
-            setDueDate(jobToEdit.due ? jobToEdit.due.toISOString().split('T')[0] : '');
+
+            // Date fields: Convert to YYYY-MM-DD string for input type="date"
+            setDueDate(formatDateForInput(jobToEdit.due));
+            setDepositDate(formatDateForInput(jobToEdit.depositDate));
+            setPaidInFull(formatDateForInput(jobToEdit.paidInFull)); // Use new state variable
+
+            // Number fields: Convert to string
+            setDepositAmount(String(jobToEdit.depositAmount || '') || ''); // Handle potential undefined/null
+
+            // Other text fields
+            setLiaison(String(jobToEdit.liaison || '') || '');
+            setPaymentNote(String(jobToEdit.paymentNote || '') || '');
+
         } else {
-            // Reset fields if modal is closed or no job is being edited
+            // Reset all fields when modal is closed or no job is being edited
             setInvoiceId('');
             setClientName('');
             setJobName('');
             setJobType('');
             setDueDate('');
+            setDepositAmount('');
+            setDepositDate('');
+            setPaidInFull('');
+            setLiaison('');
+            setPaymentNote('');
         }
-    }, [jobToEdit]); // Dependency array ensures this runs when jobToEdit changes
+    }, [jobToEdit]); 
 
     if (!isOpen || !jobToEdit) return null; // Don't render if not open or no job to edit
 
@@ -48,12 +91,17 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob }: EditJobFo
         }
 
         // Construct updated job data
-        const updatedData: UpdateJobData = {
+        const updatedData: Job = {
             invoiceId: invoiceId,
             client: clientName,
             name: jobName,
             type: jobType,
             due: new Date(dueDate), // Convert string date to Date object
+            depositDate: new Date(depositDate),
+            depositAmount: Number(depositAmount),
+            paidInFull: new Date(paidInFull),
+            liaison: liaison,
+            paymentNote: paymentNote,
         };
 
         // Call the parent handler to update the job
@@ -67,12 +115,16 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob }: EditJobFo
         }
     };
 
+    const handleDelete = () => {
+        onDeleteJob(String(jobToEdit._id));
+    }
+
     return (
         <div className="modal-overlay" onClick={onClose}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                 <button onClick={onClose} className="modal-close-btn">&times;</button>
                 <form onSubmit={handleSubmit} className="modal-form">
-                    <h2>Edit Job: {jobToEdit.name} || 'N/A'</h2> {/* Display job name in heading */}
+                    <h2>Edit Job: {jobToEdit.name} #{jobToEdit.invoiceId}</h2> {/* Display job name in heading */}
 
                     <div className="form-group">
                         <label htmlFor="invoiceId">Invoice ID:</label>
@@ -124,8 +176,58 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob }: EditJobFo
                             required
                         />
                     </div>
+                    <div className="form-group">
+                        <label htmlFor="depositAmount">Deposit Amount:</label>
+                        <input
+                            type="number"
+                            id="depositAmount"
+                            value={depositAmount}
+                            onChange={(e) => setDepositAmount(e.target.value)}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="depositDate">Deposit Date:</label>
+                        <input
+                            type="date"
+                            id="depositDate"
+                            value={depositDate}
+                            onChange={(e) => setDepositDate(e.target.value)}
+                            
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="paidInFull">Paid In Full:</label>
+                        <input
+                            type="date"
+                            id="paidInFull"
+                            value={paidInFull}
+                            onChange={(e) => setPaidInFull(e.target.value)}
+                            
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="liaison">Liaison:</label>
+                        <input
+                            type="text"
+                            id="liaison"
+                            value={liaison}
+                            onChange={(e) => setLiaison(e.target.value)}
+                           
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="paymentNote">Payment Notes:</label>
+                        <input
+                            type="text"
+                            id="paymentNote"
+                            value={paymentNote}
+                            onChange={(e) => setPaymentNote(e.target.value)}
+                            
+                        />
+                    </div>
 
                     <button type="submit">Update Job</button>
+                    <button id="delete-button" onClick={handleDelete}>Delete Job</button>
                 </form>
             </div>
         </div>

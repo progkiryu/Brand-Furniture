@@ -8,8 +8,14 @@ const jobSchema = new mongoose.Schema(
     name: { type: String, required: true },
     type: { type: String, required: true }, // Added 'type' as per your mock data
     due: { type: Date, required: true },
+    depositAmount: { type: Number, default: 0 },
+    depositDate: { type: Date, required: false },
+    paidInFull: { type: Date, required: false },
+    liaison: { type: String, default: "" },
+    paymentNote: { type: String, default: "" },
     subJobList: { type: [String], default: [] },
     isPinned: { type: Boolean, default: false },
+    isArchived: { type: Boolean, default: false },
   },
   {
     timestamps: true,
@@ -23,15 +29,11 @@ const subJobSchema = new mongoose.Schema(
     note: { type: String, default: "" },
     file: { type: String, default: "" },
     dueDate: { type: Date, required: false },
-    depositAmount: { type: Number, default: 0 },
-    depositDate: { type: Date, required: false },
-    paidInFull: { type: Boolean, default: false },
-    liaison: { type: String, default: "" },
-    paymentNote: { type: String, default: "" },
     frameList: { type: [String], default: [] },
     cushionList: { type: [String], default: [] },
     upholsteryList: { type: [String], defailt: [] },
-    isArchived: { type: Boolean, default: false },
+    status: { type: String, default: "Unassigned" }, // the 5 colours + unassigned
+    frameFormed: { type: Boolean, default: false }, // as discussed, seperate to 5 colours
   },
   {
     timestamps: true,
@@ -69,13 +71,13 @@ const cushionSchema = new mongoose.Schema(
 
 const upholsterySchema = new mongoose.Schema(
   {
-    subJobId: { type: String, require: true }, // FK to SubJob (SubJob's 'subJobId')
+    subJobId: { type: String, required: true }, // FK to SubJob (SubJob's 'subJobId')
     supplier: { type: String, default: "" },
-    type: { type: String, require: true },
+    type: { type: String, required: true },
     description: { type: String, default: "" },
-    orderedDate: { type: Date, require: false },
-    expectedDate: { type: Date, require: false },
-    receivedDate: { type: Date, require: false },
+    orderedDate: { type: Date, required: false },
+    expectedDate: { type: Date, required: false },
+    receivedDate: { type: Date, required: false },
   },
   {
     timestamps: true,
@@ -84,8 +86,8 @@ const upholsterySchema = new mongoose.Schema(
 
 const notifSchema = new mongoose.Schema(
   {
-    notifTitle: { type: String, require: true },
-    notifDesc: { type: String, require: true },
+    notifTitle: { type: String, required: true },
+    notifDesc: { type: String, required: true },
     time: { type: Date, required: true },
   },
   {
@@ -96,7 +98,7 @@ const notifSchema = new mongoose.Schema(
 const Job = mongoose.model("Job", jobSchema);
 const SubJob = mongoose.model("Subjob", subJobSchema);
 const Frame = mongoose.model("Frame", frameSchema);
-const Cushion = mongoose.model("Model", cushionSchema);
+const Cushion = mongoose.model("Cushion", cushionSchema);
 const Upholstery = mongoose.model("Upholster", upholsterySchema);
 const Notif = mongoose.model("Notification", notifSchema);
 
