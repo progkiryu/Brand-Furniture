@@ -1,6 +1,6 @@
 type Job = {
   client: String;
-  poNumber: String;
+  poNumber?: String;
   _id?: String;
   invoiceId?: String;
   client: String;
