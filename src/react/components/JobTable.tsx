@@ -32,7 +32,7 @@ function JobTable({ searchTerm, jobs, jobClicked, invoiceIDTerm, clientTerm, due
         dueDateTerm?: "asc" | "desc",
     ) => {
         if (invoiceIDTerm) {
-            if (invoiceIDTerm === "asc" ) {
+            if (invoiceIDTerm === "asc") {
                 sortedJobs.sort((a, b) => {
                     const invoiceIdA = a.invoiceId?.toLowerCase() || '';
                     const invoiceIdB = b.invoiceId?.toLowerCase() || '';

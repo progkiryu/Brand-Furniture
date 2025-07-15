@@ -23,7 +23,7 @@ import AddUpholsteryFormModal from "../components/AddUpholsteryModal";
 import { DBLink } from "../App";
 // import { deleteJob } from "../api/jobAPI";
 import { getAllJobs } from "../api/jobAPI";
-import { getSubJobById } from "../api/subJobAPI";
+import { getAllSubJobs, getSubJobById } from "../api/subJobAPI";
 import { createFrame } from "../api/frameAPI";
 import { createCushion } from "../api/cushionAPI";
 import { createUpholstery } from "../api/upholsteryAPI";
@@ -41,10 +41,21 @@ function Schedule() {
   const [isEditJobModalOpen, setIsEditJobModalOpen] = useState(false);
   const [jobToEdit, setJobToEdit] = useState<Job | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // radio button states
+  const [invoiceIDAsc, setInvoiceIDAsc] = useState<boolean>(false);
+  const [invoiceIDDesc, setInvoiceIDDesc] = useState<boolean>(false);
+  const [clientAsc, setClientAsc] = useState<boolean>(false);
+  const [clientDesc, setClientDesc] = useState<boolean>(false);
+  const [jobNameAsc, setJobNameAsc] = useState<boolean>(false);
+  const [jobNameDesc, setJobNameDesc] = useState<boolean>(false);
+  const [dueDateAsc, setDueDateAsc] = useState<boolean>(false);
+  const [dueDateDesc, setDueDateDesc] = useState<boolean>(false);
   
   const [hasSelected, setSelected] = useState<boolean>(false);
   const [jobs, setJobs] = useState<Job[]>([]); 
   const [subJobs, setSubJobs] = useState<SubJob[]>([]);
+  const [selectedSubJobs, setSelectedSubJobs] = useState<SubJob[]>([]);
   const [isAddJobModelOpen, setIsAddJobModelOpen] = useState<boolean>(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isAddSubJobModalOpen, setIsAddSubJobModalOpen] = useState(false); 
@@ -67,9 +78,11 @@ function Schedule() {
   useEffect(() => {
     const fetchJobs = async () => {
       const jobsPromise = getAllJobs();
+      const subJobsPromise = getAllSubJobs();
       try {
-        const [fetchJobs] = await Promise.all([jobsPromise]);
+        const [fetchJobs, fetchSubJobs] = await Promise.all([jobsPromise, subJobsPromise]);
         setJobs(fetchJobs);
+        setSubJobs(fetchSubJobs);
       }
       catch (err) {
         console.error("Could not fetch Jobs!");
@@ -77,28 +90,6 @@ function Schedule() {
     }
     fetchJobs();
   }, []);
-
-  // useEffect(() => {
-  //   fetch(`${DBLink}/job/getAllJobs`)
-  //     .then(res => res.json())
-  //     .then(data => {
-  //       console.log(`the data: ${data}`);
-  //       setJobs(data)
-  //     })
-  //     .catch(err => console.log(err));
-
-  //   fetch(`${DBLink}/subJob/getAllSubJobs`)
-  //     .then((res) => res.json())
-  //     .then((data) => setSubJobs(data))
-  //     .catch((err) => console.log(err));
-
-  //   fetch(`${DBLink}/subJob/getAllCushions`)
-  //     .then((res) => res.json())
-  //     .then((data) => setCushions(data))
-  //     .catch((err) => console.log(err));
-  // }, []);
-
-
 
   // Handler for when the search input changes
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -200,10 +191,10 @@ function Schedule() {
         });
         const fetchedSubJobs: SubJob[] = await Promise.all(subJobs);
         console.log(fetchedSubJobs);
-        setSubJobs(fetchedSubJobs);
+        setSelectedSubJobs(fetchedSubJobs);
       }
       else {
-        setSubJobs([]);
+        setSelectedSubJobs([]);
       }
       setSelected(true);
     }
@@ -292,6 +283,113 @@ function Schedule() {
     setIsAddUpholsteryModalOpen(true);
   };
 
+  const handleAscDscFilterChange = (attribute: String, type: "asc" | "desc" | undefined) => {
+    if (attribute === "invoiceId") {
+      if (type === "asc") {
+        setFilterInvoiceID("asc");
+        setInvoiceIDAsc(true);
+        setInvoiceIDDesc(false);
+      }
+      else {
+        setFilterInvoiceID("desc");
+        setInvoiceIDAsc(false);
+        setInvoiceIDDesc(true);
+      }
+      setFilterClient(undefined);
+      setFilterJobName(undefined);
+      setFilterDueDate(undefined);
+
+      setClientAsc(false);
+      setClientDesc(false);
+      setJobNameAsc(false);
+      setJobNameDesc(false);
+      setDueDateAsc(false);
+      setDueDateDesc(false);
+    }
+    else if (attribute === "client") {
+      if (type === "asc") { 
+        setFilterClient("asc"); 
+        setClientAsc(true);
+        setClientDesc(false);
+      } 
+      else { 
+        setFilterClient("desc");
+        setClientAsc(false);
+        setClientDesc(true);
+      }
+      setFilterInvoiceID(undefined);
+      setFilterJobName(undefined);
+      setFilterDueDate(undefined);
+
+      setInvoiceIDAsc(false);
+      setInvoiceIDDesc(false);
+      setJobNameAsc(false);
+      setJobNameDesc(false);
+      setDueDateAsc(false);
+      setDueDateDesc(false);
+    }
+    else if (attribute === "jobName") {
+      if (type === "asc") { 
+        setFilterJobName("asc"); 
+        setJobNameAsc(true);
+        setJobNameDesc(false);
+      } 
+      else { 
+        setFilterJobName("desc"); 
+        setJobNameAsc(false);
+        setJobNameDesc(true);
+      }
+      setFilterInvoiceID(undefined);
+      setFilterClient(undefined);
+      setFilterDueDate(undefined);  
+      
+      setInvoiceIDAsc(false);
+      setInvoiceIDDesc(false);
+      setClientAsc(false);
+      setClientDesc(false);
+      setDueDateAsc(false);
+      setDueDateDesc(false);
+    }
+    else if (attribute === "dueDate") {
+      if (type === "asc") { 
+        setFilterDueDate("asc"); 
+        setDueDateAsc(true);
+        setDueDateDesc(false);
+      }
+      else { 
+        setFilterDueDate("desc"); 
+        setDueDateAsc(false);
+        setDueDateDesc(true);
+      }
+      setFilterInvoiceID(undefined);
+      setFilterClient(undefined);
+      setFilterJobName(undefined);
+
+      setInvoiceIDAsc(false);
+      setInvoiceIDDesc(false);
+      setClientAsc(false);
+      setClientDesc(false);
+      setJobNameAsc(false);
+      setJobNameDesc(false);
+    }
+  }
+
+  const resetAscDscFilter = () => {
+      setFilterInvoiceID(undefined);
+      setFilterClient(undefined);
+      setFilterJobName(undefined);
+      setFilterDueDate(undefined);
+
+      setInvoiceIDAsc(false);
+      setInvoiceIDDesc(false);
+      setClientAsc(false);
+      setClientDesc(false);
+      setJobNameAsc(false);
+      setJobNameDesc(false);
+      setDueDateAsc(false);
+      setDueDateDesc(false);
+  }
+
   return (
     <>
       <Navbar />
@@ -312,24 +410,42 @@ function Schedule() {
                 <div id="dropdown-panel">
                   <div className="sort-option-group">
                     <strong>Invoice ID</strong>
-                    <label><input type="radio" name="invoice" onClick={() => setFilterInvoiceID("asc")} /> Ascending</label>
-                    <label><input type="radio" name="invoice" onClick={() => setFilterInvoiceID("desc")} /> Descending</label>
-                  </div>
-                  <div className="sort-option-group">
+                    <label><input type="radio" name="option" onClick={
+                      () => handleAscDscFilterChange("invoiceId", "asc")
+                    } checked={invoiceIDAsc}/> Ascending</label>
+                    <label><input type="radio" name="option" onClick={
+                      () => handleAscDscFilterChange("invoiceId", "desc")
+                    } checked={invoiceIDDesc} /> Descending</label>
+
                     <strong>Client</strong>
-                    <label><input type="radio" name="client" onClick={() => setFilterClient("asc")}/> Ascending</label>
-                    <label><input type="radio" name="client" onClick={() => setFilterClient("desc")}/> Descending</label>
-                  </div>
-                  <div className="sort-option-group">
+                    <label><input type="radio" name="option" onClick={
+                      () => handleAscDscFilterChange("client", "asc")
+                    } checked={clientAsc} /> Ascending</label>
+                    <label><input type="radio" name="option" onClick={
+                      () => handleAscDscFilterChange("client", "desc")
+                    } checked={clientDesc} /> Descending</label>
+
                     <strong>Job Name</strong>
-                    <label><input type="radio" name="jobname" onClick={() => setFilterJobName("asc")}/>Ascending</label>
-                    <label><input type="radio" name="jobname" onClick={() => setFilterJobName("desc")}/> Descending</label>
-                  </div>
-                  <div className="sort-option-group">
+                    <label><input type="radio" name="option" onClick={
+                      () => handleAscDscFilterChange("jobName", "asc")
+                    } checked={jobNameAsc} /> Ascending</label>
+                    <label><input type="radio" name="option" onClick={
+                      () => handleAscDscFilterChange("jobName", "desc")
+                    } checked={jobNameDesc} /> Descending</label>
+
                     <strong>Due Date</strong>
-                    <label><input type="radio" name="duedate" onClick={() => setFilterDueDate("asc")}/> Ascending</label>
-                    <label><input type="radio" name="duedate" onClick={() => setFilterDueDate("desc")}/> Descending</label>
+                    <label><input type="radio" name="option" onClick={
+                      () => handleAscDscFilterChange("dueDate", "asc")
+                    } checked={dueDateAsc} /> Ascending</label>
+                    <label><input type="radio" name="option" onClick={
+                      () => handleAscDscFilterChange("dueDate", "desc")
+                    } checked={dueDateDesc} /> Descending</label>
                   </div>
+
+                  <button onClick={() => {
+                    resetAscDscFilter();
+                    setDropdownOpen(!dropdownOpen);
+                  }}>Reset</button>
                 </div>
               )}
             </div>
@@ -340,6 +456,12 @@ function Schedule() {
               <button onClick={() => setIsAddJobModelOpen(true)} className="add-job-btn">
                 Add Job
               </button>
+            </div>
+            <div id="archive-container">
+              <label>
+                <input type="checkbox" />
+                Archive
+              </label>
             </div>
           </div>
 
@@ -392,7 +514,7 @@ function Schedule() {
           {
             hasSelected &&
                 <SubJobTable 
-                  subJobsParam={subJobs} onAddComponentClick={openAddSubJobModal} 
+                  subJobsParam={selectedSubJobs} onAddComponentClick={openAddSubJobModal} 
                   onAddFrameClick={openAddFrameModal} // Pass to SubJobTable
                   onAddCushionClick={openAddCushionModal} // Pass to SubJobTable
                   onAddUpholsteryClick={openAddUpholsteryModal} // Pass to SubJobTable

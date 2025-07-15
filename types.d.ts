@@ -14,6 +14,7 @@ type Job = {
   paymentNote?: String;
   subJobList?: String[];
   isPinned?: Boolean;
+  isArchived?: Boolean;
 };
 
 type SubJob = {
