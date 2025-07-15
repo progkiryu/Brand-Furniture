@@ -1,40 +1,68 @@
-.orderTypeDistribution {
-    background: #FFFFFF;
-    border: 1px solid #ccc;
-    border-radius: 12px;
-    margin-top: 40px;
-    padding: 30px;
-    text-align: center;
-    z-index: 1;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    max-width: 800px;
-    margin: 40px auto;
+/* #first-container {
+  margin-right: 20px;
+  margin-left: 20px;
+} */
+
+/* #header-container {
+  margin-bottom: 20px;
+} */
+
+.analytics-content-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 30px;
 }
 
-.orderTypeDistribution h2 {
+.orderTypeDistribution {
+  background: #FFFFFF;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  margin-top: 40px;
+  padding: 30px;
+  text-align: center;
+  z-index: 1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  max-width: 800px;
+  margin: 40px auto;
+  max-height: 600px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.right-panel-charts {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.jobVolume,
+.jobCompletion {
+  background: #FFFFFF;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  margin: 40px auto;
+  padding: 30px;
+  z-index: 1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  max-width: 800px;
+  text-align: center;
+}
+
+h2 {
   margin-bottom: 20px;
   color: #0D1B2A;
   font-size: 1.4rem;
 }
 
-.lineChartBox,
-.jobVolume,
-.jobCompletion {
-    background: #FFFFFF;
-    border: 1px solid #ccc;
-    border-radius: 12px;
-    margin: 40px auto;
-    padding: 30px;
-    z-index: 1;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    max-width: 800px;
-    text-align: center;
-}
-
-.line-charts {
+/* .line-charts {
   align-items: center;
   z-index: 1
-}
+} */
 
 .content-wrapper {
   display: flex;
@@ -45,6 +73,8 @@
 }
 
 .date-range-selector {
+  padding: 0.4rem;
+  margin-left: 10px;
   margin-top: 10px;
   margin-bottom: 20px;
   color: #415A77;
@@ -68,20 +98,19 @@
 }
 
 .date-range-selector select:focus {
-    outline: none;
-    border-color: #1B263B;
-    box-shadow: 0 0 0 3px rgba(27, 38, 59, 0.2);
+  outline: none;
+  border-color: #1B263B;
+  box-shadow: 0 0 0 3px rgba(27, 38, 59, 0.2);
 }
 
-@media (max-width: 100%) {
-
-}
-
-@media (max-width: 100%) {
-    .orderTypeDistribution
-    .jobVolume,
-    .jobCompletion {
-        margin-top: 20px;
-        padding: 20px;
-    }
+@media (max-width: 1024px) {
+  .analytics-content-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  .orderTypeDistribution-container,
+  .right-panel-charts {
+    width: 100%;
+    min-width: none;
+  }
 }
