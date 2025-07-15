@@ -1,24 +1,37 @@
 import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
+import type { TypeInfoDash } from "../pages/Dashboard";
+import { randomColourGen } from "../Utility";
 
-const pieData = [
-  { name: "Commercial", value: 23 },
-  { name: "Resident.", value: 19 },
-  { name: "Private", value: 27 },
-  { name: "Production", value: 15 },
-  { name: "Brand", value: 15 },
-];
+type Props = {
+  data: TypeInfoDash[];
+};
 
-const COLORS = ["#4B9EFF", "#82ca9d", "#FF7979", "#FFCC66", "#91A6FF"];
+export default function JobAnalyticsDash(Props: { data: TypeInfoDash[] }) {
+  const colours = randomColourGen(Props.data.length);
 
-export default function JobAnalytics() {
   return (
-    <div className="job-analytics" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem" }}>
-      <h3 style={{ fontSize: "1rem", fontWeight: "600", color: "#1e293b", margin: 0 }}>
+    <div
+      className="job-analytics"
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: "1rem",
+      }}
+    >
+      <h3
+        style={{
+          fontSize: "1rem",
+          fontWeight: "600",
+          color: "#1e293b",
+          margin: 0,
+        }}
+      >
         Annual Job Type Distribution
       </h3>
       <PieChart width={320} height={320}>
         <Pie
-          data={pieData}
+          data={Props.data}
           cx="50%"
           cy="50%"
           outerRadius={110}
@@ -26,8 +39,8 @@ export default function JobAnalytics() {
           dataKey="value"
           label
         >
-          {pieData.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+          {Props.data.map((_, index) => (
+            <Cell key={`cell-${index}`} fill={colours[index]} />
           ))}
         </Pie>
         <Tooltip />
@@ -36,4 +49,3 @@ export default function JobAnalytics() {
     </div>
   );
 }
-

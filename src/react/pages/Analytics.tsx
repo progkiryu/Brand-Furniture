@@ -18,7 +18,6 @@ function Analytics() {
   let jobTypes: string[] = [];
   let typeCounter: TypeInfo[] = [];
   const [typeCountState, setTypeCountState] = useState<TypeInfo[]>([]);
-  // const [typeCounter, setTypeCounter] = useState<TypeInfo[]>([]);
 
   const handleRangeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setDateRange(event.target.value);
@@ -91,10 +90,6 @@ function Analytics() {
     fetchData();
   }, [dateRange]);
 
-  const logbutton = () => {
-    console.log(dateRange);
-  };
-
   return isLoading ? (
     <>
       {/* <Navbar /> */}
@@ -125,7 +120,6 @@ function Analytics() {
               ? `Order Type Distribution ${getLabelPrefix(dateRange)}`
               : `${getLabelPrefix(dateRange)} Order Type Distribution`}
           </h2>
-          <button onClick={logbutton}>button</button>
           <OrderTypeDistributionChart data={typeCountState} />
         </div>
 
