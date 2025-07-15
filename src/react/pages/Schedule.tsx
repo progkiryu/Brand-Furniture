@@ -52,7 +52,7 @@ function Schedule() {
   const [jobNameDesc, setJobNameDesc] = useState<boolean>(false);
   const [dueDateAsc, setDueDateAsc] = useState<boolean>(false);
   const [dueDateDesc, setDueDateDesc] = useState<boolean>(false);
-  
+
   const [hasSelected, setSelected] = useState<boolean>(false);
   const [jobs, setJobs] = useState<Job[]>([]); 
   const [subJobs, setSubJobs] = useState<SubJob[]>([]);
@@ -66,6 +66,14 @@ function Schedule() {
   const [filterClient, setFilterClient] = useState<"asc" | "desc" | undefined>();
   const [filterJobName, setFilterJobName] = useState<"asc" | "desc" | undefined>();
   const [filterDueDate, setFilterDueDate] = useState<"asc" | "desc" | undefined>();
+
+  const [filterCut, setFilterCut] = useState<boolean>(false);
+  const [filterSewn, setFilterSewn] = useState<boolean>(false);
+  const [filterUpholster, setFilterUpholster] = useState<boolean>(false);
+  const [filterFoamed, setFilterFoamed] = useState<boolean>(false);
+  const [filterWrapped, setFilterWrapped] = useState<boolean>(false);
+  const [filterComplete, setFilterComplete] = useState<boolean>(false);
+  const [filterProduction, setFilterProduction] = useState<boolean>(false); 
 
   const [isAddCushionModalOpen, setIsAddCushionModalOpen] = useState(false);
   const [isAddFrameModalOpen, setIsAddFrameModalOpen] = useState(false); // New state for AddFrameModal
@@ -156,7 +164,6 @@ function Schedule() {
         setSelectedSubJobs(fetchedSubJobs);
       }
       else {
-        console.log("bruh");
         setSelectedSubJobs([]);
       }
       setSelected(true);
@@ -358,6 +365,31 @@ function Schedule() {
       setDueDateDesc(false);
   }
 
+  const handleStatusChange = (checked: boolean, status: String) => {
+    console.log(checked);
+    if (status === "cut") {
+      checked === true ? setFilterCut(false) : setFilterCut(true);
+    }
+    else if (status === "upholster") {
+      checked === true ? setFilterUpholster(false) : setFilterUpholster(true);
+    }
+    else if (status === "wrapped") {
+      checked === true ? setFilterWrapped(false) : setFilterWrapped(true);
+    }
+    else if (status === "sewn") {
+      checked === true ? setFilterSewn(false) : setFilterSewn(true);
+    }
+    else if (status === "foamed") {
+      checked === true ? setFilterFoamed(false) : setFilterFoamed(true);
+    }
+    else if (status === "complete") {
+      checked === true ? setFilterComplete(false) : setFilterFoamed(true);
+    }
+    else if (status === "production") {
+      checked === true ? setFilterProduction(false) : setFilterProduction(true);
+    }
+  }
+
   return (
     <>
       <Navbar />
@@ -438,27 +470,27 @@ function Schedule() {
             <div className="filter-wrapper">
               <div className="filter-column">
                 <label className="filter-item upholstery-cut">
-                  <input type="checkbox" /> Upholstery Cut
+                  <input type="checkbox" defaultChecked={filterCut} onChange={(e) => handleStatusChange(e.target.defaultChecked, "cut")}/> Upholstery Cut
                 </label>
                 <label className="filter-item body-upholstered">
-                  <input type="checkbox" /> Body Upholstered
+                  <input type="checkbox" defaultChecked={filterUpholster} onChange={(e) => handleStatusChange(e.target.defaultChecked, "upholster")}/> Body Upholstered
                 </label>
                 <label className="filter-item waiting-for-wrapping">
-                  <input type="checkbox" /> Waiting for wrapping
+                  <input type="checkbox" defaultChecked={filterWrapped} onChange={(e) => handleStatusChange(e.target.defaultChecked, "wrapped")}/> Waiting for wrapping
                 </label>
               </div>
               <div className="filter-column">
                 <label className="filter-item upholstery-sewn">
-                  <input type="checkbox" /> Upholstery Sewn
+                  <input type="checkbox" defaultChecked={filterSewn} onChange={(e) => handleStatusChange(e.target.defaultChecked, "sewn")}/> Upholstery Sewn
                 </label>
                 <label className="filter-item frame-foamed">
-                  <input type="checkbox" /> Frame Foamed
+                  <input type="checkbox" defaultChecked={filterFoamed} onChange={(e) => handleStatusChange(e.target.defaultChecked, "foamed")}/> Frame Foamed
                 </label>
                 <label className="filter-item complete">
-                  <input type="checkbox" /> Complete
+                  <input type="checkbox" defaultChecked={filterComplete} onChange={(e) => handleStatusChange(e.target.defaultChecked, "complete")}/> Complete
                 </label>
                 <label className="filter-item in-production">
-                  <input type="checkbox" /> In Production
+                  <input type="checkbox" defaultChecked={filterProduction} onChange={(e) => handleStatusChange(e.target.defaultChecked, "production")}/> In Production
                 </label>
               </div>
             </div>
@@ -472,11 +504,20 @@ function Schedule() {
                 key="job-table"
                 searchTerm={searchTerm}
                 jobs={jobs}
+                subJobs={subJobs}
                 jobClicked={displayJobDetails}
                 invoiceIDTerm={filterInvoiceID}
                 clientTerm={filterClient}
                 jobNameTerm={filterJobName}
                 dueDateTerm={filterDueDate}
+
+                cutTerm={filterCut}
+                sewnTerm={filterSewn}
+                upholsterTerm={filterUpholster}
+                foamedTerm={filterFoamed}
+                wrappedTerm={filterWrapped}
+                completeTerm={filterComplete}
+                productionTerm={filterProduction}
               />
             }
           </div>
