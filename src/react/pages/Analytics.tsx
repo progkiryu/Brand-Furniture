@@ -61,7 +61,7 @@ function Analytics() {
     } else if (dateRange === "last2years") {
       startDate.setFullYear(startDate.getFullYear() - 2);
     } else {
-      startDate.setMonth(startDate.getMonth() - 6);
+      startDate.setMonth(startDate.getMonth() - 1);
     }
 
     // Get all the unique job types
@@ -101,6 +101,10 @@ function Analytics() {
     fetchData();
   }, [dateRange]);
 
+  // const logbutton = () => {
+  //   console.log(dateRange);
+  // };
+
   return isLoading ? (
     <>
       {/* <Navbar /> */}
@@ -126,35 +130,36 @@ function Analytics() {
           </select>
         </div>
 
-        <div className="orderTypeDistribution">
-          <h2>
-            {needsPrefixAtEnd
-              ? `Order Type Distribution ${getLabelPrefix(dateRange)}`
-              : `${getLabelPrefix(dateRange)} Order Type Distribution`}
-          </h2>
-          <OrderTypeDistributionChart data={typeCountState} />
-        </div>
+        <div className="analytics-content-container">
+          <div className="orderTypeDistribution">
+            <h2>
+              {needsPrefixAtEnd
+                ? `Order Type Distribution ${getLabelPrefix(dateRange)}`
+                : `${getLabelPrefix(dateRange)} Order Type Distribution`}
+            </h2>
+            {/* <button onClick={logbutton}>button</button> */}
+            <OrderTypeDistributionChart data={typeCountState} />
+          </div>
 
-        <div className="jobVolume">
-          <JobVolume
-            title={
-              needsPrefixAtEnd
-                ? `Job Volume ${getLabelPrefix(dateRange)}`
-                : `${getLabelPrefix(dateRange)} Job Volume`
-            }
-            dateRange={dateRange}
-          />
-        </div>
+          <div className="right-panel-charts">
+            <div className="jobVolume">
+              <h2>
+                {needsPrefixAtEnd
+                  ? `Job Volume ${getLabelPrefix(dateRange)}`
+                  : `${getLabelPrefix(dateRange)} Job Volume`}
+                </h2>
+              <JobVolume dateRange={dateRange} />
+            </div>
 
-        <div className="jobCompletion">
-          <JobCompletion
-            title={
-              needsPrefixAtEnd
-                ? `Job Completion ${getLabelPrefix(dateRange)}`
-                : `${getLabelPrefix(dateRange)} Job Completion`
-            }
-            dateRange={dateRange}
-          />
+            <div className="jobCompletion">
+              <h2>
+                {needsPrefixAtEnd
+                  ? `Job Completion ${getLabelPrefix(dateRange)}`
+                  : `${getLabelPrefix(dateRange)} Job Completion`}
+                </h2>
+              <JobCompletion dateRange={dateRange} />
+            </div>
+          </div>
         </div>
       </div>
     </>

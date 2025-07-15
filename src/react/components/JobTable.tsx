@@ -15,7 +15,7 @@ interface JobTableProps {
     completeTerm: boolean;
     productionTerm: boolean;
     jobClicked: (job: Job) => Promise<void>;
-    // onEditJobClick: (job: Job) => void;
+    onEditJobClick: (job: Job) => void;
 }
 
 function JobTable({ 
@@ -306,8 +306,20 @@ function JobTable({
                     <tbody>
                         {displayedJobs.map((job) => (
                             <tr key={String(job._id)}>
-                                <td key={String(job._id)}
-                                onClick={() => jobClicked(job)}>{job.name}</td>
+                                <td onClick={() => jobClicked(job)}> {/* Keep existing click for details */}
+                                    {job.name}
+                                </td>
+                                <td>
+                                    {/* Add the Edit Job button */}
+                                    <input 
+                                        type="button" 
+                                        value="Edit Job" 
+                                        onClick={(e) => {
+                                            e.stopPropagation(); // Prevent row click from firing
+                                            onEditJobClick(job);
+                                        }}
+                                    />
+                                </td>
                             </tr>
                         ))}
                     </tbody>

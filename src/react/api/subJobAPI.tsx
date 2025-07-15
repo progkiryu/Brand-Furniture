@@ -75,24 +75,66 @@ export const getFilteredSubJobsByStatus = async (status: String) => {
 };
 
 // Delete a subjob by ID
+// export const deleteSubJob = async (id: String) => {
+//   fetch(`${DBLink}/subJob/removeSubJob/${id}`, {
+//     method: "DELETE",
+//     mode: "cors",
+//     headers: { "Content-Type": "application/json" },
+//   })
+//     .then((res) => res.json())
+//     .catch((err) => console.error(err));
+// };
+
+// Delete a subjob by ID
 export const deleteSubJob = async (id: String) => {
-  fetch(`${DBLink}/subJob/removeSubJob/${id}`, {
-    method: "DELETE",
-    mode: "cors",
-    headers: { "Content-Type": "application/json" },
-  })
-    .then((res) => res.json())
-    .catch((err) => console.error(err));
+  try {
+    const res = await fetch(`${DBLink}/subJob/removeSubJob/${id}`, {
+      method: "DELETE",
+      mode: "cors",
+      headers: { "Content-Type": "application/json" },
+    });
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(`HTTP error! status: ${res.status}, message: ${errorText}`);
+    }
+    return true; // Indicate success
+  } catch (err) {
+    console.error("Error deleting subjob:", err);
+    return false; // Indicate failure
+  }
 };
 
 // Update a existing job
-export const updateSubJob = async (data: SubJob) => {
-  fetch(`${DBLink}/updateSubJob`, {
-    method: "PUT",
-    mode: "cors",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  })
-    .then((res) => res.json())
-    .catch((err) => console.error(err));
+// export const updateSubJob = async (data: SubJob) => {
+//   fetch(`${DBLink}/updateSubJob`, {
+//     method: "PUT",
+//     mode: "cors",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify(data),
+//   })
+//     .then((res) => res.json())
+//     .catch((err) => console.error(err));
+// };
+
+export const updateSubJob = async (data: SubJob): Promise<SubJob | null> => {
+  try {
+    const res = await fetch(`${DBLink}/subJob/updateSubJob`, {
+      method: "PUT",
+      mode: "cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    if (res.ok) {
+      const updatedSubJob: SubJob = await res.json();
+      return updatedSubJob;
+    } else {
+      const errorText = await res.text();
+      console.error(`Error updating subjob: ${res.status} - ${errorText}`);
+      return null;
+    }
+  } catch (err) {
+    console.error("Error updating subjob:", err);
+    return null;
+  }
 };

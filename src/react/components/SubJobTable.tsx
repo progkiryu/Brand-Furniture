@@ -7,9 +7,23 @@ interface SubJobTableProps {
     onAddFrameClick: (subJobId: String, subJobDetail: String) => void; // New prop
     onAddCushionClick: (subJobId: String, subJobDetail: String) => void; // New prop
     onAddUpholsteryClick: (subJobId: String, subJobDetail: String) => void; // New prop
+    onEditSubJobClick: (subJob: SubJob) => void; // New prop for editing sub-job
+    onEditFrameClick: (frame: Frame) => void; // New prop for editing frame
+    onEditCushionClick: (cushion: Cushion) => void; // New prop for editing cushion
+    onEditUpholsteryClick: (upholstery: Upholstery) => void; // New prop for editing upholstery
 }
 
-function SubJobTable({subJobsParam, onAddComponentClick, onAddFrameClick, onAddCushionClick, onAddUpholsteryClick}: SubJobTableProps) {
+function SubJobTable({
+    subJobsParam, 
+    onAddComponentClick, 
+    onAddFrameClick, 
+    onAddCushionClick, 
+    onAddUpholsteryClick,
+    onEditSubJobClick, // Destructure new prop
+    onEditFrameClick, // Destructure new prop
+    onEditCushionClick, // Destructure new prop
+    onEditUpholsteryClick // Destructure new prop
+}: SubJobTableProps) {
     const [subJobs, setSubJobs] = useState<SubJob[]>(subJobsParam);
 
     useEffect(() => {
@@ -36,6 +50,10 @@ function SubJobTable({subJobsParam, onAddComponentClick, onAddFrameClick, onAddC
                         onAddFrameClick={onAddFrameClick} // Pass the new prop
                         onAddCushionClick={onAddCushionClick} // Pass the new prop
                         onAddUpholsteryClick={onAddUpholsteryClick} // Pass the new prop
+                        onEditSubJobClick={onEditSubJobClick} // Pass to SubJobTableRow
+                        onEditFrameClick={onEditFrameClick} // Pass to SubJobTableRow
+                        onEditCushionClick={onEditCushionClick} // Pass to SubJobTableRow
+                        onEditUpholsteryClick={onEditUpholsteryClick} // Pass to SubJobTableRow
                     />)
                 })
             }

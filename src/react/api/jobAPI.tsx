@@ -109,15 +109,24 @@ export const getFilteredJobsByType = async (type: String) => {
   return jobs;
 };
 
-// Delete a job by Id
+// Delete a job by ID
 export const deleteJob = async (id: String) => {
-  fetch(`${DBLink}/job/removeJob/${id}`, {
-    method: "DELETE",
-    mode: "cors",
-    headers: { "Content-Type": "application/json" },
-  })
-    .then((res) => res.json())
-    .catch((err) => console.error(err));
+  try {
+    const res = await fetch(`${DBLink}/job/removeJob/${id}`, {
+      method: "DELETE",
+      mode: "cors",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(`HTTP error! status: ${res.status}, message: ${errorText}`);
+    }
+    return true; // Indicate success
+  } catch (err) {
+    console.error("Error deleting job:", err);
+    return false; // Indicate failure
+  }
 };
 
 // Update a job
@@ -137,7 +146,6 @@ export const deleteJob = async (id: String) => {
 //     })
 //     .catch((err) => console.error(err));
 // };
-
 // export const updateJob = async (data: Job) => {
 //   try {
 //     const res = await fetch(`${DBLink}/job/updateJob`, {
@@ -148,8 +156,20 @@ export const deleteJob = async (id: String) => {
 //     });
 
 //     if (res.ok) {
+//       const updatedJob: Job = await res.json();
+
+//       const jobs = await getAllJobs();
+                
+//       const processedUpdatedJob = {
+//           ...updatedJob,
+//           due: updatedJob.due ? new Date(updatedJob.due) : updatedJob.due
+//       };
+
+//       const updatedJobsList = jobs.map((job : Job) => 
+//           job._id === processedUpdatedJob._id ? processedUpdatedJob : job
+//       );
 //       alert("Job updated successfully.");
-//       return res;
+//       return updatedJobsList;
 //     } else {
 //       alert("Error: Failed to update job");
 //       return null;
@@ -160,9 +180,10 @@ export const deleteJob = async (id: String) => {
 //   }
 // };
 
-export const updateJob = async (data: Job) => {
+// Update a job
+export const updateJob = async (data: Job): Promise<Job | null> => {
   try {
-    const res = await fetch(`${DBLink}/job/updateJob`, {
+    const res = await fetch(`${DBLink}/job/updateJob/${data._id}`, {
       method: "PUT",
       mode: "cors",
       headers: { "Content-Type": "application/json" },
@@ -171,6 +192,9 @@ export const updateJob = async (data: Job) => {
 
     if (res.ok) {
       const updatedJob: Job = await res.json();
+
+      // alert("Job updated successfully."); // Avoid alert()
+      //return updatedJob; // Return the single updated job from the server
 
       const jobs = await getAllJobs();
 
@@ -185,7 +209,8 @@ export const updateJob = async (data: Job) => {
       alert("Job updated successfully.");
       return updatedJobsList;
     } else {
-      alert("Error: Failed to update job");
+      const errorText = await res.text();
+      console.error(`Error updating job: ${res.status} - ${errorText}`);
       return null;
     }
   } catch (err) {
