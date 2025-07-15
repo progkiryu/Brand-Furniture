@@ -16,17 +16,12 @@ type DateRange = "lastmonth" | "last6months" | "last12months" | "last2years";
 
 function Analytics() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  // const [dateRange, setDateRange] = useState<string>("last6months");
   const [dateRange, setDateRange] = useState<DateRange>("lastmonth");
 
   let jobTypes: string[] = [];
   let typeCounter: TypeInfo[] = [];
   const [typeCountState, setTypeCountState] = useState<TypeInfo[]>([]);
-  // const [typeCounter, setTypeCounter] = useState<TypeInfo[]>([]);
 
-  // const handleRangeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-  //   setDateRange(event.target.value);
-  // };
   const handleRangeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setDateRange(event.target.value as DateRange);
   };
@@ -45,6 +40,8 @@ function Analytics() {
         return "";
     }
   };
+
+  const needsPrefixAtEnd = ["last6months", "last12months", "last2years"].includes(dateRange);
 
   const processJobTypes = async () => {
     const endDate = new Date();
@@ -131,7 +128,7 @@ function Analytics() {
 
         <div className="orderTypeDistribution">
           <h2>
-            {dateRange === "last6months"
+            {needsPrefixAtEnd
               ? `Order Type Distribution ${getLabelPrefix(dateRange)}`
               : `${getLabelPrefix(dateRange)} Order Type Distribution`}
           </h2>
@@ -142,7 +139,7 @@ function Analytics() {
         <div className="jobVolume">
           <JobVolume
             title={
-              dateRange === "last6months"
+              needsPrefixAtEnd
                 ? `Job Volume ${getLabelPrefix(dateRange)}`
                 : `${getLabelPrefix(dateRange)} Job Volume`
             }
@@ -153,7 +150,7 @@ function Analytics() {
         <div className="jobCompletion">
           <JobCompletion
             title={
-              dateRange === "last6months"
+              needsPrefixAtEnd
                 ? `Job Completion ${getLabelPrefix(dateRange)}`
                 : `${getLabelPrefix(dateRange)} Job Completion`
             }
