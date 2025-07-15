@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import "../styles/Analytics.css";
 import "../styles/Global.css";
 import Navbar from "../components/Navbar";
-import LineChartComponent from "../components/LineChartComponent";
+import JobVolume from "../components/JobVolume";
+import JobCompletion from "../components/JobCompletion";
 import OrderTypeDistributionChart from "../components/OrderTypeDistribution";
 import { getFilteredJobsByDate, getFilteredJobsByType } from "../api/jobAPI";
 
@@ -11,30 +12,36 @@ export type TypeInfo = {
   value: number;
 };
 
+type DateRange = "lastmonth" | "last6months" | "last12months" | "last2years";
+
 function Analytics() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [dateRange, setDateRange] = useState<string>("last6months");
+  const [dateRange, setDateRange] = useState<DateRange>("lastmonth");
 
   let jobTypes: string[] = [];
   let typeCounter: TypeInfo[] = [];
   const [typeCountState, setTypeCountState] = useState<TypeInfo[]>([]);
 
   const handleRangeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setDateRange(event.target.value);
+    setDateRange(event.target.value as DateRange);
   };
 
-  const getLabelPrefix = (range: string) => {
+  const getLabelPrefix = (range: DateRange) => {
     switch (range) {
-      case "lastweek":
-        return "Weekly";
       case "lastmonth":
         return "Monthly";
       case "last6months":
         return "Over the Last 6 Months";
+      case "last12months":
+        return "Over the Last 12 Months";
+      case "last2years":
+        return "Over the Last 2 Years";
       default:
         return "";
     }
   };
+
+  const needsPrefixAtEnd = ["last6months", "last12months", "last2years"].includes(dateRange);
 
   const processJobTypes = async () => {
     const endDate = new Date();
@@ -47,7 +54,7 @@ function Analytics() {
       startDate.setMonth(startDate.getMonth() - 6);
     } else if (dateRange === "last12months") {
       startDate.setFullYear(startDate.getFullYear() - 1);
-    } else if (dateRange === "last24months") {
+    } else if (dateRange === "last2years") {
       startDate.setFullYear(startDate.getFullYear() - 2);
     } else {
       startDate.setMonth(startDate.getMonth() - 6);
@@ -108,15 +115,16 @@ function Analytics() {
         <div className="date-range-selector">
           <label htmlFor="range">View data for: </label>
           <select id="range" value={dateRange} onChange={handleRangeChange}>
+            <option value="lastmonth">Last Month</option>
             <option value="last6months">Last 6 Months</option>
-            <option value="last12months">Last 12 Month</option>
-            <option value="last24months">Last 24 Months</option>
+            <option value="last12months">Last 12 Months</option>
+            <option value="last2years">Last 2 Years</option>
           </select>
         </div>
 
         <div className="orderTypeDistribution">
           <h2>
-            {dateRange === "last6months"
+            {needsPrefixAtEnd
               ? `Order Type Distribution ${getLabelPrefix(dateRange)}`
               : `${getLabelPrefix(dateRange)} Order Type Distribution`}
           </h2>
@@ -124,9 +132,9 @@ function Analytics() {
         </div>
 
         <div className="jobVolume">
-          <LineChartComponent
+          <JobVolume
             title={
-              dateRange === "last6months"
+              needsPrefixAtEnd
                 ? `Job Volume ${getLabelPrefix(dateRange)}`
                 : `${getLabelPrefix(dateRange)} Job Volume`
             }
@@ -135,9 +143,9 @@ function Analytics() {
         </div>
 
         <div className="jobCompletion">
-          <LineChartComponent
+          <JobCompletion
             title={
-              dateRange === "last6months"
+              needsPrefixAtEnd
                 ? `Job Completion ${getLabelPrefix(dateRange)}`
                 : `${getLabelPrefix(dateRange)} Job Completion`
             }
