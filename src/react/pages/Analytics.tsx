@@ -41,7 +41,11 @@ function Analytics() {
     }
   };
 
-  const needsPrefixAtEnd = ["last6months", "last12months", "last2years"].includes(dateRange);
+  const needsPrefixAtEnd = [
+    "last6months",
+    "last12months",
+    "last2years",
+  ].includes(dateRange);
 
   const processJobTypes = async () => {
     const endDate = new Date();
