@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"; 
+import { useState, useEffect } from "react";
 
 import { getFrameById } from "../api/frameAPI";
 import { getCushionById } from "../api/cushionAPI";
@@ -51,71 +51,71 @@ function SubJobTableRow({
 
 
     return (
-    <tr key={String(subJobParam._id)}>
-        <td>
-            <div>
-                <h2>Job</h2>
-                <p>{subJobParam.subJobDetail}</p>
-            </div>
-            <div>
-                <h2>Notes</h2>
-                <p>{subJobParam.note}</p>
-            </div>
-            <div>
-                <h2>Files</h2>
-                <p>{subJobParam.file}</p>
-            </div>
-        </td>
-        <td>
-        {
-            frames.map((frame: Frame) => {
-                return (
-                    <div key={String(frame._id)}>
-                        <h2>Supplier:</h2>
-                        <p>{frame.supplier}</p>
-                        <h2>Ordered:</h2>
-                        <p>{String(frame.orderedDate)}</p>
-                        <h2>Received:</h2>
-                        <h2>{String(frame.receivedDate)}</h2>
-                    </div>
-                )
-            })
-        }
-            <button onClick={() => onAddFrameClick(subJobParam._id as String, subJobParam.subJobDetail as String)}>Add New Frame</button> {/* Add onClick handler */}
-        </td>
-        <td>
-        {
-            cushions.map((cushion: Cushion) => {
-                return (
-                    <div key={String(cushion._id)}>
-                        <h2>{cushion.description}</h2>
-                        <h2>Ordered:</h2>
-                        <p>{String(cushion.orderedDate)}</p>
-                        <h2>Received:</h2>
-                        <p>{String(cushion.receivedDate)}</p>
-                    </div>
-                )
-            })
-        }
-            <button onClick={() => onAddCushionClick(subJobParam._id as String, subJobParam.subJobDetail as String)}>Add New Cushion</button> {/* Add onClick handler */}
-        </td>
-        <td>
-        {
-            upholstery.map((upholster: Upholstery) => {
-                return (
-                    <div key={String(upholster._id)}>
-                        <h2>{upholster.description}</h2>
-                        <h2>Ordered:</h2>
-                        <p>{String(upholster.orderedDate)}</p>
-                        <h2>Received:</h2>
-                        <p>{String(upholster.receivedDate)}</p>
-                    </div>
-                )
-            })
-        }
-            <button onClick={() => onAddUpholsteryClick(subJobParam._id as String, subJobParam.subJobDetail as String)}>Add New Upholstery</button> {/* Add onClick handler */}
-        </td>
-    </tr>)
+        <tr key={String(subJobParam._id)}>
+            <td >
+                <div>
+                    <h2>Job</h2>
+                    <p>{subJobParam.subJobDetail}</p>
+                </div>
+                <div>
+                    <h2>Notes</h2>
+                    <p>{subJobParam.note}</p>
+                </div>
+                <div>
+                    <h2>Files</h2>
+                    <p>{subJobParam.file}</p>
+                </div>
+            </td>
+            <td>
+                {
+                    frames.map((frame: Frame) => {
+                        return (
+                            <div key={String(frame._id)}>
+                                <h2>Supplier:</h2>
+                                <p>{frame.supplier}</p>
+                                <h2>Ordered:</h2>
+                                <p>{String(frame.orderedDate)}</p>
+                                <h2>Received:</h2>
+                                <h2>{String(frame.receivedDate)}</h2>
+                            </div>
+                        )
+                    })
+                }
+                <button onClick={() => onAddFrameClick(subJobParam._id as String, subJobParam.subJobDetail as String)}>Add New Frame</button> {/* Add onClick handler */}
+            </td>
+            <td>
+                {
+                    cushions.map((cushion: Cushion) => {
+                        return (
+                            <div key={String(cushion._id)}>
+                                <h2>{cushion.description}</h2>
+                                <h2>Ordered:</h2>
+                                <p>{String(cushion.orderedDate)}</p>
+                                <h2>Received:</h2>
+                                <p>{String(cushion.receivedDate)}</p>
+                            </div>
+                        )
+                    })
+                }
+                <button onClick={() => onAddCushionClick(subJobParam._id as String, subJobParam.subJobDetail as String)}>Add New Cushion</button> {/* Add onClick handler */}
+            </td>
+            <td>
+                {
+                    upholstery.map((upholster: Upholstery) => {
+                        return (
+                            <div key={String(upholster._id)}>
+                                <h2>{upholster.description}</h2>
+                                <h2>Ordered:</h2>
+                                <p>{String(upholster.orderedDate)}</p>
+                                <h2>Received:</h2>
+                                <p>{String(upholster.receivedDate)}</p>
+                            </div>
+                        )
+                    })
+                }
+                <button onClick={() => onAddUpholsteryClick(subJobParam._id as String, subJobParam.subJobDetail as String)}>Add New Upholstery</button> {/* Add onClick handler */}
+            </td>
+        </tr>)
 }
 
 export default SubJobTableRow;

@@ -46,7 +46,11 @@
   display: flex;
   width: 100%;
   flex: 4;
-  overflow: hidden;
+  
+}
+
+#job-detail-container {
+  overflow: scroll;
 }
 
 #job-list-container {

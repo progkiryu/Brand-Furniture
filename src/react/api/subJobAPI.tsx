@@ -35,23 +35,36 @@ export const getSubJobsByJobId = async (jobId: String) => {
 
 // Create a new subjob
 export const createSubJob = async (data: SubJob) => {
-  fetch(`${DBLink}/subJob/insertSubJob`, {
-    method: "POST",
-    mode: "cors",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  })
-    .then((res) => res.json())
-    .catch((err) => console.error(err));
+  try {
+    const res = await fetch(`${DBLink}/subjob/insertSubJob`, {
+      method: "POST",
+      mode: "cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+
+    const newSubJob = await res.json();
+    return newSubJob;
+  } catch (err) {
+    console.error("Error creating sub-job:", err);
+    return null;
+  }
 };
 
 // Get list of subjobs with filtered status. Exact matches.
 export const getFilteredSubJobsByStatus = async (status: String) => {
+  const temp = {
+    status: status,
+  };
   const subJobs = fetch(`${DBLink}/subJobs/getFilteredSubJobsByStatus`, {
     method: "POST",
     mode: "cors",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(status),
+    body: JSON.stringify(temp),
   })
     .then((res) => res.json())
     .catch((err) => console.error(err));

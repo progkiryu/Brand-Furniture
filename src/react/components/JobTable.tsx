@@ -125,10 +125,9 @@ function JobTable({ searchTerm, jobs, jobClicked, invoiceIDTerm, clientTerm, due
                 <table>
                     <tbody>
                         {displayedJobs.map((job) => (
-                            <tr key={String(job._id)}
-                                onClick={() => jobClicked(job)}
-                            >
-                                <td>{job.name}</td>
+                            <tr key={String(job._id)}>
+                                <td key={String(job._id)}
+                                onClick={() => jobClicked(job)}>{job.name}</td>
                             </tr>
                         ))}
                     </tbody>
