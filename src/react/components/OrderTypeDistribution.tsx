@@ -1,6 +1,7 @@
 import React from "react";
 import { PieChart, Pie, Cell, Tooltip } from "recharts";
 import type { TypeInfo } from "../pages/Analytics";
+import { randomColourGen } from "../Utility";
 
 type Props = {
   data: TypeInfo[];
@@ -17,17 +18,6 @@ const CustomTooltip = ({ active, payload }: any) => {
     );
   }
   return null;
-};
-
-const randomColourGen = (quantity: number) => {
-  const colourArray: string[] = [];
-
-  for (let i = 0; i < quantity; i++) {
-    const randomColour = Math.floor(Math.random() * 0xffffff);
-    const hexColour = "#" + randomColour.toString(16).padStart(6, "0");
-    colourArray.push(hexColour);
-  }
-  return colourArray;
 };
 
 const OrderTypeDistributionChart: React.FC<Props> = ({ data }) => {

@@ -41,7 +41,11 @@ function Analytics() {
     }
   };
 
-  const needsPrefixAtEnd = ["last6months", "last12months", "last2years"].includes(dateRange);
+  const needsPrefixAtEnd = [
+    "last6months",
+    "last12months",
+    "last2years",
+  ].includes(dateRange);
 
   const processJobTypes = async () => {
     const endDate = new Date();
@@ -97,10 +101,6 @@ function Analytics() {
     fetchData();
   }, [dateRange]);
 
-  const logbutton = () => {
-    console.log(dateRange);
-  };
-
   return isLoading ? (
     <>
       {/* <Navbar /> */}
@@ -132,7 +132,6 @@ function Analytics() {
               ? `Order Type Distribution ${getLabelPrefix(dateRange)}`
               : `${getLabelPrefix(dateRange)} Order Type Distribution`}
           </h2>
-          <button onClick={logbutton}>button</button>
           <OrderTypeDistributionChart data={typeCountState} />
         </div>
 
