@@ -9,6 +9,10 @@ interface SubJobTableRowProps {
     onAddFrameClick: (subJobId: String, subJobDetail: String) => void; // New prop
     onAddCushionClick: (subJobId: String, subJobDetail: String) => void; // New prop
     onAddUpholsteryClick: (subJobId: String, subJobDetail: String) => void; // New prop
+    onEditSubJobClick: (subJob: SubJob) => void; // New prop for editing sub-job
+    onEditFrameClick: (frame: Frame) => void; // New prop for editing frame
+    onEditCushionClick: (cushion: Cushion) => void; // New prop for editing cushion
+    onEditUpholsteryClick: (upholstery: Upholstery) => void; // New prop for editing upholstery
 }
 
 function SubJobTableRow({
@@ -16,6 +20,10 @@ function SubJobTableRow({
     onAddFrameClick,
     onAddCushionClick,
     onAddUpholsteryClick,
+    onEditSubJobClick, // Destructure new props
+    onEditFrameClick, // Destructure new props
+    onEditCushionClick, // Destructure new props
+    onEditUpholsteryClick // Destructure new props
 }: SubJobTableRowProps) {
 
     const [frames, setFrames] = useState<Frame[]>([]);
@@ -47,12 +55,12 @@ function SubJobTableRow({
             }
         }
         fetchComponents();
-    }, [subJobParam.upholsteryList, subJobParam.frameList, subJobParam.cushionList]);
+    }, [subJobParam.upholsteryList, subJobParam.frameList, subJobParam.cushionList, subJobParam._id]); // Added _id to dependencies (Edit form modification)
 
 
     return (
         <tr key={String(subJobParam._id)}>
-            <td >
+            <td onClick={() => onEditSubJobClick(subJobParam)}>
                 <div>
                     <h2>Job</h2>
                     <p>{subJobParam.subJobDetail}</p>
@@ -70,7 +78,7 @@ function SubJobTableRow({
                 {
                     frames.map((frame: Frame) => {
                         return (
-                            <div key={String(frame._id)}>
+                            <div key={String(frame._id)} onClick={() => onEditFrameClick(frame)}> {/* Add onClick handler */}
                                 <h2>Supplier:</h2>
                                 <p>{frame.supplier}</p>
                                 <h2>Ordered:</h2>
@@ -87,7 +95,7 @@ function SubJobTableRow({
                 {
                     cushions.map((cushion: Cushion) => {
                         return (
-                            <div key={String(cushion._id)}>
+                            <div key={String(cushion._id)} onClick={() => onEditCushionClick(cushion)}> {/* Add onClick handler */}
                                 <h2>{cushion.description}</h2>
                                 <h2>Ordered:</h2>
                                 <p>{String(cushion.orderedDate)}</p>
@@ -103,7 +111,7 @@ function SubJobTableRow({
                 {
                     upholstery.map((upholster: Upholstery) => {
                         return (
-                            <div key={String(upholster._id)}>
+                            <div key={String(upholster._id)} onClick={() => onEditUpholsteryClick(upholster)}> {/* Add onClick handler */}
                                 <h2>{upholster.description}</h2>
                                 <h2>Ordered:</h2>
                                 <p>{String(upholster.orderedDate)}</p>
