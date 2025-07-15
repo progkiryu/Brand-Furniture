@@ -14,6 +14,7 @@ function SubJobTable({subJobsParam, onAddComponentClick, onAddFrameClick, onAddC
 
     useEffect(() => {
         setSubJobs(subJobsParam);
+        console.log(subJobsParam);
     }, [subJobsParam])
 
     return (

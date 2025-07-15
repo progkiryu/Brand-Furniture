@@ -156,8 +156,10 @@ function Schedule() {
         setSelectedSubJobs(fetchedSubJobs);
       }
       else {
+        console.log("bruh");
         setSelectedSubJobs([]);
       }
+      setSelected(true);
     }
     catch (err) {
       console.log("Error deleting job:", err);
@@ -378,34 +380,34 @@ function Schedule() {
                     <strong>Invoice ID</strong>
                     <label><input type="radio" name="option" onClick={
                       () => handleAscDscFilterChange("invoiceId", "asc")
-                    } checked={invoiceIDAsc}/> Ascending</label>
+                    } defaultChecked={invoiceIDAsc}/> Ascending</label>
                     <label><input type="radio" name="option" onClick={
                       () => handleAscDscFilterChange("invoiceId", "desc")
-                    } checked={invoiceIDDesc} /> Descending</label>
+                    } defaultChecked={invoiceIDDesc} /> Descending</label>
 
                     <strong>Client</strong>
                     <label><input type="radio" name="option" onClick={
                       () => handleAscDscFilterChange("client", "asc")
-                    } checked={clientAsc} /> Ascending</label>
+                    } defaultChecked={clientAsc} /> Ascending</label>
                     <label><input type="radio" name="option" onClick={
                       () => handleAscDscFilterChange("client", "desc")
-                    } checked={clientDesc} /> Descending</label>
+                    } defaultChecked={clientDesc} /> Descending</label>
 
                     <strong>Job Name</strong>
                     <label><input type="radio" name="option" onClick={
                       () => handleAscDscFilterChange("jobName", "asc")
-                    } checked={jobNameAsc} /> Ascending</label>
+                    } defaultChecked={jobNameAsc} /> Ascending</label>
                     <label><input type="radio" name="option" onClick={
                       () => handleAscDscFilterChange("jobName", "desc")
-                    } checked={jobNameDesc} /> Descending</label>
+                    } defaultChecked={jobNameDesc} /> Descending</label>
 
                     <strong>Due Date</strong>
                     <label><input type="radio" name="option" onClick={
                       () => handleAscDscFilterChange("dueDate", "asc")
-                    } checked={dueDateAsc} /> Ascending</label>
+                    } defaultChecked={dueDateAsc} /> Ascending</label>
                     <label><input type="radio" name="option" onClick={
                       () => handleAscDscFilterChange("dueDate", "desc")
-                    } checked={dueDateDesc} /> Descending</label>
+                    } defaultChecked={dueDateDesc} /> Descending</label>
                   </div>
 
                   <button onClick={() => {

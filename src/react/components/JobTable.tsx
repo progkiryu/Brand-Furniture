@@ -48,14 +48,12 @@ function JobTable({ searchTerm, jobs, jobClicked, invoiceIDTerm, clientTerm, due
             }
         }
         if (jobNameTerm) {
-            console.log("err");
             if (jobNameTerm === "asc") {
                 sortedJobs.sort((a, b) => {
                     const jobNameA = a.name.toLowerCase();
                     const jobNameB = b.name.toLowerCase();
                     return jobNameA.localeCompare(jobNameB);
                 });
-                console.log(sortedJobs);
             }
             else if (jobNameTerm === "desc") {
                 sortedJobs.sort((a, b) => {
