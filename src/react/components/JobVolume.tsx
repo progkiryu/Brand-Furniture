@@ -3,7 +3,6 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
 type DateRange = "lastmonth" | "last6months" | "last12months" | "last2years";
 
 interface BarChartComponentProps {
-  title: string;
   dateRange: DateRange;
 }
 
@@ -84,13 +83,12 @@ const generateData = (range: string) => {
   return data;
 };
 
-export default function BarChartComponent({ title, dateRange }: BarChartComponentProps) {
+export default function BarChartComponent({ dateRange }: BarChartComponentProps) {
   const data = generateData(dateRange);
   console.log("Bar chart data:", data);
 
   return (
     <div style={{ marginBottom: "40px" }}>
-      <h4>{title}</h4>
       <BarChart
         width={600}
         height={200}

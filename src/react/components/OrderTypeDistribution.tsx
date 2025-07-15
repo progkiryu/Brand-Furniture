@@ -1,5 +1,5 @@
 import React from "react";
-import { PieChart, Pie, Cell, Tooltip } from "recharts";
+import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
 import type { TypeInfo } from "../pages/Analytics";
 
 type Props = {
@@ -38,10 +38,11 @@ const OrderTypeDistributionChart: React.FC<Props> = ({ data }) => {
       <PieChart width={600} height={300}>
         <Pie data={data} dataKey="value" label>
           {data.map((_, index) => (
-            <Cell key={`cell-${index}`} fill={colours[index]} />
+            <Cell key={`cell-${index}`} fill={colours[index % colours.length]} />
           ))}
         </Pie>
         <Tooltip content={<CustomTooltip />} />
+        <Legend layout="horizontal" verticalAlign="bottom" />
       </PieChart>
     </div>
   );
