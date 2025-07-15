@@ -32,30 +32,35 @@ function SubJobTableRow({
 
     useEffect(() => {
         const fetchComponents = async () => {
-            if (subJobParam.upholsteryList && subJobParam.upholsteryList.length > 0) {
-                const awaitUpholstery = subJobParam.upholsteryList.map((upholsteryId: String) => {
-                    return getUpholsteryById(upholsteryId);
-                })
-                const fetchedUpholstery: Upholstery[] = await Promise.all(awaitUpholstery);
-                setUpholstery(fetchedUpholstery);
-            }
-            if (subJobParam.frameList && subJobParam.frameList.length > 0) {
-                const awaitFrames = subJobParam.frameList.map((frameId: String) => {
-                    return getFrameById(frameId);
-                })
-                const fetchedFrames: Frame[] = await Promise.all(awaitFrames);
-                setFrames(fetchedFrames);
-            }
-            if (subJobParam.cushionList && subJobParam.cushionList.length > 0) {
-                const awaitCushions = subJobParam.cushionList.map((cushionId: String) => {
-                    return getCushionById(cushionId);
-                })
-                const fetchedCushions: Cushion[] = await Promise.all(awaitCushions);
-                setCushions(fetchedCushions);
-            }
+            // Fetch Upholstery list
+            // Ensure subJobParam.upholsteryList is treated as an array, even if null/undefined
+            // Map each ID to a promise that fetches the item, then filter out any null/undefined results
+            const fetchedUpholsteryPromises = (subJobParam.upholsteryList || []).map((upholsteryId: String) => {
+                return getUpholsteryById(upholsteryId);
+            });
+            const fetchedUpholstery: Upholstery[] = (await Promise.all(fetchedUpholsteryPromises)).filter(Boolean) as Upholstery[];
+            setUpholstery(fetchedUpholstery);
+
+            // Fetch Frames list
+            // Apply the same logic as above for frames
+            const fetchedFramesPromises = (subJobParam.frameList || []).map((frameId: String) => {
+                return getFrameById(frameId);
+            });
+            const fetchedFrames: Frame[] = (await Promise.all(fetchedFramesPromises)).filter(Boolean) as Frame[];
+            setFrames(fetchedFrames);
+
+            // Fetch Cushions list
+            // Apply the same logic as above for cushions
+            const fetchedCushionsPromises = (subJobParam.cushionList || []).map((cushionId: String) => {
+                return getCushionById(cushionId);
+            });
+            const fetchedCushions: Cushion[] = (await Promise.all(fetchedCushionsPromises)).filter(Boolean) as Cushion[];
+            setCushions(fetchedCushions);
         }
         fetchComponents();
-    }, [subJobParam.upholsteryList, subJobParam.frameList, subJobParam.cushionList, subJobParam._id]); // Added _id to dependencies (Edit form modification)
+    }, [subJobParam.upholsteryList, subJobParam.frameList, subJobParam.cushionList, subJobParam._id]); // Dependencies ensure this effect re-runs when lists or subJob ID changes
+
+    
 
 
     return (

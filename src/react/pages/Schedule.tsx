@@ -134,7 +134,6 @@ function Schedule() {
       setJobs(prevJobs => prevJobs.filter(job => job._id !== jobId));
       setIsEditJobModalOpen(false);
       setJobToEdit(null);
-      setSelected(false); // Clear job details if the selected job is deleted
       setSubJobs([]); // Clear subjobs as well
     } else {
       console.error("Failed to delete job.");
@@ -166,12 +165,12 @@ function Schedule() {
           return getSubJobById(subJobId);
         });
         const fetchedSubJobs: SubJob[] = await Promise.all(subJobs);
-        console.log(fetchedSubJobs);
         setSubJobs(fetchedSubJobs);
       }
       else {
         setSubJobs([]);
       }
+      setSelected(true);
     }
     catch (err) {
       console.log("Error deleting job:", err);
@@ -190,18 +189,22 @@ function Schedule() {
     }
   };
 
+
   const handleUpdateSubJob = async (subJobId: string, updatedData: SubJob) => {
     const updatedSubJobFromServer = await updateSubJob(updatedData);
     if (updatedSubJobFromServer) {
-      setSubJobs(prevSubJobs => prevSubJobs.map(subJob =>
-        subJob._id === updatedSubJobFromServer._id ? updatedSubJobFromServer : subJob
-      ));
+      // --- NEW APPROACH ---
+      if (selectedJobForSubJob) {
+        await displayJobDetails(selectedJobForSubJob); // Re-fetch all sub-jobs for the current job
+      }
+      // --- END NEW APPROACH ---
       setIsEditSubJobModalOpen(false);
       setSubJobToEdit(null);
     } else {
       console.error("Failed to update sub-job.");
     }
   };
+
 
   const handleDeleteSubJob = async (subJobId: string) => {
     const success = await deleteSubJob(subJobId as String);
@@ -528,11 +531,12 @@ function Schedule() {
                 searchTerm={searchTerm}
                 jobs={jobs}
                 jobClicked={displayJobDetails}
+                onEditJobClick={handleEditJobClick} 
               />
             }
           </div>
           <div id="job-detail-container">
-            <SubJobTable
+            {hasSelected &&  <SubJobTable
               subJobsParam={subJobs} onAddComponentClick={openAddSubJobModal}
               onAddFrameClick={openAddFrameModal} // Pass to SubJobTable
               onAddCushionClick={openAddCushionModal} // Pass to SubJobTable
@@ -541,7 +545,7 @@ function Schedule() {
               onEditFrameClick={openEditFrameModal} // Pass to SubJobTable
               onEditCushionClick={openEditCushionModal} // Pass to SubJobTable
               onEditUpholsteryClick={openEditUpholsteryModal} // Pass to SubJobTable
-            />
+            />}
           </div>
         </div>
         <div>

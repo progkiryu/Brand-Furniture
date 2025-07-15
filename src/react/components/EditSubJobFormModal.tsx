@@ -155,7 +155,7 @@ function EditSubJobFormModal({ isOpen, onClose, subJobToEdit, onUpdateSubJob, on
                             <option value="Body Upholstered">Body Upholstered</option>
                             <option value="Waiting for wrapping">Waiting for wrapping</option>
                             <option value="Frame Foamed">Frame Foamed</option>
-                             <option value="In Production">In Production</option>
+                            <option value="In Production">In Production</option>
                             <option value="Complete">Complete</option>
                         </select>
                     </div>

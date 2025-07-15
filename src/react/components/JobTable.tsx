@@ -4,11 +4,10 @@ interface JobTableProps {
     searchTerm: string;
     jobs: Job[];
     jobClicked: (job: Job) => Promise<void>;
-    // onAddSubJob: (newSubJobData: SubJob) => void;
-    // onEditJobClick: (job: Job) => void;
+    onEditJobClick: (job: Job) => void;
 }
 
-function JobTable({ searchTerm, jobs, jobClicked }: JobTableProps) {
+function JobTable({ searchTerm, jobs, jobClicked, onEditJobClick }: JobTableProps) {
     const [displayedJobs, setDisplayedJobs] = useState<Job[]>(jobs);
     // State to hold both jobId and invoiceId for the selected job
 
@@ -33,8 +32,20 @@ function JobTable({ searchTerm, jobs, jobClicked }: JobTableProps) {
                     <tbody>
                         {displayedJobs.map((job) => (
                             <tr key={String(job._id)}>
-                                <td key={String(job._id)}
-                                onClick={() => jobClicked(job)}>{job.name}</td>
+                                <td onClick={() => jobClicked(job)}> {/* Keep existing click for details */}
+                                    {job.name}
+                                </td>
+                                <td>
+                                    {/* Add the Edit Job button */}
+                                    <input 
+                                        type="button" 
+                                        value="Edit Job" 
+                                        onClick={(e) => {
+                                            e.stopPropagation(); // Prevent row click from firing
+                                            onEditJobClick(job);
+                                        }}
+                                    />
+                                </td>
                             </tr>
                         ))}
                     </tbody>
