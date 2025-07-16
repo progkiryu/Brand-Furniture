@@ -5,6 +5,8 @@
     left: 0;
     right: 0;
     bottom: 0;
+    width: 100%;
+    height: 100%;
     background-color: rgba(0, 0, 0, 0.6); /* Dark semi-transparent background */
     display: flex;
     justify-content: center;
@@ -110,121 +112,4 @@
     transform: translateY(-1px); /* Slight lift effect */
 }
 
-/* --- Tab Navigation Styling --- */
-.tab-navigation {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 25px;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
-    gap: 10px; /* Space between buttons */
-    flex-wrap: wrap; /* Allow tabs to wrap on smaller screens */
-}
 
-.tab-navigation button {
-    background-color: transparent;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-    font-size: 1.05em;
-    font-weight: 500;
-    color: #777;
-    border-radius: 8px 8px 0 0; /* Rounded top corners */
-    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out, border-bottom 0.2s ease-in-out;
-    flex-grow: 1; /* Allow buttons to grow and fill space */
-    text-align: center;
-    white-space: nowrap; /* Prevent text wrapping */
-}
-
-.tab-navigation button:hover:not(.active) {
-    color: #444;
-    background-color: #f9f9f9;
-}
-
-.tab-navigation button.active {
-    color: #667eea; /* Active tab color */
-    border-bottom: 3px solid #667eea; /* Active tab indicator */
-    font-weight: 600;
-    background-color: #f0f4ff; /* Light background for active tab */
-}
-
-/* Tab Content Sections */
-.tab-content {
-    padding: 10px 0;
-}
-
-.tab-content h3 {
-    font-size: 1.5em;
-    color: #444;
-    margin-bottom: 15px;
-    border-bottom: 1px dashed #eee;
-    padding-bottom: 10px;
-}
-
-.tab-content p {
-    color: #666;
-    line-height: 1.6;
-}
-
-/* Added for nested component display in JobTableRow */
-.nested-component-group {
-    margin-top: 10px;
-    padding-left: 15px;
-    border-left: 2px solid #e0e0e0;
-    margin-bottom: 5px;
-}
-
-.nested-component-group h4 {
-    font-size: 1em;
-    color: #555;
-    margin-bottom: 5px;
-}
-
-.sp-nested-detail {
-    font-size: 0.9em;
-    color: #777;
-    margin-bottom: 3px;
-}
-
-.frame-section, .cushion-section, .upholstery-section {
-    background-color: lightgrey;
-    padding: 30px;
-    border-radius: 10px;
-}
-
-.add-btn-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.add-btn-container input{
-    margin-top: 20px;
-    display: block;
-    width: 50px;
-    left: 100px;
-}
-
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .modal-content, .sub-job-modal-content {
-        width: 95%;
-        padding: 20px;
-    }
-
-    .tab-navigation {
-        flex-direction: column; /* Stack tabs vertically on small screens */
-        align-items: stretch;
-    }
-
-    .tab-navigation button {
-        border-radius: 8px; /* Full rounded corners when stacked */
-        margin-bottom: 5px; /* Space between stacked buttons */
-    }
-
-    .tab-navigation button.active {
-        border-bottom: none;
-        border: 2px solid #667eea; /* Border around active button when stacked */
-    }
-}

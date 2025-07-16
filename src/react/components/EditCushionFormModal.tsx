@@ -108,9 +108,10 @@ function EditCushionFormModal({ isOpen, onClose, cushionToEdit, onUpdateCushion,
     return (
         <div className="modal-overlay">
             <div className="modal-content">
-                <button className="close-button" onClick={onClose}>&times;</button>
-                <h2>Edit Cushion: {cushionToEdit?.description || cushionToEdit?.type}</h2>
-                <form onSubmit={handleSubmit}>
+                <button className="modal-close-btn" onClick={onClose}>&times;</button>
+                
+                <form onSubmit={handleSubmit} className="modal-form">
+                    <h2>Edit Cushion: {cushionToEdit?.description || cushionToEdit?.type}</h2>
                     <div className="form-group">
                         <label htmlFor="type">Type:</label>
                         <input

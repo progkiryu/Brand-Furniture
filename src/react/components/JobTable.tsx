@@ -34,9 +34,6 @@ function JobTable({ searchTerm, jobs, jobClicked, onEditJobClick }: JobTableProp
                             <tr key={String(job._id)}>
                                 <td onClick={() => jobClicked(job)}> {/* Keep existing click for details */}
                                     {job.name}
-                                </td>
-                                <td>
-                                    {/* Add the Edit Job button */}
                                     <input 
                                         type="button" 
                                         value="Edit Job" 

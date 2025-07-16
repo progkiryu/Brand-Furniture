@@ -133,8 +133,8 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob, onDeleteJob
         <div className="modal-overlay">
             <div className="modal-content">
                 <button className="modal-close-btn" onClick={onClose}>&times;</button>
-                <h2>Edit Job: {jobToEdit?.name}</h2>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} className="modal-form">
+                    <h2>Edit Job: {jobToEdit?.name}</h2>
                     <div className="form-group">
                         <label htmlFor="invoiceId">Invoice ID:</label>
                         <input
