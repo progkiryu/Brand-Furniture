@@ -27,6 +27,7 @@ function SubJobTable({
     const [subJobs, setSubJobs] = useState<SubJob[]>(subJobsParam);
 
     useEffect(() => {
+        console.log(subJobsParam);
         setSubJobs(subJobsParam);
     }, [subJobsParam])
 
@@ -44,6 +45,7 @@ function SubJobTable({
             <tbody>
             {
                 subJobs.map((subJob: SubJob) => {
+                    console.log(subJobs);
                     return (<SubJobTableRow key={String(subJob._id)}
                         subJobParam={subJob}
                         onAddFrameClick={onAddFrameClick} // Pass the new prop

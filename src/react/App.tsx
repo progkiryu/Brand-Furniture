@@ -1,4 +1,8 @@
-import { HashRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  HashRouter as Router, 
+  Routes, 
+  Route
+} from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import Schedule from "./pages/Schedule";
 import Analytics from "./pages/Analytics";

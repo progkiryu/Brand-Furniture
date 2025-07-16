@@ -29,6 +29,7 @@ import { createCushion, updateCushion, deleteCushionById } from "../api/cushionA
 import { createUpholstery, updateUpholstery, deleteUpholstery } from "../api/upholsteryAPI"; // Import updateUpholstery, deleteUpholstery
 
 import { useState, useEffect, useRef } from 'react';
+import { useLocation } from "react-router-dom";
 
 function Schedule() {
 
@@ -53,12 +54,15 @@ function Schedule() {
 
   const [jobs, setJobs] = useState<Job[]>([]); 
   const [subJobs, setSubJobs] = useState<SubJob[]>([]);
+
   const [selectedSubJobs, setSelectedSubJobs] = useState<SubJob[]>([]);
   const [isAddJobModelOpen, setIsAddJobModelOpen] = useState<boolean>(false);
   const [hasSelected, setSelected] = useState<boolean>(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isAddSubJobModalOpen, setIsAddSubJobModalOpen] = useState(false); 
   const [selectedJobForSubJob, setSelectedJobForSubJob] = useState<Job | null>(null);
+
+  const location = useLocation();
   
   const [filterInvoiceID, setFilterInvoiceID] = useState<"asc" | "desc" | undefined>();
   const [filterClient, setFilterClient] = useState<"asc" | "desc" | undefined>();
@@ -96,27 +100,43 @@ function Schedule() {
 
 
   useEffect(() => {
-    const fetchJobs = async () => {
-      const jobsPromise = getAllJobs();
-      const subJobsPromise = getAllSubJobs();
-      try {
-        const [fetchJobs, fetchSubJobs] = await Promise.all([jobsPromise, subJobsPromise]);
-        setJobs(fetchJobs);
-        setSubJobs(fetchSubJobs);
+    if (location.state !== null) {
+      const { selectedJob, selectedSubJobs } = location.state;
+      console.log(selectedSubJobs);
+      setSelectedSubJobs(selectedSubJobs);
+      setSelectedJobForSubJob(selectedJob);
+      setSelected(true);
+
+      const fetchJobs = async () => {
+        const jobsPromise = getAllJobs();
+        try {
+          const [fetchJobs] = await Promise.all([jobsPromise]);
+          setJobs(fetchJobs);
+        }
+        catch (err) {
+          console.error("Could not fetch Jobs!");
+        }
       }
-      catch (err) {
-        console.error("Could not fetch Jobs!");
-      }
+      fetchJobs();
+      
+      location.state === null;
     }
-    fetchJobs();
+    else {
+      const fetchJobs = async () => {
+        const jobsPromise = getAllJobs();
+        const subJobsPromise = getAllSubJobs();
+        try {
+          const [fetchJobs, fetchSubJobs] = await Promise.all([jobsPromise, subJobsPromise]);
+          setJobs(fetchJobs);
+          setSubJobs(fetchSubJobs);
+        }
+        catch (err) {
+          console.error("Could not fetch Jobs!");
+        }
+      }
+      fetchJobs();
+    }
   }, [subJobs, frames, cushions, upholstery]);
-
-
-
-  // Handler for when the search input changes
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
-  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -133,6 +153,13 @@ function Schedule() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [dropdownOpen]);
+
+
+  // Handler for when the search input changes
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
+
 
 
 
@@ -193,7 +220,6 @@ function Schedule() {
       else {
         setSelectedSubJobs([]);
       }
-      setSelected(true);
       setSelected(true);
     }
     catch (err) {
