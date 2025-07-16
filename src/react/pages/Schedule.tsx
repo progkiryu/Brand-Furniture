@@ -24,6 +24,7 @@ import EditFrameFormModal from "../components/EditFrameFormModal";
 import EditCushionFormModal from "../components/EditCushionFormModal";
 import EditUpholsteryFormModal from "../components/EditUpholsteryFormModal";
 
+import { DBLink } from "../App";
 import { createFrame, updateFrame, deleteFrameById } from "../api/frameAPI"; // Import updateFrame, deleteFrameById
 import { createCushion, updateCushion, deleteCushionById } from "../api/cushionAPI"; // Import updateCushion, deleteCushionById
 import { createUpholstery, updateUpholstery, deleteUpholstery } from "../api/upholsteryAPI"; // Import updateUpholstery, deleteUpholstery
@@ -78,12 +79,12 @@ function Schedule() {
   const [filterProduction, setFilterProduction] = useState<boolean>(false); 
 
   const [isAddCushionModalOpen, setIsAddCushionModalOpen] = useState(false);
-  const [isAddFrameModalOpen, setIsAddFrameModalOpen] = useState(false); 
-  const [isAddUpholsteryModalOpen, setIsAddUpholsteryModalOpen] = useState(false); 
+  const [isAddFrameModalOpen, setIsAddFrameModalOpen] = useState(false);
+  const [isAddUpholsteryModalOpen, setIsAddUpholsteryModalOpen] = useState(false);
 
   const [selectedSubJobInfoForCushion, setSelectedSubJobInfoForCushion] = useState<{ subJobId: String | null, subJobDetail: String | null } | null>(null);
-  const [selectedSubJobInfoForFrame, setSelectedSubJobInfoForFrame] = useState<{ subJobId: String | null, subJobDetail: String | null } | null>(null); 
-  const [selectedSubJobInfoForUpholstery, setSelectedSubJobInfoForUpholstery] = useState<{ subJobId: String | null, subJobDetail: String | null } | null>(null); 
+  const [selectedSubJobInfoForFrame, setSelectedSubJobInfoForFrame] = useState<{ subJobId: String | null, subJobDetail: String | null } | null>(null);
+  const [selectedSubJobInfoForUpholstery, setSelectedSubJobInfoForUpholstery] = useState<{ subJobId: String | null, subJobDetail: String | null } | null>(null);
 
   // State for Edit Modals
   const [isEditSubJobModalOpen, setIsEditSubJobModalOpen] = useState(false);
@@ -174,8 +175,8 @@ function Schedule() {
   };
 
   const handleEditJobClick = (job: Job) => {
-    setJobToEdit(job); 
-    setIsEditJobModalOpen(true); 
+    setJobToEdit(job);
+    setIsEditJobModalOpen(true);
   };
 
   const handleDeleteJob = async (jobId: string) => {
@@ -192,10 +193,10 @@ function Schedule() {
 
 
   const handleUpdateJob = async (updatedData: Job) => {
-    const updatedJobFromServer = await updateJob(updatedData); 
+    const updatedJobFromServer = await updateJob(updatedData);
     if (updatedJobFromServer) {
       setJobs(prevJobs => prevJobs.map(job =>
-          job._id === updatedJobFromServer._id ? updatedJobFromServer : job
+        job._id === updatedJobFromServer._id ? updatedJobFromServer : job
       ));
       setIsEditJobModalOpen(false);
       setJobToEdit(null);
@@ -205,7 +206,7 @@ function Schedule() {
     }
   };
 
-  
+
 
   const displayJobDetails = async (job: Job) => {
     try {
@@ -228,16 +229,35 @@ function Schedule() {
   }
 
   const handleAddSubJob = async (newSubJobData: SubJob) => {
-    const addedSubJob = await createSubJob(newSubJobData);
-    if (addedSubJob) {
-      // Update the subJob's cushionList
-      setSelectedSubJobs(prevSubJobs => [...prevSubJobs, addedSubJob]);
-      setIsAddSubJobModalOpen(false); // Close modal
-      setSelectedJobForSubJob(null); // Clear selected subjob info
-    } else {
-      console.error("Failed to create cushion.");
+    if (!selectedJobForSubJob) {
+      console.error("No job selected to add sub-job to.");
+      return;
+    }
+
+    try {
+      const addedSubJob = await createSubJob(newSubJobData);
+      if (addedSubJob && addedSubJob._id) {
+        const updatedSubJobList = [...(selectedJobForSubJob.subJobList || []), addedSubJob._id];
+        const jobToUpdate = {
+          ...selectedJobForSubJob,
+          subJobList: updatedSubJobList,
+        };
+        const updatedJobFromServer = await updateJob(jobToUpdate);
+        if (updatedJobFromServer) {
+          setJobs(prevJobs => prevJobs.map(job =>
+            job._id === updatedJobFromServer._id ? updatedJobFromServer : job
+          ));
+          await displayJobDetails(updatedJobFromServer); // Ensure sub-jobs are re-fetched and updated
+          setIsAddSubJobModalOpen(false);
+          setSelectedJobForSubJob(updatedJobFromServer); // Update the selected job to reflect changes
+        }
+      }
+    }
+    catch (err) {
+      console.error("Error adding sub-job:", err);
     }
   };
+  
 
 
   const handleUpdateSubJob = async (updatedData: SubJob) => {
@@ -748,20 +768,16 @@ function Schedule() {
             }
           </div>
           <div id="job-detail-container">
-          {
-            hasSelected &&
-              <SubJobTable 
-                  subJobsParam={selectedSubJobs} 
-                  onAddComponentClick={openAddSubJobModal} 
-                  onAddFrameClick={openAddFrameModal} // Pass to SubJobTable
-                  onAddCushionClick={openAddCushionModal} // Pass to SubJobTable
-                  onAddUpholsteryClick={openAddUpholsteryModal} // Pass to SubJobTable
-                  onEditSubJobClick={openEditSubJobModal} // Pass to SubJobTable
-                  onEditFrameClick={openEditFrameModal} // Pass to SubJobTable
-                  onEditCushionClick={openEditCushionModal} // Pass to SubJobTable
-                  onEditUpholsteryClick={openEditUpholsteryModal} // Pass to SubJobTable
-            />
-          }
+            {hasSelected && <SubJobTable
+              subJobsParam={subJobs} onAddComponentClick={openAddSubJobModal}
+              onAddFrameClick={openAddFrameModal} // Pass to SubJobTable
+              onAddCushionClick={openAddCushionModal} // Pass to SubJobTable
+              onAddUpholsteryClick={openAddUpholsteryModal} // Pass to SubJobTable
+              onEditSubJobClick={openEditSubJobModal} // Pass to SubJobTable
+              onEditFrameClick={openEditFrameModal} // Pass to SubJobTable
+              onEditCushionClick={openEditCushionModal} // Pass to SubJobTable
+              onEditUpholsteryClick={openEditUpholsteryModal} // Pass to SubJobTable
+            />}
           </div>
         </div>
         <div>
@@ -776,7 +792,7 @@ function Schedule() {
             isOpen={isEditJobModalOpen}
             onClose={() => {
               setIsEditJobModalOpen(false);
-              setJobToEdit(null); 
+              setJobToEdit(null);
             }}
             jobToEdit={jobToEdit}
             onUpdateJob={handleUpdateJob}
