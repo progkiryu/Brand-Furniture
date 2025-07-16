@@ -3,7 +3,7 @@ import "../styles/Global.css";
 import "../styles/ModalForm.css"
 import "../styles/SubJobModalForm.css" // Ensure this CSS file exists or create it if needed
 
-import { createJob, updateJob, getAllJobs, deleteJob } from "../api/jobAPI"; // Import deleteJobById
+import { createJob, updateJob, getAllJobs, getJobById, deleteJob } from "../api/jobAPI"; // Import deleteJobById
 import { createSubJob, getSubJobById, updateSubJob, deleteSubJob } from "../api/subJobAPI"; // Import deleteSubJob
 
 import Navbar from "../components/Navbar";
@@ -35,29 +35,29 @@ import { useState, useEffect, useRef } from 'react';
 function Schedule() {
 
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [cushions, setCushions] = useState<Array<Cushion>>([]); 
-  const [frames, setFrames] = useState<Array<Frame>>([]); 
-  const [upholstery, setUpholstery] = useState<Array<Upholstery>>([]); 
+  const [cushions, setCushions] = useState<Array<Cushion>>([]);
+  const [frames, setFrames] = useState<Array<Frame>>([]);
+  const [upholstery, setUpholstery] = useState<Array<Upholstery>>([]);
 
   const [isEditJobModalOpen, setIsEditJobModalOpen] = useState(false);
   const [jobToEdit, setJobToEdit] = useState<Job | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  
-  const [jobs, setJobs] = useState<Job[]>([]); 
+
+  const [jobs, setJobs] = useState<Job[]>([]);
   const [subJobs, setSubJobs] = useState<SubJob[]>([]);
   const [isAddJobModelOpen, setIsAddJobModelOpen] = useState<boolean>(false);
   const [hasSelected, setSelected] = useState<boolean>(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [isAddSubJobModalOpen, setIsAddSubJobModalOpen] = useState(false); 
-  const [selectedJobForSubJob, setSelectedJobForSubJob] = useState<Job | null>(null); 
+  const [isAddSubJobModalOpen, setIsAddSubJobModalOpen] = useState(false);
+  const [selectedJobForSubJob, setSelectedJobForSubJob] = useState<Job | null>(null);
 
   const [isAddCushionModalOpen, setIsAddCushionModalOpen] = useState(false);
-  const [isAddFrameModalOpen, setIsAddFrameModalOpen] = useState(false); 
-  const [isAddUpholsteryModalOpen, setIsAddUpholsteryModalOpen] = useState(false); 
+  const [isAddFrameModalOpen, setIsAddFrameModalOpen] = useState(false);
+  const [isAddUpholsteryModalOpen, setIsAddUpholsteryModalOpen] = useState(false);
 
   const [selectedSubJobInfoForCushion, setSelectedSubJobInfoForCushion] = useState<{ subJobId: String | null, subJobDetail: String | null } | null>(null);
-  const [selectedSubJobInfoForFrame, setSelectedSubJobInfoForFrame] = useState<{ subJobId: String | null, subJobDetail: String | null } | null>(null); 
-  const [selectedSubJobInfoForUpholstery, setSelectedSubJobInfoForUpholstery] = useState<{ subJobId: String | null, subJobDetail: String | null } | null>(null); 
+  const [selectedSubJobInfoForFrame, setSelectedSubJobInfoForFrame] = useState<{ subJobId: String | null, subJobDetail: String | null } | null>(null);
+  const [selectedSubJobInfoForUpholstery, setSelectedSubJobInfoForUpholstery] = useState<{ subJobId: String | null, subJobDetail: String | null } | null>(null);
 
   // State for Edit Modals
   const [isEditSubJobModalOpen, setIsEditSubJobModalOpen] = useState(false);
@@ -84,8 +84,9 @@ function Schedule() {
         console.error("Could not fetch Jobs!");
       }
     }
+    console.log("shit")
     fetchJobs();
-  }, [subJobs, frames, cushions, upholstery]);
+  }, []);
 
 
 
@@ -123,8 +124,8 @@ function Schedule() {
   };
 
   const handleEditJobClick = (job: Job) => {
-    setJobToEdit(job); 
-    setIsEditJobModalOpen(true); 
+    setJobToEdit(job);
+    setIsEditJobModalOpen(true);
   };
 
   const handleDeleteJob = async (jobId: string) => {
@@ -141,10 +142,10 @@ function Schedule() {
 
 
   const handleUpdateJob = async (updatedData: Job) => {
-    const updatedJobFromServer = await updateJob(updatedData); 
+    const updatedJobFromServer = await updateJob(updatedData);
     if (updatedJobFromServer) {
       setJobs(prevJobs => prevJobs.map(job =>
-          job._id === updatedJobFromServer._id ? updatedJobFromServer : job
+        job._id === updatedJobFromServer._id ? updatedJobFromServer : job
       ));
       setIsEditJobModalOpen(false);
       setJobToEdit(null);
@@ -154,7 +155,7 @@ function Schedule() {
     }
   };
 
-  
+
 
   const displayJobDetails = async (job: Job) => {
     try {
@@ -176,46 +177,36 @@ function Schedule() {
     }
   }
 
-
   const handleAddSubJob = async (newSubJobData: SubJob) => {
+    if (!selectedJobForSubJob) {
+      console.error("No job selected to add sub-job to.");
+      return;
+    }
+
     try {
-      const addedSubJob = await createSubJob(newSubJobData); 
-      if (addedSubJob && selectedJobForSubJob && selectedJobForSubJob._id) {
-        const updatedJobDataForBackend: Job = {
-            ...selectedJobForSubJob,
-            subJobList: [...(selectedJobForSubJob.subJobList || []), addedSubJob._id as String]
+      const addedSubJob = await createSubJob(newSubJobData);
+      if (addedSubJob && addedSubJob._id) {
+        const updatedSubJobList = [...(selectedJobForSubJob.subJobList || []), addedSubJob._id];
+        const jobToUpdate = {
+          ...selectedJobForSubJob,
+          subJobList: updatedSubJobList,
         };
-
-        const updatedJobFromServer = await updateJob(updatedJobDataForBackend);
-
+        const updatedJobFromServer = await updateJob(jobToUpdate);
         if (updatedJobFromServer) {
-            setJobs(prevJobs => prevJobs.map(job =>
-                job._id === updatedJobFromServer._id ? {
-                  ...updatedJobFromServer,
-                  isPinned: !!updatedJobFromServer.isPinned,
-                  isArchived: !!updatedJobFromServer.isArchived
-                } : job
-            ));
-            // Crucially, update selectedJobForSubJob immediately after updating the parent job
-            setSelectedJobForSubJob({
-              ...updatedJobFromServer,
-              isPinned: !!updatedJobFromServer.isPinned,
-              isArchived: !!updatedJobFromServer.isArchived
-            });
-            // Now, re-fetch sub-jobs using the updated selectedJobForSubJob
-            await displayJobDetails(updatedJobFromServer); // Pass the fresh job object
-        } else {
-            console.error("Failed to update parent job in backend after adding sub-job.");
+          setJobs(prevJobs => prevJobs.map(job =>
+            job._id === updatedJobFromServer._id ? updatedJobFromServer : job
+          ));
+          await displayJobDetails(updatedJobFromServer); // Ensure sub-jobs are re-fetched and updated
+          setIsAddSubJobModalOpen(false);
+          setSelectedJobForSubJob(updatedJobFromServer); // Update the selected job to reflect changes
         }
-
-        setIsAddSubJobModalOpen(false);
-      } else {
-        console.error("Failed to create sub-job or selected job is missing.");
       }
-    } catch (err) {
-      console.error("Error creating sub-job:", err);
+    }
+    catch (err) {
+      console.error("Error adding sub-job:", err);
     }
   };
+  
 
 
   const handleUpdateSubJob = async (updatedData: SubJob) => {
@@ -385,7 +376,7 @@ function Schedule() {
     }
   };
 
-  const handleUpdateUpholstery = async ( updatedData: Upholstery) => {
+  const handleUpdateUpholstery = async (updatedData: Upholstery) => {
     const updatedUpholsteryFromServer = await updateUpholstery(updatedData);
     if (updatedUpholsteryFromServer) {
       // Re-fetch subjobs to ensure consistency if lists are not directly managed
@@ -559,12 +550,12 @@ function Schedule() {
                 searchTerm={searchTerm}
                 jobs={jobs}
                 jobClicked={displayJobDetails}
-                onEditJobClick={handleEditJobClick} 
+                onEditJobClick={handleEditJobClick}
               />
             }
           </div>
           <div id="job-detail-container">
-            {hasSelected &&  <SubJobTable
+            {hasSelected && <SubJobTable
               subJobsParam={subJobs} onAddComponentClick={openAddSubJobModal}
               onAddFrameClick={openAddFrameModal} // Pass to SubJobTable
               onAddCushionClick={openAddCushionModal} // Pass to SubJobTable
@@ -588,7 +579,7 @@ function Schedule() {
             isOpen={isEditJobModalOpen}
             onClose={() => {
               setIsEditJobModalOpen(false);
-              setJobToEdit(null); 
+              setJobToEdit(null);
             }}
             jobToEdit={jobToEdit}
             onUpdateJob={handleUpdateJob}
