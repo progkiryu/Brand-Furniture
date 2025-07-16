@@ -208,6 +208,7 @@ export const putUpdateCushion = async (
     }
     res.status(200).json(updatedCushion);
   } catch (err) {
+    console.log("err");
     console.error(err);
     res.status(400).json(err);
   }

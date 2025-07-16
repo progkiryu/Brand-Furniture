@@ -69,24 +69,64 @@ export const createUpholstery = async (data: Upholstery) => {
 };
 
 // Delete a upholstery by ID
+// export const deleteUpholstery = async (id: String) => {
+//   fetch(`${DBLink}/upholstery/deleteUpholsteryById/${id}`, {
+//     method: "DELETE",
+//     mode: "cors",
+//     headers: { "Content-Type": "application/json" },
+//   })
+//     .then((res) => res.json())
+//     .catch((err) => console.error(err));
+// };
+
+// Delete a upholstery by ID
 export const deleteUpholstery = async (id: String) => {
-  fetch(`${DBLink}/upholstery/deleteUpholsteryById/${id}`, {
-    method: "DELETE",
-    mode: "cors",
-    headers: { "Content-Type": "application/json" },
-  })
-    .then((res) => res.json())
-    .catch((err) => console.error(err));
+  try {
+    const res = await fetch(`${DBLink}/upholstery/deleteUpholsteryById/${id}`, {
+      method: "DELETE",
+      mode: "cors",
+      headers: { "Content-Type": "application/json" },
+    });
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(`HTTP error! status: ${res.status}, message: ${errorText}`);
+    }
+    return true; // Indicate success
+  } catch (err) {
+    console.error("Error deleting upholstery:", err);
+    return false; // Indicate failure
+  }
 };
+
+// // Update a upholstery
+// export const updateUpholstery = async (data: Upholstery) => {
+//   fetch(`${DBLink}/upholstery/putUpdateUpholstery`, {
+//     method: "PUT",
+//     mode: "cors",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify(data),
+//   })
+//     .then((res) => res.json())
+//     .catch((err) => console.error(err));
+// };
 
 // Update a upholstery
 export const updateUpholstery = async (data: Upholstery) => {
-  fetch(`${DBLink}/upholstery/putUpdateUpholstery`, {
-    method: "PUT",
-    mode: "cors",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  })
-    .then((res) => res.json())
-    .catch((err) => console.error(err));
+  try {
+    const res = await fetch(`${DBLink}/upholstery/putUpdateUpholstery`, {
+      method: "PUT",
+      mode: "cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(`HTTP error! status: ${res.status}, message: ${errorText}`);
+    }
+    const updatedUpholstery = await res.json();
+    return updatedUpholstery;
+  } catch (err) {
+    console.error("Error updating upholstery:", err);
+    return null;
+  }
 };
