@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { Pencil } from "lucide-react";
+
 interface JobTableProps {
     searchTerm: string;
     invoiceIDTerm?: "asc" | "desc";
@@ -14,7 +16,7 @@ interface JobTableProps {
     wrappedTerm: boolean;
     completeTerm: boolean;
     productionTerm: boolean;
-    jobClicked: (job: Job) => Promise<void>;
+    handleJobClick: (job: Job) => Promise<void>;
     onEditJobClick: (job: Job) => void;
 }
 
@@ -29,7 +31,7 @@ function JobTable({
     wrappedTerm,
     completeTerm,
     productionTerm,
-    jobClicked, 
+    handleJobClick, 
     invoiceIDTerm, 
     clientTerm, 
     dueDateTerm, 
@@ -122,7 +124,7 @@ function JobTable({
         }
         return sortedJobs;
     }
-
+ 
     const statusFilter = (
         sortedJobs: Job[],
         cutTerm: boolean,
@@ -300,28 +302,53 @@ function JobTable({
         productionTerm
     ]);
 
+    const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
+
+const onRowClick = async (job: Job) => {
+  setSelectedJobId(job._id as string);
+  await handleJobClick(job);
+};
+
+
     return (
         <>
             <div className="sp-jobs-container">
                 <table>
                     <tbody>
                         {displayedJobs.map((job) => (
-                            <tr key={String(job._id)}>
-                                <td onClick={() => jobClicked(job)}> {/* Keep existing click for details */}
-                                    {job.name}
-                                </td>
+                            <tr
+                                key={String(job._id)}
+                                className={`job-row ${selectedJobId === job._id ? "selected-job" : ""}`}
+                                onClick={() => onRowClick(job)}
+                                >
+                                <td className="job-name-cell">{job.name}</td>
                                 <td>
-                                    {/* Add the Edit Job button */}
-                                    <input 
-                                        type="button" 
-                                        value="Edit Job" 
-                                        onClick={(e) => {
-                                            e.stopPropagation(); // Prevent row click from firing
-                                            onEditJobClick(job);
-                                        }}
+                                    <Pencil
+                                    className="edit-icon"
+                                    onClick={(e: React.MouseEvent) => {
+                                        e.stopPropagation(); // prevent click triggering jobClicked
+                                        onEditJobClick(job);
+                                    }}
                                     />
                                 </td>
-                            </tr>
+                                </tr>
+
+                            // <tr key={String(job._id)}>
+                            //     <td onClick={() => jobClicked(job)}> {/* Keep existing click for details */}
+                            //         {job.name}
+                            //     </td>
+                            //     <td>
+                            //         {/* Add the Edit Job button */}
+                            //         <input 
+                            //             type="button" 
+                            //             value="Edit Job" 
+                            //             onClick={(e) => {
+                            //                 e.stopPropagation(); // Prevent row click from firing
+                            //                 onEditJobClick(job);
+                            //             }}
+                            //         />
+                            //     </td>
+                            // </tr>
                         ))}
                     </tbody>
                 </table>

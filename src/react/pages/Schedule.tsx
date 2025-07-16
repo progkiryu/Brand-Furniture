@@ -694,51 +694,58 @@ function Schedule() {
               </div>
             </div>
           </div>
+</div> {/* This closes the #filter-container div */}
 
-        </div>
-        <div id="order-container">
-          <div id="job-list-container">
-            {
-              <JobTable
-                key="job-table"
-                searchTerm={searchTerm}
-                jobs={jobs}
-                subJobs={subJobs}
-                jobClicked={displayJobDetails}
-                invoiceIDTerm={filterInvoiceID}
-                clientTerm={filterClient}
-                jobNameTerm={filterJobName}
-                dueDateTerm={filterDueDate}
+<div id="order-container">
+  {/* Left Column - Job Name */}
+  <div id="job-section-wrapper">
+    <div className="job-section-header">Job Name</div>
+    <div id="job-list-container">
+      <JobTable
+        key="job-table"
+        searchTerm={searchTerm}
+        jobs={jobs}
+        subJobs={subJobs}
+        handleJobClick={displayJobDetails}
+        invoiceIDTerm={filterInvoiceID}
+        clientTerm={filterClient}
+        jobNameTerm={filterJobName}
+        dueDateTerm={filterDueDate}
+        cutTerm={filterCut}
+        sewnTerm={filterSewn}
+        upholsterTerm={filterUpholster}
+        foamedTerm={filterFoamed}
+        wrappedTerm={filterWrapped}
+        completeTerm={filterComplete}
+        productionTerm={filterProduction}
+        onEditJobClick={handleEditJobClick}
+      />
+    </div>
+  </div>
 
-                cutTerm={filterCut}
-                sewnTerm={filterSewn}
-                upholsterTerm={filterUpholster}
-                foamedTerm={filterFoamed}
-                wrappedTerm={filterWrapped}
-                completeTerm={filterComplete}
-                productionTerm={filterProduction}
-                onEditJobClick={handleEditJobClick} 
-              />
-            }
-          </div>
-          <div id="job-detail-container">
-          {
-            hasSelected &&
-              <SubJobTable 
-                  subJobsParam={selectedSubJobs} 
-                  onAddComponentClick={openAddSubJobModal} 
-                  onAddFrameClick={openAddFrameModal} // Pass to SubJobTable
-                  onAddCushionClick={openAddCushionModal} // Pass to SubJobTable
-                  onAddUpholsteryClick={openAddUpholsteryModal} // Pass to SubJobTable
-                  onEditSubJobClick={openEditSubJobModal} // Pass to SubJobTable
-                  onEditFrameClick={openEditFrameModal} // Pass to SubJobTable
-                  onEditCushionClick={openEditCushionModal} // Pass to SubJobTable
-                  onEditUpholsteryClick={openEditUpholsteryModal} // Pass to SubJobTable
-            />
-          }
-          </div>
-        </div>
-        <div>
+  {/* Right Column - Job Components */}
+  <div id="components-section-wrapper">
+    <div className="job-section-header">Job Components</div>
+    <div id="job-detail-container">
+      {hasSelected && (
+        <SubJobTable
+          subJobsParam={selectedSubJobs}
+          onAddComponentClick={openAddSubJobModal}
+          onAddFrameClick={openAddFrameModal}
+          onAddCushionClick={openAddCushionModal}
+          onAddUpholsteryClick={openAddUpholsteryModal}
+          onEditSubJobClick={openEditSubJobModal}
+          onEditFrameClick={openEditFrameModal}
+          onEditCushionClick={openEditCushionModal}
+          onEditUpholsteryClick={openEditUpholsteryModal}
+        />
+      )}
+    </div>
+  </div>
+</div>
+
+
+
           <AddJobFormModel
             isOpen={isAddJobModelOpen}
             onClose={() => setIsAddJobModelOpen(false)}
@@ -836,7 +843,6 @@ function Schedule() {
             onDeleteUpholstery={handleDeleteUpholstery}
           />
         </div>
-      </div>
     </>
   )
 
