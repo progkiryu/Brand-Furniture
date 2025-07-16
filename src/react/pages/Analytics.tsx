@@ -90,7 +90,7 @@ function Analytics() {
   };
 
   const negativeMonthChecker = (month: number, i: number, a: number) => {
-    if (month - 1 - i + a < 0) {
+    if (month - i + a < 0) {
       a = a + 12;
     }
     return a;
@@ -102,8 +102,8 @@ function Analytics() {
     i: number,
     a: number
   ) => {
-    if (month - 1 - i + a < 0) {
-      year = year - 1;
+    if (month - i + a < 0) {
+      year--;
     }
     return year;
   };
@@ -165,7 +165,7 @@ function Analytics() {
     }
 
     const today = new Date();
-    const todayDayNo: number = today.getDate();
+    // const todayDayNo: number = today.getDate();
     const todayMonth: number = today.getMonth();
     const todayYear: number = today.getFullYear();
 
@@ -176,7 +176,7 @@ function Analytics() {
     // Set the jobVolume monthly time frames
     switch (dateRange) {
       case "lastmonth":
-        jobVolumeTimeframes.unshift(MONTHS[todayMonth - 1] + jobYearCheck);
+        jobVolumeTimeframes.unshift(MONTHS[todayMonth] + jobYearCheck);
         break;
       case "last6months":
         for (let i = 0; i < 6; i++) {
@@ -189,7 +189,7 @@ function Analytics() {
           jobMonthCheck = negativeMonthChecker(todayMonth, i, jobMonthCheck);
 
           jobVolumeTimeframes.unshift(
-            MONTHS[todayMonth - 1 - i + jobMonthCheck] + jobYearCheck
+            MONTHS[todayMonth - i + jobMonthCheck] + jobYearCheck
           );
         }
         jobMonthCheck = 0;
@@ -206,7 +206,7 @@ function Analytics() {
           jobMonthCheck = negativeMonthChecker(todayMonth, i, jobMonthCheck);
 
           jobVolumeTimeframes.unshift(
-            MONTHS[todayMonth - 1 - i + jobMonthCheck] + jobYearCheck
+            MONTHS[todayMonth - i + jobMonthCheck] + jobYearCheck
           );
         }
         jobMonthCheck = 0;
@@ -223,7 +223,7 @@ function Analytics() {
           jobMonthCheck = negativeMonthChecker(todayMonth, i, jobMonthCheck);
 
           jobVolumeTimeframes.unshift(
-            MONTHS[todayMonth - 1 - i + jobMonthCheck] + jobYearCheck
+            MONTHS[todayMonth - i + jobMonthCheck] + jobYearCheck
           );
         }
         jobMonthCheck = 0;
@@ -234,10 +234,23 @@ function Analytics() {
         break;
     }
 
+    // add all the months to the obj array
+    for (let i = 0; i < jobVolumeTimeframes.length; i++) {
+      jobVolumeCounter.push({ name: jobVolumeTimeframes[i], value: 0 });
+    }
+
+    // Count job occurances for each month
     for (let i = 0; i < allJobs.length; i++) {
       const jobMonth = getMonthString(allJobs[i]);
       const jobYear = getYearString(allJobs[i]);
+      const jobMY = jobMonth + jobYear;
+      for (let j = 0; j < jobVolumeCounter.length; j++) {
+        if (jobMY.toString() === jobVolumeCounter[j].name.toString()) {
+          jobVolumeCounter[j].value++;
+        }
+      }
     }
+    setJobVolumeData(jobVolumeCounter);
   };
 
   useEffect(() => {
