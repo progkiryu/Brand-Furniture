@@ -54,7 +54,9 @@ function Analytics() {
     let existFlag: boolean = false;
 
     // Get date range
-    if (dateRange === "last6months") {
+    if (dateRange === "lastmonth") {
+      startDate.setMonth(startDate.getMonth() - 1);
+    } else if (dateRange === "last6months") {
       startDate.setMonth(startDate.getMonth() - 6);
     } else if (dateRange === "last12months") {
       startDate.setFullYear(startDate.getFullYear() - 1);
@@ -78,7 +80,7 @@ function Analytics() {
       existFlag = false;
     }
 
-    // Get the counts of each type
+    // // Get the counts of each type
     for (let i = 0; i < jobTypes.length; i++) {
       const jobs = await getFilteredJobsByType(jobTypes[i]);
       typeCounter.push({ name: `${jobTypes[i]}`, value: jobs.length });
