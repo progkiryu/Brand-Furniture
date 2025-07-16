@@ -18,9 +18,38 @@ function Analytics() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [dateRange, setDateRange] = useState<DateRange>("lastmonth");
 
+  // Job Distribution Data
   let jobTypes: string[] = [];
   let typeCounter: TypeInfo[] = [];
-  const [typeCountState, setTypeCountState] = useState<TypeInfo[]>([]);
+  const [jobDistributionData, setJobDistributionData] = useState<TypeInfo[]>(
+    []
+  );
+
+  // Job Volume Data
+  let jobVolumeTimeframes: string[] = [];
+  let jobVolumeCounter: TypeInfo[] = [];
+  const [jobVolumeData, setJobVolumeData] = useState<TypeInfo[]>([]);
+
+  const MONTHS: string[] = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  const needsPrefixAtEnd = [
+    "last6months",
+    "last12months",
+    "last2years",
+  ].includes(dateRange);
 
   const handleRangeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setDateRange(event.target.value as DateRange);
@@ -41,19 +70,10 @@ function Analytics() {
     }
   };
 
-  const needsPrefixAtEnd = [
-    "last6months",
-    "last12months",
-    "last2years",
-  ].includes(dateRange);
-
-  const processJobTypes = async () => {
+  const getDateRange = () => {
     const endDate = new Date();
     let startDate = new Date();
 
-    let existFlag: boolean = false;
-
-    // Get date range
     if (dateRange === "last6months") {
       startDate.setMonth(startDate.getMonth() - 6);
     } else if (dateRange === "last12months") {
@@ -63,9 +83,20 @@ function Analytics() {
     } else {
       startDate.setMonth(startDate.getMonth() - 1);
     }
+    return {
+      startDate: startDate,
+      endDate: endDate,
+    };
+  };
+
+  const processJobDistribution = async (allJobs: Job[]) => {
+    if (allJobs.length < 1) {
+      return;
+    }
+
+    let existFlag: boolean = false;
 
     // Get all the unique job types
-    const allJobs = await getFilteredJobsByDate(startDate, endDate);
     for (let i = 0; i < allJobs.length; i++) {
       for (let j = 0; j <= jobTypes.length; j++) {
         if (allJobs[i].type === jobTypes[j]) {
@@ -77,7 +108,6 @@ function Analytics() {
       }
       existFlag = false;
     }
-
     // Get the counts of each type
     for (let i = 0; i < jobTypes.length; i++) {
       const jobs = await getFilteredJobsByType(jobTypes[i]);
@@ -88,26 +118,128 @@ function Analytics() {
       (obj, index, self) =>
         index === self.findIndex((type) => type.name === obj.name)
     );
+    setJobDistributionData(uniqueTypeCounter);
+  };
 
-    setTypeCountState(uniqueTypeCounter);
+  const negativeMonthChecker = (month: number, i: number, a: number) => {
+    if (month - 1 - i + a < 0) {
+      a = a + 12;
+    }
+    return a;
+  };
+
+  const negativeYearChecker = (
+    year: number,
+    month: number,
+    i: number,
+    a: number
+  ) => {
+    if (month - 1 - i + a < 0) {
+      year = year - 1;
+    }
+    return year;
+  };
+
+  const processJobVolume = async (allJobs: Job[]) => {
+    if (allJobs.length < 1) {
+      return;
+    }
+
+    const today = new Date();
+    const todayDayNo: number = today.getDate();
+    const todayMonth: number = today.getMonth();
+    const todayYear: number = today.getFullYear();
+
+    // trackers to prevent negative months and years
+    let jobMonthCheck = 0;
+    let jobYearCheck: number = todayYear;
+
+    switch (dateRange) {
+      case "lastmonth":
+        jobVolumeTimeframes.unshift(MONTHS[todayMonth - 1] + jobYearCheck);
+        break;
+      case "last6months":
+        for (let i = 0; i < 6; i++) {
+          jobYearCheck = negativeYearChecker(
+            jobYearCheck,
+            todayMonth,
+            i,
+            jobMonthCheck
+          );
+          jobMonthCheck = negativeMonthChecker(todayMonth, i, jobMonthCheck);
+
+          jobVolumeTimeframes.unshift(
+            MONTHS[todayMonth - 1 - i + jobMonthCheck] + jobYearCheck
+          );
+        }
+        jobMonthCheck = 0;
+        jobYearCheck = todayYear;
+        break;
+      case "last12months":
+        for (let i = 0; i < 12; i++) {
+          jobYearCheck = negativeYearChecker(
+            jobYearCheck,
+            todayMonth,
+            i,
+            jobMonthCheck
+          );
+          jobMonthCheck = negativeMonthChecker(todayMonth, i, jobMonthCheck);
+
+          jobVolumeTimeframes.unshift(
+            MONTHS[todayMonth - 1 - i + jobMonthCheck] + jobYearCheck
+          );
+        }
+        jobMonthCheck = 0;
+        jobYearCheck = todayYear;
+        break;
+      case "last2years":
+        for (let i = 0; i < 24; i++) {
+          jobYearCheck = negativeYearChecker(
+            jobYearCheck,
+            todayMonth,
+            i,
+            jobMonthCheck
+          );
+          jobMonthCheck = negativeMonthChecker(todayMonth, i, jobMonthCheck);
+
+          jobVolumeTimeframes.unshift(
+            MONTHS[todayMonth - 1 - i + jobMonthCheck] + jobYearCheck
+          );
+        }
+        jobMonthCheck = 0;
+        jobYearCheck = todayYear;
+        break;
+      default:
+        jobVolumeTimeframes.unshift(MONTHS[todayMonth - 1]);
+        break;
+    }
+
+    console.log(jobVolumeTimeframes);
+
+    for (let i = 0; i < allJobs.length; i++) {}
   };
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      await processJobTypes().then(() => setIsLoading(false));
+
+      const range = getDateRange();
+      const allJobs = await getFilteredJobsByDate(
+        range.startDate,
+        range.endDate
+      );
+      await processJobDistribution(allJobs);
+      await processJobVolume(allJobs);
+
+      setIsLoading(false);
     };
 
     fetchData();
   }, [dateRange]);
 
-  // const logbutton = () => {
-  //   console.log(dateRange);
-  // };
-
   return isLoading ? (
     <>
-      {/* <Navbar /> */}
+      <Navbar />
       <div>
         <h1>Loading...</h1>
       </div>
@@ -137,8 +269,7 @@ function Analytics() {
                 ? `Order Type Distribution ${getLabelPrefix(dateRange)}`
                 : `${getLabelPrefix(dateRange)} Order Type Distribution`}
             </h2>
-            {/* <button onClick={logbutton}>button</button> */}
-            <OrderTypeDistributionChart data={typeCountState} />
+            <OrderTypeDistributionChart data={jobDistributionData} />
           </div>
 
           <div className="right-panel-charts">
@@ -147,8 +278,8 @@ function Analytics() {
                 {needsPrefixAtEnd
                   ? `Job Volume ${getLabelPrefix(dateRange)}`
                   : `${getLabelPrefix(dateRange)} Job Volume`}
-                </h2>
-              <JobVolume dateRange={dateRange} />
+              </h2>
+              <JobVolume data={jobVolumeData} />
             </div>
 
             <div className="jobCompletion">
@@ -156,7 +287,7 @@ function Analytics() {
                 {needsPrefixAtEnd
                   ? `Job Completion ${getLabelPrefix(dateRange)}`
                   : `${getLabelPrefix(dateRange)} Job Completion`}
-                </h2>
+              </h2>
               <JobCompletion dateRange={dateRange} />
             </div>
           </div>

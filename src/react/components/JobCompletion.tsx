@@ -17,34 +17,59 @@ const generateData = (range: string) => {
     const day = date.getDate();
     const dayOfWeek = date.getDay();
 
-    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const monthNames = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
     const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
     let formattedString = format;
-    if (format.includes('MMM')) {
-      formattedString = formattedString.replace('MMM', monthNames[month]);
+    if (format.includes("MMM")) {
+      formattedString = formattedString.replace("MMM", monthNames[month]);
     }
-    if (format.includes('D')) {
-      formattedString = formattedString.replace('D', day.toString());
+    if (format.includes("D")) {
+      formattedString = formattedString.replace("D", day.toString());
     }
-    if (format.includes('YYYY')) {
-      formattedString = formattedString.replace('YYYY', year.toString());
+    if (format.includes("YYYY")) {
+      formattedString = formattedString.replace("YYYY", year.toString());
     }
-    if (format.includes('ddd')) {
-      formattedString = formattedString.replace('ddd', dayNames[dayOfWeek]);
+    if (format.includes("ddd")) {
+      formattedString = formattedString.replace("ddd", dayNames[dayOfWeek]);
     }
     return formattedString;
   };
 
   switch (range) {
     case "lastmonth":
-      const lastMonthDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-      const daysInLastMonth = new Date(today.getFullYear(), today.getMonth(), 0).getDate();
+      const lastMonthDate = new Date(
+        today.getFullYear(),
+        today.getMonth() - 1,
+        1
+      );
+      const daysInLastMonth = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        0
+      ).getDate();
 
       for (let i = 0; i < daysInLastMonth; i++) {
-        const date = new Date(lastMonthDate.getFullYear(), lastMonthDate.getMonth(), i + 1);
+        const date = new Date(
+          lastMonthDate.getFullYear(),
+          lastMonthDate.getMonth(),
+          i + 1
+        );
         data.push({
-          name: formatDate(date, 'MMM D'),
+          name: formatDate(date, "MMM D"),
           value: Math.floor(Math.random() * 100), //this line generates dummy data
         });
       }
@@ -52,29 +77,41 @@ const generateData = (range: string) => {
 
     case "last6months":
       for (let i = 5; i >= 0; i--) {
-        const monthDate = new Date(today.getFullYear(), today.getMonth() - i, 1);
+        const monthDate = new Date(
+          today.getFullYear(),
+          today.getMonth() - i,
+          1
+        );
         data.push({
-          name: formatDate(monthDate, 'MMM YYYY'),
+          name: formatDate(monthDate, "MMM YYYY"),
           value: Math.floor(Math.random() * 100),
         });
       }
       break;
-    
+
     case "last12months":
       for (let i = 11; i >= 0; i--) {
-        const monthDate = new Date(today.getFullYear(), today.getMonth() - i, 1);
+        const monthDate = new Date(
+          today.getFullYear(),
+          today.getMonth() - i,
+          1
+        );
         data.push({
-          name: formatDate(monthDate, 'MMM YYYY'),
+          name: formatDate(monthDate, "MMM YYYY"),
           value: Math.floor(Math.random() * 100),
         });
       }
       break;
-    
+
     case "last2years":
       for (let i = 23; i >= 0; i--) {
-        const monthDate = new Date(today.getFullYear(), today.getMonth() - i, 1);
+        const monthDate = new Date(
+          today.getFullYear(),
+          today.getMonth() - i,
+          1
+        );
         data.push({
-          name: formatDate(monthDate, 'MMM YYYY'),
+          name: formatDate(monthDate, "MMM YYYY"),
           value: Math.floor(Math.random() * 100),
         });
       }
@@ -83,9 +120,11 @@ const generateData = (range: string) => {
   return data;
 };
 
-export default function BarChartComponent({ dateRange }: BarChartComponentProps) {
+export default function BarChartComponent({
+  dateRange,
+}: BarChartComponentProps) {
   const data = generateData(dateRange);
-  console.log("Bar chart data:", data);
+  // console.log("Bar chart data:", data);
 
   return (
     <div style={{ marginBottom: "40px" }}>
