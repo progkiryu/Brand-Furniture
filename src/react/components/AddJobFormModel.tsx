@@ -21,6 +21,7 @@ function AddJobFormModel({ isOpen, onClose, onAddJob}: AddJobFormModelProps) {
     const [paidInFull, setPaidInFull] = useState<string>(''); // Boolean for checkbox
     const [liaison, setLiaison] = useState<string>('');
     const [paymentNote, setPaymentNote] = useState<string>('');
+    const [isArchived, setIsArchived] = useState<boolean>(false);
 
     if (!isOpen) return null;
 
@@ -46,7 +47,7 @@ function AddJobFormModel({ isOpen, onClose, onAddJob}: AddJobFormModelProps) {
             paidInFull: new Date(paidInFull),
             liaison: liaison,
             paymentNote: paymentNote,
-            
+            isArchived: isArchived, 
         };
         
         onAddJob(newJob);
@@ -60,7 +61,7 @@ function AddJobFormModel({ isOpen, onClose, onAddJob}: AddJobFormModelProps) {
         setPaidInFull('');
         setLiaison('');
         setPaymentNote('');
-
+        setIsArchived(false); 
     }
     
 
@@ -169,6 +170,15 @@ function AddJobFormModel({ isOpen, onClose, onAddJob}: AddJobFormModelProps) {
                             value={paymentNote}
                             onChange={(e) => setPaymentNote(e.target.value)}
                             
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="isArchived">Archive Job:</label>
+                        <input
+                            type="checkbox"
+                            id="isArchived"
+                            checked={isArchived}
+                            onChange={(e) => setIsArchived(e.target.checked)}
                         />
                     </div>
                     <button type="submit">Add Job</button>

@@ -3,7 +3,7 @@ import "../styles/Global.css";
 import "../styles/ModalForm.css"
 import "../styles/SubJobModalForm.css" // Ensure this CSS file exists or create it if needed
 
-import { createJob, updateJob, getAllJobs, getJobById, deleteJob } from "../api/jobAPI"; // Import deleteJobById
+import { createJob, updateJob, getAllJobs, deleteJob } from "../api/jobAPI"; // Import deleteJobById
 import { createSubJob, getSubJobById, updateSubJob, deleteSubJob } from "../api/subJobAPI"; // Import deleteSubJob
 
 import Navbar from "../components/Navbar";
@@ -35,9 +35,6 @@ import { useState, useEffect, useRef } from 'react';
 function Schedule() {
 
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [cushions, setCushions] = useState<Array<Cushion>>([]);
-  const [frames, setFrames] = useState<Array<Frame>>([]);
-  const [upholstery, setUpholstery] = useState<Array<Upholstery>>([]);
 
   const [isEditJobModalOpen, setIsEditJobModalOpen] = useState(false);
   const [jobToEdit, setJobToEdit] = useState<Job | null>(null);
@@ -84,7 +81,6 @@ function Schedule() {
         console.error("Could not fetch Jobs!");
       }
     }
-    console.log("shit")
     fetchJobs();
   }, []);
 
