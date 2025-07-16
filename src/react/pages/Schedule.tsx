@@ -24,7 +24,6 @@ import EditFrameFormModal from "../components/EditFrameFormModal";
 import EditCushionFormModal from "../components/EditCushionFormModal";
 import EditUpholsteryFormModal from "../components/EditUpholsteryFormModal";
 
-import { DBLink } from "../App";
 import { createFrame, updateFrame, deleteFrameById } from "../api/frameAPI"; // Import updateFrame, deleteFrameById
 import { createCushion, updateCushion, deleteCushionById } from "../api/cushionAPI"; // Import updateCushion, deleteCushionById
 import { createUpholstery, updateUpholstery, deleteUpholstery } from "../api/upholsteryAPI"; // Import updateUpholstery, deleteUpholstery
@@ -769,7 +768,7 @@ function Schedule() {
           </div>
           <div id="job-detail-container">
             {hasSelected && <SubJobTable
-              subJobsParam={subJobs} onAddComponentClick={openAddSubJobModal}
+              subJobsParam={selectedSubJobs} onAddComponentClick={openAddSubJobModal}
               onAddFrameClick={openAddFrameModal} // Pass to SubJobTable
               onAddCushionClick={openAddCushionModal} // Pass to SubJobTable
               onAddUpholsteryClick={openAddUpholsteryModal} // Pass to SubJobTable
