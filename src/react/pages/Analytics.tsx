@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import "../styles/Analytics.css";
 import "../styles/Global.css";
 import Navbar from "../components/Navbar";
-import JobVolume from "../components/JobVolume";
-import OrderTypeDistributionChart from "../components/OrderTypeDistribution";
-import { getFilteredJobsByDate, getFilteredJobsByType } from "../api/jobAPI";
+import JobChartBar from "../components/JobChartBar";
+import JobChartPie from "../components/JobChartPie";
+import { getFilteredJobsByDate } from "../api/jobAPI";
 
 export type TypeInfo = {
   name: string;
@@ -358,7 +358,7 @@ function Analytics() {
                 ? `Order Type Distribution ${getLabelPrefix(dateRange)}`
                 : `${getLabelPrefix(dateRange)} Order Type Distribution`}
             </h2>
-            <OrderTypeDistributionChart data={jobDistributionData} />
+            <JobChartPie data={jobDistributionData} />
           </div>
 
           <div className="right-panel-charts">
@@ -368,7 +368,7 @@ function Analytics() {
                   ? `Job Volume ${getLabelPrefix(dateRange)}`
                   : `${getLabelPrefix(dateRange)} Job Volume`}
               </h2>
-              <JobVolume data={jobVolumeData} />
+              <JobChartBar data={jobVolumeData} />
             </div>
 
             <div className="jobCompletion">
@@ -377,7 +377,7 @@ function Analytics() {
                   ? `Job Completion ${getLabelPrefix(dateRange)}`
                   : `${getLabelPrefix(dateRange)} Job Completion`}
               </h2>
-              <JobVolume data={jobVolumeCompleteData} />
+              <JobChartBar data={jobVolumeCompleteData} />
             </div>
           </div>
         </div>
