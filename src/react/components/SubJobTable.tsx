@@ -27,7 +27,6 @@ function SubJobTable({
     const [subJobs, setSubJobs] = useState<SubJob[]>(subJobsParam);
 
     useEffect(() => {
-        console.log(subJobsParam);
         setSubJobs(subJobsParam);
     }, [subJobsParam])
 

@@ -102,7 +102,6 @@ function Schedule() {
   useEffect(() => {
     if (location.state !== null) {
       const { selectedJob, selectedSubJobs } = location.state;
-      console.log(selectedSubJobs);
       setSelectedSubJobs(selectedSubJobs);
       setSelectedJobForSubJob(selectedJob);
       setSelected(true);
