@@ -118,10 +118,11 @@ function AddSubJobFormModal({ isOpen, onClose, jobId, invoiceId, onAddSubJob }: 
                                 value={status}
                                 onChange={(e) => setStatus(e.target.value)}
                             >
-                                <option value="Unassigned">Unassigned</option>
-                                <option value="Cut">Cut</option>
-                                <option value="Sewn">Sewn</option>
-                                <option value="Upholstered">Upholstered</option>
+                                <option value="Upholstery Cut">Upholstery Cut</option>
+                                <option value="Body Upholstered">Body Upholstered</option>
+                                <option value="Waiting for wrapping">Waiting for wrapping</option>
+                                <option value="Frame Foamed">Frame Foamed</option>
+                                <option value="In Production">In Production</option>
                                 <option value="Complete">Complete</option>
                             </select>
                         </div>

@@ -67,24 +67,63 @@ export const createFrame = async (data: Frame) => {
 };
 
 // Delete a frame by ID
+// export const deleteFrameById = async (id: String) => {
+//   fetch(`${DBLink}/frame/deleteFrameById/${id}`, {
+//     method: "DELETE",
+//     mode: "cors",
+//     headers: { "Content-Type": "application/json" },
+//   })
+//     .then((res) => res.json())
+//     .catch((err) => console.error(err));
+// };
+
+// Delete a frame by ID
 export const deleteFrameById = async (id: String) => {
-  fetch(`${DBLink}/frame/deleteFrameById/${id}`, {
-    method: "DELETE",
-    mode: "cors",
-    headers: { "Content-Type": "application/json" },
-  })
-    .then((res) => res.json())
-    .catch((err) => console.error(err));
+  try {
+    const res = await fetch(`${DBLink}/frame/deleteFrameById/${id}`, {
+      method: "DELETE",
+      mode: "cors",
+      headers: { "Content-Type": "application/json" },
+    });
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(`HTTP error! status: ${res.status}, message: ${errorText}`);
+    }
+    return true; // Indicate success
+  } catch (err) {
+    console.error("Error deleting frame:", err);
+    return false; // Indicate failure
+  }
 };
 
 // Update a frame
-export const UpdateFrame = async (data: Frame) => {
-  fetch(`${DBLink}/frame/putUpdateFrame`, {
-    method: "PUT",
-    mode: "cors",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  })
-    .then((res) => res.json())
-    .catch((err) => console.log(err));
+// export const updateFrame = async (data: Frame) => {
+//   fetch(`${DBLink}/frame/putUpdateFrame`, {
+//     method: "PUT",
+//     mode: "cors",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify(data),
+//   })
+//     .then((res) => res.json())
+//     .catch((err) => console.log(err));
+// };
+
+export const updateFrame = async (data: Frame) => {
+  try {
+    const res = await fetch(`${DBLink}/frame/putUpdateFrame`, {
+      method: "PUT",
+      mode: "cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(`HTTP error! status: ${res.status}, message: ${errorText}`);
+    }
+    const updatedFrame = await res.json();
+    return updatedFrame;
+  } catch (err) {
+    console.error("Error updating frame:", err);
+    return null;
+  }
 };

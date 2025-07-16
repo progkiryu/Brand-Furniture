@@ -1,18 +1,16 @@
+// EditJobFormModal.tsx
 import React, { useState, useEffect } from 'react';
-
 
 
 interface EditJobFormModalProps {
     isOpen: boolean;
     onClose: () => void;
     jobToEdit: Job | null; // The job object to be edited, or null if not editing
-    onUpdateJob: (jobId: string, updatedData: Job) => void;
-    // onDeleteJob: (jobId: string) => void;
+    onUpdateJob: (updatedData: Job) => void;
+    onDeleteJob: (jobId: string) => void; // Add onDeleteJob prop
 }
 
-function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob, 
-    // onDeleteJob 
-}: EditJobFormModalProps) {
+function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob, onDeleteJob }: EditJobFormModalProps) {
     // State for form fields, initialized with jobToEdit data
     const [invoiceId, setInvoiceId] = useState<string>('');
     const [clientName, setClientName] = useState<string>('');
@@ -25,49 +23,47 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob,
     const [liaison, setLiaison] = useState<string>('');
     const [paymentNote, setPaymentNote] = useState<string>('');
 
+    /**
+     * Formats a Date object or string into a 'YYYY-MM-DD' string for date input fields.
+     * @param dateValue The date to format, can be Date, string, null, or undefined.
+     * @returns Formatted date string or empty string if invalid.
+     */
     const formatDateForInput = (dateValue: Date | string | null | undefined): string => {
         if (!dateValue) return '';
 
         let date: Date;
         if (dateValue instanceof Date) {
             date = dateValue;
-        } else if (typeof dateValue === 'string') {
-            date = new Date(dateValue);
         } else {
-            return ''; // Invalid type
+            date = new Date(dateValue);
         }
 
+        // Check if the date is valid before formatting
         if (isNaN(date.getTime())) {
-            return ''; // Invalid date
+            return '';
         }
 
-        // Return in YYYY-MM-DD format
-        return date.toISOString().split('T')[0];
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        return `${year}-${month}-${day}`;
     };
 
-
+    // Effect to populate form fields when jobToEdit changes or modal opens
     useEffect(() => {
-        if (jobToEdit) {
-            // Basic text fields
-            setInvoiceId(String(jobToEdit.invoiceId) || '');
-            setClientName(String(jobToEdit.client) || '');
-            setJobName(String(jobToEdit.name) || '');
-            setJobType(String(jobToEdit.type) || '');
-
-            // Date fields: Convert to YYYY-MM-DD string for input type="date"
+        if (isOpen && jobToEdit) {
+            setInvoiceId(jobToEdit.invoiceId?.toString() || '');
+            setClientName(jobToEdit.client?.toString() || '');
+            setJobName(jobToEdit.name?.toString() || '');
+            setJobType(jobToEdit.type?.toString() || '');
             setDueDate(formatDateForInput(jobToEdit.due));
+            setDepositAmount(jobToEdit.depositAmount?.toString() || '');
             setDepositDate(formatDateForInput(jobToEdit.depositDate));
-            setPaidInFull(formatDateForInput(jobToEdit.paidInFull)); // Use new state variable
-
-            // Number fields: Convert to string
-            setDepositAmount(String(jobToEdit.depositAmount || '') || ''); // Handle potential undefined/null
-
-            // Other text fields
-            setLiaison(String(jobToEdit.liaison || '') || '');
-            setPaymentNote(String(jobToEdit.paymentNote || '') || '');
-
-        } else {
-            // Reset all fields when modal is closed or no job is being edited
+            setPaidInFull(formatDateForInput(jobToEdit.paidInFull));
+            setLiaison(jobToEdit.liaison?.toString() || '');
+            setPaymentNote(jobToEdit.paymentNote?.toString() || '');
+        } else if (!isOpen) {
+            // Reset form fields when modal closes
             setInvoiceId('');
             setClientName('');
             setJobName('');
@@ -79,55 +75,64 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob,
             setLiaison('');
             setPaymentNote('');
         }
-    }, [jobToEdit]); 
+    }, [isOpen, jobToEdit]);
 
-    if (!isOpen || !jobToEdit) return null; // Don't render if not open or no job to edit
+    // If modal is not open, return null to not render anything
+    if (!isOpen) return null;
 
+    /**
+     * Handles the form submission for updating a job.
+     * @param event The form submission event.
+     */
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
 
-        // Basic validation for essential fields
-        if (!invoiceId || !clientName || !jobName || !jobType || !dueDate) {
-            alert('Please fill in all required fields.');
+        if (!jobToEdit?._id) {
+            console.error("Job ID is missing for update.");
             return;
         }
 
-        // Construct updated job data
+        // Construct the updated Job object
         const updatedData: Job = {
+            _id: jobToEdit._id, // Ensure _id is included for update
             invoiceId: invoiceId,
             client: clientName,
             name: jobName,
             type: jobType,
-            due: new Date(dueDate), // Convert string date to Date object
-            depositDate: new Date(depositDate),
-            depositAmount: Number(depositAmount),
-            paidInFull: new Date(paidInFull),
+            due: new Date(dueDate),
+            depositAmount: depositAmount ? Number(depositAmount) : undefined,
+            depositDate: depositDate ? new Date(depositDate) : undefined,
+            paidInFull: paidInFull ? new Date(paidInFull) : undefined,
             liaison: liaison,
             paymentNote: paymentNote,
+            subJobList: jobToEdit.subJobList, // Preserve existing subJobList
+            isPinned: jobToEdit.isPinned,
+            isArchived: jobToEdit.isArchived,
         };
 
-        // Call the parent handler to update the job
-        // Ensure jobToEdit._id exists before calling
-        if (jobToEdit._id) {
-            onUpdateJob(String(jobToEdit._id), updatedData);
-            // onClose(); // Parent will call onClose after successful update
+        onUpdateJob(updatedData);
+        onClose(); // Close modal after update
+    };
+
+    /**
+     * Handles the deletion of a job.
+     */
+    const handleDelete = () => {
+        if (jobToEdit?._id) {
+            // In a real application, you might add a confirmation dialog here
+            onDeleteJob(jobToEdit._id.toString());
+            onClose(); // Close modal after delete
         } else {
-            console.error("Job ID is missing for update.");
-            alert("Cannot update job: ID is missing.");
+            console.error("Job ID is missing for deletion.");
         }
     };
 
-    // const handleDelete = () => {
-    //     onDeleteJob(String(jobToEdit._id));
-    // }
-
     return (
-        <div className="modal-overlay" onClick={onClose}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                <button onClick={onClose} className="modal-close-btn">&times;</button>
-                <form onSubmit={handleSubmit} className="modal-form">
-                    <h2>Edit Job: {jobToEdit.name} #{jobToEdit.invoiceId}</h2> {/* Display job name in heading */}
-
+        <div className="modal-overlay">
+            <div className="modal-content">
+                <button className="close-button" onClick={onClose}>&times;</button>
+                <h2>Edit Job: {jobToEdit?.name}</h2>
+                <form onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label htmlFor="invoiceId">Invoice ID:</label>
                         <input
@@ -229,7 +234,7 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob,
                     </div>
 
                     <button type="submit">Update Job</button>
-                    {/* <button id="delete-button" onClick={handleDelete}>Delete Job</button> */}
+                    <button id="delete-button" type="button" onClick={handleDelete}>Delete Job</button>
                 </form>
             </div>
         </div>
