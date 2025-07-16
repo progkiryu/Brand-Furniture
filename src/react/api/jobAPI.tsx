@@ -92,11 +92,14 @@ export const getFilteredJobsByDate = async (startD: Date, endD: Date) => {
 
 // Get list of jobs with specific type. Note: must be exact match
 export const getFilteredJobsByType = async (type: String) => {
+  const temp = {
+    type: type,
+  };
   const jobs = fetch(`${DBLink}/job/getFilteredJobsByType`, {
     method: "POST",
     mode: "cors",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(type),
+    body: JSON.stringify(temp),
   })
     .then((res) => res.json())
     .catch((err) => console.error(err));
@@ -143,10 +146,6 @@ export const deleteJob = async (id: String) => {
 //     })
 //     .catch((err) => console.error(err));
 // };
-
-
-
-
 // export const updateJob = async (data: Job) => {
 //   try {
 //     const res = await fetch(`${DBLink}/job/updateJob`, {
@@ -193,8 +192,22 @@ export const updateJob = async (data: Job): Promise<Job | null> => {
 
     if (res.ok) {
       const updatedJob: Job = await res.json();
+
       // alert("Job updated successfully."); // Avoid alert()
-      return updatedJob; // Return the single updated job from the server
+      //return updatedJob; // Return the single updated job from the server
+
+      const jobs = await getAllJobs();
+
+      const processedUpdatedJob = {
+        ...updatedJob,
+        due: updatedJob.due ? new Date(updatedJob.due) : updatedJob.due,
+      };
+
+      const updatedJobsList = jobs.map((job: Job) =>
+        job._id === processedUpdatedJob._id ? processedUpdatedJob : job
+      );
+      alert("Job updated successfully.");
+      return updatedJobsList;
     } else {
       const errorText = await res.text();
       console.error(`Error updating job: ${res.status} - ${errorText}`);
