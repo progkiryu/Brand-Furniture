@@ -31,18 +31,11 @@ import EditCushionFormModal from "../components/EditCushionFormModal";
 import EditUpholsteryFormModal from "../components/EditUpholsteryFormModal";
 
 import { createFrame, updateFrame, deleteFrameById } from "../api/frameAPI"; // Import updateFrame, deleteFrameById
-import {
-  createCushion,
-  updateCushion,
-  deleteCushionById,
-} from "../api/cushionAPI"; // Import updateCushion, deleteCushionById
-import {
-  createUpholstery,
-  updateUpholstery,
-  deleteUpholstery,
-} from "../api/upholsteryAPI"; // Import updateUpholstery, deleteUpholstery
+import { createCushion, updateCushion, deleteCushionById } from "../api/cushionAPI"; // Import updateCushion, deleteCushionById
+import { createUpholstery, updateUpholstery, deleteUpholstery } from "../api/upholsteryAPI"; // Import updateUpholstery, deleteUpholstery
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from 'react';
+import { useLocation } from "react-router-dom";
 
 function Schedule() {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -66,14 +59,14 @@ function Schedule() {
 
   const [jobs, setJobs] = useState<Job[]>([]);
   const [subJobs, setSubJobs] = useState<SubJob[]>([]);
+
   const [selectedSubJobs, setSelectedSubJobs] = useState<SubJob[]>([]);
   const [isAddJobModelOpen, setIsAddJobModelOpen] = useState<boolean>(false);
   const [hasSelected, setSelected] = useState<boolean>(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
   const [isAddSubJobModalOpen, setIsAddSubJobModalOpen] = useState(false);
-  const [selectedJobForSubJob, setSelectedJobForSubJob] = useState<Job | null>(
-    null
-  );
+  const [selectedJobForSubJob, setSelectedJobForSubJob] = useState<Job | null>(null);
 
   const [filterInvoiceID, setFilterInvoiceID] = useState<
     "asc" | "desc" | undefined
@@ -98,6 +91,7 @@ function Schedule() {
 
   const [isAddCushionModalOpen, setIsAddCushionModalOpen] = useState(false);
   const [isAddFrameModalOpen, setIsAddFrameModalOpen] = useState(false);
+  
   const [isAddUpholsteryModalOpen, setIsAddUpholsteryModalOpen] =
     useState(false);
 
@@ -113,7 +107,7 @@ function Schedule() {
     useState<{ subJobId: String | null; subJobDetail: String | null } | null>(
       null
     );
-
+  
   // State for Edit Modals
   const [isEditSubJobModalOpen, setIsEditSubJobModalOpen] = useState(false);
   const [subJobToEdit, setSubJobToEdit] = useState<SubJob | null>(null);
@@ -131,28 +125,43 @@ function Schedule() {
   );
 
   useEffect(() => {
-    const fetchJobs = async () => {
-      const jobsPromise = getAllJobs();
-      const subJobsPromise = getAllSubJobs();
-      try {
-        const [fetchJobs, fetchSubJobs] = await Promise.all([
-          jobsPromise,
-          subJobsPromise,
-        ]);
-        setJobs(fetchJobs);
-        setSubJobs(fetchSubJobs);
-      } catch (err) {
-        console.error("Could not fetch Jobs!");
+    if (location.state !== null) {
+      const { selectedJob, selectedSubJobs } = location.state;
+      setSelectedSubJobs(selectedSubJobs);
+      setSelectedJobForSubJob(selectedJob);
+      setSelected(true);
+
+      const fetchJobs = async () => {
+        const jobsPromise = getAllJobs();
+        try {
+          const [fetchJobs] = await Promise.all([jobsPromise]);
+          setJobs(fetchJobs);
+        }
+        catch (err) {
+          console.error("Could not fetch Jobs!");
+        }
       }
-    };
-    fetchJobs();
+      fetchJobs();
+      
+      location.state === null;
+    }
+    else {
+      const fetchJobs = async () => {
+        const jobsPromise = getAllJobs();
+        const subJobsPromise = getAllSubJobs();
+        try {
+          const [fetchJobs, fetchSubJobs] = await Promise.all([jobsPromise, subJobsPromise]);
+          setJobs(fetchJobs);
+          setSubJobs(fetchSubJobs);
+        }
+        catch (err) {
+          console.error("Could not fetch Jobs!");
+        }
+      }
+      fetchJobs();
+    }
   }, [subJobs, frames, cushions, upholstery]);
-
-  // Handler for when the search input changes
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
-  };
-
+        
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -172,6 +181,11 @@ function Schedule() {
     };
   }, [dropdownOpen]);
 
+  // Handler for when the search input changes
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
+  
   const handleAddJob = async (newJobData: Job) => {
     const addedJob = await createJob(newJobData);
     if (addedJob) {
@@ -202,11 +216,9 @@ function Schedule() {
   const handleUpdateJob = async (updatedData: Job) => {
     const updatedJobFromServer = await updateJob(updatedData);
     if (updatedJobFromServer) {
-      setJobs((prevJobs) =>
-        prevJobs.map((job) =>
-          job._id === updatedJobFromServer._id ? updatedJobFromServer : job
-        )
-      );
+      setJobs(prevJobs => prevJobs.map(job =>
+        job._id === updatedJobFromServer._id ? updatedJobFromServer : job
+      ));
       setIsEditJobModalOpen(false);
       setJobToEdit(null);
     } else {
@@ -227,23 +239,42 @@ function Schedule() {
         setSelectedSubJobs([]);
       }
       setSelected(true);
-      setSelected(true);
-    } catch (err) {
+    }
+    catch (err) {
       console.log("Error deleting job:", err);
     }
   };
 
-  const handleAddSubJob = async (newSubJobData: SubJob) => {
-    const addedSubJob = await createSubJob(newSubJobData);
-    if (addedSubJob) {
-      // Update the subJob's cushionList
-      setSelectedSubJobs((prevSubJobs) => [...prevSubJobs, addedSubJob]);
-      setIsAddSubJobModalOpen(false); // Close modal
-      setSelectedJobForSubJob(null); // Clear selected subjob info
-    } else {
-      console.error("Failed to create cushion.");
+  const handleAddSubJob = async (newSubJobData: SubJob) = {
+    if (!selectedJobForSubJob) {
+      console.error("No job selected to add sub-job to.");
+      return;
+    }
+
+    try {
+      const addedSubJob = await createSubJob(newSubJobData);
+      if (addedSubJob && addedSubJob._id) {
+        const updatedSubJobList = [...(selectedJobForSubJob.subJobList || []), addedSubJob._id];
+        const jobToUpdate = {
+          ...selectedJobForSubJob,
+          subJobList: updatedSubJobList,
+        };
+        const updatedJobFromServer = await updateJob(jobToUpdate);
+        if (updatedJobFromServer) {
+          setJobs(prevJobs => prevJobs.map(job =>
+            job._id === updatedJobFromServer._id ? updatedJobFromServer : job
+          ));
+          await displayJobDetails(updatedJobFromServer); // Ensure sub-jobs are re-fetched and updated
+          setIsAddSubJobModalOpen(false);
+          setSelectedJobForSubJob(updatedJobFromServer); // Update the selected job to reflect changes
+        }
+      }
+    }
+    catch (err) {
+      console.error("Error adding sub-job:", err);
     }
   };
+  
 
   const handleUpdateSubJob = async (updatedData: SubJob) => {
     const updatedSubJobFromServer = await updateSubJob(updatedData);

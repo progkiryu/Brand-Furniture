@@ -22,6 +22,7 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob, onDeleteJob
     const [paidInFull, setPaidInFull] = useState<string>(''); // Boolean for checkbox
     const [liaison, setLiaison] = useState<string>('');
     const [paymentNote, setPaymentNote] = useState<string>('');
+    const [isArchived, setIsArchived] = useState<boolean>(false);
 
     /**
      * Formats a Date object or string into a 'YYYY-MM-DD' string for date input fields.
@@ -74,6 +75,7 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob, onDeleteJob
             setPaidInFull('');
             setLiaison('');
             setPaymentNote('');
+            setIsArchived(false);
         }
     }, [isOpen, jobToEdit]);
 
@@ -130,7 +132,7 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob, onDeleteJob
     return (
         <div className="modal-overlay">
             <div className="modal-content">
-                <button className="close-button" onClick={onClose}>&times;</button>
+                <button className="modal-close-btn" onClick={onClose}>&times;</button>
                 <h2>Edit Job: {jobToEdit?.name}</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
@@ -232,7 +234,15 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob, onDeleteJob
                             
                         />
                     </div>
-
+                    <div className="form-group">
+                        <label htmlFor="isArchived">Archive Job:</label>
+                        <input
+                            type="checkbox"
+                            id="isArchived"
+                            checked={isArchived}
+                            onChange={(e) => setIsArchived(e.target.checked)}
+                        />
+                    </div>
                     <button type="submit">Update Job</button>
                     <button id="delete-button" type="button" onClick={handleDelete}>Delete Job</button>
                 </form>

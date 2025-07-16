@@ -126,57 +126,6 @@ export const deleteJob = async (id: String) => {
 };
 
 // Update a job
-// export const updateJob = async (data: Job) => {
-//   fetch(`${DBLink}/job/updateJob`, {
-//     method: "PUT",
-//     mode: "cors",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify(data),
-//   })
-//     .then((res) => {
-//       if (res.ok) {
-//         alert("Job updated successfully.");
-//       } else {
-//         alert("Error: Failed to update job");
-//       }
-//     })
-//     .catch((err) => console.error(err));
-// };
-// export const updateJob = async (data: Job) => {
-//   try {
-//     const res = await fetch(`${DBLink}/job/updateJob`, {
-//       method: "PUT",
-//       mode: "cors",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify(data),
-//     });
-
-//     if (res.ok) {
-//       const updatedJob: Job = await res.json();
-
-//       const jobs = await getAllJobs();
-                
-//       const processedUpdatedJob = {
-//           ...updatedJob,
-//           due: updatedJob.due ? new Date(updatedJob.due) : updatedJob.due
-//       };
-
-//       const updatedJobsList = jobs.map((job : Job) => 
-//           job._id === processedUpdatedJob._id ? processedUpdatedJob : job
-//       );
-//       alert("Job updated successfully.");
-//       return updatedJobsList;
-//     } else {
-//       alert("Error: Failed to update job");
-//       return null;
-//     }
-//   } catch (err) {
-//     console.error("Error updating job:", err);
-//     return null;
-//   }
-// };
-
-// Update a job
 export const updateJob = async (data: Job): Promise<Job | null> => {
   try {
     const res = await fetch(`${DBLink}/job/updateJob/${data._id}`, {
@@ -189,23 +138,16 @@ export const updateJob = async (data: Job): Promise<Job | null> => {
     if (res.ok) {
       const updatedJob: Job = await res.json();
 
-      // alert("Job updated successfully."); // Avoid alert()
-      //return updatedJob; // Return the single updated job from the server
-
-      const jobs = await getAllJobs();
-
       const processedUpdatedJob = {
         ...updatedJob,
         due: updatedJob.due ? new Date(updatedJob.due) : updatedJob.due,
       };
 
-      const updatedJobsList = jobs.map((job: Job) =>
-        job._id === processedUpdatedJob._id ? processedUpdatedJob : job
-      );
-      return updatedJobsList;
+      // Return the single processed updated job
+      return processedUpdatedJob;
     } else {
       const errorText = await res.text();
-      console.error(`Error updating job: ${res.status} - ${errorText}`);
+      console.error(`Error updating job: ${res.status}, message: ${errorText}`);
       return null;
     }
   } catch (err) {
