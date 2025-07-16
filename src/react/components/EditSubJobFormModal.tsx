@@ -14,7 +14,7 @@ function EditSubJobFormModal({ isOpen, onClose, subJobToEdit, onUpdateSubJob, on
     const [note, setNote] = useState<string>('');
     const [file, setFile] = useState<string>('');
     const [dueDate, setDueDate] = useState<string>('');
-    const [status, setStatus] = useState<string>('Unassigned');
+    const [status, setStatus] = useState<string>('In Production');
     const [frameFormed, setFrameFormed] = useState<boolean>(false);
 
     /**
@@ -44,7 +44,7 @@ function EditSubJobFormModal({ isOpen, onClose, subJobToEdit, onUpdateSubJob, on
             setNote(subJobToEdit.note?.toString() || '');
             setFile(subJobToEdit.file?.toString() || '');
             setDueDate(formatDateForInput(subJobToEdit.dueDate));
-            setStatus(subJobToEdit.status?.toString() || 'Unassigned');
+            setStatus(subJobToEdit.status?.toString() || 'In Production');
             setFrameFormed(!!subJobToEdit.frameFormed); 
         } else if (!isOpen) {
             // Reset form fields when modal closes
@@ -52,7 +52,7 @@ function EditSubJobFormModal({ isOpen, onClose, subJobToEdit, onUpdateSubJob, on
             setNote('');
             setFile('');
             setDueDate('');
-            setStatus('Unassigned');
+            setStatus('In Production');
             setFrameFormed(false);
         }
     }, [isOpen, subJobToEdit]);
