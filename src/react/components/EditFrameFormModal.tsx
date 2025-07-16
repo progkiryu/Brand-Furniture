@@ -5,7 +5,7 @@ interface EditFrameFormModalProps {
     isOpen: boolean;
     onClose: () => void;
     frameToEdit: Frame | null; // The frame object to be edited
-    onUpdateFrame: (frameId: string, updatedData: Frame) => void;
+    onUpdateFrame: (updatedData: Frame) => void;
     onDeleteFrame: (frameId: string) => void;
 }
 
@@ -78,7 +78,7 @@ function EditFrameFormModal({ isOpen, onClose, frameToEdit, onUpdateFrame, onDel
             receivedDate: receivedDate ? new Date(receivedDate) : undefined,
         };
 
-        onUpdateFrame(frameToEdit._id.toString(), updatedData);
+        onUpdateFrame(updatedData);
         onClose();
     };
 

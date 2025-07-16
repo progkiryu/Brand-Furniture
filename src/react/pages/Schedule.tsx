@@ -24,7 +24,6 @@ import EditFrameFormModal from "../components/EditFrameFormModal";
 import EditCushionFormModal from "../components/EditCushionFormModal";
 import EditUpholsteryFormModal from "../components/EditUpholsteryFormModal";
 
-import { DBLink } from "../App";
 import { createFrame, updateFrame, deleteFrameById } from "../api/frameAPI"; // Import updateFrame, deleteFrameById
 import { createCushion, updateCushion, deleteCushionById } from "../api/cushionAPI"; // Import updateCushion, deleteCushionById
 import { createUpholstery, updateUpholstery, deleteUpholstery } from "../api/upholsteryAPI"; // Import updateUpholstery, deleteUpholstery
@@ -141,7 +140,7 @@ function Schedule() {
   };
 
 
-  const handleUpdateJob = async (jobId: string, updatedData: Job) => {
+  const handleUpdateJob = async (updatedData: Job) => {
     const updatedJobFromServer = await updateJob(updatedData); 
     if (updatedJobFromServer) {
       setJobs(prevJobs => prevJobs.map(job =>
@@ -177,20 +176,49 @@ function Schedule() {
     }
   }
 
+
   const handleAddSubJob = async (newSubJobData: SubJob) => {
-    const addedSubJob = await createSubJob(newSubJobData);
-    if (addedSubJob) {
-      // Update the subJob's cushionList
-      setSubJobs(prevSubJobs => [...prevSubJobs, addedSubJob]);
-      setIsAddSubJobModalOpen(false); // Close modal
-      setSelectedJobForSubJob(null); // Clear selected subjob info
-    } else {
-      console.error("Failed to create cushion.");
+    try {
+      const addedSubJob = await createSubJob(newSubJobData); 
+      if (addedSubJob && selectedJobForSubJob && selectedJobForSubJob._id) {
+        const updatedJobDataForBackend: Job = {
+            ...selectedJobForSubJob,
+            subJobList: [...(selectedJobForSubJob.subJobList || []), addedSubJob._id as String]
+        };
+
+        const updatedJobFromServer = await updateJob(updatedJobDataForBackend);
+
+        if (updatedJobFromServer) {
+            setJobs(prevJobs => prevJobs.map(job =>
+                job._id === updatedJobFromServer._id ? {
+                  ...updatedJobFromServer,
+                  isPinned: !!updatedJobFromServer.isPinned,
+                  isArchived: !!updatedJobFromServer.isArchived
+                } : job
+            ));
+            // Crucially, update selectedJobForSubJob immediately after updating the parent job
+            setSelectedJobForSubJob({
+              ...updatedJobFromServer,
+              isPinned: !!updatedJobFromServer.isPinned,
+              isArchived: !!updatedJobFromServer.isArchived
+            });
+            // Now, re-fetch sub-jobs using the updated selectedJobForSubJob
+            await displayJobDetails(updatedJobFromServer); // Pass the fresh job object
+        } else {
+            console.error("Failed to update parent job in backend after adding sub-job.");
+        }
+
+        setIsAddSubJobModalOpen(false);
+      } else {
+        console.error("Failed to create sub-job or selected job is missing.");
+      }
+    } catch (err) {
+      console.error("Error creating sub-job:", err);
     }
   };
 
 
-  const handleUpdateSubJob = async (subJobId: string, updatedData: SubJob) => {
+  const handleUpdateSubJob = async (updatedData: SubJob) => {
     const updatedSubJobFromServer = await updateSubJob(updatedData);
     if (updatedSubJobFromServer) {
       // --- NEW APPROACH ---
@@ -249,7 +277,7 @@ function Schedule() {
     }
   };
 
-  const handleUpdateCushion = async (cushionId: string, updatedData: Cushion) => {
+  const handleUpdateCushion = async (updatedData: Cushion) => {
     const updatedCushionFromServer = await updateCushion(updatedData);
     if (updatedCushionFromServer) {
       // Find the subJob that contains this cushion and update its cushionList (if necessary)
@@ -304,7 +332,7 @@ function Schedule() {
     }
   };
 
-  const handleUpdateFrame = async (frameId: string, updatedData: Frame) => {
+  const handleUpdateFrame = async (updatedData: Frame) => {
     const updatedFrameFromServer = await updateFrame(updatedData);
     if (updatedFrameFromServer) {
       // Re-fetch subjobs to ensure consistency if lists are not directly managed
@@ -357,7 +385,7 @@ function Schedule() {
     }
   };
 
-  const handleUpdateUpholstery = async (upholsteryId: string, updatedData: Upholstery) => {
+  const handleUpdateUpholstery = async ( updatedData: Upholstery) => {
     const updatedUpholsteryFromServer = await updateUpholstery(updatedData);
     if (updatedUpholsteryFromServer) {
       // Re-fetch subjobs to ensure consistency if lists are not directly managed

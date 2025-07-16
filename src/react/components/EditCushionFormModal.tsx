@@ -5,7 +5,7 @@ interface EditCushionFormModalProps {
     isOpen: boolean;
     onClose: () => void;
     cushionToEdit: Cushion | null; // The cushion object to be edited
-    onUpdateCushion: (cushionId: string, updatedData: Cushion) => void;
+    onUpdateCushion: (updatedData: Cushion) => void;
     onDeleteCushion: (cushionId: string) => void;
 }
 
@@ -89,7 +89,7 @@ function EditCushionFormModal({ isOpen, onClose, cushionToEdit, onUpdateCushion,
             receivedDate: receivedDate ? new Date(receivedDate) : undefined,
         };
 
-        onUpdateCushion(cushionToEdit._id.toString(), updatedData);
+        onUpdateCushion(updatedData);
         onClose();
     };
 
