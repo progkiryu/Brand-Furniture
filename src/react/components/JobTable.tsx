@@ -34,6 +34,7 @@ function JobTable({
     clientTerm, 
     dueDateTerm, 
     jobNameTerm,
+    onEditJobClick
 }: JobTableProps) {
     const [displayedJobs, setDisplayedJobs] = useState<Job[]>(jobs);
     // State to hold both jobId and invoiceId for the selected job

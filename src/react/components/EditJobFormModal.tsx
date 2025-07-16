@@ -6,7 +6,7 @@ interface EditJobFormModalProps {
     isOpen: boolean;
     onClose: () => void;
     jobToEdit: Job | null; // The job object to be edited, or null if not editing
-    onUpdateJob: (jobId: string, updatedData: Job) => void;
+    onUpdateJob: (updatedData: Job) => void;
     onDeleteJob: (jobId: string) => void; // Add onDeleteJob prop
 }
 
@@ -110,7 +110,7 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob, onDeleteJob
             isArchived: jobToEdit.isArchived,
         };
 
-        onUpdateJob(jobToEdit._id.toString(), updatedData);
+        onUpdateJob(updatedData);
         onClose(); // Close modal after update
     };
 

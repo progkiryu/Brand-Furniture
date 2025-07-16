@@ -5,7 +5,7 @@ interface EditSubJobFormModalProps {
     isOpen: boolean;
     onClose: () => void;
     subJobToEdit: SubJob | null; // The subJob object to be edited
-    onUpdateSubJob: (subJobId: string, updatedData: SubJob) => void;
+    onUpdateSubJob: (updatedData: SubJob) => void;
     onDeleteSubJob: (subJobId: string) => void;
 }
 
@@ -85,7 +85,7 @@ function EditSubJobFormModal({ isOpen, onClose, subJobToEdit, onUpdateSubJob, on
             upholsteryList: subJobToEdit.upholsteryList,
         };
 
-        onUpdateSubJob(subJobToEdit._id.toString(), updatedData);
+        onUpdateSubJob(updatedData);
         onClose();
     };
 

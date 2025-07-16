@@ -6,7 +6,6 @@ export const getAllJobs = async () => {
     .then((res) => res.json())
     .catch((err) => console.error(err));
   if (!allJobs) {
-    alert("Error: Failed to retrieve jobs.");
     return;
   }
   return allJobs;
@@ -18,7 +17,6 @@ export const getJobById = async (id: String) => {
     .then((res) => res.json())
     .catch((err) => console.error(err));
   if (!job) {
-    alert("Error: Failed to retrieve job.");
     return;
   }
   return job;
@@ -58,10 +56,8 @@ export const createJob = async (data: Job) => {
 
     if (res.ok) {
       const createdJob: Job = await res.json();
-      alert("Job created successfully.");
       return createdJob;
     } else {
-      alert("Error: Failed to create job.");
       return null;
     }
   } catch (err) {
@@ -206,7 +202,6 @@ export const updateJob = async (data: Job): Promise<Job | null> => {
       const updatedJobsList = jobs.map((job: Job) =>
         job._id === processedUpdatedJob._id ? processedUpdatedJob : job
       );
-      alert("Job updated successfully.");
       return updatedJobsList;
     } else {
       const errorText = await res.text();

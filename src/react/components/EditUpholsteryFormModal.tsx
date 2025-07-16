@@ -5,7 +5,7 @@ interface EditUpholsteryFormModalProps {
     isOpen: boolean;
     onClose: () => void;
     upholsteryToEdit: Upholstery | null; // The upholstery object to be edited
-    onUpdateUpholstery: (upholsteryId: string, updatedData: Upholstery) => void;
+    onUpdateUpholstery: (updatedData: Upholstery) => void;
     onDeleteUpholstery: (upholsteryId: string) => void;
 }
 
@@ -88,7 +88,7 @@ function EditUpholsteryFormModal({ isOpen, onClose, upholsteryToEdit, onUpdateUp
             receivedDate: receivedDate ? new Date(receivedDate) : undefined,
         };
 
-        onUpdateUpholstery(upholsteryToEdit._id.toString(), updatedData);
+        onUpdateUpholstery(updatedData);
         onClose();
     };
 

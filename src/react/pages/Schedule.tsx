@@ -4,7 +4,7 @@ import "../styles/ModalForm.css"
 import "../styles/SubJobModalForm.css" // Ensure this CSS file exists or create it if needed
 
 import { createJob, updateJob, getAllJobs, deleteJob } from "../api/jobAPI"; // Import deleteJobById
-import { createSubJob, getSubJobById, updateSubJob, deleteSubJob } from "../api/subJobAPI"; // Import deleteSubJob
+import { createSubJob, getAllSubJobs, getSubJobById, updateSubJob, deleteSubJob } from "../api/subJobAPI"; // Import deleteSubJob
 
 import Navbar from "../components/Navbar";
 import SearchBar from "../components/Searchbar"; // New component
@@ -24,7 +24,6 @@ import EditFrameFormModal from "../components/EditFrameFormModal";
 import EditCushionFormModal from "../components/EditCushionFormModal";
 import EditUpholsteryFormModal from "../components/EditUpholsteryFormModal";
 
-import { DBLink } from "../App";
 import { createFrame, updateFrame, deleteFrameById } from "../api/frameAPI"; // Import updateFrame, deleteFrameById
 import { createCushion, updateCushion, deleteCushionById } from "../api/cushionAPI"; // Import updateCushion, deleteCushionById
 import { createUpholstery, updateUpholstery, deleteUpholstery } from "../api/upholsteryAPI"; // Import updateUpholstery, deleteUpholstery
@@ -34,9 +33,9 @@ import { useState, useEffect, useRef } from 'react';
 function Schedule() {
 
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [cushions, setCushions] = useState<Array<Cushion>>([]); 
-  const [frames, setFrames] = useState<Array<Frame>>([]); 
-  const [upholstery, setUpholstery] = useState<Array<Upholstery>>([]); 
+  const [cushions] = useState<Array<Cushion>>([]); 
+  const [frames] = useState<Array<Frame>>([]); 
+  const [upholstery] = useState<Array<Upholstery>>([]); 
 
   const [isEditJobModalOpen, setIsEditJobModalOpen] = useState(false);
   const [jobToEdit, setJobToEdit] = useState<Job | null>(null);
@@ -52,7 +51,6 @@ function Schedule() {
   const [dueDateAsc, setDueDateAsc] = useState<boolean>(false);
   const [dueDateDesc, setDueDateDesc] = useState<boolean>(false);
 
-  const [hasSelected, setSelected] = useState<boolean>(false);
   const [jobs, setJobs] = useState<Job[]>([]); 
   const [subJobs, setSubJobs] = useState<SubJob[]>([]);
   const [selectedSubJobs, setSelectedSubJobs] = useState<SubJob[]>([]);
@@ -149,6 +147,7 @@ function Schedule() {
   };
 
   const handleEditJobClick = (job: Job) => {
+    console.log("bruh");
     setJobToEdit(job); 
     setIsEditJobModalOpen(true); 
   };
@@ -166,7 +165,7 @@ function Schedule() {
   };
 
 
-  const handleUpdateJob = async (jobId: string, updatedData: Job) => {
+  const handleUpdateJob = async (updatedData: Job) => {
     const updatedJobFromServer = await updateJob(updatedData); 
     if (updatedJobFromServer) {
       setJobs(prevJobs => prevJobs.map(job =>
@@ -208,7 +207,7 @@ function Schedule() {
     const addedSubJob = await createSubJob(newSubJobData);
     if (addedSubJob) {
       // Update the subJob's cushionList
-      setSubJobs(prevSubJobs => [...prevSubJobs, addedSubJob]);
+      setSelectedSubJobs(prevSubJobs => [...prevSubJobs, addedSubJob]);
       setIsAddSubJobModalOpen(false); // Close modal
       setSelectedJobForSubJob(null); // Clear selected subjob info
     } else {
@@ -217,7 +216,7 @@ function Schedule() {
   };
 
 
-  const handleUpdateSubJob = async (subJobId: string, updatedData: SubJob) => {
+  const handleUpdateSubJob = async (updatedData: SubJob) => {
     const updatedSubJobFromServer = await updateSubJob(updatedData);
     if (updatedSubJobFromServer) {
       // --- NEW APPROACH ---
@@ -236,7 +235,7 @@ function Schedule() {
   const handleDeleteSubJob = async (subJobId: string) => {
     const success = await deleteSubJob(subJobId as String);
     if (success) {
-      setSubJobs(prevSubJobs => prevSubJobs.filter(subJob => subJob._id !== subJobId));
+      setSelectedSubJobs(prevSubJobs => prevSubJobs.filter(subJob => subJob._id !== subJobId));
       // Also update the parent job's subJobList
       if (selectedJobForSubJob && selectedJobForSubJob._id) {
         const updatedJob: Job = {
@@ -260,7 +259,7 @@ function Schedule() {
     const addedCushion = await createCushion(newCushionData);
     if (addedCushion) {
       // Update the subJob's cushionList
-      setSubJobs(prevSubJobs => prevSubJobs.map(subJob => {
+      setSelectedSubJobs(prevSubJobs => prevSubJobs.map(subJob => {
         if (subJob._id === addedCushion.subJobId) {
           return {
             ...subJob,
@@ -276,7 +275,8 @@ function Schedule() {
     }
   };
 
-  const handleUpdateCushion = async (cushionId: string, updatedData: Cushion) => {
+  const handleUpdateCushion = async (updatedData: Cushion) => {
+    console.log(updatedData);
     const updatedCushionFromServer = await updateCushion(updatedData);
     if (updatedCushionFromServer) {
       // Find the subJob that contains this cushion and update its cushionList (if necessary)
@@ -296,7 +296,7 @@ function Schedule() {
     const success = await deleteCushionById(cushionId as String);
     if (success) {
       // Update the subJob's cushionList
-      setSubJobs(prevSubJobs => prevSubJobs.map(subJob => {
+      setSelectedSubJobs(prevSubJobs => prevSubJobs.map(subJob => {
         if (subJob.cushionList?.includes(cushionId as String)) {
           const updatedSubJob = {
             ...subJob,
@@ -317,7 +317,7 @@ function Schedule() {
   const handleAddFrame = async (newFrameData: Frame) => { // New handler for AddFrameModal
     const addedFrame = await createFrame(newFrameData);
     if (addedFrame) {
-      setSubJobs(prevSubJobs => prevSubJobs.map(subJob => {
+      setSelectedSubJobs(prevSubJobs => prevSubJobs.map(subJob => {
         if (subJob._id === addedFrame.subJobId) {
           return {
             ...subJob,
@@ -331,7 +331,7 @@ function Schedule() {
     }
   };
 
-  const handleUpdateFrame = async (frameId: string, updatedData: Frame) => {
+  const handleUpdateFrame = async (updatedData: Frame) => {
     const updatedFrameFromServer = await updateFrame(updatedData);
     if (updatedFrameFromServer) {
       // Re-fetch subjobs to ensure consistency if lists are not directly managed
@@ -349,7 +349,7 @@ function Schedule() {
     const success = await deleteFrameById(frameId as String);
     if (success) {
       // Update the subJob's frameList
-      setSubJobs(prevSubJobs => prevSubJobs.map(subJob => {
+      setSelectedSubJobs(prevSubJobs => prevSubJobs.map(subJob => {
         if (subJob.frameList?.includes(frameId as String)) {
           const updatedSubJob = {
             ...subJob,
@@ -370,7 +370,7 @@ function Schedule() {
   const handleAddUpholstery = async (newUpholsteryData: Upholstery) => { // New handler for AddUpholsteryModal
     const addedUpholstery = await createUpholstery(newUpholsteryData);
     if (addedUpholstery) {
-      setSubJobs(prevSubJobs => prevSubJobs.map(subJob => {
+      setSelectedSubJobs(prevSubJobs => prevSubJobs.map(subJob => {
         if (subJob._id === addedUpholstery.subJobId) {
           return {
             ...subJob,
@@ -402,7 +402,7 @@ function Schedule() {
     const success = await deleteUpholstery(upholsteryId as String);
     if (success) {
       // Update the subJob's upholsteryList
-      setSubJobs(prevSubJobs => prevSubJobs.map(subJob => {
+      setSelectedSubJobs(prevSubJobs => prevSubJobs.map(subJob => {
         if (subJob.upholsteryList?.includes(upholsteryId as String)) {
           const updatedSubJob = {
             ...subJob,
@@ -569,7 +569,9 @@ function Schedule() {
     else if (status === "production") {
       checked === true ? setFilterProduction(false) : setFilterProduction(true);
     }
-  }  const openEditSubJobModal = (subJob: SubJob) => {
+  }  
+  
+  const openEditSubJobModal = (subJob: SubJob) => {
     setSubJobToEdit(subJob);
     setIsEditSubJobModalOpen(true);
   };
