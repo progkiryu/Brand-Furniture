@@ -1,73 +1,73 @@
 type Job = {
-  client: String;
-  poNumber?: String;
-  _id?: String;
-  invoiceId?: String;
-  client: String;
-  name: String;
-  type: String; // Added 'type' as per your mock data
+  client: string;
+  poNumber?: string;
+  _id?: string;
+  invoiceId?: string;
+  client: string;
+  name: string;
+  type: string; // Added 'type' as per your mock data
   due: Date;
   depositAmount?: Number;
   depositDate?: Date;
   paidInFull?: Date;
-  liaison?: String;
-  paymentNote?: String;
-  subJobList?: String[];
+  liaison?: string;
+  paymentNote?: string;
+  subJobList?: string[];
   isPinned?: Boolean;
   isArchived?: Boolean;
 };
 
 type SubJob = {
-  _id?: String;
-  jobId: String;
-  subJobDetail: String;
-  note?: String;
-  file?: String;
+  _id?: string;
+  jobId: string;
+  subJobDetail: string;
+  note?: string;
+  file?: string;
   dueDate?: Date;
-  frameList?: String[];
-  cushionList?: String[];
-  upholsteryList?: String[];
-  status?: String; // status of subjob (5 colours), default: "Unassigned"
+  frameList?: string[];
+  cushionList?: string[];
+  upholsteryList?: string[];
+  status?: string; // status of subjob (5 colours), default: "Unassigned"
   frameFormed?: Boolean; // seperate to the 5 colours
 };
 
 type Frame = {
-  _id?: String;
-  subJobId: String; // FK to SubJob (SubJob's 'subJobId')
-  supplier?: String;
-  description?: String;
+  _id?: string;
+  subJobId: string; // FK to SubJob (SubJob's 'subJobId')
+  supplier?: string;
+  description?: string;
   orderedDate?: Date;
   expectedDate?: Date;
   receivedDate?: Date;
 };
 
 type Cushion = {
-  _id?: String;
-  subJobId: String; // FK to SubJob (SubJob's 'subJobId')
-  type: String;
-  supplier?: String;
-  description?: String;
+  _id?: string;
+  subJobId: string; // FK to SubJob (SubJob's 'subJobId')
+  type: string;
+  supplier?: string;
+  description?: string;
   orderedDate?: Date;
   expectedDate?: Date;
   receivedDate?: Date;
 };
 
 type Upholstery = {
-  _id?: String;
-  subJobId: String; // FK to SubJob (SubJob's 'subJobId')
-  type: String;
-  supplier?: String;
-  description?: String;
+  _id?: string;
+  subJobId: string; // FK to SubJob (SubJob's 'subJobId')
+  type: string;
+  supplier?: string;
+  description?: string;
   orderedDate?: Date;
   expectedDate?: Date;
   receivedDate?: Date;
 };
 
 type Notif = {
-  _id?: String;
+  _id?: string;
   icon?: "cart" | "pin";
-  notifTitle: String;
-  notifDesc: String;
+  notifTitle: string;
+  notifDesc: string;
   time: Date;
 };
 
