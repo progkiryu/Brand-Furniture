@@ -333,22 +333,7 @@ const onRowClick = async (job: Job) => {
                                 </td>
                                 </tr>
 
-                            // <tr key={String(job._id)}>
-                            //     <td onClick={() => jobClicked(job)}> {/* Keep existing click for details */}
-                            //         {job.name}
-                            //     </td>
-                            //     <td>
-                            //         {/* Add the Edit Job button */}
-                            //         <input 
-                            //             type="button" 
-                            //             value="Edit Job" 
-                            //             onClick={(e) => {
-                            //                 e.stopPropagation(); // Prevent row click from firing
-                            //                 onEditJobClick(job);
-                            //             }}
-                            //         />
-                            //     </td>
-                            // </tr>
+
                         ))}
                     </tbody>
                 </table>
