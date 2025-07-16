@@ -3,7 +3,6 @@ import "../styles/Analytics.css";
 import "../styles/Global.css";
 import Navbar from "../components/Navbar";
 import JobVolume from "../components/JobVolume";
-import JobCompletion from "../components/JobCompletion";
 import OrderTypeDistributionChart from "../components/OrderTypeDistribution";
 import { getFilteredJobsByDate, getFilteredJobsByType } from "../api/jobAPI";
 
@@ -12,23 +11,28 @@ export type TypeInfo = {
   value: number;
 };
 
-type DateRange = "lastmonth" | "last6months" | "last12months" | "last2years";
+type DateRange = "last6months" | "last12months" | "last2years";
 
 function Analytics() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [dateRange, setDateRange] = useState<DateRange>("lastmonth");
+  const [dateRange, setDateRange] = useState<DateRange>("last6months");
 
   // Job Distribution Data
-  let jobTypes: string[] = [];
-  let typeCounter: TypeInfo[] = [];
+  const jobTypes: string[] = [];
+  const typeCounter: TypeInfo[] = [];
   const [jobDistributionData, setJobDistributionData] = useState<TypeInfo[]>(
     []
   );
-
-  // Job Volume Data
+  // Job volume time frames
   let jobVolumeTimeframes: string[] = [];
+  // Job Volume Data
   let jobVolumeCounter: TypeInfo[] = [];
   const [jobVolumeData, setJobVolumeData] = useState<TypeInfo[]>([]);
+  // Job Completion Data
+  let jobVolumeCompleteCounter: TypeInfo[] = [];
+  const [jobVolumeCompleteData, setJobVolumeCompleteData] = useState<
+    TypeInfo[]
+  >([]);
 
   const MONTHS: string[] = [
     "Jan",
@@ -51,14 +55,18 @@ function Analytics() {
     "last2years",
   ].includes(dateRange);
 
+  const resetArrays = () => {
+    setJobDistributionData([]);
+    setJobVolumeData([]);
+    setJobVolumeCompleteData([]);
+  };
+
   const handleRangeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setDateRange(event.target.value as DateRange);
   };
 
   const getLabelPrefix = (range: DateRange) => {
     switch (range) {
-      case "lastmonth":
-        return "Monthly";
       case "last6months":
         return "Over the Last 6 Months";
       case "last12months":
@@ -127,43 +135,7 @@ function Analytics() {
     return year;
   };
 
-  const processJobDistribution = async (allJobs: Job[]) => {
-    if (allJobs.length < 1) {
-      return;
-    }
-
-    let existFlag: boolean = false;
-
-    // Get all the unique job types
-    for (let i = 0; i < allJobs.length; i++) {
-      for (let j = 0; j <= jobTypes.length; j++) {
-        if (allJobs[i].type === jobTypes[j]) {
-          existFlag = true;
-        }
-      }
-      if (existFlag === false) {
-        jobTypes.push(allJobs[i].type);
-      }
-      existFlag = false;
-    }
-    // Get the counts of each type
-    for (let i = 0; i < jobTypes.length; i++) {
-      const jobs = await getFilteredJobsByType(jobTypes[i]);
-      typeCounter.push({ name: `${jobTypes[i]}`, value: jobs.length });
-    }
-    // Filter out unique values
-    const uniqueTypeCounter = typeCounter.filter(
-      (obj, index, self) =>
-        index === self.findIndex((type) => type.name === obj.name)
-    );
-    setJobDistributionData(uniqueTypeCounter);
-  };
-
-  const processJobVolume = async (allJobs: Job[]) => {
-    if (allJobs.length < 1) {
-      return;
-    }
-
+  const getTimeFrames = () => {
     const today = new Date();
     // const todayDayNo: number = today.getDate();
     const todayMonth: number = today.getMonth();
@@ -175,9 +147,6 @@ function Analytics() {
 
     // Set the jobVolume monthly time frames
     switch (dateRange) {
-      case "lastmonth":
-        jobVolumeTimeframes.unshift(MONTHS[todayMonth] + jobYearCheck);
-        break;
       case "last6months":
         for (let i = 0; i < 6; i++) {
           jobYearCheck = negativeYearChecker(
@@ -233,6 +202,49 @@ function Analytics() {
         jobVolumeTimeframes.unshift(MONTHS[todayMonth - 1]);
         break;
     }
+  };
+
+  const processJobDistribution = async (allJobs: Job[]) => {
+    if (allJobs.length < 1) {
+      return;
+    }
+
+    let existFlag: boolean = false;
+
+    // Get all the unique job types
+    for (let i = 0; i < allJobs.length; i++) {
+      for (let j = 0; j <= jobTypes.length; j++) {
+        if (allJobs[i].type === jobTypes[j]) {
+          existFlag = true;
+        }
+      }
+      if (existFlag === false) {
+        jobTypes.push(allJobs[i].type);
+      }
+      existFlag = false;
+    }
+    // Get the counts of each type
+    for (let i = 0; i < jobTypes.length; i++) {
+      let count = 0;
+      for (let j = 0; j < allJobs.length; j++) {
+        if (jobTypes[i] === allJobs[j].type) {
+          count++;
+        }
+      }
+      typeCounter.push({ name: jobTypes[i], value: count });
+    }
+    // Filter out unique values
+    const uniqueTypeCounter = typeCounter.filter(
+      (obj, index, self) =>
+        index === self.findIndex((type) => type.name === obj.name)
+    );
+    setJobDistributionData(uniqueTypeCounter);
+  };
+
+  const processJobVolume = async (allJobs: Job[]) => {
+    if (allJobs.length < 1) {
+      return;
+    }
 
     // add all the months to the obj array
     for (let i = 0; i < jobVolumeTimeframes.length; i++) {
@@ -250,20 +262,64 @@ function Analytics() {
         }
       }
     }
-    setJobVolumeData(jobVolumeCounter);
+    // Filter out unique values
+    const uniqueJobVolumeCounter = jobVolumeCounter.filter(
+      (obj, index, self) => index === self.findIndex((a) => a.name === obj.name)
+    );
+    setJobVolumeData(uniqueJobVolumeCounter);
+  };
+
+  const processJobCompletedVolume = async (allJobs: Job[]) => {
+    if (allJobs.length < 1) {
+      return;
+    }
+
+    let archivedJobs: Job[] = [];
+    for (let i = 0; i < allJobs.length; i++) {
+      if (allJobs[i].isArchived === true) {
+        archivedJobs.push(allJobs[i]);
+      }
+    }
+
+    // add all the months to the obj array
+    for (let i = 0; i < jobVolumeTimeframes.length; i++) {
+      jobVolumeCompleteCounter.push({ name: jobVolumeTimeframes[i], value: 0 });
+    }
+
+    // Count job occurances for each month
+    for (let i = 0; i < archivedJobs.length; i++) {
+      const jobMonth = getMonthString(archivedJobs[i]);
+      const jobYear = getYearString(archivedJobs[i]);
+      const jobMY = jobMonth + jobYear;
+      for (let j = 0; j < jobVolumeCompleteCounter.length; j++) {
+        if (jobMY.toString() === jobVolumeCompleteCounter[j].name.toString()) {
+          jobVolumeCompleteCounter[j].value++;
+        }
+      }
+    }
+    // Filter out unique values
+    const uniqueJobVolumeCompleteCounter = jobVolumeCompleteCounter.filter(
+      (obj, index, self) => index === self.findIndex((a) => a.name === obj.name)
+    );
+    setJobVolumeCompleteData(uniqueJobVolumeCompleteCounter);
   };
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
 
+      resetArrays();
+      await getTimeFrames();
+
       const range = getDateRange();
       const allJobs = await getFilteredJobsByDate(
         range.startDate,
         range.endDate
       );
+
       await processJobDistribution(allJobs);
       await processJobVolume(allJobs);
+      await processJobCompletedVolume(allJobs);
 
       setIsLoading(false);
     };
@@ -289,7 +345,6 @@ function Analytics() {
         <div className="date-range-selector">
           <label htmlFor="range">View data for: </label>
           <select id="range" value={dateRange} onChange={handleRangeChange}>
-            <option value="lastmonth">Last Month</option>
             <option value="last6months">Last 6 Months</option>
             <option value="last12months">Last 12 Months</option>
             <option value="last2years">Last 2 Years</option>
@@ -322,7 +377,7 @@ function Analytics() {
                   ? `Job Completion ${getLabelPrefix(dateRange)}`
                   : `${getLabelPrefix(dateRange)} Job Completion`}
               </h2>
-              <JobCompletion dateRange={dateRange} />
+              <JobVolume data={jobVolumeCompleteData} />
             </div>
           </div>
         </div>
