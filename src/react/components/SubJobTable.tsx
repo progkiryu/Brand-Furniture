@@ -28,7 +28,6 @@ function SubJobTable({
 
     useEffect(() => {
         setSubJobs(subJobsParam);
-        console.log(subJobsParam);
     }, [subJobsParam])
 
     return (

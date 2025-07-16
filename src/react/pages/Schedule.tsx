@@ -147,7 +147,6 @@ function Schedule() {
   };
 
   const handleEditJobClick = (job: Job) => {
-    console.log("bruh");
     setJobToEdit(job); 
     setIsEditJobModalOpen(true); 
   };
@@ -189,7 +188,6 @@ function Schedule() {
           return getSubJobById(subJobId);
         });
         const fetchedSubJobs: SubJob[] = await Promise.all(subJobs);
-        console.log(fetchedSubJobs);
         setSelectedSubJobs(fetchedSubJobs);
       }
       else {
@@ -276,7 +274,6 @@ function Schedule() {
   };
 
   const handleUpdateCushion = async (updatedData: Cushion) => {
-    console.log(updatedData);
     const updatedCushionFromServer = await updateCushion(updatedData);
     if (updatedCushionFromServer) {
       // Find the subJob that contains this cushion and update its cushionList (if necessary)
@@ -547,7 +544,6 @@ function Schedule() {
   }
 
   const handleStatusChange = (checked: boolean, status: String) => {
-    console.log(checked);
     if (status === "cut") {
       checked === true ? setFilterCut(false) : setFilterCut(true);
     }
