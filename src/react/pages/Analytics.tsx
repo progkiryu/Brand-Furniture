@@ -89,6 +89,44 @@ function Analytics() {
     };
   };
 
+  const negativeMonthChecker = (month: number, i: number, a: number) => {
+    if (month - 1 - i + a < 0) {
+      a = a + 12;
+    }
+    return a;
+  };
+
+  const negativeYearChecker = (
+    year: number,
+    month: number,
+    i: number,
+    a: number
+  ) => {
+    if (month - 1 - i + a < 0) {
+      year = year - 1;
+    }
+    return year;
+  };
+
+  const getMonthString = (job: Job) => {
+    let monthStr = "";
+    for (let i = 0; i < 2; i++) {
+      monthStr = monthStr + job.due.toString()[i + 5];
+    }
+    const monthNo = Number(monthStr);
+    const month = MONTHS[monthNo - 1];
+
+    return month;
+  };
+
+  const getYearString = (job: Job) => {
+    let year = "";
+    for (let i = 0; i < 4; i++) {
+      year = year + job.due.toString()[i];
+    }
+    return year;
+  };
+
   const processJobDistribution = async (allJobs: Job[]) => {
     if (allJobs.length < 1) {
       return;
@@ -121,25 +159,6 @@ function Analytics() {
     setJobDistributionData(uniqueTypeCounter);
   };
 
-  const negativeMonthChecker = (month: number, i: number, a: number) => {
-    if (month - 1 - i + a < 0) {
-      a = a + 12;
-    }
-    return a;
-  };
-
-  const negativeYearChecker = (
-    year: number,
-    month: number,
-    i: number,
-    a: number
-  ) => {
-    if (month - 1 - i + a < 0) {
-      year = year - 1;
-    }
-    return year;
-  };
-
   const processJobVolume = async (allJobs: Job[]) => {
     if (allJobs.length < 1) {
       return;
@@ -154,6 +173,7 @@ function Analytics() {
     let jobMonthCheck = 0;
     let jobYearCheck: number = todayYear;
 
+    // Set the jobVolume monthly time frames
     switch (dateRange) {
       case "lastmonth":
         jobVolumeTimeframes.unshift(MONTHS[todayMonth - 1] + jobYearCheck);
@@ -214,9 +234,10 @@ function Analytics() {
         break;
     }
 
-    console.log(jobVolumeTimeframes);
-
-    for (let i = 0; i < allJobs.length; i++) {}
+    for (let i = 0; i < allJobs.length; i++) {
+      const jobMonth = getMonthString(allJobs[i]);
+      const jobYear = getYearString(allJobs[i]);
+    }
   };
 
   useEffect(() => {
