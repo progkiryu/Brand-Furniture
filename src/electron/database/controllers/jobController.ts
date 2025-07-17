@@ -77,6 +77,27 @@ export const getArchivedJobs = async (
   }
 };
 
+export const getPinnedJobs = async (
+  _: express.Request,
+  res: express.Response
+) => {
+  try {
+    const pinnedJobs = await schemas.Job.find({
+      isPinned: { $in: true },
+    }).sort({ due: "descending" }); // Sort latest first
+    if (!pinnedJobs) {
+      res
+        .status(404)
+        .json({ message: "Error: Failed to retrieve pinned jobs." });
+      return;
+    }
+    res.status(200).json(pinnedJobs);
+  } catch (err) {
+    console.error(err);
+    res.status(400).json(err);
+  }
+};
+
 export const insertJob = async (
   req: express.Request,
   res: express.Response
