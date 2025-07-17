@@ -44,6 +44,17 @@ export const getArchivedJobs = async () => {
   return archivedJobs;
 };
 
+// Get pinned jobs
+export const getPinnedJobs = async () => {
+  const pinnedJobs = fetch(`${DBLink}/job/getPinnedJobs`)
+    .then((res) => res.json())
+    .catch((err) => console.error(err));
+  if (!pinnedJobs) {
+    return;
+  }
+  return pinnedJobs;
+};
+
 // Create a new job
 export const createJob = async (data: Job) => {
   try {
@@ -116,7 +127,9 @@ export const deleteJob = async (id: String) => {
 
     if (!res.ok) {
       const errorText = await res.text();
-      throw new Error(`HTTP error! status: ${res.status}, message: ${errorText}`);
+      throw new Error(
+        `HTTP error! status: ${res.status}, message: ${errorText}`
+      );
     }
     return true; // Indicate success
   } catch (err) {
