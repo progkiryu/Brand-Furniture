@@ -45,10 +45,10 @@ function AddUpholsteryFormModal({ isOpen, onClose, subJobId, subJobDetail, onAdd
         }
 
         const newUpholsteryData: Upholstery = {
-            subJobId: new String(subJobId) as String,
-            type: new String(type) as String, // Required, convert to String object
-            supplier: supplier ? (new String(supplier) as String) : undefined,
-            description: description ? (new String(description) as String) : undefined,
+            subJobId: subJobId,
+            type: type, // Required, convert to String object
+            supplier: supplier ? supplier : undefined,
+            description: description ? description : undefined,
             orderedDate: orderedDate ? new Date(orderedDate) : undefined,
             expectedDate: expectedDate ? new Date(expectedDate) : undefined,
             receivedDate: receivedDate ? new Date(receivedDate) : undefined,

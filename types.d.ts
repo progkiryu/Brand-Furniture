@@ -28,7 +28,6 @@ type SubJob = {
   cushionList?: string[];
   upholsteryList?: string[];
   status?: string; // status of subjob (5 colours), default: "Unassigned"
-  frameFormed?: Boolean; // seperate to the 5 colours
 };
 
 type Frame = {

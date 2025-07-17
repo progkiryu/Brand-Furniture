@@ -50,9 +50,9 @@ function AddFrameFormModal({ isOpen, onClose, subJobId, subJobDetail, onAddFrame
         }
 
         const newFrameData: Frame = {
-            subJobId: new String(subJobId) as String, // Convert primitive string to String object
-            supplier: supplier ? (new String(supplier) as String) : undefined,
-            description: description ? (new String(description) as String) : undefined,
+            subJobId: subJobId, // Convert primitive string to String object
+            supplier: supplier ? supplier : undefined,
+            description: description ? description : undefined,
             orderedDate: orderedDate ? new Date(orderedDate) : undefined,
             expectedDate: expectedDate ? new Date(expectedDate) : undefined,
             receivedDate: receivedDate ? new Date(receivedDate) : undefined,

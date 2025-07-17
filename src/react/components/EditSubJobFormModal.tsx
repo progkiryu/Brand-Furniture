@@ -14,8 +14,7 @@ function EditSubJobFormModal({ isOpen, onClose, subJobToEdit, onUpdateSubJob, on
     const [note, setNote] = useState<string>('');
     const [file, setFile] = useState<string>('');
     const [dueDate, setDueDate] = useState<string>('');
-    const [status, setStatus] = useState<string>('Upholstery Cut');
-    const [frameFormed, setFrameFormed] = useState<boolean>(false);
+    const [status, setStatus] = useState<string>('In Production');
 
     /**
      * Formats a Date object or string into a 'YYYY-MM-DD' string for date input fields.
@@ -44,8 +43,7 @@ function EditSubJobFormModal({ isOpen, onClose, subJobToEdit, onUpdateSubJob, on
             setNote(subJobToEdit.note?.toString() || '');
             setFile(subJobToEdit.file?.toString() || '');
             setDueDate(formatDateForInput(subJobToEdit.dueDate));
-            setStatus(subJobToEdit.status?.toString() || 'Upholstery Cut');
-            setFrameFormed(!!subJobToEdit.frameFormed); 
+            setStatus(subJobToEdit.status?.toString() || 'In Production');
         } else if (!isOpen) {
             // Reset form fields when modal closes
             setSubJobDetail('');
@@ -53,7 +51,6 @@ function EditSubJobFormModal({ isOpen, onClose, subJobToEdit, onUpdateSubJob, on
             setFile('');
             setDueDate('');
             setStatus('In Production');
-            setFrameFormed(false);
         }
     }, [isOpen, subJobToEdit]);
 
@@ -79,7 +76,6 @@ function EditSubJobFormModal({ isOpen, onClose, subJobToEdit, onUpdateSubJob, on
             file: file,
             dueDate: dueDate ? new Date(dueDate) : undefined,
             status: status,
-            frameFormed: frameFormed,
             frameList: subJobToEdit.frameList, // Preserve existing lists
             cushionList: subJobToEdit.cushionList,
             upholsteryList: subJobToEdit.upholsteryList,
@@ -109,13 +105,12 @@ function EditSubJobFormModal({ isOpen, onClose, subJobToEdit, onUpdateSubJob, on
                     <h2>Edit Sub-Job: {subJobToEdit?.subJobDetail}</h2>
                     <div className="form-group">
                         <label htmlFor="subJobDetail">Component Detail:</label>
-                        <input
-                            type="text"
+                        <textarea
                             id="subJobDetail"
                             value={subJobDetail}
                             onChange={(e) => setSubJobDetail(e.target.value)}
-                            required
-                        />
+                            rows={4}
+                        ></textarea>
                     </div>
                     <div className="form-group">
                         <label htmlFor="note">Note:</label>
@@ -155,18 +150,9 @@ function EditSubJobFormModal({ isOpen, onClose, subJobToEdit, onUpdateSubJob, on
                             <option value="Body Upholstered">Body Upholstered</option>
                             <option value="Waiting for wrapping">Waiting for wrapping</option>
                             <option value="Frame Foamed">Frame Foamed</option>
-                            <option value="In Production">In Production</option>
+                            <option value="In Production" >In Production</option>
                             <option value="Complete">Complete</option>
                         </select>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="frameFormed">Frame Formed:</label>
-                        <input
-                            type="checkbox"
-                            id="frameFormed"
-                            checked={frameFormed}
-                            onChange={(e) => setFrameFormed(e.target.checked)}
-                        />
                     </div>
                     <button type="submit">Update Sub-Job</button>
                     <button id="delete-button" type="button" onClick={handleDelete}>Delete Sub-Job</button>
