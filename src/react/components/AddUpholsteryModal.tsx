@@ -19,6 +19,7 @@ function AddUpholsteryFormModal({ isOpen, onClose, subJobId, subJobDetail, onAdd
     const [orderedDate, setOrderedDate] = useState<string>('');
     const [expectedDate, setExpectedDate] = useState<string>('');
     const [receivedDate, setReceivedDate] = useState<string>('');
+    const [status, setStatus] = useState<string>('In Production');
 
 
     // Reset form fields when modal opens/closes or subJobId changes
@@ -30,6 +31,7 @@ function AddUpholsteryFormModal({ isOpen, onClose, subJobId, subJobDetail, onAdd
             setOrderedDate('');
             setExpectedDate('');
             setReceivedDate('');
+            setStatus('In Production');
         }
     }, [isOpen, subJobId]);
 
@@ -45,13 +47,14 @@ function AddUpholsteryFormModal({ isOpen, onClose, subJobId, subJobDetail, onAdd
         }
 
         const newUpholsteryData: Upholstery = {
-            subJobId: new String(subJobId) as String,
-            type: new String(type) as String, // Required, convert to String object
-            supplier: supplier ? (new String(supplier) as String) : undefined,
-            description: description ? (new String(description) as String) : undefined,
+            subJobId: subJobId,
+            type: type, // Required, convert to String object
+            supplier: supplier ? supplier : undefined,
+            description: description ? description : undefined,
             orderedDate: orderedDate ? new Date(orderedDate) : undefined,
             expectedDate: expectedDate ? new Date(expectedDate) : undefined,
             receivedDate: receivedDate ? new Date(receivedDate) : undefined,
+            status: status ? status : "In Production",
         };
 
         onAddUpholstery(newUpholsteryData);
@@ -120,6 +123,20 @@ function AddUpholsteryFormModal({ isOpen, onClose, subJobId, subJobDetail, onAdd
                             onChange={(e) => setReceivedDate(e.target.value)}
                         />
                     </div>
+
+                    <div className="form-group">
+                        <label htmlFor="status">Status:</label>
+                        <select
+                            id="status"
+                            value={status}
+                            onChange={(e) => setStatus(e.target.value)}
+                        >
+                            <option value="Body Upholstered">Body Upholstered</option>
+                            <option value="In Production" >In Production</option>
+                            <option value="Complete">Complete</option>
+                        </select>
+                    </div>
+
 
                     <button type="submit">Add Upholstery</button>
                 </form>

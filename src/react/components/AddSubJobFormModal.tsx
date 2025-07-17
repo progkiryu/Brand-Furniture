@@ -18,8 +18,6 @@ function AddSubJobFormModal({ isOpen, onClose, jobId, invoiceId, onAddSubJob }: 
     const [note, setNote] = useState<string>('');
     const [file, setFile] = useState<string>('');
     const [subJobDueDate, setSubJobDueDate] = useState<string>('');
-    const [status, setStatus] = useState<string>('Upholstery Cut'); // Default from schema
-    const [frameFormed, setFrameFormed] = useState<boolean>(false); // Default false
 
     // --- Effect for Reset on Close ---
     useEffect(() => {
@@ -28,8 +26,6 @@ function AddSubJobFormModal({ isOpen, onClose, jobId, invoiceId, onAddSubJob }: 
             setNote('');
             setFile('');
             setSubJobDueDate('');
-            setStatus('Upholstery Cut');
-            setFrameFormed(false);
         }
     }, [isOpen]);
 
@@ -49,13 +45,11 @@ function AddSubJobFormModal({ isOpen, onClose, jobId, invoiceId, onAddSubJob }: 
         // Construct the new sub-job data
         // Ensure all string properties are `String` objects as per your types.d.ts
         const newSubJobData: SubJob = {
-            jobId: new String(jobId) as String, // Convert primitive string `jobId` to `String` object
-            subJobDetail: new String(subJobDetail) as String,
-            note: note ? (new String(note) as String) : undefined,
-            file: file ? (new String(file) as String) : undefined,
+            jobId: jobId, // Convert primitive string `jobId` to `String` object
+            subJobDetail: subJobDetail,
+            note: note ? note : undefined,
+            file: file ? file : undefined,
             dueDate: subJobDueDate ? new Date(subJobDueDate) : undefined,
-            status: new String(status) as String, // Convert status to String object
-            frameFormed: frameFormed as Boolean, // Boolean is fine, but if it were 'boolean' it would be different.
             frameList: [], // Empty lists as no components are added via this simplified form
             cushionList: [],
             upholsteryList: [],
@@ -111,30 +105,7 @@ function AddSubJobFormModal({ isOpen, onClose, jobId, invoiceId, onAddSubJob }: 
                                 onChange={(e) => setSubJobDueDate(e.target.value)}
                             />
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="status">Status:</label>
-                            <select
-                                id="status"
-                                value={status}
-                                onChange={(e) => setStatus(e.target.value)}
-                            >
-                                <option value="Upholstery Cut">Upholstery Cut</option>
-                                <option value="Body Upholstered">Body Upholstered</option>
-                                <option value="Waiting for wrapping">Waiting for wrapping</option>
-                                <option value="Frame Foamed">Frame Foamed</option>
-                                <option value="In Production">In Production</option>
-                                <option value="Complete">Complete</option>
-                            </select>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="frameFormed">Frame Formed:</label>
-                            <input
-                                type="checkbox"
-                                id="frameFormed"
-                                checked={frameFormed}
-                                onChange={(e) => setFrameFormed(e.target.checked)}
-                            />
-                        </div>
+                        
                     </div>
 
                     <button type="submit">Add Sub-Job</button>

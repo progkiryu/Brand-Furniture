@@ -33,7 +33,7 @@ function SubJobTable({
   return (
     <div className="job-components-wrapper">
       <div className="job-components-header">
-        <div>Sub-job</div>
+        <div>Details</div>
         <div>Frames/Parts</div>
         <div>Cushion</div>
         <div>Upholstery</div>
