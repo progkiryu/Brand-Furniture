@@ -7,11 +7,12 @@ import DashboardJobChartPie from "../components/DashboardJobChartPie.tsx";
 import NotificationsList from "../components/NotificationsList";
 
 import {
+  createJob,
   getAllJobs,
   getFilteredJobsByDate,
-  getFilteredJobsByType,
 } from "../api/jobAPI.tsx";
 import { getAllNotifications } from "../api/notificationAPI.tsx";
+import AddJobFormModel from "../components/AddJobFormModel.tsx";
 
 export type TypeInfoDash = {
   name: string;
@@ -21,10 +22,11 @@ export type TypeInfoDash = {
 function Dashboard() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [notifs, setNotifs] = useState<Notif[]>([]);
-
   let jobTypes: string[] = [];
   let typeCounter: TypeInfoDash[] = [];
   const [JobAnalytics, setJobAnalytics] = useState<TypeInfoDash[]>([]);
+
+  const [isAddJobModelOpen, setIsAddJobModelOpen] = useState<boolean>(false);
 
   const getJobMetrics = async () => {
     const endDate = new Date();
@@ -66,6 +68,16 @@ function Dashboard() {
 
     setJobAnalytics(uniqueTypeCounter);
   };
+
+  const handleAddJob = async (newJobData: Job) => {
+    const addedJob = await createJob(newJobData);
+    if (addedJob) {
+      setJobs((prevJobs) => [...prevJobs, addedJob]);
+      setIsAddJobModelOpen(false);
+    } else {
+      console.error("Failed to create job.");
+    }
+  };
   // retrieve sub-jobs by making a API fetch call
   useEffect(() => {
     const fetchData = async () => {
@@ -98,21 +110,12 @@ function Dashboard() {
             <div id="schedule-container">
               <div className="schedule-header">
                 <h1>Upcoming Jobs</h1>
-                <button className="add-job-button">Add Job</button>
-                {/* <div className="color-key">
-                  <div className="key-item">
-                    <span className="key-color production"></span> Production
-                  </div>
-                  <div className="key-item">
-                    <span className="key-color private"></span> Private
-                  </div>
-                  <div className="key-item">
-                    <span className="key-color residential"></span> Residential
-                  </div>
-                  <div className="key-item">
-                    <span className="key-color commercial"></span> Commercial
-                  </div>
-                </div> */}
+                <button
+                  onClick={() => setIsAddJobModelOpen(true)}
+                  className="add-job-button"
+                >
+                  Add Job
+                </button>
               </div>
               <div className="upcoming-orders-scroll-container">
                 <DashboardTable jobsParams={jobs} />
@@ -130,6 +133,11 @@ function Dashboard() {
           </div>
         </div>
       </div>
+      <AddJobFormModel
+        isOpen={isAddJobModelOpen}
+        onClose={() => setIsAddJobModelOpen(false)}
+        onAddJob={handleAddJob}
+      />
     </>
   );
 }
