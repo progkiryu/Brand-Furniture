@@ -25,19 +25,34 @@ function Help() {
 
             <h4>Dashboard</h4>
             <ul>
-              <li>Lists job components or sub-jobs that are pinned (first priority).</li>
-              <li>Analytics window details ordered and received parts for progress.</li>
-              <li>Notifications pop up to provide reminders on pinned jobs and order due dates.</li>
+              <li>
+                Lists job components or sub-jobs that are pinned (first
+                priority).
+              </li>
+              <li>
+                Analytics window details ordered and received parts for
+                progress.
+              </li>
+              <li>
+                Notifications pop up to provide reminders on pinned jobs and
+                order due dates.
+              </li>
             </ul>
 
             <h4>Schedule</h4>
             <ul>
-              <li>Provides a detailed list of all the jobs with search and filter options.</li>
+              <li>
+                Provides a detailed list of all the jobs with search and filter
+                options.
+              </li>
             </ul>
 
             <h4>Analytics</h4>
             <ul>
-              <li>Provides graphs for order types, completion, and volume across timeframes.</li>
+              <li>
+                Provides graphs for order types, completion, and volume across
+                timeframes.
+              </li>
             </ul>
           </div>
         </div>
