@@ -902,9 +902,9 @@ function Schedule() {
 
 <div id="order-container">
   {/* Left Column - Job Name */}
-  <div id="job-section-wrapper">
+  {/* <div id="job-section-wrapper">
     <div className="job-section-header">Job List</div>
-    <div id="job-list-container">
+    <div id="job-list-container"> */}
       <JobTable
         key="job-table"
         searchTerm={searchTerm}
@@ -924,8 +924,8 @@ function Schedule() {
         productionTerm={filterProduction}
         onEditJobClick={handleEditJobClick}
       />
-    </div>
-  </div>
+    {/* </div>
+  </div> */}
 
   {/* Right Column - Job Components */}
   <div id="components-section-wrapper">

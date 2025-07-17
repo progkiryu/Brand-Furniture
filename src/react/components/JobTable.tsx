@@ -310,33 +310,59 @@ const onRowClick = async (job: Job) => {
 };
 
 
+    // return (
+    //     <>
+    //         <div className="sp-jobs-container">
+    //             <table>
+    //                 <tbody>
+    //                     {displayedJobs.map((job) => (
+    //                         <tr
+    //                             key={String(job._id)}
+    //                             className={`job-row ${selectedJobId === job._id ? "selected-job" : ""}`}
+    //                             onClick={() => onRowClick(job)}
+    //                             >
+    //                             <td className="job-name-cell">{job.name}</td>
+    //                             <td>
+    //                                 <Pencil
+    //                                 className="edit-icon"
+    //                                 onClick={(e: React.MouseEvent) => {
+    //                                     e.stopPropagation(); // prevent click triggering jobClicked
+    //                                     onEditJobClick(job);
+    //                                 }}
+    //                                 />
+    //                             </td>
+    //                             </tr>
+
+
+    //                     ))}
+    //                 </tbody>
+    //             </table>
+    //         </div>
+    //     </>
+    // );
+
     return (
         <>
             <div className="sp-jobs-container">
-                <table>
-                    <tbody>
-                        {displayedJobs.map((job) => (
-                            <tr
-                                key={String(job._id)}
-                                className={`job-row ${selectedJobId === job._id ? "selected-job" : ""}`}
-                                onClick={() => onRowClick(job)}
-                                >
-                                <td className="job-name-cell">{job.name}</td>
-                                <td>
-                                    <Pencil
-                                    className="edit-icon"
-                                    onClick={(e: React.MouseEvent) => {
-                                        e.stopPropagation(); // prevent click triggering jobClicked
-                                        onEditJobClick(job);
-                                    }}
-                                    />
-                                </td>
-                                </tr>
-
-
-                        ))}
-                    </tbody>
-                </table>
+                <div className="job-table-header">Job List</div>
+                <div className="job-list-wrapper">
+                    {displayedJobs.map((job) => (
+                        <div
+                            key={String(job._id)}
+                            className={`job-card ${selectedJobId === job._id ? "selected-job" : ""}`}
+                            onClick={() => onRowClick(job)}
+                            >
+                            <span className="job-name-cell">{job.name}</span>
+                            <Pencil
+                                className="edit-icon"
+                                onClick={(e: React.MouseEvent) => {
+                                    e.stopPropagation(); // prevent click triggering jobClicked
+                                    onEditJobClick(job);
+                                }}
+                            />
+                        </div>
+                    ))}
+                </div>
             </div>
         </>
     );
