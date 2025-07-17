@@ -903,7 +903,7 @@ function Schedule() {
 <div id="order-container">
   {/* Left Column - Job Name */}
   <div id="job-section-wrapper">
-    <div className="job-section-header">Job Name</div>
+    <div className="job-section-header">Job List</div>
     <div id="job-list-container">
       <JobTable
         key="job-table"

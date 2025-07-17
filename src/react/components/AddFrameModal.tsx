@@ -1,15 +1,6 @@
 // src/components/AddFrameFormModal.tsx
 import React, { useState, useEffect } from 'react';
 
-// Replicate Frame type from types.d.ts for local use (using String for strings)
-export type FrameForCreation = {
-    subJobId?: String; // Will be passed from parent, but optional for creation DTO
-    supplier?: String;
-    description?: String;
-    orderedDate?: Date;
-    expectedDate?: Date;
-    receivedDate?: Date;
-};
 
 interface AddFrameFormModalProps {
     isOpen: boolean;
@@ -25,6 +16,7 @@ function AddFrameFormModal({ isOpen, onClose, subJobId, subJobDetail, onAddFrame
     const [orderedDate, setOrderedDate] = useState<string>('');
     const [expectedDate, setExpectedDate] = useState<string>('');
     const [receivedDate, setReceivedDate] = useState<string>('');
+    const [status, setStatus] = useState<string>('In Production');
 
 
     // Reset form fields when modal opens/closes or subJobId changes
@@ -35,6 +27,7 @@ function AddFrameFormModal({ isOpen, onClose, subJobId, subJobDetail, onAddFrame
             setOrderedDate('');
             setExpectedDate('');
             setReceivedDate('');
+            setStatus('In Production');
         }
     }, [isOpen, subJobId]); // Add subJobId to dependencies to reset when context changes
 
@@ -56,6 +49,7 @@ function AddFrameFormModal({ isOpen, onClose, subJobId, subJobDetail, onAddFrame
             orderedDate: orderedDate ? new Date(orderedDate) : undefined,
             expectedDate: expectedDate ? new Date(expectedDate) : undefined,
             receivedDate: receivedDate ? new Date(receivedDate) : undefined,
+            status: status ? status : "In Production",
         };
 
         onAddFrame(newFrameData);
@@ -113,6 +107,19 @@ function AddFrameFormModal({ isOpen, onClose, subJobId, subJobDetail, onAddFrame
                             value={receivedDate}
                             onChange={(e) => setReceivedDate(e.target.value)}
                         />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="status">Status:</label>
+                        <select
+                            id="status"
+                            value={status}
+                            onChange={(e) => setStatus(e.target.value)}
+                        >
+                            <option value="Frame Foamed">Frame Foamed</option>
+                            <option value="In Production" >In Production</option>
+                            <option value="Complete">Complete</option>
+                        </select>
                     </div>
 
                     <button type="submit">Add Frame</button>

@@ -18,7 +18,6 @@ function AddSubJobFormModal({ isOpen, onClose, jobId, invoiceId, onAddSubJob }: 
     const [note, setNote] = useState<string>('');
     const [file, setFile] = useState<string>('');
     const [subJobDueDate, setSubJobDueDate] = useState<string>('');
-    const [status, setStatus] = useState<string>('Upholstery Cut'); // Default from schema
 
     // --- Effect for Reset on Close ---
     useEffect(() => {
@@ -27,7 +26,6 @@ function AddSubJobFormModal({ isOpen, onClose, jobId, invoiceId, onAddSubJob }: 
             setNote('');
             setFile('');
             setSubJobDueDate('');
-            setStatus('Upholstery Cut');
         }
     }, [isOpen]);
 
@@ -52,7 +50,6 @@ function AddSubJobFormModal({ isOpen, onClose, jobId, invoiceId, onAddSubJob }: 
             note: note ? note : undefined,
             file: file ? file : undefined,
             dueDate: subJobDueDate ? new Date(subJobDueDate) : undefined,
-            status: status, // Convert status to String object
             frameList: [], // Empty lists as no components are added via this simplified form
             cushionList: [],
             upholsteryList: [],
@@ -108,21 +105,7 @@ function AddSubJobFormModal({ isOpen, onClose, jobId, invoiceId, onAddSubJob }: 
                                 onChange={(e) => setSubJobDueDate(e.target.value)}
                             />
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="status">Status:</label>
-                            <select
-                                id="status"
-                                value={status}
-                                onChange={(e) => setStatus(e.target.value)}
-                            >
-                                <option value="Upholstery Cut">Upholstery Cut</option>
-                                <option value="Body Upholstered">Body Upholstered</option>
-                                <option value="Waiting for wrapping">Waiting for wrapping</option>
-                                <option value="Frame Foamed">Frame Foamed</option>
-                                <option value="In Production">In Production</option>
-                                <option value="Complete">Complete</option>
-                            </select>
-                        </div>
+                        
                     </div>
 
                     <button type="submit">Add Sub-Job</button>

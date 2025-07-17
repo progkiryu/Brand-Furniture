@@ -46,6 +46,10 @@
   overflow: scroll;
 }
 
+#job-list-container{
+  overflow: scroll;
+}
+
 .sp-schedule-container th{
   text-align: center;
 }
@@ -70,7 +74,7 @@
 .sp-jobs-container table{
   width: 100%;
   background-color: white;
-
+  
 }
 
 .sp-jobs-container table, th, td {
@@ -618,12 +622,15 @@
 } */
 
 .job-section-header {
+  
   font-weight: bold;
   font-size: 16px;
   background-color: #f0f0f0;
   border: 1px solid #ccc;
+  border-radius: 10px;
   padding: 10px;
   text-align: center;
+
 }
 
 @media (max-width: 1024px) {

@@ -15,6 +15,7 @@ function EditFrameFormModal({ isOpen, onClose, frameToEdit, onUpdateFrame, onDel
     const [orderedDate, setOrderedDate] = useState<string>('');
     const [expectedDate, setExpectedDate] = useState<string>('');
     const [receivedDate, setReceivedDate] = useState<string>('');
+    const [status, setStatus] = useState<string>('In Production');
 
     /**
      * Formats a Date object or string into a 'YYYY-MM-DD' string for date input fields.
@@ -44,6 +45,7 @@ function EditFrameFormModal({ isOpen, onClose, frameToEdit, onUpdateFrame, onDel
             setOrderedDate(formatDateForInput(frameToEdit.orderedDate));
             setExpectedDate(formatDateForInput(frameToEdit.expectedDate));
             setReceivedDate(formatDateForInput(frameToEdit.receivedDate));
+            setStatus(frameToEdit.status?.toString() || 'In Production');
         } else if (!isOpen) {
             // Reset form fields when modal closes
             setSupplier('');
@@ -51,6 +53,7 @@ function EditFrameFormModal({ isOpen, onClose, frameToEdit, onUpdateFrame, onDel
             setOrderedDate('');
             setExpectedDate('');
             setReceivedDate('');
+            setStatus('In Production');
         }
     }, [isOpen, frameToEdit]);
 
@@ -76,6 +79,7 @@ function EditFrameFormModal({ isOpen, onClose, frameToEdit, onUpdateFrame, onDel
             orderedDate: orderedDate ? new Date(orderedDate) : undefined,
             expectedDate: expectedDate ? new Date(expectedDate) : undefined,
             receivedDate: receivedDate ? new Date(receivedDate) : undefined,
+            status: status ? status : "In Production",
         };
 
         onUpdateFrame(updatedData);
@@ -145,6 +149,18 @@ function EditFrameFormModal({ isOpen, onClose, frameToEdit, onUpdateFrame, onDel
                             value={receivedDate}
                             onChange={(e) => setReceivedDate(e.target.value)}
                         />
+                    </div>
+                     <div className="form-group">
+                        <label htmlFor="status">Status:</label>
+                        <select
+                            id="status"
+                            value={status}
+                            onChange={(e) => setStatus(e.target.value)}
+                        >
+                            <option value="Frame Foamed">Frame Foamed</option>
+                            <option value="In Production" >In Production</option>
+                            <option value="Complete">Complete</option>
+                        </select>
                     </div>
                     <button type="submit">Update Frame</button>
                     <button id="delete-button" type="button" onClick={handleDelete}>Delete Frame</button>

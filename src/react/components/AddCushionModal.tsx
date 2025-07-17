@@ -19,6 +19,7 @@ function AddCushionFormModal({ isOpen, onClose, subJobId, subJobDetail, onAddCus
     const [orderedDate, setOrderedDate] = useState<string>('');
     const [expectedDate, setExpectedDate] = useState<string>('');
     const [receivedDate, setReceivedDate] = useState<string>('');
+    const [status, setStatus] = useState<string>('In Production');
 
 
 
@@ -31,6 +32,7 @@ function AddCushionFormModal({ isOpen, onClose, subJobId, subJobDetail, onAddCus
             setOrderedDate('');
             setExpectedDate('');
             setReceivedDate('');
+            setStatus('In Production');
         }
     }, [isOpen]);
 
@@ -53,6 +55,7 @@ function AddCushionFormModal({ isOpen, onClose, subJobId, subJobDetail, onAddCus
             orderedDate: orderedDate ? new Date(orderedDate) : undefined,
             expectedDate: expectedDate ? new Date(expectedDate) : undefined,
             receivedDate: receivedDate ? new Date(receivedDate) : undefined,
+            status: status ? status : "In Production",
         };
 
         onAddCushion(newCushionData);
@@ -119,6 +122,21 @@ function AddCushionFormModal({ isOpen, onClose, subJobId, subJobDetail, onAddCus
                             value={receivedDate}
                             onChange={(e) => setReceivedDate(e.target.value)}
                         />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="status">Status:</label>
+                        <select
+                            id="status"
+                            value={status}
+                            onChange={(e) => setStatus(e.target.value)}
+                        >
+                            <option value="In Production" >In Production</option>
+                            <option value="Upholstery Cut">Upholstery Cut</option>
+                            <option value="Upholstery Sewn">Upholstery Sewn</option>
+                            <option value="Body Upholstered">Body Upholstered</option>
+                            <option value="Complete">Complete</option>
+                        </select>
                     </div>
 
                     <button type="submit">Add Cushion</button>

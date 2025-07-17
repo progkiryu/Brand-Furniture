@@ -16,6 +16,7 @@ function EditUpholsteryFormModal({ isOpen, onClose, upholsteryToEdit, onUpdateUp
     const [orderedDate, setOrderedDate] = useState<string>('');
     const [expectedDate, setExpectedDate] = useState<string>('');
     const [receivedDate, setReceivedDate] = useState<string>('');
+    const [status, setStatus] = useState<string>('In Production');
 
     /**
      * Formats a Date object or string into a 'YYYY-MM-DD' string for date input fields.
@@ -46,6 +47,7 @@ function EditUpholsteryFormModal({ isOpen, onClose, upholsteryToEdit, onUpdateUp
             setOrderedDate(formatDateForInput(upholsteryToEdit.orderedDate));
             setExpectedDate(formatDateForInput(upholsteryToEdit.expectedDate));
             setReceivedDate(formatDateForInput(upholsteryToEdit.receivedDate));
+            setStatus(upholsteryToEdit.status?.toString() || 'In Production');
         } else if (!isOpen) {
             // Reset form fields when modal closes
             setType('');
@@ -54,6 +56,7 @@ function EditUpholsteryFormModal({ isOpen, onClose, upholsteryToEdit, onUpdateUp
             setOrderedDate('');
             setExpectedDate('');
             setReceivedDate('');
+            setStatus('In Production');
         }
     }, [isOpen, upholsteryToEdit]);
 
@@ -86,6 +89,7 @@ function EditUpholsteryFormModal({ isOpen, onClose, upholsteryToEdit, onUpdateUp
             orderedDate: orderedDate ? new Date(orderedDate) : undefined,
             expectedDate: expectedDate ? new Date(expectedDate) : undefined,
             receivedDate: receivedDate ? new Date(receivedDate) : undefined,
+            status: status ? status : "In Production",
         };
 
         onUpdateUpholstery(updatedData);
@@ -165,6 +169,18 @@ function EditUpholsteryFormModal({ isOpen, onClose, upholsteryToEdit, onUpdateUp
                             value={receivedDate}
                             onChange={(e) => setReceivedDate(e.target.value)}
                         />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="status">Status:</label>
+                        <select
+                            id="status"
+                            value={status}
+                            onChange={(e) => setStatus(e.target.value)}
+                        >
+                            <option value="Body Upholstered">Body Upholstered</option>
+                            <option value="In Production" >In Production</option>
+                            <option value="Complete">Complete</option>
+                        </select>
                     </div>
                     <button type="submit">Update Upholstery</button>
                     <button id="delete-button" type="button" onClick={handleDelete}>Delete Upholstery</button>

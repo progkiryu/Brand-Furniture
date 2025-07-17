@@ -32,7 +32,6 @@ const subJobSchema = new mongoose.Schema(
     frameList: { type: [String], default: [] },
     cushionList: { type: [String], default: [] },
     upholsteryList: { type: [String], defailt: [] },
-    status: { type: String, default: "Unassigned" }, // the 5 colours + unassigned
   },
   {
     timestamps: true,
@@ -47,6 +46,7 @@ const frameSchema = new mongoose.Schema(
     orderedDate: { type: Date, required: false },
     expectedDate: { type: Date, required: false },
     receivedDate: { type: Date, required: false },
+    status: { type: String, default: "In Production" }, 
   },
   {
     timestamps: true,
@@ -62,6 +62,7 @@ const cushionSchema = new mongoose.Schema(
     orderedDate: { type: Date, required: false },
     expectedDate: { type: Date, required: false },
     receivedDate: { type: Date, required: false },
+    status: { type: String, default: "In Production" }, 
   },
   {
     timestamps: true,
@@ -77,6 +78,7 @@ const upholsterySchema = new mongoose.Schema(
     orderedDate: { type: Date, required: false },
     expectedDate: { type: Date, required: false },
     receivedDate: { type: Date, required: false },
+    status: { type: String, default: "In Production" }, 
   },
   {
     timestamps: true,

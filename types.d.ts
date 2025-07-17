@@ -27,7 +27,6 @@ type SubJob = {
   frameList?: string[];
   cushionList?: string[];
   upholsteryList?: string[];
-  status?: string; // status of subjob (5 colours), default: "Unassigned"
 };
 
 type Frame = {
@@ -38,6 +37,7 @@ type Frame = {
   orderedDate?: Date;
   expectedDate?: Date;
   receivedDate?: Date;
+  status?: string; 
 };
 
 type Cushion = {
@@ -49,6 +49,7 @@ type Cushion = {
   orderedDate?: Date;
   expectedDate?: Date;
   receivedDate?: Date;
+  status?: string; 
 };
 
 type Upholstery = {
@@ -60,6 +61,7 @@ type Upholstery = {
   orderedDate?: Date;
   expectedDate?: Date;
   receivedDate?: Date;
+  status?: string; 
 };
 
 type Notif = {

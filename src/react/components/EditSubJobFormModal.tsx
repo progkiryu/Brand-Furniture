@@ -14,7 +14,6 @@ function EditSubJobFormModal({ isOpen, onClose, subJobToEdit, onUpdateSubJob, on
     const [note, setNote] = useState<string>('');
     const [file, setFile] = useState<string>('');
     const [dueDate, setDueDate] = useState<string>('');
-    const [status, setStatus] = useState<string>('In Production');
 
     /**
      * Formats a Date object or string into a 'YYYY-MM-DD' string for date input fields.
@@ -43,14 +42,12 @@ function EditSubJobFormModal({ isOpen, onClose, subJobToEdit, onUpdateSubJob, on
             setNote(subJobToEdit.note?.toString() || '');
             setFile(subJobToEdit.file?.toString() || '');
             setDueDate(formatDateForInput(subJobToEdit.dueDate));
-            setStatus(subJobToEdit.status?.toString() || 'In Production');
         } else if (!isOpen) {
             // Reset form fields when modal closes
             setSubJobDetail('');
             setNote('');
             setFile('');
             setDueDate('');
-            setStatus('In Production');
         }
     }, [isOpen, subJobToEdit]);
 
@@ -75,7 +72,6 @@ function EditSubJobFormModal({ isOpen, onClose, subJobToEdit, onUpdateSubJob, on
             note: note,
             file: file,
             dueDate: dueDate ? new Date(dueDate) : undefined,
-            status: status,
             frameList: subJobToEdit.frameList, // Preserve existing lists
             cushionList: subJobToEdit.cushionList,
             upholsteryList: subJobToEdit.upholsteryList,
@@ -138,21 +134,6 @@ function EditSubJobFormModal({ isOpen, onClose, subJobToEdit, onUpdateSubJob, on
                             value={dueDate}
                             onChange={(e) => setDueDate(e.target.value)}
                         />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="status">Status:</label>
-                        <select
-                            id="status"
-                            value={status}
-                            onChange={(e) => setStatus(e.target.value)}
-                        >
-                            <option value="Upholstery Cut">Upholstery Cut</option>
-                            <option value="Body Upholstered">Body Upholstered</option>
-                            <option value="Waiting for wrapping">Waiting for wrapping</option>
-                            <option value="Frame Foamed">Frame Foamed</option>
-                            <option value="In Production" >In Production</option>
-                            <option value="Complete">Complete</option>
-                        </select>
                     </div>
                     <button type="submit">Update Sub-Job</button>
                     <button id="delete-button" type="button" onClick={handleDelete}>Delete Sub-Job</button>
