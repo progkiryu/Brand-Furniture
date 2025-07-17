@@ -42,11 +42,7 @@
 }
 
 
-#job-detail-container {
-  overflow: scroll;
-}
-
-#job-list-container {
+#job-detail-container, #job-list-container {
   overflow: scroll;
 }
 
@@ -58,6 +54,7 @@
   flex: 1;
 
 }
+
 
 .job-table-header {
   background-color: #f0f0f0;

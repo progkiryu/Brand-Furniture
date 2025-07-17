@@ -742,7 +742,7 @@ function Schedule() {
                         }
                         defaultChecked={clientAsc}
                       />{" "}
-                      Ascending
+                      A-Z
                     </label>
                     <label>
                       <input
@@ -753,7 +753,7 @@ function Schedule() {
                         }
                         defaultChecked={clientDesc}
                       />{" "}
-                      Descending
+                      Z-A
                     </label>
 
                     <strong>Job Name</strong>
@@ -766,7 +766,7 @@ function Schedule() {
                         }
                         defaultChecked={jobNameAsc}
                       />{" "}
-                      Ascending
+                      A-Z
                     </label>
                     <label>
                       <input
@@ -777,7 +777,7 @@ function Schedule() {
                         }
                         defaultChecked={jobNameDesc}
                       />{" "}
-                      Descending
+                      Z-A
                     </label>
 
                     <strong>Due Date</strong>
@@ -790,7 +790,7 @@ function Schedule() {
                         }
                         defaultChecked={dueDateAsc}
                       />{" "}
-                      Ascending
+                      Oldest
                     </label>
                     <label>
                       <input
@@ -801,7 +801,7 @@ function Schedule() {
                         }
                         defaultChecked={dueDateDesc}
                       />{" "}
-                      Descending
+                      Most Recent
                     </label>
                   </div>
 
