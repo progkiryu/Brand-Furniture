@@ -913,6 +913,7 @@ function Schedule() {
             </div>
           </div>
         </div>{" "}
+        
         {/* This closes the #filter-container div */}
         <div id="order-container">
           {/* Left Column - Job Name */}
@@ -935,8 +936,7 @@ function Schedule() {
             productionTerm={filterProduction}
             onEditJobClick={handleEditJobClick}
           />
-          {/* </div>
-  </div> */}
+          
 
           {/* Right Column - Job Components */}
           <div id="components-section-wrapper">
