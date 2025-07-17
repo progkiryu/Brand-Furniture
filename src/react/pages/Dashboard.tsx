@@ -3,7 +3,7 @@ import "../styles/Global.css";
 import Navbar from "../components/Navbar";
 import { useEffect, useState } from "react";
 import DashboardTable from "../components/DashboardTable.tsx";
-import JobAnalyticsDash from "../components/JobAnalytics";
+import DashboardJobChartPie from "../components/DashboardJobChartPie.tsx";
 import NotificationsList from "../components/NotificationsList";
 
 import {
@@ -50,8 +50,13 @@ function Dashboard() {
 
     // Get the counts of each type
     for (let i = 0; i < jobTypes.length; i++) {
-      const jobs = await getFilteredJobsByType(jobTypes[i]);
-      typeCounter.push({ name: `${jobTypes[i]}`, value: jobs.length });
+      let count = 0;
+      for (let j = 0; j < allJobs.length; j++) {
+        if (jobTypes[i] === allJobs[j].type) {
+          count++;
+        }
+      }
+      typeCounter.push({ name: jobTypes[i], value: count });
     }
     // Filter out unique values
     const uniqueTypeCounter = typeCounter.filter(
@@ -116,7 +121,7 @@ function Dashboard() {
           </div>
           <div id="dashboard-third-container">
             <div id="analytics-container">
-              <JobAnalyticsDash data={JobAnalytics} />
+              <DashboardJobChartPie data={JobAnalytics} />
             </div>
             <div id="notifications-container">
               <h1>Notifications</h1>

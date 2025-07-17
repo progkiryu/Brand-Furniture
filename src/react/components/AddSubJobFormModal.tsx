@@ -18,7 +18,7 @@ function AddSubJobFormModal({ isOpen, onClose, jobId, invoiceId, onAddSubJob }: 
     const [note, setNote] = useState<string>('');
     const [file, setFile] = useState<string>('');
     const [subJobDueDate, setSubJobDueDate] = useState<string>('');
-    const [status, setStatus] = useState<string>('Unassigned'); // Default from schema
+    const [status, setStatus] = useState<string>('Upholstery Cut'); // Default from schema
     const [frameFormed, setFrameFormed] = useState<boolean>(false); // Default false
 
     // --- Effect for Reset on Close ---
@@ -28,7 +28,7 @@ function AddSubJobFormModal({ isOpen, onClose, jobId, invoiceId, onAddSubJob }: 
             setNote('');
             setFile('');
             setSubJobDueDate('');
-            setStatus('Unassigned');
+            setStatus('Upholstery Cut');
             setFrameFormed(false);
         }
     }, [isOpen]);

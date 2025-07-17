@@ -2,6 +2,9 @@ import "../styles/Dashboard.css"
 
 import { useEffect, useState } from "react";
 import { FaEdit, FaThumbtack } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+
+import { getSubJobsByJobId } from "../api/subJobAPI";
 
 interface DashboardTableProps {
   jobsParams: Array<Job>
@@ -9,8 +12,19 @@ interface DashboardTableProps {
 
 function DashboardTable({ jobsParams }: DashboardTableProps) {
 
-  const [ jobs, setJobs ] = useState<Array<Job>>(jobsParams);
-
+  const [ jobs, setJobs ] = useState<Job[]>(jobsParams);
+  
+  const navigate = useNavigate();
+  const navigateSchedule = async (job: Job) => {
+    if (job._id) {
+      const subJobsPromise = getSubJobsByJobId(job._id);
+      const [subJobs] = await Promise.all([subJobsPromise]);
+      navigate("/Schedule", {state: {
+        selectedJob: job, selectedSubJobs: subJobs
+      }});
+    }
+  }
+  
   useEffect(() => {
     setJobs(jobsParams);
   }, [jobsParams]);
@@ -26,7 +40,7 @@ function DashboardTable({ jobsParams }: DashboardTableProps) {
       </div>
       {
         jobs.map((job: Job) => 
-          (<div key={String(job._id)} className="job-list-row">
+          (<div key={String(job._id)} className="job-list-row" onClick={() => navigateSchedule(job)}>
             <span>{job.client}</span>
             <span>{job.invoiceId}</span>
             <span>{job.name}</span>
