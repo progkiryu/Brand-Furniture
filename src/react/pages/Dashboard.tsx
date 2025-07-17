@@ -20,13 +20,15 @@ export type TypeInfoDash = {
 };
 
 function Dashboard() {
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isAddJobModelOpen, setIsAddJobModelOpen] = useState<boolean>(false);
+
+  // Job Metrics PieChart
   const [jobs, setJobs] = useState<Job[]>([]);
   const [notifs, setNotifs] = useState<Notif[]>([]);
   let jobTypes: string[] = [];
   let typeCounter: TypeInfoDash[] = [];
   const [JobAnalytics, setJobAnalytics] = useState<TypeInfoDash[]>([]);
-
-  const [isAddJobModelOpen, setIsAddJobModelOpen] = useState<boolean>(false);
 
   const getJobMetrics = async () => {
     const endDate = new Date();
@@ -78,9 +80,11 @@ function Dashboard() {
       console.error("Failed to create job.");
     }
   };
-  // retrieve sub-jobs by making a API fetch call
+
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
+
       const jobsPromise = getAllJobs(); // Get all jobs
       const notifPromise = getAllNotifications(); // Get all notificatons
       try {
@@ -94,11 +98,20 @@ function Dashboard() {
         console.error(err);
       }
       await getJobMetrics(); // Get data for pie chart
+
+      setIsLoading(false);
     };
     fetchData();
   }, []);
 
-  return (
+  return isLoading ? (
+    <>
+      <Navbar />
+      <div>
+        <h1>Loading...</h1>
+      </div>
+    </>
+  ) : (
     <>
       <Navbar />
       <div id="first-container">
