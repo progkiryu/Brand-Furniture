@@ -124,6 +124,8 @@ function Schedule() {
     null
   );
 
+  const location = useLocation();
+
   useEffect(() => {
     if (location.state !== null) {
       const { selectedJob, selectedSubJobs } = location.state;
@@ -245,7 +247,7 @@ function Schedule() {
     }
   };
 
-  const handleAddSubJob = async (newSubJobData: SubJob) = {
+  const handleAddSubJob = async (newSubJobData: SubJob) => {
     if (!selectedJobForSubJob) {
       console.error("No job selected to add sub-job to.");
       return;
