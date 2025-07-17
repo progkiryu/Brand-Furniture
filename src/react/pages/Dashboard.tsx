@@ -10,6 +10,7 @@ import {
   createJob,
   getAllJobs,
   getFilteredJobsByDate,
+  getPinnedJobs,
 } from "../api/jobAPI.tsx";
 import { getAllNotifications } from "../api/notificationAPI.tsx";
 import AddJobFormModel from "../components/AddJobFormModel.tsx";
@@ -21,14 +22,24 @@ export type TypeInfoDash = {
 
 function Dashboard() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [reloader, setReloader] = useState<boolean>(false);
   const [isAddJobModelOpen, setIsAddJobModelOpen] = useState<boolean>(false);
 
-  // Job Metrics PieChart
-  const [jobs, setJobs] = useState<Job[]>([]);
+  const [organisedJobs, setOrganisedJobs] = useState<Job[]>([]);
+  // const [allJobs, setAllJobs] = useState<Job[]>([]);
   const [notifs, setNotifs] = useState<Notif[]>([]);
   let jobTypes: string[] = [];
   let typeCounter: TypeInfoDash[] = [];
   const [JobAnalytics, setJobAnalytics] = useState<TypeInfoDash[]>([]);
+
+  const reload = () => {
+    // Reloads since tracked in useEffect
+    if (reloader === true) {
+      setReloader(false);
+    } else {
+      setReloader(true);
+    }
+  };
 
   const getJobMetrics = async () => {
     const endDate = new Date();
@@ -71,11 +82,36 @@ function Dashboard() {
     setJobAnalytics(uniqueTypeCounter);
   };
 
+  const organiseJobs = (allJobs: Job[], pinnedJobs: Job[]) => {
+    const organisedArray: Job[] = [];
+    let match = false;
+
+    // Create a new array without pinned Jobs
+    for (let i = 0; i < allJobs.length; i++) {
+      for (let j = 0; j < pinnedJobs.length; j++) {
+        if (allJobs[i]._id === pinnedJobs[j]._id) {
+          match = true; // Matching ID with pinnedJob
+        }
+      }
+      if (match === false) {
+        organisedArray.push(allJobs[i]);
+      }
+      match = false;
+    }
+
+    // Add the pinned jobs to new job array, accounted for due date
+    for (let i = pinnedJobs.length - 1; i >= 0; i--) {
+      organisedArray.unshift(pinnedJobs[i]);
+    }
+    setOrganisedJobs(organisedArray);
+  };
+
   const handleAddJob = async (newJobData: Job) => {
     const addedJob = await createJob(newJobData);
     if (addedJob) {
-      setJobs((prevJobs) => [...prevJobs, addedJob]);
+      // setAllJobs((prevJobs) => [...prevJobs, addedJob]);
       setIsAddJobModelOpen(false);
+      reload();
     } else {
       console.error("Failed to create job.");
     }
@@ -85,24 +121,28 @@ function Dashboard() {
     const fetchData = async () => {
       setIsLoading(true);
 
-      const jobsPromise = getAllJobs(); // Get all jobs
-      const notifPromise = getAllNotifications(); // Get all notificatons
+      const allJobsPromise = getAllJobs();
+      const pinnedJobsPromise = getPinnedJobs();
+      const notifPromise = getAllNotifications();
       try {
-        const [jobData, notifData] = await Promise.all([
-          jobsPromise,
+        const [allJobData, pinnedJobData, notifData] = await Promise.all([
+          allJobsPromise,
+          pinnedJobsPromise,
           notifPromise,
         ]);
-        setJobs(jobData);
+        // setAllJobs(allJobData);
         setNotifs(notifData);
+
+        organiseJobs(allJobData, pinnedJobData);
       } catch (err) {
         console.error(err);
       }
-      await getJobMetrics(); // Get data for pie chart
+      getJobMetrics(); // Get data for pie chart
 
       setIsLoading(false);
     };
     fetchData();
-  }, []);
+  }, [reloader]);
 
   return isLoading ? (
     <>
@@ -131,7 +171,7 @@ function Dashboard() {
                 </button>
               </div>
               <div className="upcoming-orders-scroll-container">
-                <DashboardTable jobsParams={jobs} />
+                <DashboardTable jobsParams={organisedJobs} />
               </div>
             </div>
           </div>
