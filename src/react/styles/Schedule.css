@@ -20,7 +20,7 @@
   overflow-x:auto;
 }
 
-#add-job-archive-wrapper {
+#add-job-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -42,26 +42,9 @@
 }
 
 
-#order-container {
-  display: flex;
-  width: 100%;
-  flex: 4;
-  
-}
-
 #job-detail-container {
   overflow: scroll;
 }
-
-#job-list-container {
-  width: 30%
-}
-
-#job-detail-container {
-  width: 70%;
-  overflow: scroll;
-}
-
 
 .sp-schedule-container th{
   text-align: center;
@@ -436,3 +419,305 @@
   }
 }
 
+/* === Job Component Section (Figma Layout) === */
+
+.job-components-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 10px;
+  background-color: #f4f4f4;
+  border-radius: 10px;
+}
+
+.job-components-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  font-weight: bold;
+  text-align: center;
+  background-color: #E0E0E0;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.job-component-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+
+.component-card {
+  background: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+}
+
+.component-section {
+  background-color: #fff;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-header h4 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.edit-icon {
+  cursor: pointer;
+  color: #1B263B;
+  transition: 0.2s ease;
+}
+
+.edit-icon:hover {
+  color: #000;
+}
+
+.add-btn {
+  margin-top: auto;
+  align-self: center;
+  padding: 8px 14px;
+  font-size: 18px;
+  font-weight: bold;
+  background-color: #1B263B;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.add-btn:hover {
+  background-color: #344b6b;
+}
+
+.file-name {
+  font-style: italic;
+}
+
+.add-component-btn {
+  width: 30px;
+  height: 30px;
+  background-color: #1B263B;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  border-radius: 50%;
+  align-self: center;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.add-component-btn:hover {
+  background-color: #344b6b;
+}
+
+.job-row {
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.job-name-cell {
+  padding: 14px 12px;
+  font-size: clamp(12px, 1.2vw, 15px);
+  font-weight: 500;
+  white-space: normal;     
+  word-wrap: break-word;   
+  overflow-wrap: break-word;
+}
+
+.job-row:hover {
+  background-color: #e8e8e8;
+}
+
+.selected-job {
+  background-color: #1B263B !important;
+  color: #F4F4F4;
+}
+
+.selected-job .edit-icon {
+  color: #F4F4F4;
+}
+
+.edit-icon {
+  cursor: pointer;
+  color: #1B263B;
+  transition: 0.2s ease;
+}
+
+
+.schedule-main-container {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+}
+
+.job-name-column {
+  flex: 0 0 20%;
+  max-width: 240px;
+}
+
+.job-components-panel {
+  flex: 1;
+}
+
+#order-container {
+  display: flex;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+#job-section-wrapper {
+  flex: 0 0 15vw;
+  max-width: 15vw;
+  min-width: 15vw;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+
+#components-section-wrapper {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background-color: #f8f8f8;
+  border-radius: 12px;
+  padding: 1rem;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+
+/* #job-section-wrapper {
+  width: 15%;
+}
+
+#components-section-wrapper {
+  width: 85%;
+} */
+
+.job-section-header {
+  font-weight: bold;
+  font-size: 16px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+}
+
+@media (max-width: 1024px) {
+  #order-container {
+    flex-direction: column;
+  }
+
+  /* #job-section-wrapper,
+  #components-section-wrapper {
+    flex: 1 1 100%;
+  }
+} */
+
+#schedule-table-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#schedule-table-container .column-header {
+  display: inline-block;
+  font-weight: bold;
+  font-size: 16px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  text-align: center;
+  padding: 12px;
+  width: 100%;
+}
+
+#schedule-table-container .column-header:nth-child(1) {
+  width: 15vw;
+  max-width: 15vw;
+  float: left;
+}
+
+#schedule-table-container .column-header:nth-child(2) {
+  width: 85vw;
+  max-width: 85vw;
+  float: left;
+}
+
+#schedule-table-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.column-header {
+  font-weight: bold;
+  font-size: 16px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  text-align: center;
+  padding: 12px;
+}
+
+.column-header:nth-child(1) {
+  flex: 0 0 15vw;
+  max-width: 15vw;
+}
+
+.column-header:nth-child(2) {
+  flex: 1;
+}
+
+#table-header-row {
+  display: flex;
+  width: 100vw;
+  box-sizing: border-box;
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #ccc;
+}
+
+.table-header-left {
+  flex: 0 0 15vw;
+  max-width: 15vw;
+  padding: 12px;
+  font-weight: bold;
+  border-right: 1px solid #ccc;
+  text-align: center;
+}
+
+.table-header-right {
+  flex: 0 0 85vw;
+  max-width: 85vw;
+  padding: 12px;
+  font-weight: bold;
+  text-align: center;
+}
+.component-section + .component-section {
+  margin-top: 12px;
+}
+
+}

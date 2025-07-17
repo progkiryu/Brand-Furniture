@@ -1,7 +1,7 @@
 import { DBLink } from "../App";
 
 // Get all subjobs
-export const getAllSubJubs = async () => {
+export const getAllSubJobs = async () => {
   const subJobs = fetch(`${DBLink}/subJob/getALlSubJobs`)
     .then((res) => res.json())
     .catch((err) => console.error(err));
