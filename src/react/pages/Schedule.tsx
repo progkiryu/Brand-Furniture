@@ -136,6 +136,8 @@ function Schedule() {
 
   const location = useLocation();
 
+  const initialSelectedJob = location.state?.selectedJob;
+
   useEffect(() => {
     if (location.state !== null) {
       const { selectedJob, selectedSubJobs } = location.state;
@@ -913,7 +915,7 @@ function Schedule() {
             </div>
           </div>
         </div>{" "}
-        
+
         {/* This closes the #filter-container div */}
         <div id="order-container">
           {/* Left Column - Job Name */}
@@ -935,6 +937,7 @@ function Schedule() {
             completeTerm={filterComplete}
             productionTerm={filterProduction}
             onEditJobClick={handleEditJobClick}
+            initialSelectedJobId={initialSelectedJob?._id || null}
           />
           
 

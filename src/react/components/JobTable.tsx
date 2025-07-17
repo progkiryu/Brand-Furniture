@@ -18,6 +18,7 @@ interface JobTableProps {
     productionTerm: boolean;
     handleJobClick: (job: Job) => Promise<void>;
     onEditJobClick: (job: Job) => void;
+    initialSelectedJobId?: string | null;
 }
 
 function JobTable({ 
@@ -36,10 +37,15 @@ function JobTable({
     clientTerm, 
     dueDateTerm, 
     jobNameTerm,
-    onEditJobClick
+    onEditJobClick,
+    initialSelectedJobId,
 }: JobTableProps) {
     const [displayedJobs, setDisplayedJobs] = useState<Job[]>(jobs);
     // State to hold both jobId and invoiceId for the selected job
+
+    useEffect(() => {
+        setSelectedJobId(initialSelectedJobId || null);
+    }, [initialSelectedJobId]);
 
     const searchFilter = (searchTerm: String) => {
         const lowerCaseSearchTerm = searchTerm.toLowerCase();
@@ -308,38 +314,6 @@ const onRowClick = async (job: Job) => {
   setSelectedJobId(job._id as string);
   await handleJobClick(job);
 };
-
-
-    // return (
-    //     <>
-    //         <div className="sp-jobs-container">
-    //             <table>
-    //                 <tbody>
-    //                     {displayedJobs.map((job) => (
-    //                         <tr
-    //                             key={String(job._id)}
-    //                             className={`job-row ${selectedJobId === job._id ? "selected-job" : ""}`}
-    //                             onClick={() => onRowClick(job)}
-    //                             >
-    //                             <td className="job-name-cell">{job.name}</td>
-    //                             <td>
-    //                                 <Pencil
-    //                                 className="edit-icon"
-    //                                 onClick={(e: React.MouseEvent) => {
-    //                                     e.stopPropagation(); // prevent click triggering jobClicked
-    //                                     onEditJobClick(job);
-    //                                 }}
-    //                                 />
-    //                             </td>
-    //                             </tr>
-
-
-    //                     ))}
-    //                 </tbody>
-    //             </table>
-    //         </div>
-    //     </>
-    // );
 
     return (
         <>

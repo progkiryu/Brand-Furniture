@@ -29,7 +29,7 @@ function AddJobFormModel({ isOpen, onClose, onAddJob}: AddJobFormModelProps) {
         event.preventDefault();
 
         // Basic validation
-        if (!invoiceId || !clientName || !jobName || !jobType || !dueDate) {
+        if (!clientName || !jobName || !jobType || !dueDate) {
             alert('Please fill in all fields.');
             return;
         }
