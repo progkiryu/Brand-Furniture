@@ -10,12 +10,11 @@ export const getAllCushions = async (
     const cushions = await schemas.Cushion.find({});
     if (!cushions) {
       res.status(404).json({ message: "Error: Failed to get cushions" });
-      return;
     }
     res.status(200).json(cushions);
   } catch (err) {
     console.error(err);
-    res.status(400).json(err);
+    res.sendStatus(400);
   }
 };
 

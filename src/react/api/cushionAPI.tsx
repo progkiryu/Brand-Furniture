@@ -3,7 +3,7 @@ import { DBLink } from "../App";
 // Get all the cushions
 export const getAllCushions = async () => {
   const cushions = fetch(`${DBLink}/cushion/getAllCushions`)
-    .then((res) => res.json)
+    .then((res) => res.json())
     .catch((err) => console.error(err));
   if (!cushions) {
     return;

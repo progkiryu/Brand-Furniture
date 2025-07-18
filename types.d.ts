@@ -27,7 +27,6 @@ type SubJob = {
   frameList?: string[];
   cushionList?: string[];
   upholsteryList?: string[];
-  frameFormed?: Boolean; // seperate to the 5 colours
 };
 
 type Frame = {

@@ -30,18 +30,18 @@ import EditFrameFormModal from "../components/EditFrameFormModal";
 import EditCushionFormModal from "../components/EditCushionFormModal";
 import EditUpholsteryFormModal from "../components/EditUpholsteryFormModal";
 
-import { createFrame, updateFrame, deleteFrameById } from "../api/frameAPI"; // Import updateFrame, deleteFrameById
-import { createCushion, updateCushion, deleteCushionById } from "../api/cushionAPI"; // Import updateCushion, deleteCushionById
-import { createUpholstery, updateUpholstery, deleteUpholstery } from "../api/upholsteryAPI"; // Import updateUpholstery, deleteUpholstery
+import { getAllFrames, createFrame, updateFrame, deleteFrameById } from "../api/frameAPI"; // Import updateFrame, deleteFrameById
+import { getAllCushions, createCushion, updateCushion, deleteCushionById } from "../api/cushionAPI"; // Import updateCushion, deleteCushionById
+import { getAllUpholstery, createUpholstery, updateUpholstery, deleteUpholstery } from "../api/upholsteryAPI"; // Import updateUpholstery, deleteUpholstery
 
 import { useState, useEffect, useRef } from 'react';
 import { useLocation } from "react-router-dom";
 
 function Schedule() {
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [cushions] = useState<Array<Cushion>>([]);
-  const [frames] = useState<Array<Frame>>([]);
-  const [upholstery] = useState<Array<Upholstery>>([]);
+  const [cushions, setCushions] = useState<Array<Cushion>>([]);
+  const [frames, setFrames] = useState<Array<Frame>>([]);
+  const [upholstery, setUpholstery] = useState<Array<Upholstery>>([]);
 
   const [isEditJobModalOpen, setIsEditJobModalOpen] = useState(false);
   const [jobToEdit, setJobToEdit] = useState<Job | null>(null);
@@ -85,7 +85,6 @@ function Schedule() {
   const [filterSewn, setFilterSewn] = useState<boolean>(false);
   const [filterUpholster, setFilterUpholster] = useState<boolean>(false);
   const [filterFoamed, setFilterFoamed] = useState<boolean>(false);
-  const [filterWrapped, setFilterWrapped] = useState<boolean>(false);
   const [filterComplete, setFilterComplete] = useState<boolean>(false);
   const [filterProduction, setFilterProduction] = useState<boolean>(false);
 
@@ -151,10 +150,26 @@ function Schedule() {
       const fetchJobs = async () => {
         const jobsPromise = getAllJobs();
         const subJobsPromise = getAllSubJobs();
+        const cushionsPromise = getAllCushions();
+        const framesPromise = getAllFrames();
+        const upholsteryPromise = getAllUpholstery();
+
         try {
-          const [fetchJobs, fetchSubJobs] = await Promise.all([jobsPromise, subJobsPromise]);
+          const [
+            fetchJobs, 
+            fetchSubJobs, 
+            fetchCushions, 
+            fetchFrames, 
+            fetchUpholstery] = await Promise.all([jobsPromise, 
+                                                  subJobsPromise,
+                                                  cushionsPromise,
+                                                  framesPromise,
+                                                  upholsteryPromise]);
           setJobs(fetchJobs);
           setSubJobs(fetchSubJobs);
+          setCushions(fetchCushions);
+          setFrames(fetchFrames);
+          setUpholstery(fetchUpholstery);
         }
         catch (err) {
           console.error("Could not fetch Jobs!");
@@ -634,8 +649,6 @@ function Schedule() {
       checked === true ? setFilterCut(false) : setFilterCut(true);
     } else if (status === "upholster") {
       checked === true ? setFilterUpholster(false) : setFilterUpholster(true);
-    } else if (status === "wrapped") {
-      checked === true ? setFilterWrapped(false) : setFilterWrapped(true);
     } else if (status === "sewn") {
       checked === true ? setFilterSewn(false) : setFilterSewn(true);
     } else if (status === "foamed") {
@@ -843,16 +856,6 @@ function Schedule() {
                   />{" "}
                   Body Upholstered
                 </label>
-                <label className="filter-item waiting-for-wrapping">
-                  <input
-                    type="checkbox"
-                    defaultChecked={filterWrapped}
-                    onChange={(e) =>
-                      handleStatusChange(e.target.defaultChecked, "wrapped")
-                    }
-                  />{" "}
-                  Waiting for wrapping
-                </label>
               </div>
               <div className="filter-column">
                 <label className="filter-item upholstery-sewn">
@@ -910,6 +913,9 @@ function Schedule() {
         searchTerm={searchTerm}
         jobs={jobs}
         subJobs={subJobs}
+        frames={frames}
+        cushions={cushions}
+        upholstery={upholstery}
         handleJobClick={displayJobDetails}
         invoiceIDTerm={filterInvoiceID}
         clientTerm={filterClient}
@@ -919,7 +925,6 @@ function Schedule() {
         sewnTerm={filterSewn}
         upholsterTerm={filterUpholster}
         foamedTerm={filterFoamed}
-        wrappedTerm={filterWrapped}
         completeTerm={filterComplete}
         productionTerm={filterProduction}
         onEditJobClick={handleEditJobClick}
