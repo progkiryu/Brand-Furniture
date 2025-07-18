@@ -217,7 +217,7 @@ function Schedule() {
       setJobs((prevJobs) => prevJobs.filter((job) => job._id !== jobId));
       setIsEditJobModalOpen(false);
       setJobToEdit(null);
-      setSubJobs([]); // Clear subjobs as well
+      setSelectedSubJobs([]); // Clear subjobs as well
     } else {
       console.error("Failed to delete job.");
     }
