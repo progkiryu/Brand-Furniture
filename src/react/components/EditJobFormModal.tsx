@@ -237,7 +237,7 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob, onDeleteJob
                             <option value="Residential">Residential</option>
                             <option value="Private">Private</option>
                             <option value="Production">Production</option>
-                            <option value="Brand" selected>Brand</option>
+                            <option value="Brand">Brand</option>
                         </select>
                     </div>
 
