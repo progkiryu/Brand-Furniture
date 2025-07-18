@@ -255,17 +255,18 @@ function Schedule() {
         }
     } catch (err) {
         console.error("Error deleting job and its sub-jobs: ", err);
-    const success = await deleteJob(jobId);
-    if (success) {
-      setJobs((prevJobs) => prevJobs.filter((job) => job._id !== jobId));
-      setIsEditJobModalOpen(false);
-      setJobToEdit(null);
-      setSubJobs([]); // Clear subjobs as well
-      reload();
-    } else {
-      console.error("Failed to delete job.");
-    }
-};
+        const success = await deleteJob(jobId);
+        if (success) {
+          setJobs((prevJobs) => prevJobs.filter((job) => job._id !== jobId));
+          setIsEditJobModalOpen(false);
+          setJobToEdit(null);
+          setSubJobs([]); // Clear subjobs as well
+          reload();
+        } else {
+          console.error("Failed to delete job.");
+        }
+    };
+  }
 
   const handleUpdateJob = async (updatedData: Job) => {
     const updatedJobFromServer = await updateJob(updatedData);
@@ -1199,7 +1200,6 @@ function Schedule() {
       />
     </>
   );
-}
 }
 
 export default Schedule;
