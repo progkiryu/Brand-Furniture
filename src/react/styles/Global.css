@@ -4,6 +4,7 @@ body {
     background-color: #E0E1DD;
     color: #0D1B2A;
     height: 100%;
+    overflow-x: hidden;
 }
 
 h1, h2, h3 {
@@ -104,6 +105,8 @@ p {
     background-color: #ACB7C3;
     min-height: 100%;
     overflow-y: auto;
+    min-height: 100vh;
+    overflow-x: hidden;
 }
 
 /* .table-responsive-wrapper {
