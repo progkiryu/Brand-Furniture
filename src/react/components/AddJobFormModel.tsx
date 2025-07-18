@@ -56,7 +56,7 @@ function AddJobFormModel({ isOpen, onClose, onAddJob}: AddJobFormModelProps) {
 
 
         const newJob: Job = {
-            invoiceId: invoiceId ? invoiceId : "",
+            invoiceId: invoiceId,
             poNumber: poNumber,
             client: clientName,
             name: jobName,

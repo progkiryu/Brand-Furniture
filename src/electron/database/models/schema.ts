@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const jobSchema = new mongoose.Schema(
   {
-    invoiceId: { type: String, default: "" },
+    invoiceId: { type: String, default: ""},
     poNumber: { type: String, default: "" },
     client: { type: String, required: true },
     name: { type: String, required: true },

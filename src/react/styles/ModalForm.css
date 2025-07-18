@@ -33,9 +33,10 @@
     background-color: red;
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 1.1em;
+    font-weight: 600;
 }
 
 #delete-button:hover {

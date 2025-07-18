@@ -46,9 +46,6 @@ import { useLocation } from "react-router-dom";
 
 function Schedule() {
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [cushions] = useState<Array<Cushion>>([]);
-  const [frames] = useState<Array<Frame>>([]);
-  const [upholstery] = useState<Array<Upholstery>>([]);
 
   const [isEditJobModalOpen, setIsEditJobModalOpen] = useState(false);
   const [jobToEdit, setJobToEdit] = useState<Job | null>(null);
@@ -173,7 +170,8 @@ function Schedule() {
       };
       fetchJobs();
     }
-  }, [subJobs, frames, cushions, upholstery]);
+    console.log('loop check')
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
