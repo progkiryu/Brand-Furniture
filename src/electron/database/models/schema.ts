@@ -4,7 +4,7 @@ const jobSchema = new mongoose.Schema(
   {
     invoiceId: { type: String, default: ""},
     poNumber: { type: String, default: "" },
-    client: { type: String, required: true },
+    client: { type: String, required: true, unique: false },
     name: { type: String, required: true },
     type: { type: String, default: "Commercial" }, // Added 'type' as per your mock data
     due: { type: Date, required: false },
