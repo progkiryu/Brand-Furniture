@@ -82,7 +82,9 @@ function SubJobTableRow({
           <div className="card-header">
             <h4>Files</h4>
           </div>
-          <p><i>{subJobParam.file || "No file uploaded"}</i></p>
+          <p>
+            <i>{subJobParam.file || "No file uploaded"}</i>
+          </p>
 
         </div>
       </div>
