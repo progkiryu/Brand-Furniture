@@ -166,6 +166,9 @@ function JobTable({
                     });
                 }
             }
+            else {
+                sortedJobs = [];
+            }
         }
         if (upholsterTerm === true) {
             const upholsterJobSet = new Set<Job>();
@@ -205,6 +208,9 @@ function JobTable({
                     });
                 }
             }
+            else {
+                sortedJobs = [];
+            }
         }
         if (sewnTerm === true) {
             const sewnJobSet = new Set<Job>();
@@ -234,6 +240,9 @@ function JobTable({
                     });
                 }
             }
+            else {
+                sortedJobs = [];
+            }
         }
         if (foamedTerm === true) {
             const foamedJobSet = new Set<Job>();
@@ -262,6 +271,9 @@ function JobTable({
                         statusJobSet.add(job);
                     });   
                 }
+            }
+            else {
+                sortedJobs = [];
             }
         }
         if (completeTerm === true) {
@@ -313,16 +325,17 @@ function JobTable({
                     });
                 } 
             }
+            else {
+                sortedJobs = [];
+            }
         }
         if (productionTerm === true) {
-            console.log("bruh");
             const productionJobSet = new Set<Job>();
             const productionSubJobSet = new Set<SubJob>();
 
             const productionFrames: Frame[] = frames.filter((frame: Frame) => {
                 if (frame.status === "In Production") return true;
             });
-            console.log(productionFrames);
             productionFrames.map((frame: Frame) => {
                 const productionSubJob = subJobs.find((subJob: SubJob) => 
                     subJob._id === frame.subJobId
@@ -350,7 +363,6 @@ function JobTable({
                 if (productionSubJob) productionSubJobSet.add(productionSubJob);
             });
 
-            console.log(productionSubJobSet);
             if (productionSubJobSet.size > 0) {
                 const productionSubJobArray = [...productionSubJobSet];
                 productionSubJobArray.map((subJob: SubJob) => {
@@ -365,6 +377,9 @@ function JobTable({
                         statusJobSet.add(job);
                     });
                 } 
+            }
+            else {
+                sortedJobs = [];
             }
         }
         if (statusJobSet.size > 0) {
@@ -392,7 +407,6 @@ function JobTable({
             completeTerm,
             productionTerm
         );
-        console.log(filtered);
         setDisplayedJobs(filtered);
 
     }, [searchTerm,

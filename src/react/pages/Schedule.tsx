@@ -658,7 +658,7 @@ function Schedule() {
     } else if (status === "foamed") {
       checked === true ? setFilterFoamed(false) : setFilterFoamed(true);
     } else if (status === "complete") {
-      checked === true ? setFilterComplete(false) : setFilterFoamed(true);
+      checked === true ? setFilterComplete(false) : setFilterComplete(true);
     } else if (status === "production") {
       checked === true ? setFilterProduction(false) : setFilterProduction(true);
     }
