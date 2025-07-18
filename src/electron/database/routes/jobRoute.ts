@@ -9,6 +9,7 @@ import {
   getFilteredJobsByType,
   getArchivedJobs,
   getCurrentJobs,
+  getPinnedJobs,
 } from "../controllers/jobController.js";
 
 export default (router: express.Router) => {
@@ -17,6 +18,7 @@ export default (router: express.Router) => {
   router.get("/job/getJobById/:id", getJobById);
   router.get("/job/getCurrentJobs", getCurrentJobs);
   router.get("/job/getArchivedJobs", getArchivedJobs);
+  router.get("/job/getPinnedJobs", getPinnedJobs);
   // Post Routes
   router.post("/job/insertJob", insertJob);
   router.post("/job/getFilteredJobsByDate", getFilteredJobsByDate);

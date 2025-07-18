@@ -34,7 +34,7 @@ import { getAllFrames, createFrame, updateFrame, deleteFrameById } from "../api/
 import { getAllCushions, createCushion, updateCushion, deleteCushionById } from "../api/cushionAPI"; // Import updateCushion, deleteCushionById
 import { getAllUpholstery, createUpholstery, updateUpholstery, deleteUpholstery } from "../api/upholsteryAPI"; // Import updateUpholstery, deleteUpholstery
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 
 function Schedule() {
@@ -66,7 +66,9 @@ function Schedule() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const [isAddSubJobModalOpen, setIsAddSubJobModalOpen] = useState(false);
-  const [selectedJobForSubJob, setSelectedJobForSubJob] = useState<Job | null>(null);
+  const [selectedJobForSubJob, setSelectedJobForSubJob] = useState<Job | null>(
+    null
+  );
 
   const [filterInvoiceID, setFilterInvoiceID] = useState<
     "asc" | "desc" | undefined
@@ -90,7 +92,7 @@ function Schedule() {
 
   const [isAddCushionModalOpen, setIsAddCushionModalOpen] = useState(false);
   const [isAddFrameModalOpen, setIsAddFrameModalOpen] = useState(false);
-  
+
   const [isAddUpholsteryModalOpen, setIsAddUpholsteryModalOpen] =
     useState(false);
 
@@ -106,7 +108,7 @@ function Schedule() {
     useState<{ subJobId: String | null; subJobDetail: String | null } | null>(
       null
     );
-  
+
   // State for Edit Modals
   const [isEditSubJobModalOpen, setIsEditSubJobModalOpen] = useState(false);
   const [subJobToEdit, setSubJobToEdit] = useState<SubJob | null>(null);
@@ -137,16 +139,14 @@ function Schedule() {
         try {
           const [fetchJobs] = await Promise.all([jobsPromise]);
           setJobs(fetchJobs);
-        }
-        catch (err) {
+        } catch (err) {
           console.error("Could not fetch Jobs!");
         }
-      }
+      };
       fetchJobs();
-      
+
       location.state === null;
-    }
-    else {
+    } else {
       const fetchJobs = async () => {
         const jobsPromise = getAllJobs();
         const subJobsPromise = getAllSubJobs();
@@ -174,11 +174,11 @@ function Schedule() {
         catch (err) {
           console.error("Could not fetch Jobs!");
         }
-      }
+      };
       fetchJobs();
     }
   }, [subJobs, frames, cushions, upholstery]);
-        
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -202,7 +202,7 @@ function Schedule() {
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
-  
+
   const handleAddJob = async (newJobData: Job) => {
     const addedJob = await createJob(newJobData);
     if (addedJob) {
@@ -233,9 +233,11 @@ function Schedule() {
   const handleUpdateJob = async (updatedData: Job) => {
     const updatedJobFromServer = await updateJob(updatedData);
     if (updatedJobFromServer) {
-      setJobs(prevJobs => prevJobs.map(job =>
-        job._id === updatedJobFromServer._id ? updatedJobFromServer : job
-      ));
+      setJobs((prevJobs) =>
+        prevJobs.map((job) =>
+          job._id === updatedJobFromServer._id ? updatedJobFromServer : job
+        )
+      );
       setIsEditJobModalOpen(false);
       setJobToEdit(null);
     } else {
@@ -256,8 +258,7 @@ function Schedule() {
         setSelectedSubJobs([]);
       }
       setSelected(true);
-    }
-    catch (err) {
+    } catch (err) {
       console.log("Error deleting job:", err);
     }
   };
@@ -271,27 +272,30 @@ function Schedule() {
     try {
       const addedSubJob = await createSubJob(newSubJobData);
       if (addedSubJob && addedSubJob._id) {
-        const updatedSubJobList = [...(selectedJobForSubJob.subJobList || []), addedSubJob._id];
+        const updatedSubJobList = [
+          ...(selectedJobForSubJob.subJobList || []),
+          addedSubJob._id,
+        ];
         const jobToUpdate = {
           ...selectedJobForSubJob,
           subJobList: updatedSubJobList,
         };
         const updatedJobFromServer = await updateJob(jobToUpdate);
         if (updatedJobFromServer) {
-          setJobs(prevJobs => prevJobs.map(job =>
-            job._id === updatedJobFromServer._id ? updatedJobFromServer : job
-          ));
+          setJobs((prevJobs) =>
+            prevJobs.map((job) =>
+              job._id === updatedJobFromServer._id ? updatedJobFromServer : job
+            )
+          );
           await displayJobDetails(updatedJobFromServer); // Ensure sub-jobs are re-fetched and updated
           setIsAddSubJobModalOpen(false);
           setSelectedJobForSubJob(updatedJobFromServer); // Update the selected job to reflect changes
         }
       }
-    }
-    catch (err) {
+    } catch (err) {
       console.error("Error adding sub-job:", err);
     }
   };
-  
 
   const handleUpdateSubJob = async (updatedData: SubJob) => {
     const updatedSubJobFromServer = await updateSubJob(updatedData);
@@ -932,134 +936,213 @@ function Schedule() {
     </div>
   </div>
 
-  {/* Right Column - Job Components */}
-  <div id="components-section-wrapper">
-    <div className="job-section-header">Job Components</div>
-    <div id="job-detail-container">
-      {hasSelected && (
-        <SubJobTable
-          subJobsParam={selectedSubJobs}
-          onAddComponentClick={openAddSubJobModal}
-          onAddFrameClick={openAddFrameModal}
-          onAddCushionClick={openAddCushionModal}
-          onAddUpholsteryClick={openAddUpholsteryModal}
-          onEditSubJobClick={openEditSubJobModal}
-          onEditFrameClick={openEditFrameModal}
-          onEditCushionClick={openEditCushionModal}
-          onEditUpholsteryClick={openEditUpholsteryModal}
-        />
-      )}
-    </div>
-  </div>
-</div>
-
-
-
-          <AddJobFormModel
-            isOpen={isAddJobModelOpen}
-            onClose={() => setIsAddJobModelOpen(false)}
-            onAddJob={handleAddJob}
-          />
-
-          {/* Edit Job Modal */}
-          <EditJobFormModal
-            isOpen={isEditJobModalOpen}
-            onClose={() => {
-              setIsEditJobModalOpen(false);
-              setJobToEdit(null);
-            }}
-            jobToEdit={jobToEdit}
-            onUpdateJob={handleUpdateJob}
-            onDeleteJob={handleDeleteJob} // Pass delete handler
-          />
-
-          <AddSubJobFormModal // New AddSubJobFormModal component
-            isOpen={isAddSubJobModalOpen} //
-            onClose={() => setIsAddSubJobModalOpen(false)} //
-            jobId={selectedJobForSubJob?._id?.toString() || null} // Pass the jobId
-            invoiceId={selectedJobForSubJob?.invoiceId?.toString() || null} // Pass the invoiceId
-            onAddSubJob={handleAddSubJob} // Pass the handler for adding sub-jobs
-          />
-
-          {/* Edit SubJob Modal */}
-          <EditSubJobFormModal
-            isOpen={isEditSubJobModalOpen}
-            onClose={() => {
-              setIsEditSubJobModalOpen(false);
-              setSubJobToEdit(null);
-            }}
-            subJobToEdit={subJobToEdit}
-            onUpdateSubJob={handleUpdateSubJob}
-            onDeleteSubJob={handleDeleteSubJob}
-          />
-
-          <AddFrameFormModal // New AddFrameModal component
-            isOpen={isAddFrameModalOpen}
-            onClose={() => setIsAddFrameModalOpen(false)}
-            subJobId={selectedSubJobInfoForFrame?.subJobId?.toString() || ""}
-            subJobDetail={
-              selectedSubJobInfoForFrame?.subJobDetail?.toString() || ""
-            }
-            onAddFrame={handleAddFrame}
-          />
-
-          {/* Edit Frame Modal */}
-          <EditFrameFormModal
-            isOpen={isEditFrameModalOpen}
-            onClose={() => {
-              setIsEditFrameModalOpen(false);
-              setFrameToEdit(null);
-            }}
-            frameToEdit={frameToEdit}
-            onUpdateFrame={handleUpdateFrame}
-            onDeleteFrame={handleDeleteFrame}
-          />
-
-          <AddCushionFormModal
-            isOpen={isAddCushionModalOpen}
-            onClose={() => setIsAddCushionModalOpen(false)}
-            subJobId={selectedSubJobInfoForCushion?.subJobId?.toString() || ""}
-            subJobDetail={
-              selectedSubJobInfoForCushion?.subJobDetail?.toString() || ""
-            }
-            onAddCushion={handleAddCushion}
-          />
-
-          {/* Edit Cushion Modal */}
-          <EditCushionFormModal
-            isOpen={isEditCushionModalOpen}
-            onClose={() => {
-              setIsEditCushionModalOpen(false);
-              setCushionToEdit(null);
-            }}
-            cushionToEdit={cushionToEdit}
-            onUpdateCushion={handleUpdateCushion}
-            onDeleteCushion={handleDeleteCushion}
-          />
-
-          <AddUpholsteryFormModal // New AddUpholsteryModal component
-            isOpen={isAddUpholsteryModalOpen}
-            onClose={() => setIsAddUpholsteryModalOpen(false)}
-            subJobId={
-              selectedSubJobInfoForUpholstery?.subJobId?.toString() || ""
-            }
-            subJobDetail={
-              selectedSubJobInfoForUpholstery?.subJobDetail?.toString() || ""
-            }
-            onAddUpholstery={handleAddUpholstery}
-          />
-
-          <EditUpholsteryFormModal
-            isOpen={isEditUpholsteryModalOpen}
-            onClose={() => {
-              setIsEditUpholsteryModalOpen(false);
-              setUpholsteryToEdit(null);
-            }}
-            upholsteryToEdit={upholsteryToEdit}
-            onUpdateUpholstery={handleUpdateUpholstery}
-            onDeleteUpholstery={handleDeleteUpholstery}
-          />
+          {/* Right Column - Job Components */}
+          <div id="components-section-wrapper">
+            <div className="job-section-header">Job Components</div>
+            <div id="job-detail-container">
+              {hasSelected && (
+                <SubJobTable
+                  subJobsParam={selectedSubJobs}
+                  onAddComponentClick={openAddSubJobModal}
+                  onAddFrameClick={openAddFrameModal}
+                  onAddCushionClick={openAddCushionModal}
+                  onAddUpholsteryClick={openAddUpholsteryModal}
+                  onEditSubJobClick={openEditSubJobModal}
+                  onEditFrameClick={openEditFrameModal}
+                  onEditCushionClick={openEditCushionModal}
+                  onEditUpholsteryClick={openEditUpholsteryModal}
+                />
+              )}
+            </div>
+          </div>
         </div>
+        <AddJobFormModel
+          isOpen={isAddJobModelOpen}
+          onClose={() => setIsAddJobModelOpen(false)}
+          onAddJob={handleAddJob}
+        />
+        {/* Edit Job Modal */}
+        <EditJobFormModal
+          isOpen={isEditJobModalOpen}
+          onClose={() => {
+            setIsEditJobModalOpen(false);
+            setJobToEdit(null);
+          }}
+          jobToEdit={jobToEdit}
+          onUpdateJob={handleUpdateJob}
+          onDeleteJob={handleDeleteJob} // Pass delete handler
+        />
+        <AddSubJobFormModal // New AddSubJobFormModal component
+          isOpen={isAddSubJobModalOpen} //
+          onClose={() => setIsAddSubJobModalOpen(false)} //
+          jobId={selectedJobForSubJob?._id?.toString() || null} // Pass the jobId
+          invoiceId={selectedJobForSubJob?.invoiceId?.toString() || null} // Pass the invoiceId
+          onAddSubJob={handleAddSubJob} // Pass the handler for adding sub-jobs
+        />
+        {/* Edit SubJob Modal */}
+        <EditSubJobFormModal
+          isOpen={isEditSubJobModalOpen}
+          onClose={() => {
+            setIsEditSubJobModalOpen(false);
+            setSubJobToEdit(null);
+          }}
+          subJobToEdit={subJobToEdit}
+          onUpdateSubJob={handleUpdateSubJob}
+          onDeleteSubJob={handleDeleteSubJob}
+        />
+        <AddFrameFormModal // New AddFrameModal component
+          isOpen={isAddFrameModalOpen}
+          onClose={() => setIsAddFrameModalOpen(false)}
+          subJobId={selectedSubJobInfoForFrame?.subJobId?.toString() || ""}
+          subJobDetail={
+            selectedSubJobInfoForFrame?.subJobDetail?.toString() || ""
+          }
+          onAddFrame={handleAddFrame}
+        />
+        {/* Edit Frame Modal */}
+        <EditFrameFormModal
+          isOpen={isEditFrameModalOpen}
+          onClose={() => {
+            setIsEditFrameModalOpen(false);
+            setFrameToEdit(null);
+          }}
+          frameToEdit={frameToEdit}
+          onUpdateFrame={handleUpdateFrame}
+          onDeleteFrame={handleDeleteFrame}
+        />
+        <AddCushionFormModal
+          isOpen={isAddCushionModalOpen}
+          onClose={() => setIsAddCushionModalOpen(false)}
+          subJobId={selectedSubJobInfoForCushion?.subJobId?.toString() || ""}
+          subJobDetail={
+            selectedSubJobInfoForCushion?.subJobDetail?.toString() || ""
+          }
+          onAddCushion={handleAddCushion}
+        />
+        {/* Edit Cushion Modal */}
+        <EditCushionFormModal
+          isOpen={isEditCushionModalOpen}
+          onClose={() => {
+            setIsEditCushionModalOpen(false);
+            setCushionToEdit(null);
+          }}
+          cushionToEdit={cushionToEdit}
+          onUpdateCushion={handleUpdateCushion}
+          onDeleteCushion={handleDeleteCushion}
+        />
+        <AddUpholsteryFormModal // New AddUpholsteryModal component
+          isOpen={isAddUpholsteryModalOpen}
+          onClose={() => setIsAddUpholsteryModalOpen(false)}
+          subJobId={selectedSubJobInfoForUpholstery?.subJobId?.toString() || ""}
+          subJobDetail={
+            selectedSubJobInfoForUpholstery?.subJobDetail?.toString() || ""
+          }
+          onAddUpholstery={handleAddUpholstery}
+        />
+        <EditUpholsteryFormModal
+          isOpen={isEditUpholsteryModalOpen}
+          onClose={() => {
+            setIsEditUpholsteryModalOpen(false);
+            setUpholsteryToEdit(null);
+          }}
+          upholsteryToEdit={upholsteryToEdit}
+          onUpdateUpholstery={handleUpdateUpholstery}
+          onDeleteUpholstery={handleDeleteUpholstery}
+        />
+      </div>
+      <AddJobFormModel
+        isOpen={isAddJobModelOpen}
+        onClose={() => setIsAddJobModelOpen(false)}
+        onAddJob={handleAddJob}
+      />
+      {/* Edit Job Modal */}
+      <EditJobFormModal
+        isOpen={isEditJobModalOpen}
+        onClose={() => {
+          setIsEditJobModalOpen(false);
+          setJobToEdit(null);
+        }}
+        jobToEdit={jobToEdit}
+        onUpdateJob={handleUpdateJob}
+        onDeleteJob={handleDeleteJob} // Pass delete handler
+      />
+      <AddSubJobFormModal // New AddSubJobFormModal component
+        isOpen={isAddSubJobModalOpen} //
+        onClose={() => setIsAddSubJobModalOpen(false)} //
+        jobId={selectedJobForSubJob?._id?.toString() || null} // Pass the jobId
+        invoiceId={selectedJobForSubJob?.invoiceId?.toString() || null} // Pass the invoiceId
+        onAddSubJob={handleAddSubJob} // Pass the handler for adding sub-jobs
+      />
+      {/* Edit SubJob Modal */}
+      <EditSubJobFormModal
+        isOpen={isEditSubJobModalOpen}
+        onClose={() => {
+          setIsEditSubJobModalOpen(false);
+          setSubJobToEdit(null);
+        }}
+        subJobToEdit={subJobToEdit}
+        onUpdateSubJob={handleUpdateSubJob}
+        onDeleteSubJob={handleDeleteSubJob}
+      />
+      <AddFrameFormModal // New AddFrameModal component
+        isOpen={isAddFrameModalOpen}
+        onClose={() => setIsAddFrameModalOpen(false)}
+        subJobId={selectedSubJobInfoForFrame?.subJobId?.toString() || ""}
+        subJobDetail={
+          selectedSubJobInfoForFrame?.subJobDetail?.toString() || ""
+        }
+        onAddFrame={handleAddFrame}
+      />
+      {/* Edit Frame Modal */}
+      <EditFrameFormModal
+        isOpen={isEditFrameModalOpen}
+        onClose={() => {
+          setIsEditFrameModalOpen(false);
+          setFrameToEdit(null);
+        }}
+        frameToEdit={frameToEdit}
+        onUpdateFrame={handleUpdateFrame}
+        onDeleteFrame={handleDeleteFrame}
+      />
+      <AddCushionFormModal
+        isOpen={isAddCushionModalOpen}
+        onClose={() => setIsAddCushionModalOpen(false)}
+        subJobId={selectedSubJobInfoForCushion?.subJobId?.toString() || ""}
+        subJobDetail={
+          selectedSubJobInfoForCushion?.subJobDetail?.toString() || ""
+        }
+        onAddCushion={handleAddCushion}
+      />
+      {/* Edit Cushion Modal */}
+      <EditCushionFormModal
+        isOpen={isEditCushionModalOpen}
+        onClose={() => {
+          setIsEditCushionModalOpen(false);
+          setCushionToEdit(null);
+        }}
+        cushionToEdit={cushionToEdit}
+        onUpdateCushion={handleUpdateCushion}
+        onDeleteCushion={handleDeleteCushion}
+      />
+      <AddUpholsteryFormModal // New AddUpholsteryModal component
+        isOpen={isAddUpholsteryModalOpen}
+        onClose={() => setIsAddUpholsteryModalOpen(false)}
+        subJobId={selectedSubJobInfoForUpholstery?.subJobId?.toString() || ""}
+        subJobDetail={
+          selectedSubJobInfoForUpholstery?.subJobDetail?.toString() || ""
+        }
+        onAddUpholstery={handleAddUpholstery}
+      />
+      <EditUpholsteryFormModal
+        isOpen={isEditUpholsteryModalOpen}
+        onClose={() => {
+          setIsEditUpholsteryModalOpen(false);
+          setUpholsteryToEdit(null);
+        }}
+        upholsteryToEdit={upholsteryToEdit}
+        onUpdateUpholstery={handleUpdateUpholstery}
+        onDeleteUpholstery={handleDeleteUpholstery}
+      />
     </>
   );
 }

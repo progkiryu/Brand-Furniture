@@ -58,36 +58,34 @@ function SubJobTableRow({
   return (
     <div className="job-component-row">
       {/* === SUB-JOB COLUMN === */}
-{/* JOB CARD */}
-<div className="component-card">
-  {/* JOB CARD */}
-  <div className="component-section">
-    <div className="card-header">
-      <h4>Job</h4>
-      <Pencil className="edit-icon" onClick={() => onEditSubJobClick(subJobParam)} />
-    </div>
-    <p>{subJobParam.subJobDetail}</p>
-  </div>
+      {/* JOB CARD */}
+      <div className="component-card">
+        {/* JOB CARD */}
+        <div className="component-section">
+          <div className="card-header">
+            <h4>Job</h4>
+            <Pencil className="edit-icon" onClick={() => onEditSubJobClick(subJobParam)} />
+          </div>
+          <p>{subJobParam.subJobDetail}</p>
+        </div>
 
-{/* NOTES CARD */}
- <div className="component-section">
-    <div className="card-header">
-      <h4>Notes</h4>
-      <Pencil className="edit-icon" onClick={() => onEditSubJobClick(subJobParam)} />
-    </div>
-    <p>{subJobParam.note}</p>
-  </div>
+        {/* NOTES CARD */}
+        <div className="component-section">
+          <div className="card-header">
+            <h4>Notes</h4>
+          </div>
+          <p>{subJobParam.note}</p>
+        </div>
 
-{/* FILES CARD */}
-  <div className="component-section">
-    <div className="card-header">
-      <h4>Files</h4>
-      <Pencil className="edit-icon" onClick={() => onEditSubJobClick(subJobParam)} />
-    </div>
-   <p><i>{subJobParam.file || "No file uploaded"}</i></p>
+        {/* FILES CARD */}
+        <div className="component-section">
+          <div className="card-header">
+            <h4>Files</h4>
+          </div>
+          <p><i>{subJobParam.file || "No file uploaded"}</i></p>
 
-  </div>
-</div>
+        </div>
+      </div>
 
 
       {/* === FRAME COLUMN === */}
