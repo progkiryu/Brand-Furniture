@@ -38,6 +38,8 @@ import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 
 function Schedule() {
+  const [reloadState, setReloadState] = useState<boolean>(false);
+
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [cushions, setCushions] = useState<Array<Cushion>>([]);
   const [frames, setFrames] = useState<Array<Frame>>([]);
@@ -127,6 +129,10 @@ function Schedule() {
 
   const location = useLocation();
 
+  const reload = () => {
+    reloadState === true ? setReloadState(false) : setReloadState(true);
+  }
+
   useEffect(() => {
     if (location.state !== null) {
       const { selectedJob, selectedSubJobs } = location.state;
@@ -177,7 +183,7 @@ function Schedule() {
       };
       fetchJobs();
     }
-  }, [jobs, subJobs, frames, cushions, upholstery]);
+  }, [reload]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -208,6 +214,7 @@ function Schedule() {
     if (addedJob) {
       setJobs((prevJobs) => [...prevJobs, addedJob]);
       setIsAddJobModelOpen(false);
+      reload();
     } else {
       console.error("Failed to create job.");
     }
@@ -225,6 +232,7 @@ function Schedule() {
       setIsEditJobModalOpen(false);
       setJobToEdit(null);
       setSubJobs([]); // Clear subjobs as well
+      reload();
     } else {
       console.error("Failed to delete job.");
     }
@@ -240,6 +248,7 @@ function Schedule() {
       );
       setIsEditJobModalOpen(false);
       setJobToEdit(null);
+      reload();
     } else {
       console.error("Failed to update job.");
     }
@@ -307,6 +316,7 @@ function Schedule() {
       // --- END NEW APPROACH ---
       setIsEditSubJobModalOpen(false);
       setSubJobToEdit(null);
+      reload();
     } else {
       console.error("Failed to update sub-job.");
     }
@@ -331,6 +341,7 @@ function Schedule() {
           prevJobs.map((job) => (job._id === updatedJob._id ? updatedJob : job))
         );
         setSelectedJobForSubJob(updatedJob);
+        reload();
       }
       setIsEditSubJobModalOpen(false);
       setSubJobToEdit(null);
@@ -356,6 +367,7 @@ function Schedule() {
       );
       setIsAddCushionModalOpen(false); // Close modal
       setSelectedSubJobInfoForCushion(null); // Clear selected subjob info
+      reload();
     } else {
       console.error("Failed to create cushion.");
     }
@@ -369,6 +381,7 @@ function Schedule() {
       // For now, let's re-fetch subjobs to ensure consistency if lists are not directly managed
       if (selectedJobForSubJob) {
         displayJobDetails(selectedJobForSubJob); // Re-fetch all subjobs for the current job
+        reload();
       }
       setIsEditCushionModalOpen(false);
       setCushionToEdit(null);
@@ -396,6 +409,7 @@ function Schedule() {
       );
       setIsEditCushionModalOpen(false);
       setCushionToEdit(null);
+      reload();
     } else {
       console.error("Failed to delete cushion.");
     }
@@ -416,6 +430,7 @@ function Schedule() {
           return subJob;
         })
       );
+      reload();
     } else {
       console.error("Failed to create frame.");
     }
@@ -427,6 +442,7 @@ function Schedule() {
       // Re-fetch subjobs to ensure consistency if lists are not directly managed
       if (selectedJobForSubJob) {
         displayJobDetails(selectedJobForSubJob); // Re-fetch all subjobs for the current job
+        reload();
       }
       setIsEditFrameModalOpen(false);
       setFrameToEdit(null);
@@ -454,6 +470,7 @@ function Schedule() {
       );
       setIsEditFrameModalOpen(false);
       setFrameToEdit(null);
+      reload();
     } else {
       console.error("Failed to delete frame.");
     }
@@ -477,6 +494,7 @@ function Schedule() {
           return subJob;
         })
       );
+      reload();
     } else {
       console.error("Failed to create upholstery.");
     }
@@ -488,6 +506,7 @@ function Schedule() {
       // Re-fetch subjobs to ensure consistency if lists are not directly managed
       if (selectedJobForSubJob) {
         displayJobDetails(selectedJobForSubJob); // Re-fetch all subjobs for the current job
+        reload();
       }
       setIsEditUpholsteryModalOpen(false);
       setUpholsteryToEdit(null);
@@ -517,6 +536,7 @@ function Schedule() {
       );
       setIsEditUpholsteryModalOpen(false);
       setUpholsteryToEdit(null);
+      reload();
     } else {
       console.error("Failed to delete upholstery.");
     }
