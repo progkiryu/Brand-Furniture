@@ -92,6 +92,8 @@ function Schedule() {
   const [filterComplete, setFilterComplete] = useState<boolean>(false);
   const [filterProduction, setFilterProduction] = useState<boolean>(false);
 
+  const [filterArchive, setFilterArchive] = useState<boolean>(false);
+
   const [isAddCushionModalOpen, setIsAddCushionModalOpen] = useState(false);
   const [isAddFrameModalOpen, setIsAddFrameModalOpen] = useState(false);
 
@@ -684,6 +686,10 @@ function Schedule() {
     }
   };
 
+  const handleArchiveChange = (checked: boolean) => {
+    checked === true ? setFilterArchive(false) : setFilterArchive(true);
+  }
+
   const openEditSubJobModal = (subJob: SubJob) => {
     setSubJobToEdit(subJob);
     setIsEditSubJobModalOpen(true);
@@ -850,7 +856,9 @@ function Schedule() {
             </div>
             <div id="archive-container">
               <label>
-                <input type="checkbox" />
+                <input type="checkbox" 
+                defaultChecked={filterArchive} 
+                onChange={(e) => handleArchiveChange(e.target.defaultChecked)}/>
                 Archive
               </label>
             </div>
@@ -951,6 +959,7 @@ function Schedule() {
         foamedTerm={filterFoamed}
         completeTerm={filterComplete}
         productionTerm={filterProduction}
+        archiveTerm={filterArchive}
         onEditJobClick={handleEditJobClick}
       />
     </div>

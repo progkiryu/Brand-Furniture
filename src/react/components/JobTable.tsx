@@ -18,6 +18,7 @@ interface JobTableProps {
     foamedTerm: boolean;
     completeTerm: boolean;
     productionTerm: boolean;
+    archiveTerm: boolean;
     handleJobClick: (job: Job) => Promise<void>;
     onEditJobClick: (job: Job) => void;
 }
@@ -35,6 +36,7 @@ function JobTable({
     foamedTerm,
     completeTerm,
     productionTerm,
+    archiveTerm,
     handleJobClick, 
     invoiceIDTerm, 
     clientTerm, 
@@ -388,6 +390,15 @@ function JobTable({
         return sortedJobs;
     }
 
+    const archiveFilter = (sortedJobs: Job[], archiveTerm: boolean) => {
+        if (archiveTerm === true) {
+            sortedJobs = sortedJobs.filter((job: Job) => {
+                if (job.isArchived === true) return true;
+            });
+        }
+        return sortedJobs;
+    }
+
     useEffect(() => {
         let filtered = [...jobs];
         filtered = searchFilter(searchTerm);
@@ -407,6 +418,7 @@ function JobTable({
             completeTerm,
             productionTerm
         );
+        filtered = archiveFilter(filtered, archiveTerm);
         setDisplayedJobs(filtered);
 
     }, [searchTerm,
@@ -424,47 +436,16 @@ function JobTable({
         upholsterTerm,
         foamedTerm,
         completeTerm,
-        productionTerm
+        productionTerm,
+        archiveTerm
     ]);
 
     const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
 
-const onRowClick = async (job: Job) => {
-  setSelectedJobId(job._id as string);
-  await handleJobClick(job);
-};
-
-
-    // return (
-    //     <>
-    //         <div className="sp-jobs-container">
-    //             <table>
-    //                 <tbody>
-    //                     {displayedJobs.map((job) => (
-    //                         <tr
-    //                             key={String(job._id)}
-    //                             className={`job-row ${selectedJobId === job._id ? "selected-job" : ""}`}
-    //                             onClick={() => onRowClick(job)}
-    //                             >
-    //                             <td className="job-name-cell">{job.name}</td>
-    //                             <td>
-    //                                 <Pencil
-    //                                 className="edit-icon"
-    //                                 onClick={(e: React.MouseEvent) => {
-    //                                     e.stopPropagation(); // prevent click triggering jobClicked
-    //                                     onEditJobClick(job);
-    //                                 }}
-    //                                 />
-    //                             </td>
-    //                             </tr>
-
-
-    //                     ))}
-    //                 </tbody>
-    //             </table>
-    //         </div>
-    //     </>
-    // );
+    const onRowClick = async (job: Job) => {
+        setSelectedJobId(job._id as string);
+        await handleJobClick(job);
+    };
 
     return (
         <>
