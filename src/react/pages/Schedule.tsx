@@ -10,13 +10,13 @@ import {
   getSubJobById,
   updateSubJob,
   deleteSubJob,
+  getSubJobsByJobId,
 } from "../api/subJobAPI"; // Import deleteSubJob
 
 import Navbar from "../components/Navbar";
 import SearchBar from "../components/Searchbar"; // New component
 import JobTable from "../components/JobTable"; // New component
-import AddJobFormModel from "../components/AddJobFormModel"; // New modal component
-// import EditJobFormModal from "../components/EditJobFormModal";
+import AddJobFormModel from "../components/AddJobFormModel";
 import SubJobTable from "../components/SubJobTable";
 import EditJobFormModal from "../components/EditJobFormModal";
 import AddSubJobFormModal from "../components/AddSubJobFormModal";
@@ -130,6 +130,7 @@ function Schedule() {
   );
 
   const location = useLocation();
+  const initialSelectedJob = location.state?.selectedJob;
 
   const reload = () => {
     reloadState === true ? setReloadState(false) : setReloadState(true);
@@ -227,7 +228,33 @@ function Schedule() {
     setIsEditJobModalOpen(true);
   };
 
+
   const handleDeleteJob = async (jobId: string) => {
+    try {
+        const jobs = await getSubJobsByJobId(jobId);
+        if (jobs) {
+            for (const job of jobs) {
+                await deleteSubJob(job._id);
+            }
+        }
+        const success = await deleteJob(jobId);
+        if (success) {
+            const jobsPromise = getAllJobs();
+            const subJobsPromise = getAllSubJobs();
+            const [fetchJobs, fetchSubJobs] = await Promise.all([
+                jobsPromise,
+                subJobsPromise,
+            ]);
+            setJobs(fetchJobs);
+            setSelectedSubJobs(fetchSubJobs);
+            setIsEditJobModalOpen(false);
+            setJobToEdit(null);
+            setSelected(false);
+        } else {
+            console.error("Failed to delete job.");
+        }
+    } catch (err) {
+        console.error("Error deleting job and its sub-jobs: ", err);
     const success = await deleteJob(jobId);
     if (success) {
       setJobs((prevJobs) => prevJobs.filter((job) => job._id !== jobId));
@@ -238,7 +265,7 @@ function Schedule() {
     } else {
       console.error("Failed to delete job.");
     }
-  };
+};
 
   const handleUpdateJob = async (updatedData: Job) => {
     const updatedJobFromServer = await updateJob(updatedData);
@@ -769,7 +796,7 @@ function Schedule() {
                         }
                         defaultChecked={clientAsc}
                       />{" "}
-                      Ascending
+                      A-Z
                     </label>
                     <label>
                       <input
@@ -780,7 +807,7 @@ function Schedule() {
                         }
                         defaultChecked={clientDesc}
                       />{" "}
-                      Descending
+                      Z-A
                     </label>
 
                     <strong>Job Name</strong>
@@ -793,7 +820,7 @@ function Schedule() {
                         }
                         defaultChecked={jobNameAsc}
                       />{" "}
-                      Ascending
+                      A-Z
                     </label>
                     <label>
                       <input
@@ -804,7 +831,7 @@ function Schedule() {
                         }
                         defaultChecked={jobNameDesc}
                       />{" "}
-                      Descending
+                      Z-A
                     </label>
 
                     <strong>Due Date</strong>
@@ -817,7 +844,7 @@ function Schedule() {
                         }
                         defaultChecked={dueDateAsc}
                       />{" "}
-                      Ascending
+                      Oldest
                     </label>
                     <label>
                       <input
@@ -828,7 +855,7 @@ function Schedule() {
                         }
                         defaultChecked={dueDateDesc}
                       />{" "}
-                      Descending
+                      Most Recent
                     </label>
                   </div>
 
@@ -933,37 +960,35 @@ function Schedule() {
               </div>
             </div>
           </div>
-</div> {/* This closes the #filter-container div */}
+        </div>{" "}
 
-<div id="order-container">
-  {/* Left Column - Job Name */}
-  <div id="job-section-wrapper">
-    <div className="job-section-header">Job Name</div>
-    <div id="job-list-container">
-      <JobTable
-        key="job-table"
-        searchTerm={searchTerm}
-        jobs={jobs}
-        subJobs={subJobs}
-        frames={frames}
-        cushions={cushions}
-        upholstery={upholstery}
-        handleJobClick={displayJobDetails}
-        invoiceIDTerm={filterInvoiceID}
-        clientTerm={filterClient}
-        jobNameTerm={filterJobName}
-        dueDateTerm={filterDueDate}
-        cutTerm={filterCut}
-        sewnTerm={filterSewn}
-        upholsterTerm={filterUpholster}
-        foamedTerm={filterFoamed}
-        completeTerm={filterComplete}
-        productionTerm={filterProduction}
-        archiveTerm={filterArchive}
-        onEditJobClick={handleEditJobClick}
-      />
-    </div>
-  </div>
+        {/* This closes the #filter-container div */}
+        <div id="order-container">
+          {/* Left Column - Job Name */}
+          <JobTable
+            key="job-table"
+            searchTerm={searchTerm}
+            jobs={jobs}
+            subJobs={subJobs}
+            frames={frames}
+            cushions={cushions}
+            upholstery={upholstery}
+            handleJobClick={displayJobDetails}
+            invoiceIDTerm={filterInvoiceID}
+            clientTerm={filterClient}
+            jobNameTerm={filterJobName}
+            dueDateTerm={filterDueDate}
+            cutTerm={filterCut}
+            sewnTerm={filterSewn}
+            upholsterTerm={filterUpholster}
+            foamedTerm={filterFoamed}
+            completeTerm={filterComplete}
+            productionTerm={filterProduction}
+            archiveTerm={filterArchive}
+            onEditJobClick={handleEditJobClick}
+            initialSelectedJobId={initialSelectedJob?._id || null}
+          />
+          
 
           {/* Right Column - Job Components */}
           <div id="components-section-wrapper">
@@ -1174,6 +1199,7 @@ function Schedule() {
       />
     </>
   );
+}
 }
 
 export default Schedule;

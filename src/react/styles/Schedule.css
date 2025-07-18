@@ -42,12 +42,8 @@
 }
 
 
-#job-detail-container {
-  overflow-y: scroll;
-}
-
-#job-list-container {
-  overflow-y: scroll;
+#job-detail-container, #job-list-container {
+  overflow: scroll;
 }
 
 
@@ -56,8 +52,10 @@
   flex-direction: column;
   height: 100%;
   flex: 1;
-
+  background-color: #E0E0E0;
+  border-radius: 5px;
 }
+
 
 .job-table-header {
   background-color: #f0f0f0;

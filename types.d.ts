@@ -1,8 +1,7 @@
 type Job = {
-  client: string;
-  poNumber?: string;
   _id?: string;
   invoiceId?: string;
+  poNumber?: string;
   client: string;
   name: string;
   type: string; // Added 'type' as per your mock data

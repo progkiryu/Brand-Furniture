@@ -39,19 +39,22 @@ function SubJobTable({
         <div>Upholstery</div>
       </div>
 
-      {subJobs.map((subJob) => (
-        <SubJobTableRow
-          key={String(subJob._id)}
-          subJobParam={subJob}
-          onAddFrameClick={onAddFrameClick}
-          onAddCushionClick={onAddCushionClick}
-          onAddUpholsteryClick={onAddUpholsteryClick}
-          onEditSubJobClick={onEditSubJobClick}
-          onEditFrameClick={onEditFrameClick}
-          onEditCushionClick={onEditCushionClick}
-          onEditUpholsteryClick={onEditUpholsteryClick}
-        />
-      ))}
+      <div className="job-components-body">
+        {subJobs.map((subJob) => (
+          <SubJobTableRow
+            key={String(subJob._id)}
+            subJobParam={subJob}
+            onAddFrameClick={onAddFrameClick}
+            onAddCushionClick={onAddCushionClick}
+            onAddUpholsteryClick={onAddUpholsteryClick}
+            onEditSubJobClick={onEditSubJobClick}
+            onEditFrameClick={onEditFrameClick}
+            onEditCushionClick={onEditCushionClick}
+            onEditUpholsteryClick={onEditUpholsteryClick}
+          />
+        ))}
+      </div>
+
 
       <button className="add-component-btn" onClick={onAddComponentClick}>
         +

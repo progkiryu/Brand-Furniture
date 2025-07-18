@@ -21,6 +21,7 @@ interface JobTableProps {
     archiveTerm: boolean;
     handleJobClick: (job: Job) => Promise<void>;
     onEditJobClick: (job: Job) => void;
+    initialSelectedJobId?: string | null;
 }
 
 function JobTable({ 
@@ -42,10 +43,15 @@ function JobTable({
     clientTerm, 
     dueDateTerm, 
     jobNameTerm,
-    onEditJobClick
+    onEditJobClick,
+    initialSelectedJobId,
 }: JobTableProps) {
     const [displayedJobs, setDisplayedJobs] = useState<Job[]>(jobs);
     // State to hold both jobId and invoiceId for the selected job
+
+    useEffect(() => {
+        setSelectedJobId(initialSelectedJobId || null);
+    }, [initialSelectedJobId]);
 
     const searchFilter = (searchTerm: String) => {
         const lowerCaseSearchTerm = searchTerm.toLowerCase();
