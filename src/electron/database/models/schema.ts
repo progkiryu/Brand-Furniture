@@ -2,13 +2,13 @@ import mongoose from "mongoose";
 
 const jobSchema = new mongoose.Schema(
   {
-    invoiceId: { type: String, required: false },
-    poNumber: { type: String, required: false },
+    invoiceId: { type: String, default: "" },
+    poNumber: { type: String, default: "" },
     client: { type: String, required: true },
     name: { type: String, required: true },
     type: { type: String, default: "Commercial" }, // Added 'type' as per your mock data
     due: { type: Date, required: false },
-    depositAmount: { type: Number, default: 0, required: false },
+    depositAmount: { type: Number, default: 0},
     depositDate: { type: Date, required: false },
     paidInFull: { type: Date, required: false },
     liaison: { type: String, default: "" },

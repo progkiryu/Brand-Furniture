@@ -64,7 +64,7 @@ export const createJob = async (data: Job) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
-
+    
     if (res.ok) {
       const createdJob: Job = await res.json();
       return createdJob;

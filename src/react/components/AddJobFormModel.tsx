@@ -50,14 +50,14 @@ function AddJobFormModel({ isOpen, onClose, onAddJob}: AddJobFormModelProps) {
 
         // Basic validation
         if (!clientName || !jobName) {
-            alert('Please fill in all fields.');
+
             return;
         }
 
 
         const newJob: Job = {
-            invoiceId: invoiceId ? invoiceId : undefined,
-            poNumber: poNumber ? poNumber : undefined,
+            invoiceId: invoiceId ? invoiceId : "",
+            poNumber: poNumber,
             client: clientName,
             name: jobName,
             type: jobType, // Added 'type' as per your mock data
@@ -67,11 +67,11 @@ function AddJobFormModel({ isOpen, onClose, onAddJob}: AddJobFormModelProps) {
             paidInFull: paidInFull ? new Date(paidInFull) : undefined,
             liaison: liaison ? liaison : undefined,
             paymentNote: paymentNote ? paymentNote : undefined,
-            subJobList: [],
             isArchived: isArchived ? isArchived : false, 
             isPinned: isPinned ? isPinned : false,
         };
         
+        console.log (newJob)
         onAddJob(newJob);
         onClose();
     }
