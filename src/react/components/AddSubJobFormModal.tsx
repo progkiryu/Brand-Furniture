@@ -30,7 +30,7 @@ function AddSubJobFormModal({ isOpen, onClose, jobId, invoiceId, onAddSubJob }: 
     }, [isOpen]);
 
     // --- Early Exit if Modal Not Open or Missing Required IDs ---
-    if (!isOpen || !jobId || invoiceId === null) return null;
+    if (!isOpen || !jobId ) return null;
 
     // --- Handle Form Submission ---
     const handleSubmit = (event: React.FormEvent) => {

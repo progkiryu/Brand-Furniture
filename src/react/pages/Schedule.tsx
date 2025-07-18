@@ -15,8 +15,7 @@ import {
 import Navbar from "../components/Navbar";
 import SearchBar from "../components/Searchbar"; // New component
 import JobTable from "../components/JobTable"; // New component
-import AddJobFormModel from "../components/AddJobFormModel"; // New modal component
-// import EditJobFormModal from "../components/EditJobFormModal";
+import AddJobFormModel from "../components/AddJobFormModel";
 import SubJobTable from "../components/SubJobTable";
 import EditJobFormModal from "../components/EditJobFormModal";
 import AddSubJobFormModal from "../components/AddSubJobFormModal";
@@ -47,9 +46,6 @@ import { useLocation } from "react-router-dom";
 
 function Schedule() {
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [cushions] = useState<Array<Cushion>>([]);
-  const [frames] = useState<Array<Frame>>([]);
-  const [upholstery] = useState<Array<Upholstery>>([]);
 
   const [isEditJobModalOpen, setIsEditJobModalOpen] = useState(false);
   const [jobToEdit, setJobToEdit] = useState<Job | null>(null);
@@ -136,6 +132,8 @@ function Schedule() {
 
   const location = useLocation();
 
+  const initialSelectedJob = location.state?.selectedJob;
+
   useEffect(() => {
     if (location.state !== null) {
       const { selectedJob, selectedSubJobs } = location.state;
@@ -172,7 +170,7 @@ function Schedule() {
       };
       fetchJobs();
     }
-  }, [subJobs, frames, cushions, upholstery]);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -740,7 +738,7 @@ function Schedule() {
                         }
                         defaultChecked={clientAsc}
                       />{" "}
-                      Ascending
+                      A-Z
                     </label>
                     <label>
                       <input
@@ -751,7 +749,7 @@ function Schedule() {
                         }
                         defaultChecked={clientDesc}
                       />{" "}
-                      Descending
+                      Z-A
                     </label>
 
                     <strong>Job Name</strong>
@@ -764,7 +762,7 @@ function Schedule() {
                         }
                         defaultChecked={jobNameAsc}
                       />{" "}
-                      Ascending
+                      A-Z
                     </label>
                     <label>
                       <input
@@ -775,7 +773,7 @@ function Schedule() {
                         }
                         defaultChecked={jobNameDesc}
                       />{" "}
-                      Descending
+                      Z-A
                     </label>
 
                     <strong>Due Date</strong>
@@ -788,7 +786,7 @@ function Schedule() {
                         }
                         defaultChecked={dueDateAsc}
                       />{" "}
-                      Ascending
+                      Oldest
                     </label>
                     <label>
                       <input
@@ -799,7 +797,7 @@ function Schedule() {
                         }
                         defaultChecked={dueDateDesc}
                       />{" "}
-                      Descending
+                      Most Recent
                     </label>
                   </div>
 
@@ -913,6 +911,7 @@ function Schedule() {
             </div>
           </div>
         </div>{" "}
+
         {/* This closes the #filter-container div */}
         <div id="order-container">
           {/* Left Column - Job Name */}
@@ -934,9 +933,9 @@ function Schedule() {
             completeTerm={filterComplete}
             productionTerm={filterProduction}
             onEditJobClick={handleEditJobClick}
+            initialSelectedJobId={initialSelectedJob?._id || null}
           />
-          {/* </div>
-  </div> */}
+          
 
           {/* Right Column - Job Components */}
           <div id="components-section-wrapper">

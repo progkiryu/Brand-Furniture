@@ -13,9 +13,10 @@ interface EditJobFormModalProps {
 function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob, onDeleteJob }: EditJobFormModalProps) {
     // State for form fields, initialized with jobToEdit data
     const [invoiceId, setInvoiceId] = useState<string>('');
+    const [poNumber, setPONumber] = useState<string>('');
     const [clientName, setClientName] = useState<string>('');
     const [jobName, setJobName] = useState<string>('');
-    const [jobType, setJobType] = useState<string>('');
+    const [jobType, setJobType] = useState<string>('Commercial');
     const [dueDate, setDueDate] = useState<string>(''); // Keep as string for input type="date"
     const [depositAmount, setDepositAmount] = useState<string>('');
     const [depositDate, setDepositDate] = useState<string>('');
@@ -54,6 +55,7 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob, onDeleteJob
     useEffect(() => {
         if (isOpen && jobToEdit) {
             setInvoiceId(jobToEdit.invoiceId?.toString() || '');
+            setPONumber(jobToEdit.poNumber?.toString() || '')
             setClientName(jobToEdit.client?.toString() || '');
             setJobName(jobToEdit.name?.toString() || '');
             setJobType(jobToEdit.type?.toString() || '');
@@ -66,6 +68,7 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob, onDeleteJob
         } else if (!isOpen) {
             // Reset form fields when modal closes
             setInvoiceId('');
+            setPONumber('');
             setClientName('');
             setJobName('');
             setJobType('');
@@ -98,12 +101,13 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob, onDeleteJob
         const updatedData: Job = {
             _id: jobToEdit._id, // Ensure _id is included for update
             invoiceId: invoiceId,
+            poNumber: poNumber,
             client: clientName,
             name: jobName,
             type: jobType,
             due: new Date(dueDate),
-            depositAmount: depositAmount ? Number(depositAmount) : undefined,
-            depositDate: depositDate ? new Date(depositDate) : undefined,
+            depositAmount: depositAmount ? new Number(depositAmount) : new Number(),
+            depositDate: depositDate ? new Date(depositDate) : new Date(),
             paidInFull: paidInFull ? new Date(paidInFull) : undefined,
             liaison: liaison,
             paymentNote: paymentNote,
@@ -137,21 +141,30 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob, onDeleteJob
                     <h2>Edit Job: {jobToEdit?.name}</h2>
                     <div className="form-group">
                         <label htmlFor="invoiceId">Invoice ID:</label>
-                        <input
-                            type="text"
+                        <textarea
+                            rows={1}
                             id="invoiceId"
                             value={invoiceId}
                             onChange={(e) => setInvoiceId(e.target.value)}
-                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        
+                        <label htmlFor="poNumber">Purchase Order No:</label>
+                        <textarea
+                            id="poNumber"
+                            value={poNumber}
+                            onChange={(e) => setPONumber(e.target.value)}
+                            rows={1}
                         />
                     </div>
                     <div className="form-group">
                         <label htmlFor="clientName">Client Name:</label>
-                        <input
-                            type="text"
+                        <textarea
                             id="clientName"
                             value={clientName}
                             onChange={(e) => setClientName(e.target.value)}
+                            rows={1}
                             required
                         />
                     </div>
@@ -172,7 +185,6 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob, onDeleteJob
                             id="dueDate"
                             value={dueDate}
                             onChange={(e) => setDueDate(e.target.value)}
-                            required
                         />
                     </div>
                     <div className="form-group">
@@ -237,7 +249,7 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob, onDeleteJob
                             <option value="Residential">Residential</option>
                             <option value="Private">Private</option>
                             <option value="Production">Production</option>
-                            <option value="Brand" selected>Brand</option>
+                            <option value="Brand">Brand</option>
                         </select>
                     </div>
 
