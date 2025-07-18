@@ -15,8 +15,7 @@ import {
 import Navbar from "../components/Navbar";
 import SearchBar from "../components/Searchbar"; // New component
 import JobTable from "../components/JobTable"; // New component
-import AddJobFormModel from "../components/AddJobFormModel"; // New modal component
-// import EditJobFormModal from "../components/EditJobFormModal";
+import AddJobFormModel from "../components/AddJobFormModel";
 import SubJobTable from "../components/SubJobTable";
 import EditJobFormModal from "../components/EditJobFormModal";
 import AddSubJobFormModal from "../components/AddSubJobFormModal";

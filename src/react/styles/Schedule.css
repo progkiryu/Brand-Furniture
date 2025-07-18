@@ -52,7 +52,8 @@
   flex-direction: column;
   height: 100%;
   flex: 1;
-
+  background-color: #E0E0E0;
+  border-radius: 5px;
 }
 
 

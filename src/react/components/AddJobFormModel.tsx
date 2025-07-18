@@ -1,5 +1,5 @@
 // AddJobFormModal.tsx
-import React, { useState} from 'react';
+import React, { useState, useEffect} from 'react';
 
 // Define NewJobDataForAdd interface directly in this file
 
@@ -12,9 +12,10 @@ export interface AddJobFormModelProps {
 
 function AddJobFormModel({ isOpen, onClose, onAddJob}: AddJobFormModelProps) {
     const [invoiceId, setInvoiceId] = useState<string>('');
+    const [poNumber, setPONumber] = useState<string>('');
     const [clientName, setClientName] = useState<string>('');
     const [jobName, setJobName] = useState<string>('');
-    const [jobType, setJobType] = useState<string>(''); // New state for job type
+    const [jobType, setJobType] = useState<string>('Commercial'); // New state for job type
     const [dueDate, setDueDate] = useState<string>('');
     const [depositAmount, setDepositAmount] = useState<string>('');
     const [depositDate, setDepositDate] = useState<string>('');
@@ -22,6 +23,25 @@ function AddJobFormModel({ isOpen, onClose, onAddJob}: AddJobFormModelProps) {
     const [liaison, setLiaison] = useState<string>('');
     const [paymentNote, setPaymentNote] = useState<string>('');
     const [isArchived, setIsArchived] = useState<boolean>(false);
+    const [isPinned, setIsPinned] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (!isOpen) { // Reset all state when modal closes
+            setInvoiceId('');
+            setPONumber('');
+            setClientName('');
+            setJobName('');
+            setJobType('Commercial');
+            setDueDate('');
+            setDepositAmount('');
+            setDepositDate('');
+            setPaidInFull('');
+            setLiaison('');
+            setPaymentNote('');
+            setIsArchived(false); 
+            setIsPinned(false);
+        }
+    }, [isOpen]);
 
     if (!isOpen) return null;
 
@@ -29,45 +49,37 @@ function AddJobFormModel({ isOpen, onClose, onAddJob}: AddJobFormModelProps) {
         event.preventDefault();
 
         // Basic validation
-        if (!clientName || !jobName || !jobType || !dueDate) {
+        if (!clientName || !jobName) {
             alert('Please fill in all fields.');
             return;
         }
 
-        // const newUniqueJobId = generateMongoStyleId(); // Use MongoDB-style ID
 
         const newJob: Job = {
-            invoiceId: invoiceId,
+            invoiceId: invoiceId ? invoiceId : undefined,
+            poNumber: poNumber ? poNumber : undefined,
             client: clientName,
             name: jobName,
             type: jobType, // Added 'type' as per your mock data
             due: new Date(dueDate),
-            depositDate: new Date(depositDate),
-            depositAmount: new Number(depositAmount),
-            paidInFull: new Date(paidInFull),
-            liaison: liaison,
-            paymentNote: paymentNote,
-            isArchived: isArchived, 
+            depositDate: depositDate ? new Date(depositDate) : undefined,
+            depositAmount: depositAmount ? new Number(depositAmount) : undefined,
+            paidInFull: paidInFull ? new Date(paidInFull) : undefined,
+            liaison: liaison ? liaison : undefined,
+            paymentNote: paymentNote ? paymentNote : undefined,
+            subJobList: [],
+            isArchived: isArchived ? isArchived : false, 
+            isPinned: isPinned ? isPinned : false,
         };
         
         onAddJob(newJob);
-        setInvoiceId('');
-        setClientName('');
-        setJobName('');
-        setJobType('');
-        setDueDate('');
-        setDepositAmount('');
-        setDepositDate('');
-        setPaidInFull('');
-        setLiaison('');
-        setPaymentNote('');
-        setIsArchived(false); 
+        onClose();
     }
     
 
     return (
-        <div className="modal-overlay">
-            <div className="modal-content">
+        <div className="modal-overlay" onClick={onClose}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                 <button onClick={onClose} className="modal-close-btn">&times;</button>
                 <form onSubmit={handleSubmit} className="modal-form">
 
@@ -75,21 +87,30 @@ function AddJobFormModel({ isOpen, onClose, onAddJob}: AddJobFormModelProps) {
                     <div className="form-group">
                         
                         <label htmlFor="invoiceId">Invoice ID:</label>
-                        <input
-                            type="number"
+                        <textarea
+                            rows={1}
                             id="invoiceId"
                             value={invoiceId}
                             onChange={(e) => setInvoiceId(e.target.value)}
-                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        
+                        <label htmlFor="poNumber">Purchase Order No:</label>
+                        <textarea
+                            id="poNumber"
+                            value={poNumber}
+                            onChange={(e) => setPONumber(e.target.value)}
+                            rows={1}
                         />
                     </div>
                     <div className="form-group">
                         <label htmlFor="clientName">Client Name:</label>
-                        <input
-                            type="text"
+                        <textarea
                             id="clientName"
                             value={clientName}
                             onChange={(e) => setClientName(e.target.value)}
+                            rows={1}
                             required
                         />
                     </div>
@@ -111,7 +132,6 @@ function AddJobFormModel({ isOpen, onClose, onAddJob}: AddJobFormModelProps) {
                             id="dueDate"
                             value={dueDate}
                             onChange={(e) => setDueDate(e.target.value)}
-                            required
                         />
                     </div>
                     <div className="form-group">
