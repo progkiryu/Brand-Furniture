@@ -11,11 +11,11 @@ export type TypeInfo = {
   value: number;
 };
 
-type DateRange = "last6months" | "last12months" | "last2years";
+type DateRange = "currentmonth" | "last6months" | "last12months" | "last2years";
 
 function Analytics() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [dateRange, setDateRange] = useState<DateRange>("last6months");
+  const [dateRange, setDateRange] = useState<DateRange>("currentmonth");
 
   // Job Distribution Data
   const jobTypes: string[] = [];
@@ -50,6 +50,7 @@ function Analytics() {
   ];
 
   const needsPrefixAtEnd = [
+    "currentmonth",
     "last6months",
     "last12months",
     "last2years",
@@ -67,6 +68,8 @@ function Analytics() {
 
   const getLabelPrefix = (range: DateRange) => {
     switch (range) {
+      case "currentmonth":
+        return "Over the current month";
       case "last6months":
         return "Over the Last 6 Months";
       case "last12months":
@@ -82,7 +85,9 @@ function Analytics() {
     const endDate = new Date();
     let startDate = new Date();
 
-    if (dateRange === "last6months") {
+    if (dateRange === "currentmonth") {
+      startDate.setMonth(startDate.getMonth() - 1);
+    } else if (dateRange === "last6months") {
       startDate.setMonth(startDate.getMonth() - 6);
     } else if (dateRange === "last12months") {
       startDate.setFullYear(startDate.getFullYear() - 1);
@@ -147,6 +152,9 @@ function Analytics() {
 
     // Set the jobVolume monthly time frames
     switch (dateRange) {
+      case "currentmonth":
+        jobVolumeTimeframes.unshift(MONTHS[todayMonth] + jobYearCheck);
+        break;
       case "last6months":
         for (let i = 0; i < 6; i++) {
           jobYearCheck = negativeYearChecker(
@@ -199,7 +207,7 @@ function Analytics() {
         jobYearCheck = todayYear;
         break;
       default:
-        jobVolumeTimeframes.unshift(MONTHS[todayMonth - 1]);
+        jobVolumeTimeframes.unshift(MONTHS[todayMonth] + jobYearCheck);
         break;
     }
   };
@@ -262,6 +270,8 @@ function Analytics() {
         }
       }
     }
+
+    console.log(jobVolumeCounter);
     // Filter out unique values
     const uniqueJobVolumeCounter = jobVolumeCounter.filter(
       (obj, index, self) => index === self.findIndex((a) => a.name === obj.name)
@@ -345,6 +355,7 @@ function Analytics() {
         <div className="date-range-selector">
           <label htmlFor="range">View data for: </label>
           <select id="range" value={dateRange} onChange={handleRangeChange}>
+            <option value="currentmonth">Current Month</option>
             <option value="last6months">Last 6 Months</option>
             <option value="last12months">Last 12 Months</option>
             <option value="last2years">Last 2 Years</option>
