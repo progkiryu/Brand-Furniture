@@ -169,7 +169,7 @@ export const deleteCushionById = async (
     const result = await schemas.Cushion.findByIdAndDelete(cushionId);
     if (!result) {
       res.status(404).json({
-        message: `Error: Failed to delete cushion with id: ${cushionId}}`,
+        message: `Error: Failed to delete cushion with id: ${cushionId}`,
       });
       return;
     }

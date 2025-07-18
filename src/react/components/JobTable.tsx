@@ -315,12 +315,14 @@ function JobTable({
             }
         }
         if (productionTerm === true) {
+            console.log("bruh");
             const productionJobSet = new Set<Job>();
             const productionSubJobSet = new Set<SubJob>();
 
             const productionFrames: Frame[] = frames.filter((frame: Frame) => {
-                if (frame.status === "Complete") return true;
+                if (frame.status === "In Production") return true;
             });
+            console.log(productionFrames);
             productionFrames.map((frame: Frame) => {
                 const productionSubJob = subJobs.find((subJob: SubJob) => 
                     subJob._id === frame.subJobId
@@ -329,7 +331,7 @@ function JobTable({
             });
 
             const productionCushions: Cushion[] = cushions.filter((cushion: Cushion) => {
-                if (cushion.status === "Complete") return true;
+                if (cushion.status === "In Production") return true;
             });
             productionCushions.map((cushion: Cushion) => {
                 const productionSubJob = subJobs.find((subJob: SubJob) =>
@@ -339,7 +341,7 @@ function JobTable({
             });
 
             const productionUpholstery: Upholstery[] = upholstery.filter((upholster: Upholstery) => {
-                if (upholster.status === "Complete") return true;
+                if (upholster.status === "In Production") return true;
             });
             productionUpholstery.map((upholster: Upholstery) => {
                 const productionSubJob = subJobs.find((subJob: SubJob) =>
@@ -348,6 +350,7 @@ function JobTable({
                 if (productionSubJob) productionSubJobSet.add(productionSubJob);
             });
 
+            console.log(productionSubJobSet);
             if (productionSubJobSet.size > 0) {
                 const productionSubJobArray = [...productionSubJobSet];
                 productionSubJobArray.map((subJob: SubJob) => {
@@ -367,27 +370,6 @@ function JobTable({
         if (statusJobSet.size > 0) {
             sortedJobs = [...statusJobSet];
         }
-        return sortedJobs;
-
-        // if (cutTerm === true) {
-        //     const cutSet = new Set<Job>();
-        //     const cutSubJobs: SubJob[] = subJobs.filter((subJob: SubJob) => {
-        //         if (subJob.status === "Upholstery Cut") return true;
-        //     });
-        //     cutSubJobs.map((subJob: SubJob) => {
-        //         const cutJob = jobs.find((job: Job) =>
-        //             job._id === subJob.jobId
-        //         );
-        //         if (cutJob) {
-        //             cutSet.add(cutJob);
-        //         }
-        //     });
-        //     if (cutSet.size > 0) {
-        //         const cutArray = [...cutSet];
-        //         sortedJobs = sortedJobs.filter((job: Job) => cutArray.includes(job));
-        //     }
-        // }
-
         return sortedJobs;
     }
 
@@ -410,10 +392,15 @@ function JobTable({
             completeTerm,
             productionTerm
         );
+        console.log(filtered);
         setDisplayedJobs(filtered);
 
     }, [searchTerm,
         jobs,
+        subJobs,
+        frames,
+        cushions,
+        upholstery,
         invoiceIDTerm,
         clientTerm,
         dueDateTerm,

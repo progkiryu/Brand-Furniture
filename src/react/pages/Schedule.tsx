@@ -177,7 +177,7 @@ function Schedule() {
       };
       fetchJobs();
     }
-  }, [subJobs, frames, cushions, upholstery]);
+  }, [jobs, subJobs, frames, cushions, upholstery]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
