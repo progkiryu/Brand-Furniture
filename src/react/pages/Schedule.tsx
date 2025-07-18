@@ -10,6 +10,7 @@ import {
   getSubJobById,
   updateSubJob,
   deleteSubJob,
+  getSubJobsByJobId,
 } from "../api/subJobAPI"; // Import deleteSubJob
 
 import Navbar from "../components/Navbar";
@@ -211,17 +212,35 @@ function Schedule() {
     setIsEditJobModalOpen(true);
   };
 
+
   const handleDeleteJob = async (jobId: string) => {
-    const success = await deleteJob(jobId);
-    if (success) {
-      setJobs((prevJobs) => prevJobs.filter((job) => job._id !== jobId));
-      setIsEditJobModalOpen(false);
-      setJobToEdit(null);
-      setSubJobs([]); // Clear subjobs as well
-    } else {
-      console.error("Failed to delete job.");
+    try {
+        const jobs = await getSubJobsByJobId(jobId);
+        if (jobs) {
+            for (const job of jobs) {
+                await deleteSubJob(job._id);
+            }
+        }
+        const success = await deleteJob(jobId);
+        if (success) {
+            const jobsPromise = getAllJobs();
+            const subJobsPromise = getAllSubJobs();
+            const [fetchJobs, fetchSubJobs] = await Promise.all([
+                jobsPromise,
+                subJobsPromise,
+            ]);
+            setJobs(fetchJobs);
+            setSelectedSubJobs(fetchSubJobs);
+            setIsEditJobModalOpen(false);
+            setJobToEdit(null);
+            setSelected(false);
+        } else {
+            console.error("Failed to delete job.");
+        }
+    } catch (err) {
+        console.error("Error deleting job and its sub-jobs: ", err);
     }
-  };
+};
 
   const handleUpdateJob = async (updatedData: Job) => {
     const updatedJobFromServer = await updateJob(updatedData);
