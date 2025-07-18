@@ -62,16 +62,16 @@ function AddJobFormModel({ isOpen, onClose, onAddJob}: AddJobFormModelProps) {
             name: jobName,
             type: jobType, // Added 'type' as per your mock data
             due: new Date(dueDate),
-            depositDate: depositDate ? new Date(depositDate) : undefined,
-            depositAmount: depositAmount ? new Number(depositAmount) : undefined,
+            depositDate: new Date(depositDate),
+            depositAmount: new Number(depositAmount),
             paidInFull: paidInFull ? new Date(paidInFull) : undefined,
-            liaison: liaison ? liaison : undefined,
-            paymentNote: paymentNote ? paymentNote : undefined,
-            isArchived: isArchived ? isArchived : false, 
-            isPinned: isPinned ? isPinned : false,
+            liaison: liaison,
+            paymentNote: paymentNote,
+            isArchived: isArchived,
+            isPinned: isPinned,
         };
         
-        console.log (newJob)
+
         onAddJob(newJob);
         onClose();
     }

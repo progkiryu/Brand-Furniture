@@ -9,7 +9,7 @@ const jobSchema = new mongoose.Schema(
     type: { type: String, default: "Commercial" }, // Added 'type' as per your mock data
     due: { type: Date, required: false },
     depositAmount: { type: Number, default: 0},
-    depositDate: { type: Date, required: false },
+    depositDate: { type: Date, required: false, default: () => Date.now },
     paidInFull: { type: Date, required: false },
     liaison: { type: String, default: "" },
     paymentNote: { type: String, default: "" },

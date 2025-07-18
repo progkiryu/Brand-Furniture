@@ -170,7 +170,6 @@ function Schedule() {
       };
       fetchJobs();
     }
-    console.log('loop check')
   }, []);
 
   useEffect(() => {

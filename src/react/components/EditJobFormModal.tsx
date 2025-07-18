@@ -100,14 +100,14 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob, onDeleteJob
         // Construct the updated Job object
         const updatedData: Job = {
             _id: jobToEdit._id, // Ensure _id is included for update
-            invoiceId: invoiceId ? invoiceId : undefined,
-            poNumber: poNumber ? poNumber : undefined,
+            invoiceId: invoiceId,
+            poNumber: poNumber,
             client: clientName,
             name: jobName,
             type: jobType,
             due: new Date(dueDate),
-            depositAmount: depositAmount ? Number(depositAmount) : undefined,
-            depositDate: depositDate ? new Date(depositDate) : undefined,
+            depositAmount: depositAmount ? new Number(depositAmount) : new Number(),
+            depositDate: depositDate ? new Date(depositDate) : new Date(),
             paidInFull: paidInFull ? new Date(paidInFull) : undefined,
             liaison: liaison,
             paymentNote: paymentNote,
@@ -249,7 +249,7 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob, onDeleteJob
                             <option value="Residential">Residential</option>
                             <option value="Private">Private</option>
                             <option value="Production">Production</option>
-                            <option value="Brand" selected>Brand</option>
+                            <option value="Brand">Brand</option>
                         </select>
                     </div>
 
