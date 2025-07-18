@@ -15,7 +15,7 @@ export default function BarChartComponent({ data }: BarChartComponentProps) {
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />
-          <YAxis />
+          <YAxis allowDecimals={false} />
           <Tooltip />
           <Bar dataKey="value" fill="#1B263B" />
         </BarChart>

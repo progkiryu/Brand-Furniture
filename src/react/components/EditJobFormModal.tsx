@@ -133,8 +133,8 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob, onDeleteJob
         <div className="modal-overlay">
             <div className="modal-content">
                 <button className="modal-close-btn" onClick={onClose}>&times;</button>
-                <h2>Edit Job: {jobToEdit?.name}</h2>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} className="modal-form">
+                    <h2>Edit Job: {jobToEdit?.name}</h2>
                     <div className="form-group">
                         <label htmlFor="invoiceId">Invoice ID:</label>
                         <input
@@ -157,23 +157,13 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob, onDeleteJob
                     </div>
                     <div className="form-group">
                         <label htmlFor="jobName">Job Name:</label>
-                        <input
-                            type="text"
+                        <textarea
                             id="jobName"
                             value={jobName}
                             onChange={(e) => setJobName(e.target.value)}
+                            rows={4}
                             required
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="jobType">Job Type:</label>
-                        <input
-                            type="text"
-                            id="jobType"
-                            value={jobType}
-                            onChange={(e) => setJobType(e.target.value)}
-                            required
-                        />
+                        ></textarea>
                     </div>
                     <div className="form-group">
                         <label htmlFor="dueDate">Due Date:</label>
@@ -234,6 +224,23 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob, onDeleteJob
                             
                         />
                     </div>
+
+                    <div className="form-group">
+                        <label htmlFor="jobType">Job Type:</label>
+
+                        <select
+                            id="jobType"
+                            value={jobType}
+                            onChange={(e) => setJobType(e.target.value)}
+                        >
+                            <option value="Commercial">Commercial</option>
+                            <option value="Residential">Residential</option>
+                            <option value="Private">Private</option>
+                            <option value="Production">Production</option>
+                            <option value="Brand" selected>Brand</option>
+                        </select>
+                    </div>
+
                     <div className="form-group">
                         <label htmlFor="isArchived">Archive Job:</label>
                         <input

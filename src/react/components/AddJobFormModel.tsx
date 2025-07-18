@@ -95,24 +95,15 @@ function AddJobFormModel({ isOpen, onClose, onAddJob}: AddJobFormModelProps) {
                     </div>
                     <div className="form-group">
                         <label htmlFor="jobName">Job Name:</label>
-                        <input
-                            type="text"
+                        <textarea
                             id="jobName"
                             value={jobName}
                             onChange={(e) => setJobName(e.target.value)}
+                            rows={4}
                             required
-                        />
+                        ></textarea>
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="jobType">Job Type:</label>
-                        <input
-                            type="text"
-                            id="jobType"
-                            value={jobType}
-                            onChange={(e) => setJobType(e.target.value)}
-                            required
-                        />
-                    </div>
+
                     <div className="form-group">
                         <label htmlFor="dueDate">Due Date:</label>
                         <input
@@ -172,6 +163,22 @@ function AddJobFormModel({ isOpen, onClose, onAddJob}: AddJobFormModelProps) {
                             
                         />
                     </div>
+
+                    <div className="form-group">
+                        <label htmlFor="jobType">Job Type:</label>
+                        <select
+                            id="jobType"
+                            value={jobType}
+                            onChange={(e) => setJobType(e.target.value)}
+                        >
+                            <option value="Commercial">Commercial</option>
+                            <option value="Residential">Residential</option>
+                            <option value="Private">Private</option>
+                            <option value="Production">Production</option>
+                            <option value="Brand" selected>Brand</option>
+                        </select>
+                    </div>
+
                     <div className="form-group">
                         <label htmlFor="isArchived">Archive Job:</label>
                         <input

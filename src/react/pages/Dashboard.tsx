@@ -7,11 +7,13 @@ import DashboardJobChartPie from "../components/DashboardJobChartPie.tsx";
 import NotificationsList from "../components/NotificationsList";
 
 import {
+  createJob,
   getAllJobs,
   getFilteredJobsByDate,
-  getFilteredJobsByType,
+  getPinnedJobs,
 } from "../api/jobAPI.tsx";
 import { getAllNotifications } from "../api/notificationAPI.tsx";
+import AddJobFormModel from "../components/AddJobFormModel.tsx";
 
 export type TypeInfoDash = {
   name: string;
@@ -19,12 +21,25 @@ export type TypeInfoDash = {
 };
 
 function Dashboard() {
-  const [jobs, setJobs] = useState<Job[]>([]);
-  const [notifs, setNotifs] = useState<Notif[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [reloader, setReloader] = useState<boolean>(false);
+  const [isAddJobModelOpen, setIsAddJobModelOpen] = useState<boolean>(false);
 
+  const [organisedJobs, setOrganisedJobs] = useState<Job[]>([]);
+  // const [allJobs, setAllJobs] = useState<Job[]>([]);
+  const [notifs, setNotifs] = useState<Notif[]>([]);
   let jobTypes: string[] = [];
   let typeCounter: TypeInfoDash[] = [];
   const [JobAnalytics, setJobAnalytics] = useState<TypeInfoDash[]>([]);
+
+  const reload = () => {
+    // Reloads since tracked in useEffect
+    if (reloader === true) {
+      setReloader(false);
+    } else {
+      setReloader(true);
+    }
+  };
 
   const getJobMetrics = async () => {
     const endDate = new Date();
@@ -66,27 +81,77 @@ function Dashboard() {
 
     setJobAnalytics(uniqueTypeCounter);
   };
-  // retrieve sub-jobs by making a API fetch call
+
+  const organiseJobs = (allJobs: Job[], pinnedJobs: Job[]) => {
+    const organisedArray: Job[] = [];
+    let match = false;
+
+    // Create a new array without pinned Jobs
+    for (let i = 0; i < allJobs.length; i++) {
+      for (let j = 0; j < pinnedJobs.length; j++) {
+        if (allJobs[i]._id === pinnedJobs[j]._id) {
+          match = true; // Matching ID with pinnedJob
+        }
+      }
+      if (match === false) {
+        organisedArray.push(allJobs[i]);
+      }
+      match = false;
+    }
+
+    // Add the pinned jobs to new job array, accounted for due date
+    for (let i = pinnedJobs.length - 1; i >= 0; i--) {
+      organisedArray.unshift(pinnedJobs[i]);
+    }
+    setOrganisedJobs(organisedArray);
+  };
+
+  const handleAddJob = async (newJobData: Job) => {
+    const addedJob = await createJob(newJobData);
+    if (addedJob) {
+      // setAllJobs((prevJobs) => [...prevJobs, addedJob]);
+      setIsAddJobModelOpen(false);
+      reload();
+    } else {
+      console.error("Failed to create job.");
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
-      const jobsPromise = getAllJobs(); // Get all jobs
-      const notifPromise = getAllNotifications(); // Get all notificatons
+      setIsLoading(true);
+
+      const allJobsPromise = getAllJobs();
+      const pinnedJobsPromise = getPinnedJobs();
+      const notifPromise = getAllNotifications();
       try {
-        const [jobData, notifData] = await Promise.all([
-          jobsPromise,
+        const [allJobData, pinnedJobData, notifData] = await Promise.all([
+          allJobsPromise,
+          pinnedJobsPromise,
           notifPromise,
         ]);
-        setJobs(jobData);
+        // setAllJobs(allJobData);
         setNotifs(notifData);
+
+        organiseJobs(allJobData, pinnedJobData);
       } catch (err) {
         console.error(err);
       }
-      await getJobMetrics(); // Get data for pie chart
+      getJobMetrics(); // Get data for pie chart
+
+      setIsLoading(false);
     };
     fetchData();
-  }, []);
+  }, [reloader]);
 
-  return (
+  return isLoading ? (
+    <>
+      <Navbar />
+      <div>
+        <h1>Loading...</h1>
+      </div>
+    </>
+  ) : (
     <>
       <Navbar />
       <div id="first-container">
@@ -98,24 +163,15 @@ function Dashboard() {
             <div id="schedule-container">
               <div className="schedule-header">
                 <h1>Upcoming Jobs</h1>
-                <button className="add-job-button">Add Job</button>
-                {/* <div className="color-key">
-                  <div className="key-item">
-                    <span className="key-color production"></span> Production
-                  </div>
-                  <div className="key-item">
-                    <span className="key-color private"></span> Private
-                  </div>
-                  <div className="key-item">
-                    <span className="key-color residential"></span> Residential
-                  </div>
-                  <div className="key-item">
-                    <span className="key-color commercial"></span> Commercial
-                  </div>
-                </div> */}
+                <button
+                  onClick={() => setIsAddJobModelOpen(true)}
+                  className="add-job-button"
+                >
+                  Add Job
+                </button>
               </div>
               <div className="upcoming-orders-scroll-container">
-                <DashboardTable jobsParams={jobs} />
+                <DashboardTable jobsParams={organisedJobs} />
               </div>
             </div>
           </div>
@@ -130,6 +186,11 @@ function Dashboard() {
           </div>
         </div>
       </div>
+      <AddJobFormModel
+        isOpen={isAddJobModelOpen}
+        onClose={() => setIsAddJobModelOpen(false)}
+        onAddJob={handleAddJob}
+      />
     </>
   );
 }
