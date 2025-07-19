@@ -11,6 +11,7 @@ interface EditJobFormModalProps {
 }
 
 function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob, onDeleteJob }: EditJobFormModalProps) {
+
     // State for form fields, initialized with jobToEdit data
     const [invoiceId, setInvoiceId] = useState<string>('');
     const [poNumber, setPONumber] = useState<string>('');
@@ -65,6 +66,7 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob, onDeleteJob
             setPaidInFull(formatDateForInput(jobToEdit.paidInFull));
             setLiaison(jobToEdit.liaison?.toString() || '');
             setPaymentNote(jobToEdit.paymentNote?.toString() || '');
+            setIsArchived(jobToEdit.isArchived);
         } else if (!isOpen) {
             // Reset form fields when modal closes
             setInvoiceId('');
@@ -78,8 +80,8 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob, onDeleteJob
             setPaidInFull('');
             setLiaison('');
             setPaymentNote('');
-            setIsArchived(false);
         }
+        if (jobToEdit) console.log(jobToEdit.isArchived);
     }, [isOpen, jobToEdit]);
 
     // If modal is not open, return null to not render anything
@@ -113,7 +115,7 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob, onDeleteJob
             paymentNote: paymentNote,
             subJobList: jobToEdit.subJobList, // Preserve existing subJobList
             isPinned: jobToEdit.isPinned,
-            isArchived: jobToEdit.isArchived,
+            isArchived: isArchived,
         };
 
         onUpdateJob(updatedData);

@@ -12,8 +12,8 @@ type Job = {
   liaison?: string;
   paymentNote?: string;
   subJobList?: string[];
-  isPinned?: Boolean;
-  isArchived?: Boolean;
+  isPinned?: boolean;
+  isArchived: boolean;
 };
 
 type SubJob = {
