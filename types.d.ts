@@ -12,7 +12,7 @@ type Job = {
   liaison?: string;
   paymentNote?: string;
   subJobList?: string[];
-  isPinned?: boolean;
+  isPinned: boolean;
   isArchived: boolean;
 };
 
