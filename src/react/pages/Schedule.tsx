@@ -30,23 +30,20 @@ import EditFrameFormModal from "../components/EditFrameFormModal";
 import EditCushionFormModal from "../components/EditCushionFormModal";
 import EditUpholsteryFormModal from "../components/EditUpholsteryFormModal";
 
-import { createFrame, updateFrame, deleteFrameById } from "../api/frameAPI"; // Import updateFrame, deleteFrameById
-import {
-  createCushion,
-  updateCushion,
-  deleteCushionById,
-} from "../api/cushionAPI"; // Import updateCushion, deleteCushionById
-import {
-  createUpholstery,
-  updateUpholstery,
-  deleteUpholstery,
-} from "../api/upholsteryAPI"; // Import updateUpholstery, deleteUpholstery
+import { getAllFrames, createFrame, updateFrame, deleteFrameById } from "../api/frameAPI"; // Import updateFrame, deleteFrameById
+import { getAllCushions, createCushion, updateCushion, deleteCushionById } from "../api/cushionAPI"; // Import updateCushion, deleteCushionById
+import { getAllUpholstery, createUpholstery, updateUpholstery, deleteUpholstery } from "../api/upholsteryAPI"; // Import updateUpholstery, deleteUpholstery
 
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 
 function Schedule() {
+  const [reloadState, setReloadState] = useState<boolean>(false);
+
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [cushions, setCushions] = useState<Array<Cushion>>([]);
+  const [frames, setFrames] = useState<Array<Frame>>([]);
+  const [upholstery, setUpholstery] = useState<Array<Upholstery>>([]);
 
   const [isEditJobModalOpen, setIsEditJobModalOpen] = useState(false);
   const [jobToEdit, setJobToEdit] = useState<Job | null>(null);
@@ -92,9 +89,10 @@ function Schedule() {
   const [filterSewn, setFilterSewn] = useState<boolean>(false);
   const [filterUpholster, setFilterUpholster] = useState<boolean>(false);
   const [filterFoamed, setFilterFoamed] = useState<boolean>(false);
-  const [filterWrapped, setFilterWrapped] = useState<boolean>(false);
   const [filterComplete, setFilterComplete] = useState<boolean>(false);
   const [filterProduction, setFilterProduction] = useState<boolean>(false);
+
+  const [filterArchive, setFilterArchive] = useState<boolean>(false);
 
   const [isAddCushionModalOpen, setIsAddCushionModalOpen] = useState(false);
   const [isAddFrameModalOpen, setIsAddFrameModalOpen] = useState(false);
@@ -132,8 +130,11 @@ function Schedule() {
   );
 
   const location = useLocation();
-
   const initialSelectedJob = location.state?.selectedJob;
+
+  const reload = () => {
+    reloadState === true ? setReloadState(false) : setReloadState(true);
+  }
 
   useEffect(() => {
     if (location.state !== null) {
@@ -158,20 +159,34 @@ function Schedule() {
       const fetchJobs = async () => {
         const jobsPromise = getAllJobs();
         const subJobsPromise = getAllSubJobs();
+        const cushionsPromise = getAllCushions();
+        const framesPromise = getAllFrames();
+        const upholsteryPromise = getAllUpholstery();
+
         try {
-          const [fetchJobs, fetchSubJobs] = await Promise.all([
-            jobsPromise,
-            subJobsPromise,
-          ]);
+          const [
+            fetchJobs, 
+            fetchSubJobs, 
+            fetchCushions, 
+            fetchFrames, 
+            fetchUpholstery] = await Promise.all([jobsPromise, 
+                                                  subJobsPromise,
+                                                  cushionsPromise,
+                                                  framesPromise,
+                                                  upholsteryPromise]);
           setJobs(fetchJobs);
           setSubJobs(fetchSubJobs);
-        } catch (err) {
+          setCushions(fetchCushions);
+          setFrames(fetchFrames);
+          setUpholstery(fetchUpholstery);
+        }
+        catch (err) {
           console.error("Could not fetch Jobs!");
         }
       };
       fetchJobs();
     }
-  }, []);
+  }, [reload]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -202,6 +217,7 @@ function Schedule() {
     if (addedJob) {
       setJobs((prevJobs) => [...prevJobs, addedJob]);
       setIsAddJobModelOpen(false);
+      reload();
     } else {
       console.error("Failed to create job.");
     }
@@ -239,8 +255,18 @@ function Schedule() {
         }
     } catch (err) {
         console.error("Error deleting job and its sub-jobs: ", err);
-    }
-};
+        const success = await deleteJob(jobId);
+        if (success) {
+          setJobs((prevJobs) => prevJobs.filter((job) => job._id !== jobId));
+          setIsEditJobModalOpen(false);
+          setJobToEdit(null);
+          setSubJobs([]); // Clear subjobs as well
+          reload();
+        } else {
+          console.error("Failed to delete job.");
+        }
+    };
+  }
 
   const handleUpdateJob = async (updatedData: Job) => {
     const updatedJobFromServer = await updateJob(updatedData);
@@ -252,6 +278,7 @@ function Schedule() {
       );
       setIsEditJobModalOpen(false);
       setJobToEdit(null);
+      reload();
     } else {
       console.error("Failed to update job.");
     }
@@ -319,6 +346,7 @@ function Schedule() {
       // --- END NEW APPROACH ---
       setIsEditSubJobModalOpen(false);
       setSubJobToEdit(null);
+      reload();
     } else {
       console.error("Failed to update sub-job.");
     }
@@ -343,6 +371,7 @@ function Schedule() {
           prevJobs.map((job) => (job._id === updatedJob._id ? updatedJob : job))
         );
         setSelectedJobForSubJob(updatedJob);
+        reload();
       }
       setIsEditSubJobModalOpen(false);
       setSubJobToEdit(null);
@@ -368,6 +397,7 @@ function Schedule() {
       );
       setIsAddCushionModalOpen(false); // Close modal
       setSelectedSubJobInfoForCushion(null); // Clear selected subjob info
+      reload();
     } else {
       console.error("Failed to create cushion.");
     }
@@ -381,6 +411,7 @@ function Schedule() {
       // For now, let's re-fetch subjobs to ensure consistency if lists are not directly managed
       if (selectedJobForSubJob) {
         displayJobDetails(selectedJobForSubJob); // Re-fetch all subjobs for the current job
+        reload();
       }
       setIsEditCushionModalOpen(false);
       setCushionToEdit(null);
@@ -408,6 +439,7 @@ function Schedule() {
       );
       setIsEditCushionModalOpen(false);
       setCushionToEdit(null);
+      reload();
     } else {
       console.error("Failed to delete cushion.");
     }
@@ -428,6 +460,7 @@ function Schedule() {
           return subJob;
         })
       );
+      reload();
     } else {
       console.error("Failed to create frame.");
     }
@@ -439,6 +472,7 @@ function Schedule() {
       // Re-fetch subjobs to ensure consistency if lists are not directly managed
       if (selectedJobForSubJob) {
         displayJobDetails(selectedJobForSubJob); // Re-fetch all subjobs for the current job
+        reload();
       }
       setIsEditFrameModalOpen(false);
       setFrameToEdit(null);
@@ -466,6 +500,7 @@ function Schedule() {
       );
       setIsEditFrameModalOpen(false);
       setFrameToEdit(null);
+      reload();
     } else {
       console.error("Failed to delete frame.");
     }
@@ -489,6 +524,7 @@ function Schedule() {
           return subJob;
         })
       );
+      reload();
     } else {
       console.error("Failed to create upholstery.");
     }
@@ -500,6 +536,7 @@ function Schedule() {
       // Re-fetch subjobs to ensure consistency if lists are not directly managed
       if (selectedJobForSubJob) {
         displayJobDetails(selectedJobForSubJob); // Re-fetch all subjobs for the current job
+        reload();
       }
       setIsEditUpholsteryModalOpen(false);
       setUpholsteryToEdit(null);
@@ -529,6 +566,7 @@ function Schedule() {
       );
       setIsEditUpholsteryModalOpen(false);
       setUpholsteryToEdit(null);
+      reload();
     } else {
       console.error("Failed to delete upholstery.");
     }
@@ -665,18 +703,20 @@ function Schedule() {
       checked === true ? setFilterCut(false) : setFilterCut(true);
     } else if (status === "upholster") {
       checked === true ? setFilterUpholster(false) : setFilterUpholster(true);
-    } else if (status === "wrapped") {
-      checked === true ? setFilterWrapped(false) : setFilterWrapped(true);
     } else if (status === "sewn") {
       checked === true ? setFilterSewn(false) : setFilterSewn(true);
     } else if (status === "foamed") {
       checked === true ? setFilterFoamed(false) : setFilterFoamed(true);
     } else if (status === "complete") {
-      checked === true ? setFilterComplete(false) : setFilterFoamed(true);
+      checked === true ? setFilterComplete(false) : setFilterComplete(true);
     } else if (status === "production") {
       checked === true ? setFilterProduction(false) : setFilterProduction(true);
     }
   };
+
+  const handleArchiveChange = (checked: boolean) => {
+    checked === true ? setFilterArchive(false) : setFilterArchive(true);
+  }
 
   const openEditSubJobModal = (subJob: SubJob) => {
     setSubJobToEdit(subJob);
@@ -844,7 +884,9 @@ function Schedule() {
             </div>
             <div id="archive-container">
               <label>
-                <input type="checkbox" />
+                <input type="checkbox" 
+                defaultChecked={filterArchive} 
+                onChange={(e) => handleArchiveChange(e.target.defaultChecked)}/>
                 Archive
               </label>
             </div>
@@ -873,16 +915,6 @@ function Schedule() {
                     }
                   />{" "}
                   Body Upholstered
-                </label>
-                <label className="filter-item waiting-for-wrapping">
-                  <input
-                    type="checkbox"
-                    defaultChecked={filterWrapped}
-                    onChange={(e) =>
-                      handleStatusChange(e.target.defaultChecked, "wrapped")
-                    }
-                  />{" "}
-                  Waiting for wrapping
                 </label>
               </div>
               <div className="filter-column">
@@ -939,6 +971,9 @@ function Schedule() {
             searchTerm={searchTerm}
             jobs={jobs}
             subJobs={subJobs}
+            frames={frames}
+            cushions={cushions}
+            upholstery={upholstery}
             handleJobClick={displayJobDetails}
             invoiceIDTerm={filterInvoiceID}
             clientTerm={filterClient}
@@ -948,9 +983,9 @@ function Schedule() {
             sewnTerm={filterSewn}
             upholsterTerm={filterUpholster}
             foamedTerm={filterFoamed}
-            wrappedTerm={filterWrapped}
             completeTerm={filterComplete}
             productionTerm={filterProduction}
+            archiveTerm={filterArchive}
             onEditJobClick={handleEditJobClick}
             initialSelectedJobId={initialSelectedJob?._id || null}
           />

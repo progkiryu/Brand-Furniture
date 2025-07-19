@@ -50,7 +50,6 @@ function AddJobFormModel({ isOpen, onClose, onAddJob}: AddJobFormModelProps) {
 
         // Basic validation
         if (!clientName || !jobName) {
-
             return;
         }
 
@@ -75,7 +74,6 @@ function AddJobFormModel({ isOpen, onClose, onAddJob}: AddJobFormModelProps) {
         onAddJob(newJob);
         onClose();
     }
-    
 
     return (
         <div className="modal-overlay" onClick={onClose}>
@@ -204,7 +202,6 @@ function AddJobFormModel({ isOpen, onClose, onAddJob}: AddJobFormModelProps) {
                         <input
                             type="checkbox"
                             id="isArchived"
-                            checked={isArchived}
                             onChange={(e) => setIsArchived(e.target.checked)}
                         />
                     </div>

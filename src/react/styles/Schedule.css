@@ -615,7 +615,7 @@
   flex-direction: column;
   background-color: transparent;
   border-radius: 12px;
-  padding: 0;
+  padding: 1rem;
   overflow-x: hidden;
   box-sizing: border-box;
 }
