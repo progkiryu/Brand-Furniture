@@ -2,7 +2,7 @@ import { DBLink } from "../App";
 
 // Get all upholstery
 export const getAllUpholstery = async () => {
-  const upholstery = fetch(`${DBLink}/upholtsery/getAllUpholstery`)
+  const upholstery = fetch(`${DBLink}/upholstery/getAllUpholstery`)
     .then((res) => res.json())
     .catch((err) => console.error(err));
   if (!upholstery) {

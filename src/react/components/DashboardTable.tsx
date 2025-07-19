@@ -37,7 +37,7 @@ function DashboardTable({ jobsParams }: DashboardTableProps) {
     }
 
     // Aternate job isPinned to true/false
-    let isPinned: Boolean = job.isPinned ? job.isPinned : false;
+    let isPinned: boolean = job.isPinned ? job.isPinned : false;
     if (job.isPinned) {
       isPinned = false;
     } else {
@@ -52,6 +52,7 @@ function DashboardTable({ jobsParams }: DashboardTableProps) {
       type: job.type,
       due: job.due,
       isPinned: isPinned,
+      isArchived: job.isArchived
     };
 
     updateJob(temp);
