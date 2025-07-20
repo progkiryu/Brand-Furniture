@@ -872,96 +872,97 @@ function Schedule() {
               )}
             </div>
           </div>
+  
+    <div id="add-job-wrapper">
+      <div id="add-job-container">
+        <button
+          onClick={() => setIsAddJobModelOpen(true)}
+          className="add-job-btn"
+        >
+          Add Job
+        </button>
+      </div>
+      <div id="archive-container">
+        <label>
+          <input
+            type="checkbox"
+            defaultChecked={filterArchive}
+            onChange={e => handleArchiveChange(e.target.defaultChecked)}
+          />
+          Archive
+        </label>
+      </div>
+    </div>
 
-          <div id="add-job-wrapper">
-            <div id="add-job-container">
-              <button
-                onClick={() => setIsAddJobModelOpen(true)}
-                className="add-job-btn"
-              >
-                Add Job
-              </button>
-            </div>
-            <div id="archive-container">
-              <label>
-                <input type="checkbox" 
-                defaultChecked={filterArchive} 
-                onChange={(e) => handleArchiveChange(e.target.defaultChecked)}/>
-                Archive
-              </label>
-            </div>
-          </div>
+    {}
+    <div id="filter-container">
+      <div className="filter-wrapper">
 
-          <div id="filter-container">
-            {/* filter-checkboxes stay unchanged here */}
-            <div className="filter-wrapper">
-              <div className="filter-column">
-                <label className="filter-item upholstery-cut">
-                  <input
-                    type="checkbox"
-                    defaultChecked={filterCut}
-                    onChange={(e) =>
-                      handleStatusChange(e.target.defaultChecked, "cut")
-                    }
-                  />{" "}
-                  Upholstery Cut
-                </label>
-                <label className="filter-item body-upholstered">
-                  <input
-                    type="checkbox"
-                    defaultChecked={filterUpholster}
-                    onChange={(e) =>
-                      handleStatusChange(e.target.defaultChecked, "upholster")
-                    }
-                  />{" "}
-                  Body Upholstered
-                </label>
-              </div>
-              <div className="filter-column">
-                <label className="filter-item upholstery-sewn">
-                  <input
-                    type="checkbox"
-                    defaultChecked={filterSewn}
-                    onChange={(e) =>
-                      handleStatusChange(e.target.defaultChecked, "sewn")
-                    }
-                  />{" "}
-                  Upholstery Sewn
-                </label>
-                <label className="filter-item frame-foamed">
-                  <input
-                    type="checkbox"
-                    defaultChecked={filterFoamed}
-                    onChange={(e) =>
-                      handleStatusChange(e.target.defaultChecked, "foamed")
-                    }
-                  />{" "}
-                  Frame Foamed
-                </label>
-                <label className="filter-item complete">
-                  <input
-                    type="checkbox"
-                    defaultChecked={filterComplete}
-                    onChange={(e) =>
-                      handleStatusChange(e.target.defaultChecked, "complete")
-                    }
-                  />{" "}
-                  Complete
-                </label>
-                <label className="filter-item in-production">
-                  <input
-                    type="checkbox"
-                    defaultChecked={filterProduction}
-                    onChange={(e) =>
-                      handleStatusChange(e.target.defaultChecked, "production")
-                    }
-                  />{" "}
-                  In Production
-                </label>
-              </div>
-            </div>
-          </div>
-        </div>{" "}
+        {/* Left column */}
+        <div className="filter-column">
+          <label className="filter-item upholstery-cut">
+            <input
+              type="checkbox"
+              defaultChecked={filterCut}
+              onChange={e => handleStatusChange(e.target.defaultChecked, "cut")}
+            />{" "}
+            Upholstery Cut
+          </label>
+
+          <label className="filter-item body-upholstered">
+            <input
+              type="checkbox"
+              defaultChecked={filterUpholster}
+              onChange={e => handleStatusChange(e.target.defaultChecked, "upholster")}
+            />{" "}
+            Body Upholstered
+          </label>
+
+          <label className="filter-item in-production">
+            <input
+              type="checkbox"
+              defaultChecked={filterProduction}
+              onChange={e => handleStatusChange(e.target.defaultChecked, "production")}
+            />{" "}
+            In Production
+          </label>
+        </div>
+
+        {/* Right column */}
+        <div className="filter-column">
+          <label className="filter-item upholstery-sewn">
+            <input
+              type="checkbox"
+              defaultChecked={filterSewn}
+              onChange={e => handleStatusChange(e.target.defaultChecked, "sewn")}
+            />{" "}
+            Upholstery Sewn
+          </label>
+
+          <label className="filter-item frame-foamed">
+            <input
+              type="checkbox"
+              defaultChecked={filterFoamed}
+              onChange={e => handleStatusChange(e.target.defaultChecked, "foamed")}
+            />{" "}
+            Frame Foamed
+          </label>
+
+          <label className="filter-item complete">
+            <input
+              type="checkbox"
+              defaultChecked={filterComplete}
+              onChange={e => handleStatusChange(e.target.defaultChecked, "complete")}
+            />{" "}
+            Complete
+          </label>
+        </div>
+
+      </div>
+    </div>
+    {}
+
+  </div> {}
 
         {/* This closes the #filter-container div */}
         <div id="order-container">
