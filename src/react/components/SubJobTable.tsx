@@ -60,8 +60,7 @@ function SubJobTable({
           </div>
         ))}
       </div>
-
-
+      
       <button className="add-component-btn" onClick={onAddComponentClick}>
         +
       </button>
