@@ -67,6 +67,7 @@ function DashboardTable({ jobsParams }: DashboardTableProps) {
     <div className="job-list">
       <div className="job-list-header">
         <span>Client</span>
+        <span>PO#</span>
         <span>Invoice No.</span>
         <span>Job Name</span>
         <span>Job Type</span>
@@ -75,6 +76,7 @@ function DashboardTable({ jobsParams }: DashboardTableProps) {
       {jobs.map((job: Job) => (
         <div key={String(job._id)} className="job-list-row">
           <span>{job.client}</span>
+          <span>{job.poNumber || "—"}</span>
           <span>{job.invoiceId}</span>
           <span>{job.name}</span>
           <span>{job.type}</span>
