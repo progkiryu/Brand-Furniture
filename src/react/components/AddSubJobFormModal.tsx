@@ -69,7 +69,7 @@ function AddSubJobFormModal({ isOpen, onClose, jobId, invoiceId, onAddSubJob }: 
                     {/* Only the Detail Section */}
                     <div className="detail-section">
                         <div className="form-group">
-                            <label htmlFor="subJobDetail">Sub-Job Detail:</label>
+                            <label htmlFor="subJobDetail">Description:</label>
                             <textarea
                                 id="subJobDetail"
                                 value={subJobDetail}
@@ -89,11 +89,17 @@ function AddSubJobFormModal({ isOpen, onClose, jobId, invoiceId, onAddSubJob }: 
                         </div>
                         <div className="form-group">
                             <label htmlFor="file">File:</label>
-                            <input
-                                type="text"
+                            {/* <textarea
                                 id="file"
                                 value={file}
                                 onChange={(e) => setFile(e.target.value)}
+                            /> */}
+                            <input 
+                                type="string"
+                                id="file"
+                                value={file}
+                                onChange={(e) => setFile(e.target.value)}
+                                multiple
                             />
                         </div>
                         <div className="form-group">

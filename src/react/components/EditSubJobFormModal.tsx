@@ -100,7 +100,7 @@ function EditSubJobFormModal({ isOpen, onClose, subJobToEdit, onUpdateSubJob, on
                 <form onSubmit={handleSubmit} className="modal-form">
                     <h2>Edit Sub-Job: {subJobToEdit?.subJobDetail}</h2>
                     <div className="form-group">
-                        <label htmlFor="subJobDetail">Component Detail:</label>
+                        <label htmlFor="subJobDetail">Description:</label>
                         <textarea
                             id="subJobDetail"
                             value={subJobDetail}
@@ -119,11 +119,17 @@ function EditSubJobFormModal({ isOpen, onClose, subJobToEdit, onUpdateSubJob, on
                     </div>
                     <div className="form-group">
                         <label htmlFor="file">File:</label>
-                        <input
-                            type="text"
+                        {/* <textarea
                             id="file"
                             value={file}
                             onChange={(e) => setFile(e.target.value)}
+                        /> */}
+                        <input
+                            type="string"
+                            id="file"
+                            value={file}
+                            onChange={(e) => setFile(e.target.value)}
+                            multiple
                         />
                     </div>
                     <div className="form-group">

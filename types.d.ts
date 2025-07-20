@@ -79,5 +79,6 @@ type DateRange = {
 interface Window {
   electron: {
     greeting: () => void;
+    openExternalLink: (url: string) => void;
   };
 }

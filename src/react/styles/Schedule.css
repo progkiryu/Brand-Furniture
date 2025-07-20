@@ -440,13 +440,40 @@
   border-radius: 8px;
 }
 
-.job-component-row {
+.sub-job-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #bcbbbb;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  margin: 20px 0px 10px 0px;
+  text-align: center;
+  padding: 8px 0px;
+}
+
+.sub-job-title > h4 {
+  margin-top: 0px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+  margin-left: 20px;
+  
+}
+
+/* SubJobTableRow.tsx */
+
+/* .job-component-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
   width: 100%;
   overflow-x: hidden;
   box-sizing: border-box;
+} */
+
+.job-component-row {
+  display: flex;
+  flex-direction: column;
 }
 
 
@@ -458,6 +485,7 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  margin-top: 10px;
 
 }
 
@@ -466,6 +494,13 @@
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 10px;
+}
+
+.component-section > pre {
+  word-wrap: break-word;      /* Breaks long words onto the next line */
+  overflow-wrap: break-word;  /* Modern equivalent, ensures compatibility */
+  /* white-space: normal;   */
+  overflow: scroll;
 }
 
 .card-header {
@@ -479,6 +514,8 @@
   font-size: 16px;
 }
 
+
+
 .edit-icon {
   cursor: pointer;
   color: #1B263B;
@@ -487,6 +524,10 @@
 
 .edit-icon:hover {
   color: #000;
+}
+
+.sub-job-title > .edit-icon {
+  margin-right: 20px;
 }
 
 .add-btn {
