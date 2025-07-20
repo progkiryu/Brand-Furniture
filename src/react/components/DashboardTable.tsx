@@ -37,7 +37,7 @@ function DashboardTable({ jobsParams }: DashboardTableProps) {
     }
 
     // Aternate job isPinned to true/false
-    let isPinned: Boolean = job.isPinned ? job.isPinned : false;
+    let isPinned: boolean = job.isPinned ? job.isPinned : false;
     if (job.isPinned) {
       isPinned = false;
     } else {
@@ -52,6 +52,7 @@ function DashboardTable({ jobsParams }: DashboardTableProps) {
       type: job.type,
       due: job.due,
       isPinned: isPinned,
+      isArchived: job.isArchived
     };
 
     updateJob(temp);
@@ -66,6 +67,7 @@ function DashboardTable({ jobsParams }: DashboardTableProps) {
     <div className="job-list">
       <div className="job-list-header">
         <span>Client</span>
+        <span>PO#</span>
         <span>Invoice No.</span>
         <span>Job Name</span>
         <span>Job Type</span>
@@ -74,6 +76,7 @@ function DashboardTable({ jobsParams }: DashboardTableProps) {
       {jobs.map((job: Job) => (
         <div key={String(job._id)} className="job-list-row">
           <span>{job.client}</span>
+          <span>{job.poNumber || "—"}</span>
           <span>{job.invoiceId}</span>
           <span>{job.name}</span>
           <span>{job.type}</span>
@@ -84,7 +87,12 @@ function DashboardTable({ jobsParams }: DashboardTableProps) {
               alignItems: "center",
             }}
           >
-            <span>{String(job.due)}</span>
+            <span>
+            {job.due
+              ? new Date(job.due).toLocaleDateString('en-GB')   // “DD/MM/YYYY”
+              : '—'}
+          </span>
+
             <span className="icon-wrapper-vertical">
               {job.isPinned === true ? (
                 <FaThumbtackSlash
