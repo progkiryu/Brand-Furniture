@@ -87,7 +87,12 @@ function DashboardTable({ jobsParams }: DashboardTableProps) {
               alignItems: "center",
             }}
           >
-            <span>{String(job.due)}</span>
+            <span>
+            {job.due
+              ? new Date(job.due).toLocaleDateString('en-GB')   // “DD/MM/YYYY”
+              : '—'}
+          </span>
+
             <span className="icon-wrapper-vertical">
               {job.isPinned === true ? (
                 <FaThumbtackSlash
