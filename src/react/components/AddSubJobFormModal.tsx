@@ -20,7 +20,7 @@ function AddSubJobFormModal({
   // --- State for Sub-Job Details ---
   const [subJobDetail, setSubJobDetail] = useState<string>("");
   const [note, setNote] = useState<string>("");
-  const [file, setFile] = useState<string>("");
+  const [files, setFiles] = useState<string[]>([""]);
   const [subJobDueDate, setSubJobDueDate] = useState<string>("");
 
   // --- Effect for Reset on Close ---
@@ -29,7 +29,7 @@ function AddSubJobFormModal({
       // Reset all state when modal closes
       setSubJobDetail("");
       setNote("");
-      setFile("");
+      setFiles([""]);
       setSubJobDueDate("");
     }
   }, [isOpen]);
@@ -47,13 +47,15 @@ function AddSubJobFormModal({
       return;
     }
 
+    const nonEmptyFiles = files.filter((f) => f.trim() !== "");
+
     // Construct the new sub-job data
     // Ensure all string properties are `String` objects as per your types.d.ts
     const newSubJobData: SubJob = {
       jobId: jobId, // Convert primitive string `jobId` to `String` object
       subJobDetail: subJobDetail,
       note: note ? note : undefined,
-      file: file ? file : undefined,
+      file: nonEmptyFiles,
       dueDate: subJobDueDate ? new Date(subJobDueDate) : undefined,
       frameList: [], // Empty lists as no components are added via this simplified form
       cushionList: [],
@@ -62,6 +64,23 @@ function AddSubJobFormModal({
 
     onAddSubJob(newSubJobData); // Pass the comprehensive data
     onClose(); // Close the modal after submission
+  };
+
+  const handleAddFile = () => {
+    setFiles([...files, ""]);
+  };
+
+  // --- Helper function to handle file input changes ---
+  const handleFileChange = (index: number, value: string) => {
+    const newFiles = [...files];
+    newFiles[index] = value;
+    setFiles(newFiles);
+  };
+
+  // --- Helper function to remove a file input ---
+  const handleRemoveFile = (index: number) => {
+    const newFiles = files.filter((_, i) => i !== index);
+    setFiles(newFiles);
   };
 
   return (
@@ -97,14 +116,43 @@ function AddSubJobFormModal({
                 rows={2}
               ></textarea>
             </div>
+            {/* <div className="form-group">
+                            <label htmlFor="file">File:</label>
+                            <input
+                                type="url"
+                                id="file"
+                                value={file}
+                                onChange={(e) => setFile(e.target.value)}
+                            />
+                        </div> */}
             <div className="form-group">
-              <label htmlFor="file">File:</label>
-              <input
-                type="text"
-                id="file"
-                value={file}
-                onChange={(e) => setFile(e.target.value)}
-              />
+              <label>Files:</label>
+              {files.map((fileUrl, index) => (
+                <div key={index} className="file-input-wrapper">
+                  <input
+                    type="url"
+                    value={fileUrl}
+                    onChange={(e) => handleFileChange(index, e.target.value)}
+                  />
+                  {/* Only show the remove button if there's more than one input */}
+                  {files.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveFile(index)}
+                      className="remove-file-btn"
+                    >
+                      -
+                    </button>
+                  )}
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={handleAddFile}
+                className="add-file-btn"
+              >
+                + Add Another File
+              </button>
             </div>
             <div className="form-group">
               <label htmlFor="subJobDueDate">Due Date:</label>

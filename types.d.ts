@@ -21,7 +21,7 @@ type SubJob = {
   jobId: string;
   subJobDetail: string;
   note?: string;
-  file?: string;
+  file?: string[];
   dueDate?: Date;
   frameList?: string[];
   cushionList?: string[];
@@ -79,5 +79,6 @@ type DateRange = {
 interface Window {
   electron: {
     greeting: () => void;
+    openExternalLink: (url: string) => void;
   };
 }

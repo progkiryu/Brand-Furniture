@@ -17,7 +17,7 @@ function EditSubJobFormModal({
 }: EditSubJobFormModalProps) {
   const [subJobDetail, setSubJobDetail] = useState<string>("");
   const [note, setNote] = useState<string>("");
-  const [file, setFile] = useState<string>("");
+  const [files, setFiles] = useState<string[]>([""]);
   const [dueDate, setDueDate] = useState<string>("");
 
   /**
@@ -47,13 +47,17 @@ function EditSubJobFormModal({
     if (isOpen && subJobToEdit) {
       setSubJobDetail(subJobToEdit.subJobDetail?.toString() || "");
       setNote(subJobToEdit.note?.toString() || "");
-      setFile(subJobToEdit.file?.toString() || "");
+      setFiles(
+        subJobToEdit.file && subJobToEdit.file.length > 0
+          ? subJobToEdit.file
+          : [""]
+      );
       setDueDate(formatDateForInput(subJobToEdit.dueDate));
     } else if (!isOpen) {
       // Reset form fields when modal closes
       setSubJobDetail("");
       setNote("");
-      setFile("");
+      setFiles([""]);
       setDueDate("");
     }
   }, [isOpen, subJobToEdit]);
@@ -72,12 +76,14 @@ function EditSubJobFormModal({
       return;
     }
 
+    const nonEmptyFiles = files.filter((f) => f.trim() !== "");
+
     const updatedData: SubJob = {
       _id: subJobToEdit._id,
       jobId: subJobToEdit.jobId, // Preserve existing jobId
       subJobDetail: subJobDetail,
       note: note,
-      file: file,
+      file: nonEmptyFiles,
       dueDate: dueDate ? new Date(dueDate) : undefined,
       frameList: subJobToEdit.frameList, // Preserve existing lists
       cushionList: subJobToEdit.cushionList,
@@ -98,6 +104,23 @@ function EditSubJobFormModal({
     } else {
       console.error("SubJob ID is missing for deletion.");
     }
+  };
+
+  const handleAddFile = () => {
+    setFiles([...files, ""]);
+  };
+
+  // --- Helper function to handle file input changes ---
+  const handleFileChange = (index: number, value: string) => {
+    const newFiles = [...files];
+    newFiles[index] = value;
+    setFiles(newFiles);
+  };
+
+  // --- Helper function to remove a file input ---
+  const handleRemoveFile = (index: number) => {
+    const newFiles = files.filter((_, i) => i !== index);
+    setFiles(newFiles);
   };
 
   return (
@@ -126,14 +149,43 @@ function EditSubJobFormModal({
               rows={2}
             ></textarea>
           </div>
+          {/* <div className="form-group">
+                        <label htmlFor="file">File:</label>
+                        <input
+                            type="url"
+                            id="file"
+                            value={file}
+                            onChange={(e) => setFile(e.target.value)}
+                        />
+                    </div> */}
+
           <div className="form-group">
-            <label htmlFor="file">File:</label>
-            <input
-              type="text"
-              id="file"
-              value={file}
-              onChange={(e) => setFile(e.target.value)}
-            />
+            <label>Files:</label>
+            {files.map((fileUrl, index) => (
+              <div key={index} className="file-input-wrapper">
+                <input
+                  type="url"
+                  value={fileUrl}
+                  onChange={(e) => handleFileChange(index, e.target.value)}
+                />
+                {files.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveFile(index)}
+                    className="remove-file-btn"
+                  >
+                    -
+                  </button>
+                )}
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={handleAddFile}
+              className="add-file-btn"
+            >
+              + Add Another File
+            </button>
           </div>
           <div className="form-group">
             <label htmlFor="dueDate">Due Date:</label>
