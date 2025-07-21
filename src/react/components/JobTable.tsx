@@ -3,10 +3,10 @@ import { Pencil } from "lucide-react";
 
 interface JobTableProps {
     searchTerm: string;
-    invoiceIDTerm?: "asc" | "desc";
     jobNameTerm?: "asc" | "desc";
     clientTerm?: "asc" | "desc";
     dueDateTerm?: "asc" | "desc";
+    yearTerm: string;
     jobs: Job[];
     subJobs: SubJob[];
     frames: Frame[];
@@ -39,10 +39,10 @@ function JobTable({
     productionTerm,
     archiveTerm,
     handleJobClick, 
-    invoiceIDTerm, 
     clientTerm, 
     dueDateTerm, 
     jobNameTerm,
+    yearTerm,
     onEditJobClick,
     initialSelectedJobId,
 }: JobTableProps) {
@@ -405,16 +405,28 @@ function JobTable({
         return sortedJobs;
     }
 
+    const yearFilter = (sortedJobs: Job[], yearTerm: string) => {
+        if (yearTerm !== "--") {
+            const yearJobs: Job[] = [];
+            const yearNumber = parseInt(yearTerm);
+            sortedJobs.map((job: Job) => {
+                const jobYear = parseInt(String(job.due).substring(0, 4));
+                if (jobYear === yearNumber) yearJobs.push(job);
+            });
+            sortedJobs = yearJobs;
+        }
+        return sortedJobs;
+    }
+
     useEffect(() => {
         let filtered = [...jobs];
         filtered = searchFilter(searchTerm);
         filtered = ascDescFilter(
             filtered, 
-            invoiceIDTerm,
             jobNameTerm,
             clientTerm,
             dueDateTerm
-        )
+        );
         filtered = statusFilter(
             filtered, 
             cutTerm,
@@ -425,6 +437,7 @@ function JobTable({
             productionTerm
         );
         filtered = archiveFilter(filtered, archiveTerm);
+        filtered = yearFilter(filtered, yearTerm);
         setDisplayedJobs(filtered);
 
     }, [searchTerm,
@@ -433,10 +446,10 @@ function JobTable({
         frames,
         cushions,
         upholstery,
-        invoiceIDTerm,
         clientTerm,
         dueDateTerm,
         jobNameTerm,
+        yearTerm,
         cutTerm,
         sewnTerm,
         upholsterTerm,

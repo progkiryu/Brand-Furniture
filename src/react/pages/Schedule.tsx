@@ -50,8 +50,7 @@ function Schedule() {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // radio button states
-  const [invoiceIDAsc, setInvoiceIDAsc] = useState<boolean>(false);
-  const [invoiceIDDesc, setInvoiceIDDesc] = useState<boolean>(false);
+  const [selectedYear, setSelectedYear] = useState<string>("--");
   const [clientAsc, setClientAsc] = useState<boolean>(false);
   const [clientDesc, setClientDesc] = useState<boolean>(false);
   const [jobNameAsc, setJobNameAsc] = useState<boolean>(false);
@@ -72,9 +71,6 @@ function Schedule() {
     null
   );
 
-  const [filterInvoiceID, setFilterInvoiceID] = useState<
-    "asc" | "desc" | undefined
-  >();
   const [filterClient, setFilterClient] = useState<
     "asc" | "desc" | undefined
   >();
@@ -186,7 +182,7 @@ function Schedule() {
       };
       fetchJobs();
     }
-  }, [reload]);
+  }, [reloadState]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -599,27 +595,7 @@ function Schedule() {
     attribute: String,
     type?: "asc" | "desc"
   ) => {
-    if (attribute === "invoiceId") {
-      if (type === "asc") {
-        setFilterInvoiceID("asc");
-        setInvoiceIDAsc(true);
-        setInvoiceIDDesc(false);
-      } else {
-        setFilterInvoiceID("desc");
-        setInvoiceIDAsc(false);
-        setInvoiceIDDesc(true);
-      }
-      setFilterClient(undefined);
-      setFilterJobName(undefined);
-      setFilterDueDate(undefined);
-
-      setClientAsc(false);
-      setClientDesc(false);
-      setJobNameAsc(false);
-      setJobNameDesc(false);
-      setDueDateAsc(false);
-      setDueDateDesc(false);
-    } else if (attribute === "client") {
+    if (attribute === "client") {
       if (type === "asc") {
         setFilterClient("asc");
         setClientAsc(true);
@@ -629,12 +605,9 @@ function Schedule() {
         setClientAsc(false);
         setClientDesc(true);
       }
-      setFilterInvoiceID(undefined);
       setFilterJobName(undefined);
       setFilterDueDate(undefined);
 
-      setInvoiceIDAsc(false);
-      setInvoiceIDDesc(false);
       setJobNameAsc(false);
       setJobNameDesc(false);
       setDueDateAsc(false);
@@ -649,12 +622,9 @@ function Schedule() {
         setJobNameAsc(false);
         setJobNameDesc(true);
       }
-      setFilterInvoiceID(undefined);
       setFilterClient(undefined);
       setFilterDueDate(undefined);
 
-      setInvoiceIDAsc(false);
-      setInvoiceIDDesc(false);
       setClientAsc(false);
       setClientDesc(false);
       setDueDateAsc(false);
@@ -669,12 +639,9 @@ function Schedule() {
         setDueDateAsc(false);
         setDueDateDesc(true);
       }
-      setFilterInvoiceID(undefined);
       setFilterClient(undefined);
       setFilterJobName(undefined);
 
-      setInvoiceIDAsc(false);
-      setInvoiceIDDesc(false);
       setClientAsc(false);
       setClientDesc(false);
       setJobNameAsc(false);
@@ -683,13 +650,11 @@ function Schedule() {
   };
 
   const resetAscDscFilter = () => {
-    setFilterInvoiceID(undefined);
     setFilterClient(undefined);
     setFilterJobName(undefined);
     setFilterDueDate(undefined);
+    setSelectedYear("--");
 
-    setInvoiceIDAsc(false);
-    setInvoiceIDDesc(false);
     setClientAsc(false);
     setClientDesc(false);
     setJobNameAsc(false);
@@ -697,6 +662,22 @@ function Schedule() {
     setDueDateAsc(false);
     setDueDateDesc(false);
   };
+
+  const handleSelectYear = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedYear(event.target.value);
+  }
+
+  const generateYears = () => {
+    const currentYear = new Date().getFullYear();
+    const startYear = currentYear - 25;
+    const endYear = currentYear + 5;
+
+    const years = [];
+    for (var year = endYear; year >= startYear; year--) {
+      years.push(year);
+    }
+    return years;
+  }
 
   const handleStatusChange = (checked: boolean, status: String) => {
     if (status === "cut") {
@@ -763,28 +744,16 @@ function Schedule() {
               {dropdownOpen && (
                 <div id="dropdown-panel">
                   <div className="sort-option-group">
-                    <strong>Invoice ID</strong>
+                    <strong>Year</strong>
                     <label>
-                      <input
-                        type="radio"
-                        name="option"
-                        onClick={() =>
-                          handleAscDscFilterChange("invoiceId", "asc")
+                      <select name="option" value={selectedYear} onChange={handleSelectYear}>
+                        <option value="--">--</option>
+                        {
+                          generateYears().map((year: number) => (
+                            <option key={year} value={String(year)}>{year}</option>
+                          ))
                         }
-                        defaultChecked={invoiceIDAsc}
-                      />{" "}
-                      Ascending
-                    </label>
-                    <label>
-                      <input
-                        type="radio"
-                        name="option"
-                        onClick={() =>
-                          handleAscDscFilterChange("invoiceId", "desc")
-                        }
-                        defaultChecked={invoiceIDDesc}
-                      />{" "}
-                      Descending
+                      </select>
                     </label>
 
                     <strong>Client</strong>
@@ -916,6 +885,16 @@ function Schedule() {
                   />{" "}
                   Body Upholstered
                 </label>
+                <label className="filter-item in-production">
+                  <input
+                    type="checkbox"
+                    defaultChecked={filterProduction}
+                    onChange={(e) =>
+                      handleStatusChange(e.target.defaultChecked, "production")
+                    }
+                  />{" "}
+                  In Production
+                </label>
               </div>
               <div className="filter-column">
                 <label className="filter-item upholstery-sewn">
@@ -948,16 +927,6 @@ function Schedule() {
                   />{" "}
                   Complete
                 </label>
-                <label className="filter-item in-production">
-                  <input
-                    type="checkbox"
-                    defaultChecked={filterProduction}
-                    onChange={(e) =>
-                      handleStatusChange(e.target.defaultChecked, "production")
-                    }
-                  />{" "}
-                  In Production
-                </label>
               </div>
             </div>
           </div>
@@ -975,10 +944,10 @@ function Schedule() {
             cushions={cushions}
             upholstery={upholstery}
             handleJobClick={displayJobDetails}
-            invoiceIDTerm={filterInvoiceID}
             clientTerm={filterClient}
             jobNameTerm={filterJobName}
             dueDateTerm={filterDueDate}
+            yearTerm={selectedYear}
             cutTerm={filterCut}
             sewnTerm={filterSewn}
             upholsterTerm={filterUpholster}
