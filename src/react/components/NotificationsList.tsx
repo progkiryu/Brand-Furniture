@@ -14,9 +14,7 @@ export default function NotificationsList({ notifsParams }: Props) {
     <div className="notifications-list">
       {notifsParams.map((notif, index) => (
         <div key={index} className="notification-card">
-          <div className="notif-icon">
-            {iconMap[notif.icon ?? "cart"]}
-          </div>
+          <div className="notif-icon">{iconMap[notif.icon ?? "cart"]}</div>
           <div className="notif-content">
             <div className="notif-title">{notif.notifTitle}</div>
             <div className="notif-desc">{notif.notifDesc}</div>
@@ -27,4 +25,3 @@ export default function NotificationsList({ notifsParams }: Props) {
     </div>
   );
 }
-
