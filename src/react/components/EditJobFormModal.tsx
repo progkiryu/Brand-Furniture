@@ -81,7 +81,6 @@ function EditJobFormModal({ isOpen, onClose, jobToEdit, onUpdateJob, onDeleteJob
             setLiaison('');
             setPaymentNote('');
         }
-        if (jobToEdit) console.log(jobToEdit.isArchived);
     }, [isOpen, jobToEdit]);
 
     // If modal is not open, return null to not render anything
