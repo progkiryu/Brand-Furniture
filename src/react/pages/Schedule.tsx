@@ -3,7 +3,13 @@ import "../styles/Global.css";
 import "../styles/ModalForm.css";
 import "../styles/SubJobModalForm.css"; // Ensure this CSS file exists or create it if needed
 
-import { createJob, updateJob, getAllJobs, deleteJob } from "../api/jobAPI"; // Import deleteJobById
+import {
+  createJob,
+  updateJob,
+  getAllJobs,
+  deleteJob,
+  getPinnedJobs,
+} from "../api/jobAPI"; // Import deleteJobById
 import {
   createSubJob,
   getAllSubJobs,
@@ -30,9 +36,24 @@ import EditFrameFormModal from "../components/EditFrameFormModal";
 import EditCushionFormModal from "../components/EditCushionFormModal";
 import EditUpholsteryFormModal from "../components/EditUpholsteryFormModal";
 
-import { getAllFrames, createFrame, updateFrame, deleteFrameById } from "../api/frameAPI"; // Import updateFrame, deleteFrameById
-import { getAllCushions, createCushion, updateCushion, deleteCushionById } from "../api/cushionAPI"; // Import updateCushion, deleteCushionById
-import { getAllUpholstery, createUpholstery, updateUpholstery, deleteUpholstery } from "../api/upholsteryAPI"; // Import updateUpholstery, deleteUpholstery
+import {
+  getAllFrames,
+  createFrame,
+  updateFrame,
+  deleteFrameById,
+} from "../api/frameAPI"; // Import updateFrame, deleteFrameById
+import {
+  getAllCushions,
+  createCushion,
+  updateCushion,
+  deleteCushionById,
+} from "../api/cushionAPI"; // Import updateCushion, deleteCushionById
+import {
+  getAllUpholstery,
+  createUpholstery,
+  updateUpholstery,
+  deleteUpholstery,
+} from "../api/upholsteryAPI"; // Import updateUpholstery, deleteUpholstery
 
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
@@ -61,6 +82,7 @@ function Schedule() {
 
   const [jobs, setJobs] = useState<Job[]>([]);
   const [subJobs, setSubJobs] = useState<SubJob[]>([]);
+  const [pinnedJobs, setPinnedJobs] = useState<Job[]>([]);
 
   const [selectedSubJobs, setSelectedSubJobs] = useState<SubJob[]>([]);
   const [isAddJobModelOpen, setIsAddJobModelOpen] = useState<boolean>(false);
@@ -134,7 +156,7 @@ function Schedule() {
 
   const reload = () => {
     reloadState === true ? setReloadState(false) : setReloadState(true);
-  }
+  };
 
   useEffect(() => {
     if (location.state !== null) {
@@ -145,9 +167,15 @@ function Schedule() {
 
       const fetchJobs = async () => {
         const jobsPromise = getAllJobs();
+        const pinnedJobsPromise = getPinnedJobs();
         try {
-          const [fetchJobs] = await Promise.all([jobsPromise]);
+          const [fetchJobs, fetchPinnedJobs] = await Promise.all([
+            jobsPromise,
+            pinnedJobsPromise,
+          ]);
           setJobs(fetchJobs);
+          setPinnedJobs(fetchPinnedJobs);
+          organiseJobs(fetchJobs, fetchPinnedJobs);
         } catch (err) {
           console.error("Could not fetch Jobs!");
         }
@@ -158,6 +186,7 @@ function Schedule() {
     } else {
       const fetchJobs = async () => {
         const jobsPromise = getAllJobs();
+        const pinnedJobsPromise = getPinnedJobs();
         const subJobsPromise = getAllSubJobs();
         const cushionsPromise = getAllCushions();
         const framesPromise = getAllFrames();
@@ -165,22 +194,28 @@ function Schedule() {
 
         try {
           const [
-            fetchJobs, 
-            fetchSubJobs, 
-            fetchCushions, 
-            fetchFrames, 
-            fetchUpholstery] = await Promise.all([jobsPromise, 
-                                                  subJobsPromise,
-                                                  cushionsPromise,
-                                                  framesPromise,
-                                                  upholsteryPromise]);
+            fetchJobs,
+            fetchPinnedJobs,
+            fetchSubJobs,
+            fetchCushions,
+            fetchFrames,
+            fetchUpholstery,
+          ] = await Promise.all([
+            jobsPromise,
+            pinnedJobsPromise,
+            subJobsPromise,
+            cushionsPromise,
+            framesPromise,
+            upholsteryPromise,
+          ]);
           setJobs(fetchJobs);
+          setPinnedJobs(fetchPinnedJobs);
           setSubJobs(fetchSubJobs);
           setCushions(fetchCushions);
           setFrames(fetchFrames);
           setUpholstery(fetchUpholstery);
-        }
-        catch (err) {
+          organiseJobs(fetchJobs, fetchPinnedJobs);
+        } catch (err) {
           console.error("Could not fetch Jobs!");
         }
       };
@@ -207,6 +242,29 @@ function Schedule() {
     };
   }, [dropdownOpen]);
 
+  // Organise job list to push pinned jobs to top
+  const organiseJobs = (allJobs: Job[], pinnedJobs: Job[]) => {
+    const organisedArray: Job[] = [];
+    let match = false;
+    // Create a new array without pinned Jobs
+    for (let i = 0; i < allJobs.length; i++) {
+      for (let j = 0; j < pinnedJobs.length; j++) {
+        if (allJobs[i]._id === pinnedJobs[j]._id) {
+          match = true;
+        }
+      }
+      if (match === false) {
+        organisedArray.push(allJobs[i]);
+      }
+      match = false;
+    }
+    // Add the pinned jobs to new job array, accounted for due date
+    for (let i = pinnedJobs.length - 1; i >= 0; i--) {
+      organisedArray.unshift(pinnedJobs[i]);
+    }
+    setJobs(organisedArray);
+  };
+
   // Handler for when the search input changes
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
@@ -228,45 +286,44 @@ function Schedule() {
     setIsEditJobModalOpen(true);
   };
 
-
   const handleDeleteJob = async (jobId: string) => {
     try {
-        const jobs = await getSubJobsByJobId(jobId);
-        if (jobs) {
-            for (const job of jobs) {
-                await deleteSubJob(job._id);
-            }
+      const jobs = await getSubJobsByJobId(jobId);
+      if (jobs) {
+        for (const job of jobs) {
+          await deleteSubJob(job._id);
         }
-        const success = await deleteJob(jobId);
-        if (success) {
-            const jobsPromise = getAllJobs();
-            const subJobsPromise = getAllSubJobs();
-            const [fetchJobs, fetchSubJobs] = await Promise.all([
-                jobsPromise,
-                subJobsPromise,
-            ]);
-            setJobs(fetchJobs);
-            setSelectedSubJobs(fetchSubJobs);
-            setIsEditJobModalOpen(false);
-            setJobToEdit(null);
-            setSelected(false);
-        } else {
-            console.error("Failed to delete job.");
-        }
+      }
+      const success = await deleteJob(jobId);
+      if (success) {
+        const jobsPromise = getAllJobs();
+        const subJobsPromise = getAllSubJobs();
+        const [fetchJobs, fetchSubJobs] = await Promise.all([
+          jobsPromise,
+          subJobsPromise,
+        ]);
+        setJobs(fetchJobs);
+        setSelectedSubJobs(fetchSubJobs);
+        setIsEditJobModalOpen(false);
+        setJobToEdit(null);
+        setSelected(false);
+      } else {
+        console.error("Failed to delete job.");
+      }
     } catch (err) {
-        console.error("Error deleting job and its sub-jobs: ", err);
-        const success = await deleteJob(jobId);
-        if (success) {
-          setJobs((prevJobs) => prevJobs.filter((job) => job._id !== jobId));
-          setIsEditJobModalOpen(false);
-          setJobToEdit(null);
-          setSubJobs([]); // Clear subjobs as well
-          reload();
-        } else {
-          console.error("Failed to delete job.");
-        }
-    };
-  }
+      console.error("Error deleting job and its sub-jobs: ", err);
+      const success = await deleteJob(jobId);
+      if (success) {
+        setJobs((prevJobs) => prevJobs.filter((job) => job._id !== jobId));
+        setIsEditJobModalOpen(false);
+        setJobToEdit(null);
+        setSubJobs([]); // Clear subjobs as well
+        reload();
+      } else {
+        console.error("Failed to delete job.");
+      }
+    }
+  };
 
   const handleUpdateJob = async (updatedData: Job) => {
     const updatedJobFromServer = await updateJob(updatedData);
@@ -716,7 +773,7 @@ function Schedule() {
 
   const handleArchiveChange = (checked: boolean) => {
     checked === true ? setFilterArchive(false) : setFilterArchive(true);
-  }
+  };
 
   const openEditSubJobModal = (subJob: SubJob) => {
     setSubJobToEdit(subJob);
@@ -884,9 +941,11 @@ function Schedule() {
             </div>
             <div id="archive-container">
               <label>
-                <input type="checkbox" 
-                defaultChecked={filterArchive} 
-                onChange={(e) => handleArchiveChange(e.target.defaultChecked)}/>
+                <input
+                  type="checkbox"
+                  defaultChecked={filterArchive}
+                  onChange={(e) => handleArchiveChange(e.target.defaultChecked)}
+                />
                 Archive
               </label>
             </div>
@@ -903,7 +962,7 @@ function Schedule() {
                     onChange={(e) =>
                       handleStatusChange(e.target.defaultChecked, "cut")
                     }
-                  />{" "}
+                  />
                   Upholstery Cut
                 </label>
                 <label className="filter-item body-upholstered">
@@ -961,8 +1020,7 @@ function Schedule() {
               </div>
             </div>
           </div>
-        </div>{" "}
-
+        </div>
         {/* This closes the #filter-container div */}
         <div id="order-container">
           {/* Left Column - Job Name */}
@@ -989,7 +1047,6 @@ function Schedule() {
             onEditJobClick={handleEditJobClick}
             initialSelectedJobId={initialSelectedJob?._id || null}
           />
-          
 
           {/* Right Column - Job Components */}
           <div id="components-section-wrapper">

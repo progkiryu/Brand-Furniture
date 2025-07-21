@@ -21,7 +21,7 @@ export type TypeInfoDash = {
 };
 
 function Dashboard() {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  // const [isLoading, setIsLoading] = useState<boolean>(true);
   const [reloader, setReloader] = useState<boolean>(false);
   const [isAddJobModelOpen, setIsAddJobModelOpen] = useState<boolean>(false);
 
@@ -34,11 +34,7 @@ function Dashboard() {
 
   const reload = () => {
     // Reloads since tracked in useEffect
-    if (reloader === true) {
-      setReloader(false);
-    } else {
-      setReloader(true);
-    }
+    reloader === true ? setReloader(false) : setReloader(true);
   };
 
   const getJobMetrics = async () => {
@@ -85,12 +81,11 @@ function Dashboard() {
   const organiseJobs = (allJobs: Job[], pinnedJobs: Job[]) => {
     const organisedArray: Job[] = [];
     let match = false;
-
     // Create a new array without pinned Jobs
     for (let i = 0; i < allJobs.length; i++) {
       for (let j = 0; j < pinnedJobs.length; j++) {
         if (allJobs[i]._id === pinnedJobs[j]._id) {
-          match = true; // Matching ID with pinnedJob
+          match = true;
         }
       }
       if (match === false) {
@@ -98,7 +93,6 @@ function Dashboard() {
       }
       match = false;
     }
-
     // Add the pinned jobs to new job array, accounted for due date
     for (let i = pinnedJobs.length - 1; i >= 0; i--) {
       organisedArray.unshift(pinnedJobs[i]);
@@ -119,7 +113,7 @@ function Dashboard() {
 
   useEffect(() => {
     const fetchData = async () => {
-      setIsLoading(true);
+      // setIsLoading(true);
 
       const allJobsPromise = getAllJobs();
       const pinnedJobsPromise = getPinnedJobs();
@@ -139,19 +133,20 @@ function Dashboard() {
       }
       getJobMetrics(); // Get data for pie chart
 
-      setIsLoading(false);
+      // setIsLoading(false);
     };
     fetchData();
   }, [reloader]);
 
-  return isLoading ? (
-    <>
-      <Navbar />
-      <div>
-        <h1>Loading...</h1>
-      </div>
-    </>
-  ) : (
+  return (
+    // isLoading ? (
+    //   <>
+    //     <Navbar />
+    //     <div>
+    //       <h1>Loading...</h1>
+    //     </div>
+    //   </>
+    // ) :
     <>
       <Navbar />
       <div id="first-container">

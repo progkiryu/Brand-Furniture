@@ -1,0 +1,14 @@
+.icon-container {
+  width: 20px;
+  min-height: 80px;
+  padding: 5px;
+  align-items: center;
+  justify-content: center;
+  display: grid;
+}
+
+.icon-edit,
+.icon-pin {
+  min-height: 20px;
+  min-width: 20px;
+}
