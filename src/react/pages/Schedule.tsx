@@ -724,6 +724,26 @@ function Schedule() {
       <Navbar />
       <div id="first-container">
         <div id="schedule-first-container">
+          <div id="add-job-wrapper">
+            <div id="add-job-container">
+              <button
+                onClick={() => setIsAddJobModelOpen(true)}
+                className="add-job-btn"
+              >
+                Add Job
+              </button>
+            </div>
+            <div id="archive-container">
+              <label>
+                <input type="checkbox" 
+                defaultChecked={filterArchive} 
+                onChange={(e) => handleArchiveChange(e.target.defaultChecked)}/>
+                Show Archived Jobs
+              </label>
+            </div>
+          </div>
+
+          
           <div id="search-and-dropdown-container">
             <div id="search-container">
               <SearchBar
@@ -842,24 +862,7 @@ function Schedule() {
             </div>
           </div>
 
-          <div id="add-job-wrapper">
-            <div id="add-job-container">
-              <button
-                onClick={() => setIsAddJobModelOpen(true)}
-                className="add-job-btn"
-              >
-                Add Job
-              </button>
-            </div>
-            <div id="archive-container">
-              <label>
-                <input type="checkbox" 
-                defaultChecked={filterArchive} 
-                onChange={(e) => handleArchiveChange(e.target.defaultChecked)}/>
-                Archive
-              </label>
-            </div>
-          </div>
+          
 
           <div id="filter-container">
             {/* filter-checkboxes stay unchanged here */}
