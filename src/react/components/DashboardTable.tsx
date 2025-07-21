@@ -35,15 +35,9 @@ function DashboardTable({ jobsParams }: DashboardTableProps) {
     if (!job._id) {
       return;
     }
-
     // Aternate job isPinned to true/false
     let isPinned: boolean = job.isPinned ? job.isPinned : false;
-    if (job.isPinned) {
-      isPinned = false;
-    } else {
-      isPinned = true;
-    }
-
+    job.isPinned === true ? (isPinned = false) : (isPinned = true);
     // Create updated job obj
     const temp: Job = {
       _id: job._id,
@@ -52,9 +46,8 @@ function DashboardTable({ jobsParams }: DashboardTableProps) {
       type: job.type,
       due: job.due,
       isPinned: isPinned,
-      isArchived: job.isArchived
+      isArchived: job.isArchived,
     };
-
     updateJob(temp);
     window.location.reload();
   };
@@ -88,10 +81,10 @@ function DashboardTable({ jobsParams }: DashboardTableProps) {
             }}
           >
             <span>
-            {job.due
-              ? new Date(job.due).toLocaleDateString('en-GB')   // “DD/MM/YYYY”
-              : '—'}
-          </span>
+              {job.due
+                ? new Date(job.due).toLocaleDateString("en-GB") // “DD/MM/YYYY”
+                : "—"}
+            </span>
 
             <span className="icon-wrapper-vertical">
               {job.isPinned === true ? (

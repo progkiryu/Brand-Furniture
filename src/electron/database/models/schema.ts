@@ -27,7 +27,7 @@ const subJobSchema = new mongoose.Schema(
     jobId: { type: String, required: true },
     subJobDetail: { type: String, required: true },
     note: { type: String, default: "" },
-    file: { type: String, default: "" },
+    file:  { type: [String], default: [] },
     dueDate: { type: Date, required: false },
     frameList: { type: [String], default: [] },
     cushionList: { type: [String], default: [] },
