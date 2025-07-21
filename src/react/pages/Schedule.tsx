@@ -963,6 +963,12 @@ function Schedule() {
           {/* Right Column - Job Components */}
           <div id="components-section-wrapper">
             <div className="job-section-header">Job Components</div>
+            <div className="job-components-header">
+              <div>Details</div>
+              <div>Frames/Parts</div>
+              <div>Cushion</div>
+              <div>Upholstery</div>
+            </div>
             <div id="job-detail-container">
               {hasSelected && (
                 <SubJobTable
