@@ -61,6 +61,8 @@
     margin-bottom: 20px;
     text-align: center;
     font-weight: 600;
+    overflow-wrap: break-word; 
+    white-space: normal; 
 }
 
 .form-group {

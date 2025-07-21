@@ -17,9 +17,10 @@ const STATUS_CLASS: Record<string, string> = {
 
 interface SubJobTableRowProps {
   subJobParam: SubJob;
-  onAddFrameClick: (subJobId: string, subJobDetail: string) => void;
-  onAddCushionClick: (subJobId: string, subJobDetail: string) => void;
-  onAddUpholsteryClick: (subJobId: string, subJobDetail: string) => void;
+  index: number;
+  onAddFrameClick: (subJobId: String, subJobDetail: String) => void;
+  onAddCushionClick: (subJobId: String, subJobDetail: String) => void;
+  onAddUpholsteryClick: (subJobId: String, subJobDetail: String) => void;
   onEditSubJobClick: (subJob: SubJob) => void;
   onEditFrameClick: (frame: Frame) => void;
   onEditCushionClick: (cushion: Cushion) => void;
@@ -28,6 +29,7 @@ interface SubJobTableRowProps {
 
 const SubJobTableRow: React.FC<SubJobTableRowProps> = ({
   subJobParam,
+  index,
   onAddFrameClick,
   onAddCushionClick,
   onAddUpholsteryClick,
@@ -59,126 +61,202 @@ const SubJobTableRow: React.FC<SubJobTableRowProps> = ({
     subJobParam._id,
   ]);
 
-  return (
-    <div className="job-component-row">
-      {/* SUB-JOB COLUMN */}
-      <div className="component-card">
-        <div className="component-section">
-          <div className="card-header">
-            <h4>Job</h4>
-            <Pencil
-              className="edit-icon"
-              onClick={() => onEditSubJobClick(subJobParam)}
-            />
-          </div>
-          <p>{subJobParam.subJobDetail}</p>
-        </div>
-        <div className="component-section">
-          <div className="card-header"><h4>Notes</h4></div>
-          <p>{subJobParam.note}</p>
-        </div>
-        <div className="component-section">
-          <div className="card-header"><h4>Files</h4></div>
-          <p><i>{subJobParam.file || "No file uploaded"}</i></p>
-        </div>
-      </div>
+  /**
+   * Handles click on the file link by sending a message to the main process
+   * to open the URL in the system's default browser.
+   * @param url The URL to open.
+   */
+  const handleLinkClick =
+    (url: string) => (event: React.MouseEvent<HTMLAnchorElement>) => {
+      event.preventDefault(); // Prevents the default HTML link behavior
 
-      {/* FRAME COLUMN */}
-      <div className="component-card">
-        {frames.map((frame, idx) => {
-          const cls = STATUS_CLASS[frame.status || ""] || "";
-          return (
-            <div
-              key={frame._id}
-              className={`component-section ${cls}`}
-            >
+      if (window.electron) {
+        // --- Corrected Line ---
+        // Ensure the URL is a primitive string before sending it to the main process
+        window.electron.openExternalLink(String(url));
+      } else {
+        window.open(url, "_blank");
+      }
+    };
+
+  return (
+    <>
+      <div className="sub-job-title">
+        <h4>Component #{index + 1}</h4>
+        <Pencil
+          className="edit-icon"
+          onClick={() => onEditSubJobClick(subJobParam)}
+        />
+      </div>
+      <div className="job-component-row">
+        {/* === SUB-JOB COLUMN === */}
+        {/* JOB CARD */}
+        <div className="component-card">
+          {/* JOB CARD */}
+          <div className="component-section">
+            <div className="card-header">
+              <h4>Job</h4>
+            </div>
+            <p>{subJobParam.subJobDetail}</p>
+          </div>
+
+          {/* NOTES CARD */}
+          <div className="component-section">
+            <div className="card-header">
+              <h4>Notes</h4>
+            </div>
+            <p>{subJobParam.note}</p>
+          </div>
+
+          {/* FILES CARD */}
+          <div className="component-section">
+            <div className="card-header">
+              <h4>Links</h4>
+              <p></p>
+            </div>
+            {/* <p><i>{subJobParam.file || "No file uploaded"}</i></p> */}
+            {subJobParam.file && subJobParam.file.length > 0
+              ? subJobParam.file.map((fileUrl, index) => (
+                  <div key={index}>
+                    <a
+                      href={fileUrl}
+                      onClick={handleLinkClick(fileUrl)}
+                      className="file-link"
+                    >
+                      {fileUrl}
+                      <p></p>
+                    </a>
+                  </div>
+                ))
+              : "—"}
+          </div>
+        </div>
+
+        {/* === FRAME COLUMN === */}
+        <div className="component-card">
+          {frames.map((frame, index) => (
+            <div key={String(frame._id)} className="component-section">
               <div className="card-header">
-                <h4>Frame {idx + 1}</h4>
+                <h4>Frame {index + 1}</h4>
                 <Pencil
                   className="edit-icon"
                   onClick={() => onEditFrameClick(frame)}
                 />
               </div>
-              <p><strong>Supplier:</strong> {frame.supplier}</p>
-              <p><strong>Ordered:</strong>  {frame.orderedDate  ? String(frame.orderedDate)  : "—"}</p>
-              <p><strong>Received:</strong> {frame.receivedDate ? String(frame.receivedDate) : "—"}</p>
-            </div>
-          );
-        })}
-        <button
-          className="add-btn"
-          onClick={() =>
-            onAddFrameClick(subJobParam._id as string, subJobParam.subJobDetail)
-          }
-        >
-          +
-        </button>
-      </div>
+              <p>
+                <strong>Supplier:</strong> {frame.supplier}
+              </p>
+              <p>
+                <strong>Ordered:</strong>{" "}
+                {frame.orderedDate
+                  ? new Date(frame.orderedDate).toLocaleDateString("en-GB")
+                  : "—"}
+              </p>
 
-      {/* CUSHION COLUMN */}
-      <div className="component-card">
-        {cushions.map((cushion, idx) => {
-          const cls = STATUS_CLASS[cushion.status || ""] || "";
-          return (
-            <div
-              key={cushion._id}
-              className={`component-section ${cls}`}
-            >
+              <p>
+                <strong>Received:</strong>{" "}
+                {frame.receivedDate
+                  ? new Date(frame.receivedDate).toLocaleDateString("en-GB")
+                  : "—"}
+              </p>
+            </div>
+          ))}
+          <button
+            className="add-btn"
+            onClick={() =>
+              onAddFrameClick(
+                subJobParam._id as String,
+                subJobParam.subJobDetail as String
+              )
+            }
+          >
+            +
+          </button>
+        </div>
+
+        {/* === CUSHION COLUMN === */}
+        <div className="component-card">
+          {cushions.map((cushion, index) => (
+            <div key={String(cushion._id)} className="component-section">
               <div className="card-header">
-                <h4>Cushion {idx + 1}</h4>
+                <h4>Cushion {index + 1}</h4>
                 <Pencil
                   className="edit-icon"
                   onClick={() => onEditCushionClick(cushion)}
                 />
               </div>
-              <p><strong>Ordered:</strong>  {cushion.orderedDate  ? String(cushion.orderedDate)  : "—"}</p>
-              <p><strong>Received:</strong> {cushion.receivedDate ? String(cushion.receivedDate) : "—"}</p>
+              <p>
+                <strong>Ordered:</strong>{" "}
+                {cushion.orderedDate
+                  ? new Date(cushion.orderedDate).toLocaleDateString("en-GB")
+                  : "—"}
+              </p>
+              <p>
+                <strong>Received:</strong>{" "}
+                {cushion.receivedDate
+                  ? new Date(cushion.receivedDate).toLocaleDateString("en-GB")
+                  : "—"}
+              </p>
             </div>
-          );
-        })}
-        <button
-          className="add-btn"
-          onClick={() =>
-            onAddCushionClick(subJobParam._id as string, subJobParam.subJobDetail)
-          }
-        >
-          +
-        </button>
-      </div>
+          ))}
+          <button
+            className="add-btn"
+            onClick={() =>
+              onAddCushionClick(
+                subJobParam._id as String,
+                subJobParam.subJobDetail as String
+              )
+            }
+          >
+            +
+          </button>
+        </div>
 
-      {/* UPHOLSTERY COLUMN */}
-      <div className="component-card">
-        {upholstery.map((u, idx) => {
-          const cls = STATUS_CLASS[u.status || ""] || "";
-          return (
-            <div
-              key={u._id}
-              className={`component-section ${cls}`}
-            >
+        {/* === UPHOLSTERY COLUMN === */}
+        <div className="component-card">
+          {upholstery.map((u, index) => (
+            <div key={String(u._id)} className="component-section">
               <div className="card-header">
-                <h4>Upholstery {idx + 1}</h4>
+                <h4>Upholstery {index + 1}</h4>
                 <Pencil
                   className="edit-icon"
                   onClick={() => onEditUpholsteryClick(u)}
                 />
               </div>
-              <p><strong>Type:</strong>        {u.type}</p>
-              <p><strong>Description:</strong> {u.description}</p>
-              <p><strong>Ordered:</strong>     {u.orderedDate  ? String(u.orderedDate)  : "—"}</p>
-              <p><strong>Received:</strong>    {u.receivedDate ? String(u.receivedDate) : "—"}</p>
+              <p>
+                <strong>Type:</strong> {u.type}
+              </p>
+              <p>
+                <strong>Description:</strong> {u.description}
+              </p>
+              <p>
+                <strong>Ordered:</strong>{" "}
+                {u.orderedDate
+                  ? new Date(u.orderedDate).toLocaleDateString("en-GB")
+                  : "—"}
+              </p>
+              <p>
+                <strong>Received:</strong>{" "}
+                {u.receivedDate
+                  ? new Date(u.receivedDate).toLocaleDateString("en-GB")
+                  : "—"}
+              </p>
             </div>
-          );
-        })}
-        <button
-          className="add-btn"
-          onClick={() =>
-            onAddUpholsteryClick(subJobParam._id as string, subJobParam.subJobDetail)
-          }
-        >
-          +
-        </button>
+          ))}
+          <button
+            className="add-btn"
+            onClick={() =>
+              onAddUpholsteryClick(
+                subJobParam._id as String,
+                subJobParam.subJobDetail as String
+              )
+            }
+          >
+            +
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
