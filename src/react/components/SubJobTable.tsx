@@ -32,12 +32,12 @@ function SubJobTable({
 
   return (
     <div className="job-components-wrapper">
-      <div className="job-components-header">
+      {/* <div className="job-components-header">
         <div>Details</div>
         <div>Frames/Parts</div>
         <div>Cushion</div>
         <div>Upholstery</div>
-      </div>
+      </div> */}
 
       <div className="job-components-body">
         {subJobs.map((subJob, index) => (

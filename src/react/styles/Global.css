@@ -59,6 +59,10 @@ p {
     box-sizing: border-box; */
 }
 
+#navBar-container a:first-child {
+    padding: 0px;
+}
+
 #navBar-container a {
   color: #ACB7C3;
   text-decoration: none;
@@ -74,6 +78,16 @@ p {
     background-color: #1B263B;
     color: #FFFFFF;
 }
+
+
+#navBar-container img {
+    width: 100%;
+}
+
+.logo-container {
+    background-color: black;
+}
+
 
 #header-container {
     /* background-color: #1B263B;
