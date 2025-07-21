@@ -21,6 +21,17 @@ export const insertNotification = async (data: Notif) => {
     .catch((err) => console.log(err));
 };
 
+// export const updateNotification = async (id: string, data: Partial<Notif>) => {
+//   fetch(`${DBLink}/notification/updateNotification`, {
+//     method: "PUT",
+//     mode: "cors",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify(data),
+//   })
+//   .then((res) => res.json())
+//   .catch((err) => console.log(err));
+// };
+
 export const removeNotification = async (id: String) => {
   fetch(`${DBLink}/notification/removeNotification/${id}`, {
     method: "DELETE",

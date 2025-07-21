@@ -20,8 +20,8 @@ export default function NotificationsList({ notifsParams }: Props) {
           <div className="notif-content">
             <div className="notif-title">{notif.notifTitle}</div>
             <div className="notif-desc">{notif.notifDesc}</div>
+            <div className="notif-time">{String(notif.time)}</div>
           </div>
-          <div className="notif-time">{String(notif.time)}</div>
         </div>
       ))}
     </div>

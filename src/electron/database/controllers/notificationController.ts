@@ -39,6 +39,30 @@ export const insertNotification = async (
     }
 }
 
+// export const updateNotification = async (
+//     req: express.Request,
+//     res: express.Response
+// ) => {
+//     try {
+//         const id = req.params.id;
+        
+//         if (!id) {
+//             res.status(404).json({ message: "Failed to provide notification ID!"});
+//         }
+
+//          const result = await schemas.Notif.findByIdAndUpdate<Notif>();
+
+//          if (!result) {
+//             res.status(404).json({ message: `Failed to find job with ID: ${id}! Or could not process request.` });
+//          }
+
+//          res.status(200).json(result).end();
+//     }
+//     catch(err) {
+//         res.status(400).json(err).end();
+//     }
+// }
+
 export const removeNotification = async (
     req: express.Request,
     res: express.Response
