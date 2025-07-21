@@ -348,9 +348,6 @@ function Analytics() {
     <>
       <Navbar />
       <div id="first-container">
-        <div id="header-container">
-          <h1>Analytics</h1>
-        </div>
 
         <div className="date-range-selector">
           <label htmlFor="range">View data for: </label>

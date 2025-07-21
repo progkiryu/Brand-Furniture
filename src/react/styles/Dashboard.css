@@ -124,11 +124,6 @@ th {
   z-index: 1;
 }
 
-/* .upcoming-orders-scroll-container {
-    flex-grow: 1;
-    overflow-y: auto;
-    margin-top: 1rem;
-} */
 
 .upcoming-orders-table {
     width: 100%;

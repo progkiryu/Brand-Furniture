@@ -147,9 +147,6 @@ function Dashboard() {
     <>
       <Navbar />
       <div id="first-container">
-        <div id="header-container">
-          <h1>Dashboard</h1>
-        </div>
         <div id="dashboard-first-container">
           <div id="dashboard-second-container">
             <div id="schedule-container">
