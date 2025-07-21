@@ -740,13 +740,12 @@
     margin-top: 12px;
   }
 
-/* in Schedule.css (or SubJobTableRow.css) */
-
-.status-cut          { background-color: #fdfcb6; }
-.status-upholstered  { background-color: #d6f6d2; }
-.status-sewn         { background-color: #f9a8a8; }
-.status-foamed       { background-color: #b0cfff; }
-.status-complete     { background-color: #cccccc; }
-.status-production   { background-color: #e9e9e9; }
 
 }
+
+.status-cut          { background-color: #fdfcb6; } /* yellow */
+.status-upholstered  { background-color: #d6f6d2; } /* green */
+.status-sewn         { background-color: #f9a8a8; } /* red */
+.status-foamed       { background-color: #b0cfff; } /* blue */
+.status-complete     { background-color: #cccccc; } /* grey */
+.status-production   { background-color: #ffffff; } /* white */
