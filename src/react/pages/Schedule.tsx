@@ -719,7 +719,7 @@ function Schedule() {
 
   const handleSelectYear = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedYear(event.target.value);
-  }
+  };
 
   const generateYears = () => {
     const currentYear = new Date().getFullYear();
@@ -731,7 +731,7 @@ function Schedule() {
       years.push(year);
     }
     return years;
-  }
+  };
 
   const handleStatusChange = (checked: boolean, status: String) => {
     if (status === "cut") {
@@ -800,13 +800,17 @@ function Schedule() {
                   <div className="sort-option-group">
                     <strong>Year</strong>
                     <label>
-                      <select name="option" value={selectedYear} onChange={handleSelectYear}>
+                      <select
+                        name="option"
+                        value={selectedYear}
+                        onChange={handleSelectYear}
+                      >
                         <option value="--">--</option>
-                        {
-                          generateYears().map((year: number) => (
-                            <option key={year} value={String(year)}>{year}</option>
-                          ))
-                        }
+                        {generateYears().map((year: number) => (
+                          <option key={year} value={String(year)}>
+                            {year}
+                          </option>
+                        ))}
                       </select>
                     </label>
 

@@ -438,6 +438,7 @@ function JobTable({
       isArchived: job.isArchived,
     };
     updateJob(temp);
+    window.location.reload();
   };
 
   useEffect(() => {
