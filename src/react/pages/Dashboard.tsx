@@ -8,7 +8,8 @@ import NotificationsList from "../components/NotificationsList";
 
 import {
   createJob,
-  getAllJobs,
+  // getAllJobs,
+  getCurrentJobs,
   getFilteredJobsByDate,
   getPinnedJobs,
 } from "../api/jobAPI.tsx";
@@ -112,7 +113,8 @@ function Dashboard() {
     const fetchData = async () => {
       // setIsLoading(true);
 
-      const allJobsPromise = getAllJobs();
+      // const allJobsPromise = getAllJobs();
+      const allJobsPromise = getCurrentJobs();
       const pinnedJobsPromise = getPinnedJobs();
       const notifPromise = getAllNotifications();
       try {
