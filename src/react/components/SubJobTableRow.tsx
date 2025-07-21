@@ -64,7 +64,10 @@ function SubJobTableRow({
         <div className="component-section">
           <div className="card-header">
             <h4>Job</h4>
-            <Pencil className="edit-icon" onClick={() => onEditSubJobClick(subJobParam)} />
+            <Pencil
+              className="edit-icon"
+              onClick={() => onEditSubJobClick(subJobParam)}
+            />
           </div>
           <p>{subJobParam.subJobDetail}</p>
         </div>
@@ -82,11 +85,11 @@ function SubJobTableRow({
           <div className="card-header">
             <h4>Files</h4>
           </div>
-          <p><i>{subJobParam.file || "No file uploaded"}</i></p>
-
+          <p>
+            <i>{subJobParam.file || "No file uploaded"}</i>
+          </p>
         </div>
       </div>
-
 
       {/* === FRAME COLUMN === */}
       <div className="component-card">
@@ -94,15 +97,35 @@ function SubJobTableRow({
           <div key={String(frame._id)} className="component-section">
             <div className="card-header">
               <h4>Frame {index + 1}</h4>
-              <Pencil className="edit-icon" onClick={() => onEditFrameClick(frame)} />
+              <Pencil
+                className="edit-icon"
+                onClick={() => onEditFrameClick(frame)}
+              />
             </div>
-            <p><strong>Supplier:</strong> {frame.supplier}</p>
-            <p><strong>Ordered:</strong> {frame.orderedDate ? String(frame.orderedDate) : "—"}</p>
-            <p><strong>Received:</strong> {frame.receivedDate ? String(frame.receivedDate) : "—"}</p>
-
+            <p>
+              <strong>Supplier:</strong> {frame.supplier}
+            </p>
+            <p>
+              <strong>Ordered:</strong>{" "}
+              {frame.orderedDate ? String(frame.orderedDate) : "—"}
+            </p>
+            <p>
+              <strong>Received:</strong>{" "}
+              {frame.receivedDate ? String(frame.receivedDate) : "—"}
+            </p>
           </div>
         ))}
-        <button className="add-btn" onClick={() => onAddFrameClick(subJobParam._id as String, subJobParam.subJobDetail as String)}>+</button>
+        <button
+          className="add-btn"
+          onClick={() =>
+            onAddFrameClick(
+              subJobParam._id as String,
+              subJobParam.subJobDetail as String
+            )
+          }
+        >
+          +
+        </button>
       </div>
 
       {/* === CUSHION COLUMN === */}
@@ -111,14 +134,32 @@ function SubJobTableRow({
           <div key={String(cushion._id)} className="component-section">
             <div className="card-header">
               <h4>Cushion {index + 1}</h4>
-              <Pencil className="edit-icon" onClick={() => onEditCushionClick(cushion)} />
+              <Pencil
+                className="edit-icon"
+                onClick={() => onEditCushionClick(cushion)}
+              />
             </div>
-            <p><strong>Ordered:</strong> {cushion.orderedDate ? String(cushion.orderedDate) : "—"}</p>
-            <p><strong>Received:</strong> {cushion.receivedDate ? String(cushion.receivedDate) : "—"}</p>
-
+            <p>
+              <strong>Ordered:</strong>{" "}
+              {cushion.orderedDate ? String(cushion.orderedDate) : "—"}
+            </p>
+            <p>
+              <strong>Received:</strong>{" "}
+              {cushion.receivedDate ? String(cushion.receivedDate) : "—"}
+            </p>
           </div>
         ))}
-        <button className="add-btn" onClick={() => onAddCushionClick(subJobParam._id as String, subJobParam.subJobDetail as String)}>+</button>
+        <button
+          className="add-btn"
+          onClick={() =>
+            onAddCushionClick(
+              subJobParam._id as String,
+              subJobParam.subJobDetail as String
+            )
+          }
+        >
+          +
+        </button>
       </div>
 
       {/* === UPHOLSTERY COLUMN === */}
@@ -127,16 +168,38 @@ function SubJobTableRow({
           <div key={String(u._id)} className="component-section">
             <div className="card-header">
               <h4>Upholstery {index + 1}</h4>
-              <Pencil className="edit-icon" onClick={() => onEditUpholsteryClick(u)} />
+              <Pencil
+                className="edit-icon"
+                onClick={() => onEditUpholsteryClick(u)}
+              />
             </div>
-            <p><strong>Type:</strong> {u.type}</p>
-            <p><strong>Description:</strong> {u.description}</p>
-            <p><strong>Ordered:</strong> {u.orderedDate ? String(u.orderedDate) : "—"}</p>
-            <p><strong>Received:</strong> {u.receivedDate ? String(u.receivedDate) : "—"}</p>
-
+            <p>
+              <strong>Type:</strong> {u.type}
+            </p>
+            <p>
+              <strong>Description:</strong> {u.description}
+            </p>
+            <p>
+              <strong>Ordered:</strong>{" "}
+              {u.orderedDate ? String(u.orderedDate) : "—"}
+            </p>
+            <p>
+              <strong>Received:</strong>{" "}
+              {u.receivedDate ? String(u.receivedDate) : "—"}
+            </p>
           </div>
         ))}
-        <button className="add-btn" onClick={() => onAddUpholsteryClick(subJobParam._id as String, subJobParam.subJobDetail as String)}>+</button>
+        <button
+          className="add-btn"
+          onClick={() =>
+            onAddUpholsteryClick(
+              subJobParam._id as String,
+              subJobParam.subJobDetail as String
+            )
+          }
+        >
+          +
+        </button>
       </div>
     </div>
   );

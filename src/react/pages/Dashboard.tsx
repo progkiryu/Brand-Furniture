@@ -21,12 +21,10 @@ export type TypeInfoDash = {
 };
 
 function Dashboard() {
-  // const [isLoading, setIsLoading] = useState<boolean>(true);
   const [reloader, setReloader] = useState<boolean>(false);
   const [isAddJobModelOpen, setIsAddJobModelOpen] = useState<boolean>(false);
 
   const [organisedJobs, setOrganisedJobs] = useState<Job[]>([]);
-  // const [allJobs, setAllJobs] = useState<Job[]>([]);
   const [notifs, setNotifs] = useState<Notif[]>([]);
   let jobTypes: string[] = [];
   let typeCounter: TypeInfoDash[] = [];
@@ -103,7 +101,6 @@ function Dashboard() {
   const handleAddJob = async (newJobData: Job) => {
     const addedJob = await createJob(newJobData);
     if (addedJob) {
-      // setAllJobs((prevJobs) => [...prevJobs, addedJob]);
       setIsAddJobModelOpen(false);
       reload();
     } else {
@@ -124,9 +121,7 @@ function Dashboard() {
           pinnedJobsPromise,
           notifPromise,
         ]);
-        // setAllJobs(allJobData);
         setNotifs(notifData);
-
         organiseJobs(allJobData, pinnedJobData);
       } catch (err) {
         console.error(err);

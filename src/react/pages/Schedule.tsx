@@ -82,7 +82,6 @@ function Schedule() {
 
   const [jobs, setJobs] = useState<Job[]>([]);
   const [subJobs, setSubJobs] = useState<SubJob[]>([]);
-  const [pinnedJobs, setPinnedJobs] = useState<Job[]>([]);
 
   const [selectedSubJobs, setSelectedSubJobs] = useState<SubJob[]>([]);
   const [isAddJobModelOpen, setIsAddJobModelOpen] = useState<boolean>(false);
@@ -174,7 +173,6 @@ function Schedule() {
             pinnedJobsPromise,
           ]);
           setJobs(fetchJobs);
-          setPinnedJobs(fetchPinnedJobs);
           organiseJobs(fetchJobs, fetchPinnedJobs);
         } catch (err) {
           console.error("Could not fetch Jobs!");
@@ -209,7 +207,6 @@ function Schedule() {
             upholsteryPromise,
           ]);
           setJobs(fetchJobs);
-          setPinnedJobs(fetchPinnedJobs);
           setSubJobs(fetchSubJobs);
           setCushions(fetchCushions);
           setFrames(fetchFrames);
