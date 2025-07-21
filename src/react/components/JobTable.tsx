@@ -402,6 +402,11 @@ function JobTable({
                 if (job.isArchived === true) return true;
             });
         }
+        else {
+            sortedJobs = sortedJobs.filter((job: Job) => {
+                if (job.isArchived === false) return true;
+            });
+        }
         return sortedJobs;
     }
 
