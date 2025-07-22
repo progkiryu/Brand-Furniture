@@ -1,15 +1,6 @@
 import { FaShoppingCart, FaThumbtack } from "react-icons/fa";
 import { MdClose } from "react-icons/md";
 
-interface Notif {
-  _id: string;
-  notifTitle: string;
-  notifDesc: string;
-  time: Date;
-  icon?: "cart" | "pin";
-  type? : "orderDue" | "general";
-}
-
 interface Props {
   notifsParams: Notif[];
   onremoveNotification: (id: string) => void;
@@ -103,13 +94,13 @@ export default function NotificationsList({ notifsParams }: Props) {
                 <div className="notif-title">{notifTitle}</div>
                 <div className="notif-desc">{notifDescription}</div>
               </div>
-              <button
+              {/* <button
                 className="notif-close-button"
                 onClick={() => onRemoveNotification(notif._id)}
                 aria-label="Remove notification"
               >
                 <MdClose />
-              </button>
+              </button> */}
             </div>
           );
         })

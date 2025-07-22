@@ -18,25 +18,21 @@ import {
 import { getAllNotifications, insertNotification, removeNotification } from "../api/notificationAPI.tsx";
 import AddJobFormModel from "../components/AddJobFormModel.tsx";
 
-type DashboardJob = {
-  _id: string;
-  name: string;
-  type: string;
-  dueDate: string;
-}
-
-type DashboardNotif = {
-  _id: string;
-  notifTitle: string;
-  notifDesc: string;
-  time: Date;
-  icon?: "cart" | "pin";
-  type?: "orderDue" | "general";
-}
-
 export type TypeInfoDash = {
   name: string;
   value: number;
+};
+
+// Helper function to calculate days until due
+const calculateDaysUntilDue = (dueDate: Date): number => {
+  const today = new Date();
+  const due = new Date(dueDate);
+
+  today.setHours(0, 0, 0, 0);
+  due.setHours(0, 0, 0, 0);
+  const diffTime = due.getTime() - today.getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  return diffDays;
 };
 
 function Dashboard() {
@@ -45,8 +41,7 @@ function Dashboard() {
 
   const [organisedJobs, setOrganisedJobs] = useState<Job[]>([]);
   const [notifs, setNotifs] = useState<Notif[]>([]);
-  
-  let jobTypes: string[] = [];
+
   let typeCounter: TypeInfoDash[] = [];
   const [JobAnalytics, setJobAnalytics] = useState<TypeInfoDash[]>([]);
 
@@ -107,50 +102,46 @@ function Dashboard() {
     const addedJob = await createJob(newJobData);
     if (addedJob) {
       setIsAddJobModelOpen(false);
-      await checkAndGenerateOrderDueNotification(addedJob);
       reload();
     } else {
       console.error("Failed to create job.");
     }
   };
 
-  const checkAndGenerateOrderDueNotification = async (job: DashboardJob) => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const dueDate = new Date(job.dueDate);
-    dueDate.setHours(0, 0, 0, 0);
+  const generateOrderDueNotification = () => {
+    const orderDueNotifications: Notif[] = [];
+    organisedJobs.forEach((job: Job) => {
+        const daysUntilDue = calculateDaysUntilDue(job.due);
+        if (daysUntilDue <= 7 && daysUntilDue >= 0) {
+          const dueTodayText = "Order due today";
+          const dueInDaysText = `Order due in ${daysUntilDue} days`;
+          const notifDesc = daysUntilDue === 0 ? dueTodayText : dueInDaysText;
+          orderDueNotifications.push({
+            // Assuming a 'type' property exists or can be added to Notif for filtering later if needed
+            // For now, using 'cart' icon as per existing logic
+            icon: "cart", 
+            notifTitle: "Order Due",
+            notifDesc: `${notifDesc}\n${new Date(job.due).toLocaleDateString()}`,
+            // Using a timestamp for time, which can be sorted for chronological order
+            time: new Date(job.due), 
+          });
+        }
+    })
+    
+     // Sort notifications chronologically (earliest due date first)
+    orderDueNotifications.sort((a, b) => {
+      const aDays = calculateDaysUntilDue(new Date(a.notifDesc.split('\n')[0].replace('Order due in ', '').replace(' days', '')));
+      const bDays = calculateDaysUntilDue(new Date(b.notifDesc.split('\n')[0].replace('Order due in ', '').replace(' days', '')));
 
-    const diffTime = dueDate.getTime() - today.getTime();
-    const daysUntilDue = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      if (aDays === 0 && bDays !== 0) return -1;
+      if (aDays !== 0 && bDays === 0) return 1;
+      
+      return (aDays) - (bDays);
+    });
 
-    if (daysUntilDue >= 0 && daysUntilDue <= 7) {
-      // Create a notification for the order due
-      const newNotif: DashboardNotif = {
-        _id: `order-due-${job._id}`, // Unique ID for order due notification
-        notifTitle: "Order Due", // This will be overridden by NotificationsList
-        notifDesc: `Order due in ${daysUntilDue} days`, // This will be overridden by NotificationsList
-        time: dueDate,
-        icon: "cart",
-        type: "orderDue",
-      };
-      // Check if a similar notification already exists to prevent duplicates
-      const existingNotifs: DashboardNotif[] = await getAllNotifications();
-      const alreadyNotified = existingNotifs.some((notif: DashboardNotif) =>
-        notif._id === newNotif._id
-      );
-
-      if (!alreadyNotified) {
-        await insertNotification(newNotif);
-      }
-    }
+    return orderDueNotifications;
   };
 
-  const handleRemoveNotification = async (id: string) => {
-    await removeNotification(id);
-    reload();
-  };
-
-  
   useEffect(() => {
     const fetchData = async () => {
       // setIsLoading(true);
@@ -172,16 +163,10 @@ function Dashboard() {
           pinnedJobsPromise,
           notifPromise,
         ]);
-        setNotifs(notifData);
+        
+        const generatedOrderNotifications = generateOrderDueNotification();
+        setNotifs(generatedOrderNotifications);
         organiseJobs(currentJobData, currentJobsUnpinnedData, pinnedJobData);
-        organiseJobs(allJobData, pinnedJobData);
-
-        for (const job of allJobData) {
-          await checkAndGenerateOrderDueNotification(job);
-        }
-
-        const updatedNotifData: DashboardNotif = await getAllNotifications();
-        setNotifs(updatedNotifData);
 
       } catch (err) {
         console.error(err);
@@ -191,6 +176,14 @@ function Dashboard() {
       // setIsLoading(false);
     };
     fetchData();
+
+    const dailyRefreshInterval = setInterval(() => {
+      fetchData(); 
+    }, 1000 * 60 * 60 * 24); // Every 24 hours
+
+    // Clear interval on component unmount
+    return () => clearInterval(dailyRefreshInterval);
+
   }, [reloader]);
 
   return (
@@ -228,7 +221,7 @@ function Dashboard() {
             </div>
             <div id="notifications-container">
               <h1>Notifications</h1>
-              <NotificationsList notifsParams={notifs} onremoveNotification={handleRemoveNotification} />
+              <NotificationsList notifsParams={notifs} />
             </div>
           </div>
         </div>
