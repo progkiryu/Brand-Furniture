@@ -358,6 +358,7 @@ th {
   display: flex;
   align-items: center;
   background-color: #f4f4f4;
+  width: 100px;
   border-radius: 12px;
   padding: 0.8rem 1rem;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.08);
@@ -417,4 +418,114 @@ th {
 .add-job-button:hover {
   background-color: #111827;
   transform: translateY(-1px);
+}
+
+/* =============================================
+   ZOOMED‑IN LAYOUT FIXES
+   (only applies when you “cmd +” enough that
+    viewport width ≤ 1200px)
+   ============================================= */
+@media (max-width: 1200px) {
+  /* 1) Let the sidebar’s right column stretch full width */
+  #dashboard-third-container {
+    max-width: none;       /* override your old 360px cap */
+    width: 100%;           /* fill the available space */
+    padding-bottom: 2rem;  /* give extra room for notifications below */
+  }
+
+  /* 2) Make both cards (analytics & notifications) span the whole container */
+  #analytics-container,
+  #notifications-container {
+    max-width: none;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* 3) Give the analytics card extra height so the legend never overflows */
+  #analytics-container {
+    position: relative;    /* allow absolutely‑positioned legend */
+    min-height: 420px;     /* bump default from 240px */
+    padding-bottom: 5rem;  /* room for legend at bottom */
+  }
+
+  /* 4) Re‑position the Recharts legend inside the analytics card */
+  /*    (this selector targets the legend wrapper that Recharts injects) */
+  #analytics-container .recharts-legend-wrapper {
+    position: absolute !important;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto !important;
+    text-align: center;
+  }
+
+  /* 5) Give the notifications card some bottom padding */
+  #notifications-container {
+    padding-bottom: 1.5rem;
+  }
+
+  /* 6) Center the notification list inside its card */
+  #notifications-container .notifications-list {
+    align-items: center;
+    width: 100%;
+  }
+  #notifications-container .notification-card {
+    width: 100%;
+    max-width: 600px;  /* optional: nice max width on very tall zooms */
+  }
+}
+
+/* -----------------------------------
+   When zoomed in (under 1200px wide)
+   Give the analytics card extra height
+   and re‑center the Recharts legend.
+   ----------------------------------- */
+@media (max-width: 1200px) {
+  /* 1) Push the bottom edge down so the legend fits */
+  #analytics-container {
+    min-height: 450px;    /* ↑ bump up from 240px */
+    padding-bottom: 6rem; /* ↑ room for the legend */
+  }
+
+  /* 2) Target the built‑in Recharts legend wrapper,
+        center it under the pie, and nudge it lower */
+  #analytics-container .recharts-legend-wrapper {
+    position: absolute;
+    bottom: 1.5rem !important;
+    left: 50%      !important;
+    transform: translateX(-50%) !important;
+  }
+}
+
+@media (max-width: 1200px) {
+  /* move the Recharts legend further down under the pie */
+  #analytics-container .recharts-legend-wrapper {
+    bottom: -2rem !important;  /* ↑ was 1.5rem, now 2.5rem */
+  }
+}
+
+/*---------------------------------------------------------------------------*/
+/* 1) Force each notification card to fill the container width               */
+/* 2) Give the notif list a little top‑margin so it sits lower under the H1  */
+/*---------------------------------------------------------------------------*/
+#notifications-container {
+  /* ensure the container itself pads all the way around */
+  padding: 1.5rem; 
+}
+
+#notifications-container > h1 {
+  /* push the list down beneath the heading */
+  margin-bottom: 1.25rem;
+}
+
+#notifications-container .notifications-list {
+  /* make the list occupy full width */
+  width: 100%;
+}
+
+#notifications-container .notification-card {
+  /* force each card to fill 100% of its parent width */
+  width: 95%;
+  /* optional: if you want them to never exceed some max for readability */
+  max-width: none;
 }
