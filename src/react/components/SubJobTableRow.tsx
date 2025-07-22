@@ -97,7 +97,7 @@ const SubJobTableRow: React.FC<SubJobTableRowProps> = ({
             <div className="card-header"><h4>Links</h4></div>
             {subJobParam.file && subJobParam.file.length > 0 ? (
               subJobParam.file.map((url, i) => (
-                <div key={i}>
+                <div className="links-container" key={i}>
                   <a
                     href={url}
                     onClick={handleLinkClick(url)}
