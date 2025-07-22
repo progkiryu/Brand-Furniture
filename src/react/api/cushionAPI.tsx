@@ -24,7 +24,7 @@ export const getCushionById = async (id: String) => {
 
 // Get list of cushions from subJobId
 export const getCushionsBySubJobId = async (subJobId: String) => {
-  const cushions = fetch(`${DBLink}/cushions/getCushionsBySubJobId/${subJobId}`)
+  const cushions = fetch(`${DBLink}/cushion/getCushionsBySubJobId/${subJobId}`)
     .then((res) => res.json())
     .catch((err) => console.error(err));
   if (!cushions) {
@@ -33,17 +33,14 @@ export const getCushionsBySubJobId = async (subJobId: String) => {
   return cushions;
 };
 
-// Create a new cushion
-// export const createCushion = async (data: Cushion) => {
-//   fetch(`${DBLink}/cushion/postCreateCushion`, {
-//     method: "POST",
-//     mode: "cors",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify(data),
-//   })
-//     .then((res) => res.json())
-//     .catch((err) => console.error(err));
-// };
+// Get list of cushions by status
+export const getCushionsByStatus = async (status: String) => {
+  const cushions = fetch(`${DBLink}/cushion/getCushionsByStatus/${status}`)
+    .then((res) => res.json())
+    .catch((err) => console.error(err));
+  if (!cushions) return;
+  return cushions;
+}
 
 export const createCushion = async (data: Cushion) => {
   try {
@@ -67,17 +64,6 @@ export const createCushion = async (data: Cushion) => {
 };
 
 // Delete a cushion by ID
-// export const deleteCushionById = async (id: String) => {
-//   fetch(`${DBLink}/cushion/deleteCushionById/${id}`, {
-//     method: "DELETE",
-//     mode: "cors",
-//     headers: { "Content-Type": "application/json" },
-//   })
-//     .then((res) => res.json())
-//     .catch((err) => console.log(err));
-// };
-
-// Delete a cushion by ID
 export const deleteCushionById = async (id: String) => {
   try {
     const res = await fetch(`${DBLink}/cushion/deleteCushionById/${id}`, {
@@ -95,18 +81,6 @@ export const deleteCushionById = async (id: String) => {
     return false; // Indicate failure
   }
 };
-
-// Update a cushion
-// export const updateCushion = async (data: Cushion) => {
-//   fetch(`${DBLink}/cushion/putUpdateCushion`, {
-//     method: "PUT",
-//     mode: "cors",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify(data),
-//   })
-//     .then((res) => res.json())
-//     .catch((err) => console.error(err));
-// };
 
 export const updateCushion = async (data: Cushion) => {
   try {

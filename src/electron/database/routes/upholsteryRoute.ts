@@ -3,6 +3,7 @@ import {
   deleteUpholsteryById,
   getAllUpholstery,
   getUpholsteryById,
+  getUpholsteryByStatus,
   getUpholsteryBySubJobId,
   postCreateUpholstery,
   putUpdateUpholstery,
@@ -16,6 +17,7 @@ export default (router: express.Router) => {
     "/upholstery/getUpholsteryBySubJobId/:subjobid",
     getUpholsteryBySubJobId
   );
+  router.get("/upholstery/getUpholsteryByStatus/:status", getUpholsteryByStatus);
   // Post Routes
   router.post("/upholstery/postCreateUpholstery", postCreateUpholstery);
   // Delete Routes

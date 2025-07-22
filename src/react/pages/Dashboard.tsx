@@ -8,7 +8,6 @@ import NotificationsList from "../components/NotificationsList";
 
 import {
   createJob,
-  getCurrentJobs,
   getCurrentJobsUnpinnedNullDue,
   getCurrentJobsUnpinnedWithDue,
   getJobsByTypeByDate,
@@ -17,6 +16,8 @@ import {
 } from "../api/jobAPI.tsx";
 import { getAllNotifications } from "../api/notificationAPI.tsx";
 import AddJobFormModel from "../components/AddJobFormModel.tsx";
+
+import { getUpholsteryByStatus } from "../api/upholsteryAPI.tsx";
 
 export type TypeInfoDash = {
   name: string;
@@ -98,6 +99,7 @@ function Dashboard() {
   
   useEffect(() => {
     const fetchData = async () => {
+    console.log(await getUpholsteryByStatus("Body Upholstered"));
       // setIsLoading(true);
       const jobTypes = await getUniqueJobTypes();
 
