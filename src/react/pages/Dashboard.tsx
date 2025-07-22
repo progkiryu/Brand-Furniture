@@ -10,6 +10,7 @@ import {
   createJob,
   getCurrentJobs,
   getFilteredJobsByDate,
+  getJobsByTypeByDate,
   getPinnedJobs,
   getUniqueJobTypes,
 } from "../api/jobAPI.tsx";
@@ -36,20 +37,27 @@ function Dashboard() {
   };
 
   const getJobMetrics = async (jobTypes: string[]) => {
+    if (jobTypes.length < 1) {
+      return;
+    }
     const endDate = new Date();
     let startDate = new Date();
     startDate.setFullYear(startDate.getFullYear() - 1);
-    // Get list of jobs within date range
-    const allJobs = await getFilteredJobsByDate(startDate, endDate);
-    // Get the counts of each type
+    // Get list of jobs within criteria
     for (let i = 0; i < jobTypes.length; i++) {
-      let count = 0;
-      for (let j = 0; j < allJobs.length; j++) {
-        if (jobTypes[i] === allJobs[j].type) {
-          count++;
+      try {
+        let jobData: Job[] = await getJobsByTypeByDate(
+          jobTypes[i],
+          startDate,
+          endDate
+        );
+        if (!jobData) {
+          jobData = [];
         }
+        typeCounter.push({ name: jobTypes[i], value: jobData.length });
+      } catch (err) {
+        console.error(err);
       }
-      typeCounter.push({ name: jobTypes[i], value: count });
     }
     // Filter out unique values
     const uniqueTypeCounter = typeCounter.filter(

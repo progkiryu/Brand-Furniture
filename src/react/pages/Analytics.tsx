@@ -4,7 +4,11 @@ import "../styles/Global.css";
 import Navbar from "../components/Navbar";
 import JobChartBar from "../components/JobChartBar";
 import JobChartPie from "../components/JobChartPie";
-import { getFilteredJobsByDate, getUniqueJobTypes } from "../api/jobAPI";
+import {
+  getFilteredJobsByDate,
+  getJobsByTypeByDate,
+  getUniqueJobTypes,
+} from "../api/jobAPI";
 
 export type TypeInfo = {
   name: string;
@@ -211,19 +215,28 @@ function Analytics() {
     }
   };
 
-  const processJobDistribution = async (allJobs: Job[], jobTypes: string[]) => {
-    if (allJobs.length < 1) {
+  const processJobDistribution = async (
+    jobTypes: string[],
+    startDate: Date,
+    endDate: Date
+  ) => {
+    if (jobTypes.length < 1) {
       return;
     }
-    // Get the counts of each type
     for (let i = 0; i < jobTypes.length; i++) {
-      let count = 0;
-      for (let j = 0; j < allJobs.length; j++) {
-        if (jobTypes[i] === allJobs[j].type) {
-          count++;
+      try {
+        let jobData: Job[] = await getJobsByTypeByDate(
+          jobTypes[i],
+          startDate,
+          endDate
+        );
+        if (!jobData) {
+          jobData = [];
         }
+        typeCounter.push({ name: jobTypes[i], value: jobData.length });
+      } catch (err) {
+        console.error(err);
       }
-      typeCounter.push({ name: jobTypes[i], value: count });
     }
     // Filter out unique values
     const uniqueTypeCounter = typeCounter.filter(
@@ -302,14 +315,15 @@ function Analytics() {
       setIsLoading(true);
 
       resetArrays();
-      await getTimeFrames();
-      const uniqueJobTypes: string[] = await getUniqueJobTypes();
-      const range = getDateRange();
-      const jobs = await getFilteredJobsByDate(range.startDate, range.endDate);
+      getTimeFrames();
 
-      await processJobDistribution(jobs, uniqueJobTypes);
-      await processJobVolume(jobs);
-      await processJobCompletedVolume(jobs);
+      const jobTypes: string[] = await getUniqueJobTypes();
+      const range = getDateRange();
+      // const jobs = await getFilteredJobsByDate(range.startDate, range.endDate);
+
+      await processJobDistribution(jobTypes, range.startDate, range.endDate);
+      // await processJobVolume(jobs);
+      // await processJobCompletedVolume(jobs);
 
       setIsLoading(false);
     };
