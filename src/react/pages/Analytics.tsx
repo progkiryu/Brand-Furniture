@@ -4,7 +4,7 @@ import "../styles/Global.css";
 import Navbar from "../components/Navbar";
 import JobChartBar from "../components/JobChartBar";
 import JobChartPie from "../components/JobChartPie";
-import { getFilteredJobsByDate } from "../api/jobAPI";
+import { getFilteredJobsByDate, getUniqueJobTypes } from "../api/jobAPI";
 
 export type TypeInfo = {
   name: string;
@@ -18,7 +18,6 @@ function Analytics() {
   const [dateRange, setDateRange] = useState<DateRange>("currentmonth");
 
   // Job Distribution Data
-  const jobTypes: string[] = [];
   const typeCounter: TypeInfo[] = [];
   const [jobDistributionData, setJobDistributionData] = useState<TypeInfo[]>(
     []
@@ -212,24 +211,9 @@ function Analytics() {
     }
   };
 
-  const processJobDistribution = async (allJobs: Job[]) => {
+  const processJobDistribution = async (allJobs: Job[], jobTypes: string[]) => {
     if (allJobs.length < 1) {
       return;
-    }
-
-    let existFlag: boolean = false;
-
-    // Get all the unique job types
-    for (let i = 0; i < allJobs.length; i++) {
-      for (let j = 0; j <= jobTypes.length; j++) {
-        if (allJobs[i].type === jobTypes[j]) {
-          existFlag = true;
-        }
-      }
-      if (existFlag === false) {
-        jobTypes.push(allJobs[i].type);
-      }
-      existFlag = false;
     }
     // Get the counts of each type
     for (let i = 0; i < jobTypes.length; i++) {
@@ -271,7 +255,6 @@ function Analytics() {
       }
     }
 
-    console.log(jobVolumeCounter);
     // Filter out unique values
     const uniqueJobVolumeCounter = jobVolumeCounter.filter(
       (obj, index, self) => index === self.findIndex((a) => a.name === obj.name)
@@ -320,14 +303,14 @@ function Analytics() {
 
       resetArrays();
       await getTimeFrames();
-
+      const uniqueJobTypes: string[] = await getUniqueJobTypes();
       const range = getDateRange();
+      // const jobTypes = await getUniqueJobTypes();
       const allJobs = await getFilteredJobsByDate(
         range.startDate,
         range.endDate
       );
-
-      await processJobDistribution(allJobs);
+      await processJobDistribution(allJobs, uniqueJobTypes);
       await processJobVolume(allJobs);
       await processJobCompletedVolume(allJobs);
 
@@ -348,7 +331,6 @@ function Analytics() {
     <>
       <Navbar />
       <div id="first-container">
-
         <div className="date-range-selector">
           <label htmlFor="range">View data for: </label>
           <select id="range" value={dateRange} onChange={handleRangeChange}>

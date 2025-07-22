@@ -98,6 +98,26 @@ export const getPinnedJobs = async (
   }
 };
 
+export const getUniqueTypes = async (
+  _: express.Request,
+  res: express.Response
+) => {
+  try {
+    const uniqueTypes = await schemas.Job.distinct("type").sort({
+      type: "ascending",
+    });
+    if (!uniqueTypes) {
+      res
+        .status(404)
+        .json({ message: "Error: Failed to retrieve unique job types." });
+    }
+    res.status(200).json(uniqueTypes);
+  } catch (err) {
+    console.error(err);
+    res.status(400).json(err);
+  }
+};
+
 export const insertJob = async (
   req: express.Request,
   res: express.Response
