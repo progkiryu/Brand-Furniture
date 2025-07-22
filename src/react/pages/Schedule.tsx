@@ -778,6 +778,26 @@ function Schedule() {
       <Navbar />
       <div id="first-container">
         <div id="schedule-first-container">
+          <div id="add-job-wrapper">
+            <div id="add-job-container">
+              <button
+                onClick={() => setIsAddJobModelOpen(true)}
+                className="add-job-btn"
+              >
+                Add Job
+              </button>
+            </div>
+            <div id="archive-container">
+              <label>
+                <input type="checkbox" 
+                defaultChecked={filterArchive} 
+                onChange={(e) => handleArchiveChange(e.target.defaultChecked)}/>
+                Show Archived Jobs
+              </label>
+            </div>
+          </div>
+
+          
           <div id="search-and-dropdown-container">
             <div id="search-container">
               <SearchBar
@@ -800,17 +820,13 @@ function Schedule() {
                   <div className="sort-option-group">
                     <strong>Year</strong>
                     <label>
-                      <select
-                        name="option"
-                        value={selectedYear}
-                        onChange={handleSelectYear}
-                      >
+                      <select name="option" value={selectedYear} onChange={handleSelectYear}>
                         <option value="--">--</option>
-                        {generateYears().map((year: number) => (
-                          <option key={year} value={String(year)}>
-                            {year}
-                          </option>
-                        ))}
+                        {
+                          generateYears().map((year: number) => (
+                            <option key={year} value={String(year)}>{year}</option>
+                          ))
+                        }
                       </select>
                     </label>
 
@@ -900,26 +916,7 @@ function Schedule() {
             </div>
           </div>
 
-          <div id="add-job-wrapper">
-            <div id="add-job-container">
-              <button
-                onClick={() => setIsAddJobModelOpen(true)}
-                className="add-job-btn"
-              >
-                Add Job
-              </button>
-            </div>
-            <div id="archive-container">
-              <label>
-                <input
-                  type="checkbox"
-                  defaultChecked={filterArchive}
-                  onChange={(e) => handleArchiveChange(e.target.defaultChecked)}
-                />
-                Archive
-              </label>
-            </div>
-          </div>
+          
 
           <div id="filter-container">
             {/* filter-checkboxes stay unchanged here */}
@@ -932,7 +929,7 @@ function Schedule() {
                     onChange={(e) =>
                       handleStatusChange(e.target.defaultChecked, "cut")
                     }
-                  />
+                  />{" "}
                   Upholstery Cut
                 </label>
                 <label className="filter-item body-upholstered">
@@ -990,7 +987,8 @@ function Schedule() {
               </div>
             </div>
           </div>
-        </div>
+        </div>{" "}
+
         {/* This closes the #filter-container div */}
         <div id="order-container">
           {/* Left Column - Job Name */}
@@ -1017,10 +1015,17 @@ function Schedule() {
             onEditJobClick={handleEditJobClick}
             initialSelectedJobId={initialSelectedJob?._id || null}
           />
+          
 
           {/* Right Column - Job Components */}
           <div id="components-section-wrapper">
             <div className="job-section-header">Job Components</div>
+            <div className="job-components-header">
+              <div>Details</div>
+              <div>Frames/Parts</div>
+              <div>Cushion</div>
+              <div>Upholstery</div>
+            </div>
             <div id="job-detail-container">
               {hasSelected && (
                 <SubJobTable

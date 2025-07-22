@@ -7,9 +7,6 @@ function Help() {
     <>
       <Navbar />
       <div id="first-container">
-        <div id="header-container">
-          <h1>Help</h1>
-        </div>
         <div className="help-content">
           <h2>How to Use Threadline</h2>
 

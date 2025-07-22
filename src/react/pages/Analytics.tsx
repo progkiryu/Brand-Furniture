@@ -4,7 +4,11 @@ import "../styles/Global.css";
 import Navbar from "../components/Navbar";
 import JobChartBar from "../components/JobChartBar";
 import JobChartPie from "../components/JobChartPie";
-import { getFilteredJobsByDate } from "../api/jobAPI";
+import {
+  getFilteredJobsByDate,
+  getJobsByTypeByDate,
+  getUniqueJobTypes,
+} from "../api/jobAPI";
 
 export type TypeInfo = {
   name: string;
@@ -18,7 +22,6 @@ function Analytics() {
   const [dateRange, setDateRange] = useState<DateRange>("currentmonth");
 
   // Job Distribution Data
-  const jobTypes: string[] = [];
   const typeCounter: TypeInfo[] = [];
   const [jobDistributionData, setJobDistributionData] = useState<TypeInfo[]>(
     []
@@ -212,34 +215,29 @@ function Analytics() {
     }
   };
 
-  const processJobDistribution = async (allJobs: Job[]) => {
-    if (allJobs.length < 1) {
+  const processJobDistribution = async (
+    jobTypes: string[],
+    startDate: Date,
+    endDate: Date
+  ) => {
+    if (jobTypes.length < 1) {
       return;
     }
-
-    let existFlag: boolean = false;
-
-    // Get all the unique job types
-    for (let i = 0; i < allJobs.length; i++) {
-      for (let j = 0; j <= jobTypes.length; j++) {
-        if (allJobs[i].type === jobTypes[j]) {
-          existFlag = true;
-        }
-      }
-      if (existFlag === false) {
-        jobTypes.push(allJobs[i].type);
-      }
-      existFlag = false;
-    }
-    // Get the counts of each type
+    // Get list of jobs within criteria
     for (let i = 0; i < jobTypes.length; i++) {
-      let count = 0;
-      for (let j = 0; j < allJobs.length; j++) {
-        if (jobTypes[i] === allJobs[j].type) {
-          count++;
+      try {
+        let jobData: Job[] = await getJobsByTypeByDate(
+          jobTypes[i],
+          startDate,
+          endDate
+        );
+        if (!jobData) {
+          jobData = [];
         }
+        typeCounter.push({ name: jobTypes[i], value: jobData.length });
+      } catch (err) {
+        console.error(err);
       }
-      typeCounter.push({ name: jobTypes[i], value: count });
     }
     // Filter out unique values
     const uniqueTypeCounter = typeCounter.filter(
@@ -271,7 +269,6 @@ function Analytics() {
       }
     }
 
-    console.log(jobVolumeCounter);
     // Filter out unique values
     const uniqueJobVolumeCounter = jobVolumeCounter.filter(
       (obj, index, self) => index === self.findIndex((a) => a.name === obj.name)
@@ -319,17 +316,15 @@ function Analytics() {
       setIsLoading(true);
 
       resetArrays();
-      await getTimeFrames();
+      getTimeFrames();
 
+      const jobTypes: string[] = await getUniqueJobTypes();
       const range = getDateRange();
-      const allJobs = await getFilteredJobsByDate(
-        range.startDate,
-        range.endDate
-      );
+      const jobs = await getFilteredJobsByDate(range.startDate, range.endDate);
 
-      await processJobDistribution(allJobs);
-      await processJobVolume(allJobs);
-      await processJobCompletedVolume(allJobs);
+      await processJobDistribution(jobTypes, range.startDate, range.endDate);
+      await processJobVolume(jobs);
+      await processJobCompletedVolume(jobs);
 
       setIsLoading(false);
     };
@@ -348,10 +343,6 @@ function Analytics() {
     <>
       <Navbar />
       <div id="first-container">
-        <div id="header-container">
-          <h1>Analytics</h1>
-        </div>
-
         <div className="date-range-selector">
           <label htmlFor="range">View data for: </label>
           <select id="range" value={dateRange} onChange={handleRangeChange}>
