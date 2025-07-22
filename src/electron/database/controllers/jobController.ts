@@ -54,6 +54,48 @@ export const getCurrentJobs = async (
   }
 };
 
+export const getCurrentJobsUnpinnedNullDue = async (
+  _: express.Request,
+  res: express.Response
+) => {
+  try {
+    const jobs = await schemas.Job.find({
+      isArchived: { $in: false },
+      isPinned: { $in: false },
+      due: { $ne: null },
+    }).sort({ due: "ascending" });
+    if (!jobs) {
+      res.status(404).json({ message: "ErrorL Failed to retrieve jobs." });
+      return;
+    }
+    res.status(200).json(jobs);
+  } catch (err) {
+    console.error(err);
+    res.status(400).json(err);
+  }
+};
+
+export const getCurrentJobsUnpinnedWithDue = async (
+  _: express.Request,
+  res: express.Response
+) => {
+  try {
+    const jobs = await schemas.Job.find({
+      isArchived: { $in: false },
+      isPinned: { $in: false },
+      due: { $eq: null },
+    }).sort({ due: "ascending" });
+    if (!jobs) {
+      res.status(404).json({ message: "ErrorL Failed to retrieve jobs." });
+      return;
+    }
+    res.status(200).json(jobs);
+  } catch (err) {
+    console.error(err);
+    res.status(400).json(err);
+  }
+};
+
 export const getArchivedJobs = async (
   _: express.Request,
   res: express.Response

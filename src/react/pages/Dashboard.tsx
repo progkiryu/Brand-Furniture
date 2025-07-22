@@ -9,6 +9,8 @@ import NotificationsList from "../components/NotificationsList";
 import {
   createJob,
   getCurrentJobs,
+  getCurrentJobsUnpinnedNullDue,
+  getCurrentJobsUnpinnedWithDue,
   getJobsByTypeByDate,
   getPinnedJobs,
   getUniqueJobTypes,
@@ -27,6 +29,7 @@ function Dashboard() {
 
   const [organisedJobs, setOrganisedJobs] = useState<Job[]>([]);
   const [notifs, setNotifs] = useState<Notif[]>([]);
+
   let typeCounter: TypeInfoDash[] = [];
   const [JobAnalytics, setJobAnalytics] = useState<TypeInfoDash[]>([]);
 
@@ -66,20 +69,15 @@ function Dashboard() {
     setJobAnalytics(uniqueTypeCounter);
   };
 
-  const organiseJobs = (allJobs: Job[], pinnedJobs: Job[]) => {
+  const organiseJobs = (jobs: Job[], jobsNoDue: Job[], pinnedJobs: Job[]) => {
     const organisedArray: Job[] = [];
-    let match = false;
-    // Create a new array without pinned Jobs
-    for (let i = 0; i < allJobs.length; i++) {
-      for (let j = 0; j < pinnedJobs.length; j++) {
-        if (allJobs[i]._id === pinnedJobs[j]._id) {
-          match = true;
-        }
-      }
-      if (match === false) {
-        organisedArray.push(allJobs[i]);
-      }
-      match = false;
+    // Push unpinned jobs without due dates
+    for (let i = 0; i < jobsNoDue.length; i++) {
+      organisedArray.push(jobsNoDue[i]);
+    }
+    // Push unpinned jobs with due dates
+    for (let i = 0; i < jobs.length; i++) {
+      organisedArray.push(jobs[i]);
     }
     // Add the pinned jobs to new job array, accounted for due date
     for (let i = pinnedJobs.length - 1; i >= 0; i--) {
@@ -101,19 +99,26 @@ function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       // setIsLoading(true);
-
       const jobTypes = await getUniqueJobTypes();
-      const allJobsPromise = await getCurrentJobs();
+
+      const currentJobsPromise = await getCurrentJobsUnpinnedWithDue();
+      const currentJobsUnpinnedPromise = await getCurrentJobsUnpinnedNullDue();
       const pinnedJobsPromise = await getPinnedJobs();
       const notifPromise = await getAllNotifications();
       try {
-        const [allJobData, pinnedJobData, notifData] = await Promise.all([
-          allJobsPromise,
+        const [
+          currentJobData,
+          currentJobsUnpinnedData,
+          pinnedJobData,
+          notifData,
+        ] = await Promise.all([
+          currentJobsPromise,
+          currentJobsUnpinnedPromise,
           pinnedJobsPromise,
           notifPromise,
         ]);
         setNotifs(notifData);
-        organiseJobs(allJobData, pinnedJobData);
+        organiseJobs(currentJobData, currentJobsUnpinnedData, pinnedJobData);
       } catch (err) {
         console.error(err);
       }
