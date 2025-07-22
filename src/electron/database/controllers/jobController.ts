@@ -40,7 +40,7 @@ export const getCurrentJobs = async (
   try {
     const currentJobs = await schemas.Job.find({
       isArchived: { $in: false },
-    }).sort({ due: "descending" }); // Sort latest first;
+    }).sort({ due: "ascending" }); // Sort latest first;
     if (!currentJobs) {
       res
         .status(404)
@@ -54,6 +54,48 @@ export const getCurrentJobs = async (
   }
 };
 
+export const getCurrentJobsUnpinnedNullDue = async (
+  _: express.Request,
+  res: express.Response
+) => {
+  try {
+    const jobs = await schemas.Job.find({
+      isArchived: { $in: false },
+      isPinned: { $in: false },
+      due: { $ne: null },
+    }).sort({ due: "ascending" });
+    if (!jobs) {
+      res.status(404).json({ message: "ErrorL Failed to retrieve jobs." });
+      return;
+    }
+    res.status(200).json(jobs);
+  } catch (err) {
+    console.error(err);
+    res.status(400).json(err);
+  }
+};
+
+export const getCurrentJobsUnpinnedWithDue = async (
+  _: express.Request,
+  res: express.Response
+) => {
+  try {
+    const jobs = await schemas.Job.find({
+      isArchived: { $in: false },
+      isPinned: { $in: false },
+      due: { $eq: null },
+    }).sort({ due: "ascending" });
+    if (!jobs) {
+      res.status(404).json({ message: "ErrorL Failed to retrieve jobs." });
+      return;
+    }
+    res.status(200).json(jobs);
+  } catch (err) {
+    console.error(err);
+    res.status(400).json(err);
+  }
+};
+
 export const getArchivedJobs = async (
   _: express.Request,
   res: express.Response
@@ -61,7 +103,7 @@ export const getArchivedJobs = async (
   try {
     const archivedJobs = await schemas.Job.find({
       isArchived: { $in: true },
-    }).sort({ due: "descending" }); // Sort latest first
+    }).sort({ due: "ascending" }); // Sort latest first
     if (!archivedJobs) {
       res
         .status(404)
@@ -82,7 +124,7 @@ export const getPinnedJobs = async (
   try {
     const pinnedJobs = await schemas.Job.find({
       isPinned: { $in: true },
-    }).sort({ due: "descending" }); // Sort latest first
+    }).sort({ due: "ascending" }); // Sort latest first
     if (!pinnedJobs) {
       res
         .status(404)

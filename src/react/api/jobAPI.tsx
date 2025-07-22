@@ -33,6 +33,28 @@ export const getCurrentJobs = async () => {
   return currentJobs;
 };
 
+// Get current unpinned w/o due dates
+export const getCurrentJobsUnpinnedNullDue = async () => {
+  const jobs = fetch(`${DBLink}/job/getCurrentJobsUnpinnedNullDue`)
+    .then((res) => res.json())
+    .catch((err) => console.error(err));
+  if (!jobs) {
+    return;
+  }
+  return jobs;
+};
+
+// Get current unpinned w/ due dates
+export const getCurrentJobsUnpinnedWithDue = async () => {
+  const jobs = fetch(`${DBLink}/job/getCurrentJobsUnpinnedWithDue`)
+    .then((res) => res.json())
+    .catch((err) => console.error(err));
+  if (!jobs) {
+    return;
+  }
+  return jobs;
+};
+
 // Get all archived jobs
 export const getArchivedJobs = async () => {
   const archivedJobs = fetch(`${DBLink}/job/getArchivedJobs`)
