@@ -8,10 +8,10 @@ import NotificationsList from "../components/NotificationsList";
 
 import {
   createJob,
-  // getAllJobs,
   getCurrentJobs,
-  getFilteredJobsByDate,
+  getJobsByTypeByDate,
   getPinnedJobs,
+  getUniqueJobTypes,
 } from "../api/jobAPI.tsx";
 import { getAllNotifications } from "../api/notificationAPI.tsx";
 import AddJobFormModel from "../components/AddJobFormModel.tsx";
@@ -27,7 +27,6 @@ function Dashboard() {
 
   const [organisedJobs, setOrganisedJobs] = useState<Job[]>([]);
   const [notifs, setNotifs] = useState<Notif[]>([]);
-  let jobTypes: string[] = [];
   let typeCounter: TypeInfoDash[] = [];
   const [JobAnalytics, setJobAnalytics] = useState<TypeInfoDash[]>([]);
 
@@ -36,44 +35,34 @@ function Dashboard() {
     reloader === true ? setReloader(false) : setReloader(true);
   };
 
-  const getJobMetrics = async () => {
+  const getJobMetrics = async (jobTypes: string[]) => {
+    if (jobTypes.length < 1) {
+      return;
+    }
     const endDate = new Date();
     let startDate = new Date();
-    // 1 year range
     startDate.setFullYear(startDate.getFullYear() - 1);
-
-    let existFlag: boolean = false;
-
-    // Get all the unique job types
-    const allJobs = await getFilteredJobsByDate(startDate, endDate);
-    for (let i = 0; i < allJobs.length; i++) {
-      for (let j = 0; j <= jobTypes.length; j++) {
-        if (allJobs[i].type === jobTypes[j]) {
-          existFlag = true;
-        }
-      }
-      if (existFlag === false) {
-        jobTypes.push(allJobs[i].type);
-      }
-      existFlag = false;
-    }
-
-    // Get the counts of each type
+    // Get list of jobs within criteria
     for (let i = 0; i < jobTypes.length; i++) {
-      let count = 0;
-      for (let j = 0; j < allJobs.length; j++) {
-        if (jobTypes[i] === allJobs[j].type) {
-          count++;
+      try {
+        let jobData: Job[] = await getJobsByTypeByDate(
+          jobTypes[i],
+          startDate,
+          endDate
+        );
+        if (!jobData) {
+          jobData = [];
         }
+        typeCounter.push({ name: jobTypes[i], value: jobData.length });
+      } catch (err) {
+        console.error(err);
       }
-      typeCounter.push({ name: jobTypes[i], value: count });
     }
     // Filter out unique values
     const uniqueTypeCounter = typeCounter.filter(
       (obj, index, self) =>
         index === self.findIndex((type) => type.name === obj.name)
     );
-
     setJobAnalytics(uniqueTypeCounter);
   };
 
@@ -113,10 +102,10 @@ function Dashboard() {
     const fetchData = async () => {
       // setIsLoading(true);
 
-      // const allJobsPromise = getAllJobs();
-      const allJobsPromise = getCurrentJobs();
-      const pinnedJobsPromise = getPinnedJobs();
-      const notifPromise = getAllNotifications();
+      const jobTypes = await getUniqueJobTypes();
+      const allJobsPromise = await getCurrentJobs();
+      const pinnedJobsPromise = await getPinnedJobs();
+      const notifPromise = await getAllNotifications();
       try {
         const [allJobData, pinnedJobData, notifData] = await Promise.all([
           allJobsPromise,
@@ -128,7 +117,7 @@ function Dashboard() {
       } catch (err) {
         console.error(err);
       }
-      getJobMetrics(); // Get data for pie chart
+      getJobMetrics(jobTypes);
 
       // setIsLoading(false);
     };

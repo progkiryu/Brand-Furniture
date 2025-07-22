@@ -47,7 +47,6 @@ export const getCurrentJobs = async (
         .json({ message: "Error: Failed to retrieve current jobs." });
       return;
     }
-
     res.status(200).json(currentJobs);
   } catch (err) {
     console.error(err);
@@ -69,7 +68,6 @@ export const getArchivedJobs = async (
         .json({ message: "Error: Failed to retrieve archived jobs." });
       return;
     }
-
     res.status(200).json(archivedJobs);
   } catch (err) {
     console.error(err);
@@ -98,6 +96,26 @@ export const getPinnedJobs = async (
   }
 };
 
+export const getUniqueTypes = async (
+  _: express.Request,
+  res: express.Response
+) => {
+  try {
+    const uniqueTypes = await schemas.Job.distinct("type").sort({
+      type: "ascending",
+    });
+    if (!uniqueTypes) {
+      res
+        .status(404)
+        .json({ message: "Error: Failed to retrieve unique job types." });
+    }
+    res.status(200).json(uniqueTypes);
+  } catch (err) {
+    console.error(err);
+    res.status(400).json(err);
+  }
+};
+
 export const insertJob = async (
   req: express.Request,
   res: express.Response
@@ -113,6 +131,34 @@ export const insertJob = async (
   }
 };
 
+export const getJobByTypeByDate = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  try {
+    const type: String = req.body.type;
+    const startDate: String = req.body.startDate;
+    const endDate: String = req.body.endDate;
+    if (!type || !startDate || !endDate) {
+      res.status(404).json({ message: "Error: Failed to provide fields." });
+      return;
+    }
+    // Search for jobs that meet criteria
+    const jobs = await schemas.Job.find({
+      due: { $gte: startDate, $lte: endDate },
+      type: { $in: type },
+    });
+    if (!jobs) {
+      res.status(404).json({ message: "Error: Failed to find any jobs." });
+      return;
+    }
+    res.status(200).json(jobs);
+  } catch (err) {
+    console.error(err);
+    res.status(400).json(err);
+  }
+};
+
 export const getFilteredJobsByDate = async (
   req: express.Request,
   res: express.Response
@@ -121,10 +167,9 @@ export const getFilteredJobsByDate = async (
     const startDate: String = req.body.startDate;
     const endDate: String = req.body.endDate;
     if (!startDate || !endDate) {
-      res.status(404).json({ message: "Error: Failed to provide date range." });
+      res.status(404).json({ message: "Error: Failed to provide fields." });
       return;
     }
-
     // Search for subJobs within specified range
     const jobs = await schemas.Job.find({
       due: { $gte: startDate, $lte: endDate },
@@ -135,7 +180,6 @@ export const getFilteredJobsByDate = async (
         .json({ message: "Error: Failed to find any filtered jobs." });
       return;
     }
-
     res.status(200).json(jobs);
   } catch (err) {
     console.error(err);
@@ -150,10 +194,9 @@ export const getFilteredJobsByType = async (
   try {
     const type: String = req.body.type;
     if (!type) {
-      res.status(404).json({ message: "Error: Failed to provide job type." });
+      res.status(404).json({ message: "Error: Failed to provide fields." });
       return;
     }
-
     // Search for subJobs within specified range
     const jobs = await schemas.Job.find({
       type: { $in: type },
@@ -164,7 +207,6 @@ export const getFilteredJobsByType = async (
         .json({ message: "Error: Failed to find any filtered jobs." });
       return;
     }
-
     res.status(200).json(jobs);
   } catch (err) {
     console.error(err);
@@ -203,7 +245,6 @@ export const removeJob = async (
 ) => {
   try {
     const id = req.params.id;
-
     // Check if job exists
     const job = await schemas.Job.findById(id);
     if (!job) {
@@ -212,7 +253,6 @@ export const removeJob = async (
         .json({ message: `Error: Failed to find job with ID: ${id}` });
       return;
     }
-
     // -------------------- Delete Dependencies --------------------
     for (let i = 0; i < job.subJobList.length; i++) {
       const subJobId = job.subJobList[i].toString();
@@ -271,7 +311,6 @@ export const removeJob = async (
         }
       }
     }
-
     // Delete all child subJobs
     if (job.subJobList.length > 0) {
       const subJobs = await Promise.all(
@@ -287,7 +326,6 @@ export const removeJob = async (
       }
     }
     // -------------------------------------------------------------
-
     // Finally, delete the job
     const result = await schemas.Job.findByIdAndDelete<Job>(id);
     if (!result) {
