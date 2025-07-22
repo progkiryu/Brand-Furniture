@@ -60,7 +60,7 @@
   padding: 12px;
   font-weight: bold;
   font-size: 16px;
-  margin-bottom: 5px;
+  margin-bottom: 12px;
   border-radius: 5px;
 }
 
@@ -402,12 +402,13 @@
 
 .job-components-header {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: repeat(4, 1fr);
   font-weight: bold;
   text-align: center;
   background-color: #E0E0E0;
   padding: 12px;
   border-radius: 8px;
+  margin-top: 8px; 
 }
 
 .sub-job-title {
@@ -706,4 +707,13 @@
   .component-section+.component-section {
     margin-top: 12px;
   }
+
+
 }
+
+.status-cut          { background-color: #fdfcb6; } /* yellow */
+.status-upholstered  { background-color: #d6f6d2; } /* green */
+.status-sewn         { background-color: #f9a8a8; } /* red */
+.status-foamed       { background-color: #b0cfff; } /* blue */
+.status-complete     { background-color: #cccccc; } /* grey */
+.status-production   { background-color: #ffffff; } /* white */
