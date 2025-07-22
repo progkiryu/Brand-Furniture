@@ -94,10 +94,6 @@ export default function NotificationsList({ notifsParams }: Props) {
             }
           }
 
-          function onRemoveNotification(_id: string): void {
-            throw new Error("Function not implemented.");
-          }
-
           return (
             <div key={notif._id} className="notification-card">
               <div className="notif-icon">

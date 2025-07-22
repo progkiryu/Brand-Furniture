@@ -1,5 +1,12 @@
 import { DBLink } from "../App";
 
+// export interface Job {
+//   _id: string;
+//   name: string;
+//   type: string;
+//   dueDate: string;
+// }
+
 // Get all jobs
 export const getAllJobs = async () => {
   const allJobs = fetch(`${DBLink}/job/getAllJobs`)

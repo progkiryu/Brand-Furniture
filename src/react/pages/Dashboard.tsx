@@ -16,6 +16,22 @@ import {
 import { getAllNotifications, insertNotification, removeNotification } from "../api/notificationAPI.tsx";
 import AddJobFormModel from "../components/AddJobFormModel.tsx";
 
+type DashboardJob = {
+  _id: string;
+  name: string;
+  type: string;
+  dueDate: string;
+}
+
+type DashboardNotif = {
+  _id: string;
+  notifTitle: string;
+  notifDesc: string;
+  time: Date;
+  icon?: "cart" | "pin";
+  type?: "orderDue" | "general";
+}
+
 export type TypeInfoDash = {
   name: string;
   value: number;
@@ -27,6 +43,7 @@ function Dashboard() {
 
   const [organisedJobs, setOrganisedJobs] = useState<Job[]>([]);
   const [notifs, setNotifs] = useState<Notif[]>([]);
+  
   let jobTypes: string[] = [];
   let typeCounter: TypeInfoDash[] = [];
   const [JobAnalytics, setJobAnalytics] = useState<TypeInfoDash[]>([]);
@@ -103,14 +120,14 @@ function Dashboard() {
     const addedJob = await createJob(newJobData);
     if (addedJob) {
       setIsAddJobModelOpen(false);
-      checkAndGenerateOrderDueNotification(addedJob);
+      await checkAndGenerateOrderDueNotification(addedJob);
       reload();
     } else {
       console.error("Failed to create job.");
     }
   };
 
-  const checkAndGenerateOrderDueNotification = async (job: Job) => {
+  const checkAndGenerateOrderDueNotification = async (job: DashboardJob) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const dueDate = new Date(job.dueDate);
@@ -121,7 +138,7 @@ function Dashboard() {
 
     if (daysUntilDue >= 0 && daysUntilDue <= 7) {
       // Create a notification for the order due
-      const newNotif: Notif = {
+      const newNotif: DashboardNotif = {
         _id: `order-due-${job._id}`, // Unique ID for order due notification
         notifTitle: "Order Due", // This will be overridden by NotificationsList
         notifDesc: `Order due in ${daysUntilDue} days`, // This will be overridden by NotificationsList
@@ -130,8 +147,8 @@ function Dashboard() {
         type: "orderDue",
       };
       // Check if a similar notification already exists to prevent duplicates
-      const existingNotifs = await getAllNotifications();
-      const alreadyNotified = existingNotifs.some((notif: Notif) =>
+      const existingNotifs: DashboardNotif[] = await getAllNotifications();
+      const alreadyNotified = existingNotifs.some((notif: DashboardNotif) =>
         notif._id === newNotif._id
       );
 
@@ -164,10 +181,10 @@ function Dashboard() {
         organiseJobs(allJobData, pinnedJobData);
 
         for (const job of allJobData) {
-          checkAndGenerateOrderDueNotification(job);
+          await checkAndGenerateOrderDueNotification(job);
         }
 
-        const updatedNotifData = await getAllNotifications();
+        const updatedNotifData: DashboardNotif = await getAllNotifications();
         setNotifs(updatedNotifData);
 
       } catch (err) {
