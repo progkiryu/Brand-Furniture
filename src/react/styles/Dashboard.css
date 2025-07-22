@@ -2,66 +2,57 @@
   display: flex;
   gap: 20px;
   padding: 2rem;
-  /* width: 100%; */
   box-sizing: border-box;
   flex-grow: 1;
-  /* min-height: 0; */
 }
 
 #dashboard-second-container {
-    flex: 7;
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    flex-grow: 1;
-    min-height: 0;
-    
-
+  flex: 7;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  flex-grow: 1;
+  min-height: 0;
 }
 
 #dashboard-third-container {
-    flex: 3;
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    overflow-y: auto;
-    flex-grow: 1;
-    min-height: 0;
-    max-width: 360px;
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  overflow-y: auto;
+  flex-grow: 1;
+  min-height: 0;
+  max-width: 360px;
 }
 
 .schedule-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
 }
 
 .color-key {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .key-item {
-    display: flex;
-    align-items: center;
-    font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
 }
 
 .key-color {
-    width: 16px;
-    height: 16px;
-    display: inline-block;
-    margin-right: 0.5rem;
-    border: 1px solid #555;
-    border-radius: 3px;
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  margin-right: 0.5rem;
+  border: 1px solid #555;
+  border-radius: 3px;
 }
-
-/* .key-color.production { background-color: #fecaca; }
-.key-color.private { background-color: #bbf7d0; }
-.key-color.residential { background-color: #fef9c3; }
-.key-color.commercial { background-color: #d1d5fa; } */
 
 #schedule-container,
 #analytics-container,
@@ -76,9 +67,7 @@
 }
 
 #schedule-container {
-    flex: 1;
-    /* height: auto;
-    flex-direction: column; */
+  flex: 1;
 }
 
 #analytics-container {
@@ -95,7 +84,7 @@
 }
 
 #notifications-container {
-  flex: 1 ;
+  flex: 1;
 }
 
 .upcoming-orders-scroll-container {
@@ -109,7 +98,8 @@ table {
   border-collapse: collapse;
 }
 
-th, td {
+th,
+td {
   border-bottom: 1px solid #E0E1DD;
   text-align: left;
   padding: 0.75rem 1rem;
@@ -124,66 +114,49 @@ th {
   z-index: 1;
 }
 
-
 .upcoming-orders-table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
-}
-
-.upcoming-orders-table th,
-.upcoming-orders-table td {
-    padding: 1rem;
-    font-size: 1.25rem;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-    word-wrap: break-word;
-    min-width: 80px;
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
 }
 
 .upcoming-orders-scroll-container::-webkit-scrollbar {
-    width: 8px;
+  width: 8px;
 }
+
 .upcoming-orders-scroll-container::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.2);
-    border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
 }
 
-/* .order-row-production { background-color: #fecaca; }
-.order-row-private { background-color: #bbf7d0; }
-.order-row-residential { background-color: #fef9c3; }
-.order-row-commercial { background-color: #d1d5fa; } */
-
-/* ----------------------------- */
 /* ANALYTICS CHART STYLING START */
-/* ----------------------------- */
 .job-analytics {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 1rem;
-    height: 100%;
-    box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  height: 100%;
+  box-sizing: border-box;
 }
 
 .analytics-title {
-    margin-bottom: 1rem;
+  margin-bottom: 1rem;
   font-size: 1rem;
   font-weight: 500;
   color: #1e293b;
 }
 
 .analytics-charts {
-    display: flex;
-    gap: 2rem;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    flex-grow: 1;
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  flex-grow: 1;
 }
 
 .chart {
-    position: relative;
+  position: relative;
   width: 200px;
   height: 200px;
 }
@@ -194,24 +167,38 @@ th {
 }
 
 .chart-percentage {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-weight: bold;
-    font-size: 1rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: bold;
+  font-size: 1rem;
 }
 
-.chart-segment.frames { stroke: #3b82f6; stroke-width: 4; fill: none; }
-.chart-segment.cushions { stroke: #facc15; stroke-width: 4; fill: none; }
-.chart-segment.upholstery { stroke: #f97316; stroke-width: 4; fill: none; }
+.chart-segment.frames {
+  stroke: #3b82f6;
+  stroke-width: 4;
+  fill: none;
+}
+
+.chart-segment.cushions {
+  stroke: #facc15;
+  stroke-width: 4;
+  fill: none;
+}
+
+.chart-segment.upholstery {
+  stroke: #f97316;
+  stroke-width: 4;
+  fill: none;
+}
 
 .analytics-legend {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1rem;
-    flex-wrap: wrap;
-    justify-content: center;
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .legend-item {
@@ -228,29 +215,47 @@ th {
   margin-right: 6px;
 }
 
-.legend-color.frames { background-color: #3b82f6; }
-.legend-color.cushions { background-color: #facc15; }
-.legend-color.upholstery { background-color: #f97316; }
-
-
-@media (max-width: 1200px) {
-  .chart { width: 60px; height: 60px; }
-  .chart-svg { width: 60px; height: 60px; }
-  .chart-percentage { font-size: 0.6rem; }
-  .legend-item { font-size: 0.6rem; }
+.legend-color.frames {
+  background-color: #3b82f6;
 }
 
+.legend-color.cushions {
+  background-color: #facc15;
+}
 
+.legend-color.upholstery {
+  background-color: #f97316;
+}
+
+@media (max-width: 1200px) {
+  .chart {
+    width: 60px;
+    height: 60px;
+  }
+
+  .chart-svg {
+    width: 60px;
+    height: 60px;
+  }
+
+  .chart-percentage {
+    font-size: 0.6rem;
+  }
+
+  .legend-item {
+    font-size: 0.6rem;
+  }
+}
 
 @media (max-width: 1200px) {
   #dashboard-first-container {
-    flex-wrap: wrap; /* Wrap to next line below 987px */
+    flex-wrap: wrap;
     flex-direction: column;
   }
+
   .job-analytics {
     height: 300px;
   }
-  
 }
 
 .job-list {
@@ -261,14 +266,14 @@ th {
 
 .job-list-header,
 .job-list-row {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr 1fr 2.4fr 1.4fr 1.9fr;
+  grid-template-columns: minmax(100px, 1.2fr) minmax(80px, 1fr) minmax(100px, 1fr) minmax(150px, 2.4fr) minmax(100px, 1.4fr) minmax(120px, 1.9fr);
   column-gap: 1.5rem;
   row-gap: 0.5rem;
   padding: 0.8rem 1.5rem;
   font-size: 0.92rem;
   border-radius: 10px;
   align-items: center;
+  display: grid; /* Added missing display: grid; for job-list-row */
 }
 
 .job-list-header {
@@ -276,29 +281,21 @@ th {
   background-color: #c2c5c7;
   color: #1e293b;
   font-size: 0.95rem;
-  display: grid;
-  grid-template-columns: 1.2fr 1fr 1fr 2.4fr 1.4fr 1.9fr;
-  padding: 0.8rem 1.5rem;
-  border-radius: 10px;
-  align-items: center;
 }
+
 .job-list-header span::after {
   content: " ▼";
   font-size: 0.7rem;
   color: #94a3b8;
   margin-left: 4px;
-
 }
 
 .job-list-row {
-  background-color: #c5c5c8; 
+  background-color: #c5c5c8;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
-  padding: 1.2rem 1.5rem;
   font-size: 1rem;
   min-height: 72px;
-  display: grid;
-  align-items: center;
   transition: all 0.2s ease;
 }
 
@@ -307,13 +304,21 @@ th {
   background-color: #eeeeee;
 }
 
-.upcoming-orders-table th,
-.upcoming-orders-table td {
+.job-list-row span {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+.upcoming-orders-table td { /* Combined the similar CSS from th and td */
   padding: 1rem;
   font-size: 0.95rem;
   text-align: left;
   border-bottom: 1px solid #ddd;
   vertical-align: middle;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
 }
 
 .upcoming-orders-table tr:hover {
@@ -327,15 +332,17 @@ th {
   margin-left: 0.5rem;
 }
 
-.icon-pin, .icon-edit {
-  color: #6b7280; /* Tailwind's gray-500 */
+.icon-pin,
+.icon-edit {
+  color: #6b7280;
   font-size: 1.3rem;
   cursor: pointer;
   transition: color 0.2s ease;
 }
 
-.icon-pin:hover, .icon-edit:hover {
-  color: #111827; /* Tailwind's gray-900 */
+.icon-pin:hover,
+.icon-edit:hover {
+  color: #111827;
   transform: scale(1.05);
 }
 
@@ -402,7 +409,7 @@ th {
 }
 
 .add-job-button {
-  background-color: #1E293B; /* Dark navy */
+  background-color: #1E293B;
   color: white;
   font-weight: 500;
   border: none;

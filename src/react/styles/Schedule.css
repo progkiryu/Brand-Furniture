@@ -51,6 +51,7 @@
   background-color: transparent;
   border-radius: 5px;
   padding: 0;
+  max-width: 200px;
 }
 
 .job-table-header {
@@ -83,6 +84,7 @@
   cursor: pointer;
   transition: background-color 0.2s ease;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  
 }
 
 .job-card:hover {
@@ -95,10 +97,7 @@
   background-color: #d1e0f0;
 }
 
-.job-name-cell {
-  flex-grow: 1;
-  font-weight: 500;
-}
+
 
 .edit-icon {
   flex-shrink: 0;
@@ -537,12 +536,14 @@
 }
 
 .job-name-cell {
+  flex-grow: 1;
   padding: 14px 12px;
   font-size: clamp(12px, 1.2vw, 15px);
   font-weight: 500;
   white-space: normal;
   word-wrap: break-word;
   overflow-wrap: break-word;
+  max-width: 70%;
 }
 
 .job-row:hover {
