@@ -40,7 +40,7 @@ export const getCurrentJobs = async (
   try {
     const currentJobs = await schemas.Job.find({
       isArchived: { $in: false },
-    }).sort({ due: "descending" }); // Sort latest first;
+    }).sort({ due: "ascending" }); // Sort latest first;
     if (!currentJobs) {
       res
         .status(404)
@@ -61,7 +61,7 @@ export const getArchivedJobs = async (
   try {
     const archivedJobs = await schemas.Job.find({
       isArchived: { $in: true },
-    }).sort({ due: "descending" }); // Sort latest first
+    }).sort({ due: "ascending" }); // Sort latest first
     if (!archivedJobs) {
       res
         .status(404)
@@ -82,7 +82,7 @@ export const getPinnedJobs = async (
   try {
     const pinnedJobs = await schemas.Job.find({
       isPinned: { $in: true },
-    }).sort({ due: "descending" }); // Sort latest first
+    }).sort({ due: "ascending" }); // Sort latest first
     if (!pinnedJobs) {
       res
         .status(404)
