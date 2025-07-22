@@ -13,7 +13,7 @@ import {
   getFilteredJobsByDate,
   getPinnedJobs,
 } from "../api/jobAPI.tsx";
-import { getAllNotifications } from "../api/notificationAPI.tsx";
+import { getAllNotifications, insertNotification, removeNotification } from "../api/notificationAPI.tsx";
 import AddJobFormModel from "../components/AddJobFormModel.tsx";
 
 export type TypeInfoDash = {
@@ -103,10 +103,47 @@ function Dashboard() {
     const addedJob = await createJob(newJobData);
     if (addedJob) {
       setIsAddJobModelOpen(false);
+      checkAndGenerateOrderDueNotification(addedJob);
       reload();
     } else {
       console.error("Failed to create job.");
     }
+  };
+
+  const checkAndGenerateOrderDueNotification = async (job: Job) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const dueDate = new Date(job.dueDate);
+    dueDate.setHours(0, 0, 0, 0);
+
+    const diffTime = dueDate.getTime() - today.getTime();
+    const daysUntilDue = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (daysUntilDue >= 0 && daysUntilDue <= 7) {
+      // Create a notification for the order due
+      const newNotif: Notif = {
+        _id: `order-due-${job._id}`, // Unique ID for order due notification
+        notifTitle: "Order Due", // This will be overridden by NotificationsList
+        notifDesc: `Order due in ${daysUntilDue} days`, // This will be overridden by NotificationsList
+        time: dueDate,
+        icon: "cart",
+        type: "orderDue",
+      };
+      // Check if a similar notification already exists to prevent duplicates
+      const existingNotifs = await getAllNotifications();
+      const alreadyNotified = existingNotifs.some((notif: Notif) =>
+        notif._id === newNotif._id
+      );
+
+      if (!alreadyNotified) {
+        await insertNotification(newNotif);
+      }
+    }
+  };
+
+  const handleRemoveNotification = async (id: string) => {
+    await removeNotification(id);
+    reload();
   };
 
   useEffect(() => {
@@ -125,6 +162,14 @@ function Dashboard() {
         ]);
         setNotifs(notifData);
         organiseJobs(allJobData, pinnedJobData);
+
+        for (const job of allJobData) {
+          checkAndGenerateOrderDueNotification(job);
+        }
+
+        const updatedNotifData = await getAllNotifications();
+        setNotifs(updatedNotifData);
+
       } catch (err) {
         console.error(err);
       }
@@ -173,7 +218,7 @@ function Dashboard() {
             </div>
             <div id="notifications-container">
               <h1>Notifications</h1>
-              <NotificationsList notifsParams={notifs} />
+              <NotificationsList notifsParams={notifs} onremoveNotification={handleRemoveNotification} />
             </div>
           </div>
         </div>
