@@ -223,6 +223,7 @@ function Analytics() {
     if (jobTypes.length < 1) {
       return;
     }
+    // Get list of jobs within criteria
     for (let i = 0; i < jobTypes.length; i++) {
       try {
         let jobData: Job[] = await getJobsByTypeByDate(
@@ -319,11 +320,11 @@ function Analytics() {
 
       const jobTypes: string[] = await getUniqueJobTypes();
       const range = getDateRange();
-      // const jobs = await getFilteredJobsByDate(range.startDate, range.endDate);
+      const jobs = await getFilteredJobsByDate(range.startDate, range.endDate);
 
       await processJobDistribution(jobTypes, range.startDate, range.endDate);
-      // await processJobVolume(jobs);
-      // await processJobCompletedVolume(jobs);
+      await processJobVolume(jobs);
+      await processJobCompletedVolume(jobs);
 
       setIsLoading(false);
     };

@@ -9,7 +9,6 @@ import NotificationsList from "../components/NotificationsList";
 import {
   createJob,
   getCurrentJobs,
-  getFilteredJobsByDate,
   getJobsByTypeByDate,
   getPinnedJobs,
   getUniqueJobTypes,
