@@ -2,10 +2,8 @@
   display: flex;
   gap: 20px;
   padding: 2rem;
-  /* width: 100%; */
   box-sizing: border-box;
   flex-grow: 1;
-  /* min-height: 0; */
 }
 
 #dashboard-second-container {
@@ -15,8 +13,6 @@
   gap: 2rem;
   flex-grow: 1;
   min-height: 0;
-
-
 }
 
 #dashboard-third-container {
@@ -58,11 +54,6 @@
   border-radius: 3px;
 }
 
-/* .key-color.production { background-color: #fecaca; }
-.key-color.private { background-color: #bbf7d0; }
-.key-color.residential { background-color: #fef9c3; }
-.key-color.commercial { background-color: #d1d5fa; } */
-
 #schedule-container,
 #analytics-container,
 #notifications-container {
@@ -77,8 +68,6 @@
 
 #schedule-container {
   flex: 1;
-  /* height: auto;
-    flex-direction: column; */
 }
 
 #analytics-container {
@@ -125,14 +114,11 @@ th {
   z-index: 1;
 }
 
-
 .upcoming-orders-table {
   width: 100%;
   border-collapse: collapse;
   table-layout: fixed;
 }
-
-
 
 .upcoming-orders-scroll-container::-webkit-scrollbar {
   width: 8px;
@@ -143,14 +129,7 @@ th {
   border-radius: 4px;
 }
 
-/* .order-row-production { background-color: #fecaca; }
-.order-row-private { background-color: #bbf7d0; }
-.order-row-residential { background-color: #fef9c3; }
-.order-row-commercial { background-color: #d1d5fa; } */
-
-/* ----------------------------- */
 /* ANALYTICS CHART STYLING START */
-/* ----------------------------- */
 .job-analytics {
   display: flex;
   flex-direction: column;
@@ -248,7 +227,6 @@ th {
   background-color: #f97316;
 }
 
-
 @media (max-width: 1200px) {
   .chart {
     width: 60px;
@@ -269,19 +247,15 @@ th {
   }
 }
 
-
-
 @media (max-width: 1200px) {
   #dashboard-first-container {
     flex-wrap: wrap;
-    /* Wrap to next line below 987px */
     flex-direction: column;
   }
 
   .job-analytics {
     height: 300px;
   }
-
 }
 
 .job-list {
@@ -290,22 +264,8 @@ th {
   gap: 1rem;
 }
 
-/* 
 .job-list-header,
 .job-list-row {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr 1fr 2.4fr 1.4fr 1.9fr;
-  column-gap: 1.5rem;
-  row-gap: 0.5rem;
-  padding: 0.8rem 1.5rem;
-  font-size: 0.92rem;
-  border-radius: 10px;
-  align-items: center;
-} */
-
-.job-list-header,
-.job-list-row {
-  /* Use fr units to distribute available space proportionally, and consider minmax for flexibility */
   grid-template-columns: minmax(100px, 1.2fr) minmax(80px, 1fr) minmax(100px, 1fr) minmax(150px, 2.4fr) minmax(100px, 1.4fr) minmax(120px, 1.9fr);
   column-gap: 1.5rem;
   row-gap: 0.5rem;
@@ -313,6 +273,7 @@ th {
   font-size: 0.92rem;
   border-radius: 10px;
   align-items: center;
+  display: grid; /* Added missing display: grid; for job-list-row */
 }
 
 .job-list-header {
@@ -320,9 +281,6 @@ th {
   background-color: #c2c5c7;
   color: #1e293b;
   font-size: 0.95rem;
-  display: grid;
-  border-radius: 10px;
-  align-items: center;
 }
 
 .job-list-header span::after {
@@ -330,7 +288,6 @@ th {
   font-size: 0.7rem;
   color: #94a3b8;
   margin-left: 4px;
-
 }
 
 .job-list-row {
@@ -339,8 +296,6 @@ th {
   border-radius: 12px;
   font-size: 1rem;
   min-height: 72px;
-  display: grid;
-  align-items: center;
   transition: all 0.2s ease;
 }
 
@@ -349,30 +304,22 @@ th {
   background-color: #eeeeee;
 }
 
-
-
 .job-list-row span {
   word-wrap: break-word;
   overflow-wrap: break-word;
   white-space: normal;
-
 }
 
-.upcoming-orders-table th,
-.upcoming-orders-table td {
+.upcoming-orders-table td { /* Combined the similar CSS from th and td */
   padding: 1rem;
   font-size: 0.95rem;
   text-align: left;
   border-bottom: 1px solid #ddd;
   vertical-align: middle;
   word-wrap: break-word;
-  /* Ensure long words break */
   overflow-wrap: break-word;
-  /* Ensure long words break */
   white-space: normal;
-  /* Allow normal text wrapping */
 }
-
 
 .upcoming-orders-table tr:hover {
   background-color: #f5f5f5;
@@ -388,7 +335,6 @@ th {
 .icon-pin,
 .icon-edit {
   color: #6b7280;
-  /* Tailwind's gray-500 */
   font-size: 1.3rem;
   cursor: pointer;
   transition: color 0.2s ease;
@@ -397,7 +343,6 @@ th {
 .icon-pin:hover,
 .icon-edit:hover {
   color: #111827;
-  /* Tailwind's gray-900 */
   transform: scale(1.05);
 }
 
@@ -465,7 +410,6 @@ th {
 
 .add-job-button {
   background-color: #1E293B;
-  /* Dark navy */
   color: white;
   font-weight: 500;
   border: none;

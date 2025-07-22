@@ -543,7 +543,7 @@
   white-space: normal;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  max-width: 100%;
+  max-width: 70%;
 }
 
 .job-row:hover {
