@@ -88,7 +88,32 @@ export const createJob = async (data: Job) => {
   }
 };
 
-// Get list of jobs within specified date range
+// Get list of jobs specific type within date range
+export const getJobsByTypeByDate = async (
+  type: string,
+  startD: Date,
+  endD: Date
+) => {
+  const data = {
+    type: type,
+    startDate: startD,
+    endDate: endD,
+  };
+  const jobs = fetch(`${DBLink}/job/getJobsByTypeByDate`, {
+    method: "POST",
+    mode: "cors",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  })
+    .then((res) => res.json())
+    .catch((err) => console.error(err));
+  if (!jobs) {
+    return;
+  }
+  return jobs;
+};
+
+// Get list of jobs within date range
 export const getFilteredJobsByDate = async (startD: Date, endD: Date) => {
   const range = {
     startDate: startD,

@@ -305,14 +305,11 @@ function Analytics() {
       await getTimeFrames();
       const uniqueJobTypes: string[] = await getUniqueJobTypes();
       const range = getDateRange();
-      // const jobTypes = await getUniqueJobTypes();
-      const allJobs = await getFilteredJobsByDate(
-        range.startDate,
-        range.endDate
-      );
-      await processJobDistribution(allJobs, uniqueJobTypes);
-      await processJobVolume(allJobs);
-      await processJobCompletedVolume(allJobs);
+      const jobs = await getFilteredJobsByDate(range.startDate, range.endDate);
+
+      await processJobDistribution(jobs, uniqueJobTypes);
+      await processJobVolume(jobs);
+      await processJobCompletedVolume(jobs);
 
       setIsLoading(false);
     };

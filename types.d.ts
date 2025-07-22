@@ -36,7 +36,7 @@ type Frame = {
   orderedDate?: Date;
   expectedDate?: Date;
   receivedDate?: Date;
-  status?: string; 
+  status?: string;
 };
 
 type Cushion = {
@@ -48,7 +48,7 @@ type Cushion = {
   orderedDate?: Date;
   expectedDate?: Date;
   receivedDate?: Date;
-  status?: string; 
+  status?: string;
 };
 
 type Upholstery = {
@@ -60,7 +60,7 @@ type Upholstery = {
   orderedDate?: Date;
   expectedDate?: Date;
   receivedDate?: Date;
-  status?: string; 
+  status?: string;
 };
 
 type Notif = {
