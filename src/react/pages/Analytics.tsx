@@ -247,8 +247,8 @@ function Analytics() {
     setJobDistributionData(uniqueTypeCounter);
   };
 
-  const processJobVolume = async (allJobs: Job[]) => {
-    if (allJobs.length < 1) {
+  const processJobVolume = async (jobs: Job[]) => {
+    if (jobs.length < 1) {
       return;
     }
 
@@ -258,9 +258,9 @@ function Analytics() {
     }
 
     // Count job occurances for each month
-    for (let i = 0; i < allJobs.length; i++) {
-      const jobMonth = getMonthString(allJobs[i]);
-      const jobYear = getYearString(allJobs[i]);
+    for (let i = 0; i < jobs.length; i++) {
+      const jobMonth = getMonthString(jobs[i]);
+      const jobYear = getYearString(jobs[i]);
       const jobMY = jobMonth + jobYear;
       for (let j = 0; j < jobVolumeCounter.length; j++) {
         if (jobMY.toString() === jobVolumeCounter[j].name.toString()) {
@@ -276,15 +276,15 @@ function Analytics() {
     setJobVolumeData(uniqueJobVolumeCounter);
   };
 
-  const processJobCompletedVolume = async (allJobs: Job[]) => {
-    if (allJobs.length < 1) {
+  const processJobCompletedVolume = async (jobs: Job[]) => {
+    if (jobs.length < 1) {
       return;
     }
 
     let archivedJobs: Job[] = [];
-    for (let i = 0; i < allJobs.length; i++) {
-      if (allJobs[i].isArchived === true) {
-        archivedJobs.push(allJobs[i]);
+    for (let i = 0; i < jobs.length; i++) {
+      if (jobs[i].isArchived === true) {
+        archivedJobs.push(jobs[i]);
       }
     }
 
