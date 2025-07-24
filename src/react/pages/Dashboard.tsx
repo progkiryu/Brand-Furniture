@@ -97,7 +97,6 @@ function Dashboard() {
     }
   };
 
-  // in Dashboard.tsx (or any script that runs once on page load)
 useEffect(() => {
   const root = document.getElementById("dashboard-first-container")!;
   const checkZoom = () =>
