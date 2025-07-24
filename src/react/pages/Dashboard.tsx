@@ -17,15 +17,12 @@ import {
 import { getAllNotifications } from "../api/notificationAPI.tsx";
 import AddJobFormModel from "../components/AddJobFormModel.tsx";
 
-import { getUpholsteryByStatus } from "../api/upholsteryAPI.tsx";
-
 export type TypeInfoDash = {
   name: string;
   value: number;
 };
 
 function Dashboard() {
-  const [reloader, setReloader] = useState<boolean>(false);
   const [isAddJobModelOpen, setIsAddJobModelOpen] = useState<boolean>(false);
 
   const [organisedJobs, setOrganisedJobs] = useState<Job[]>([]);
@@ -34,25 +31,47 @@ function Dashboard() {
   let typeCounter: TypeInfoDash[] = [];
   const [JobAnalytics, setJobAnalytics] = useState<TypeInfoDash[]>([]);
 
-  const reload = () => {
-    // Reloads since tracked in useEffect
-    reloader === true ? setReloader(false) : setReloader(true);
+  const getFinancialYearRange = () => {
+    const todayDate = new Date();
+    let startDate = new Date();
+    let endDate = new Date();
+
+    // Set start date
+    startDate.setDate(1); // First day of July
+    startDate.setMonth(6); // Set to July
+    // Set end date
+    endDate.setDate(30); // Last day of June
+    endDate.setMonth(5); // Set to June
+
+    if (todayDate.getMonth() <= 5) {
+      // set startDate to prev year
+      startDate.setFullYear(startDate.getFullYear() - 1);
+    } else if (todayDate.getMonth() >= 6) {
+      // set endDate to next year
+      endDate.setFullYear(endDate.getFullYear() + 1);
+    } else {
+      console.error("Error: Invalid month.");
+    }
+
+    return {
+      startDate,
+      endDate,
+    };
   };
 
   const getJobMetrics = async (jobTypes: string[]) => {
     if (jobTypes.length < 1) {
       return;
     }
-    const endDate = new Date();
-    let startDate = new Date();
-    startDate.setFullYear(startDate.getFullYear() - 1);
+    // Get date range of FY
+    const dateRange = getFinancialYearRange();
     // Get list of jobs within criteria
     for (let i = 0; i < jobTypes.length; i++) {
       try {
         let jobData: Job[] = await getJobsByTypeByDate(
           jobTypes[i],
-          startDate,
-          endDate
+          dateRange.startDate,
+          dateRange.endDate
         );
         if (!jobData) {
           jobData = [];
@@ -91,7 +110,7 @@ function Dashboard() {
     const addedJob = await createJob(newJobData);
     if (addedJob) {
       setIsAddJobModelOpen(false);
-      reload();
+      fetchData();
     } else {
       console.error("Failed to create job.");
     }
@@ -109,40 +128,39 @@ useEffect(() => {
   return () => window.removeEventListener("resize", checkZoom);
 }, []);
 
-  
+  const fetchData = async () => {
+    // setIsLoading(true);
+    const jobTypes = await getUniqueJobTypes();
+
+    const currentJobsPromise = await getCurrentJobsUnpinnedWithDue();
+    const currentJobsUnpinnedPromise = await getCurrentJobsUnpinnedNullDue();
+    const pinnedJobsPromise = await getPinnedJobs();
+    const notifPromise = await getAllNotifications();
+    try {
+      const [
+        currentJobData,
+        currentJobsUnpinnedData,
+        pinnedJobData,
+        notifData,
+      ] = await Promise.all([
+        currentJobsPromise,
+        currentJobsUnpinnedPromise,
+        pinnedJobsPromise,
+        notifPromise,
+      ]);
+      setNotifs(notifData);
+      organiseJobs(currentJobData, currentJobsUnpinnedData, pinnedJobData);
+    } catch (err) {
+      console.error(err);
+    }
+    getJobMetrics(jobTypes);
+
+    // setIsLoading(false);
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-    console.log(await getUpholsteryByStatus("Body Upholstered"));
-      // setIsLoading(true);
-      const jobTypes = await getUniqueJobTypes();
-
-      const currentJobsPromise = await getCurrentJobsUnpinnedWithDue();
-      const currentJobsUnpinnedPromise = await getCurrentJobsUnpinnedNullDue();
-      const pinnedJobsPromise = await getPinnedJobs();
-      const notifPromise = await getAllNotifications();
-      try {
-        const [
-          currentJobData,
-          currentJobsUnpinnedData,
-          pinnedJobData,
-          notifData,
-        ] = await Promise.all([
-          currentJobsPromise,
-          currentJobsUnpinnedPromise,
-          pinnedJobsPromise,
-          notifPromise,
-        ]);
-        setNotifs(notifData);
-        organiseJobs(currentJobData, currentJobsUnpinnedData, pinnedJobData);
-      } catch (err) {
-        console.error(err);
-      }
-      getJobMetrics(jobTypes);
-
-      // setIsLoading(false);
-    };
     fetchData();
-  }, [reloader]);
+  }, []);
 
   return (
     // isLoading ? (
