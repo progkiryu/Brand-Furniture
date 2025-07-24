@@ -17,14 +17,13 @@ export default function NotificationsList({ notifsParams, onDeleteNotification }
   
   return (
     <div className="notifications-list">
-            {sortedNotifs.map((notif, index) => ( // Use sortedNotifs here
+      {sortedNotifs.map((notif, index) => ( // Use sortedNotifs here
         <div key={notif._id || index} className="notification-card">
           <div className="notif-icon">{iconMap[notif.icon ?? "cart"]}</div>
           <div className="notif-content">
             <div className="notif-title">{notif.notifTitle}</div>
-            <div className="notif-desc">{notif.notifDesc}
-              </div>
-            <div className="notif-time">{String(new Date(notif.time).toLocaleString())}</div> {/* Format date for better readability */}
+            <div className="notif-desc">{notif.notifDesc}</div>
+            <div className="notif-time">{String(new Date(notif.time).toLocaleString())}</div>
           </div>
           <button
             className="delete-notif-button"

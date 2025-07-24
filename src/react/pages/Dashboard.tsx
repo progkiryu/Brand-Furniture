@@ -221,7 +221,7 @@ function Dashboard() {
             </div>
             <div id="notifications-container">
               <h1>Notifications</h1>
-              <NotificationsList notifsParams={notifs} onDeleteNofification={handleDeleteNotification}/>
+              <NotificationsList notifsParams={notifs} onDeleteNotification={handleDeleteNotification}/>
             </div>
           </div>
         </div>

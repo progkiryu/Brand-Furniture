@@ -14,6 +14,7 @@ type Job = {
   subJobList?: string[];
   isPinned: boolean;
   isArchived: boolean;
+  hasNotificationBeenDeleted: boolean;
 };
 
 type SubJob = {
