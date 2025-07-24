@@ -16,6 +16,7 @@ const jobSchema = new mongoose.Schema(
     subJobList: { type: [String], default: [] },
     isPinned: { type: Boolean, default: false },
     isArchived: { type: Boolean, default: false },
+    hasNoDeletedNotification: { type: Boolean, default: true },
   },
   {
     timestamps: true,
@@ -31,7 +32,7 @@ const subJobSchema = new mongoose.Schema(
     dueDate: { type: Date, required: false },
     frameList: { type: [String], default: [] },
     cushionList: { type: [String], default: [] },
-    upholsteryList: { type: [String], defailt: [] },
+    upholsteryList: { type: [String], default: [] },
   },
   {
     timestamps: true,
@@ -87,6 +88,7 @@ const upholsterySchema = new mongoose.Schema(
 
 const notifSchema = new mongoose.Schema(
   {
+    jobId: { type: String, required: true }, 
     notifTitle: { type: String, required: true },
     notifDesc: { type: String, required: true },
     time: { type: Date, required: true },
