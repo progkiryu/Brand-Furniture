@@ -916,8 +916,6 @@ function Schedule() {
             </div>
           </div>
 
-          
-
           <div id="filter-container">
             {/* filter-checkboxes stay unchanged here */}
             <div className="filter-wrapper">

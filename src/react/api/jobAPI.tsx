@@ -1,4 +1,5 @@
 import { DBLink } from "../App";
+import { removeNotification, getNotificationByJobId } from "./notificationAPI"; // Import notification API functions
 
 // Get all jobs
 export const getAllJobs = async () => {
@@ -177,6 +178,11 @@ export const getFilteredJobsByType = async (type: String) => {
 // Delete a job by ID
 export const deleteJob = async (id: String) => {
   try {
+    // First, try to get and delete the associated notification
+    const notification = await getNotificationByJobId(id.toString());
+    if (notification && notification._id) {
+      await removeNotification(notification._id, id); // Pass job ID as well
+    }
     const res = await fetch(`${DBLink}/job/removeJob/${id}`, {
       method: "DELETE",
       mode: "cors",
