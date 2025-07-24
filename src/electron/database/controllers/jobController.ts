@@ -173,6 +173,53 @@ export const insertJob = async (
   }
 };
 
+export const getJobsByMonthAndYearNumber = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  try {
+    const jobMonth: number = req.body.monthNumber;
+    const jobYear: number = req.body.yearNumber;
+    if (!jobMonth || !jobYear) {
+      res.status(404).json({ message: "Error: Failed to provide fields." });
+      return;
+    }
+    // Search for jobs that meet the criteria
+    const jobs = await schemas.Job.find({
+      $expr: {
+        $and: [
+          {
+            $eq: [
+              {
+                $month: "$due",
+              },
+              jobMonth,
+            ],
+          },
+          {
+            $eq: [
+              {
+                $year: "$due",
+              },
+              jobYear,
+            ],
+          },
+        ],
+      },
+    });
+    console.log();
+    if (!jobs) {
+      // No jobs meet criteria, send empty array
+      res.status(200).json([]);
+      return;
+    }
+    res.status(200).json(jobs);
+  } catch (err) {
+    console.error(err);
+    res.status(400).json(err);
+  }
+};
+
 export const getJobByTypeByDate = async (
   req: express.Request,
   res: express.Response

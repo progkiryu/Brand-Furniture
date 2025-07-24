@@ -60,6 +60,27 @@ export const getFramesBySubJobId = async (
   }
 };
 
+export const getFramesByStatus = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  try {
+    const status = req.params.status;
+    const frames = await schemas.Frame.find({
+      status: { $in: status }
+    });
+    if (!frames) {
+      res.status(404).json({ message: "Error: Failed to retrieve frames" });
+      return;
+    }
+    res.status(200).json(frames);
+  }
+  catch (err) {
+    console.error(err);
+    res.status(400).json(err);
+  }
+}
+
 // Create new frame
 export const postCreateFrame = async (
   req: express.Request,

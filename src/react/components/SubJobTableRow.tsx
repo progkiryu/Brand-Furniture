@@ -5,15 +5,14 @@ import { getFrameById } from "../api/frameAPI";
 import { getCushionById } from "../api/cushionAPI";
 import { getUpholsteryById } from "../api/upholsteryAPI";
 
-
 // map each status label to its CSS class
 const STATUS_CLASS: Record<string, string> = {
-  "Upholstery Cut":   "status-cut",
+  "Upholstery Cut": "status-cut",
   "Body Upholstered": "status-upholstered",
-  "Upholstery Sewn":  "status-sewn",
-  "Frame Foamed":     "status-foamed",
-  "Complete":         "status-complete",
-  "In Production":    "status-production",
+  "Upholstery Sewn": "status-sewn",
+  "Frame Foamed": "status-foamed",
+  Complete: "status-complete",
+  "In Production": "status-production",
 };
 
 interface SubJobTableRowProps {
@@ -47,12 +46,12 @@ const SubJobTableRow: React.FC<SubJobTableRowProps> = ({
     async function fetchComponents() {
       const [u, f, c] = await Promise.all([
         Promise.all((subJobParam.upholsteryList || []).map(getUpholsteryById)),
-        Promise.all((subJobParam.frameList      || []).map(getFrameById)),
-        Promise.all((subJobParam.cushionList    || []).map(getCushionById)),
+        Promise.all((subJobParam.frameList || []).map(getFrameById)),
+        Promise.all((subJobParam.cushionList || []).map(getCushionById)),
       ]);
       setUpholstery(u.filter(Boolean) as Upholstery[]);
-      setFrames    (f.filter(Boolean) as Frame[]);
-      setCushions  (c.filter(Boolean) as Cushion[]);
+      setFrames(f.filter(Boolean) as Frame[]);
+      setCushions(c.filter(Boolean) as Cushion[]);
     }
     fetchComponents();
   }, [
@@ -86,15 +85,21 @@ const SubJobTableRow: React.FC<SubJobTableRowProps> = ({
         {/* DETAILS */}
         <div className="component-card">
           <div className="component-section">
-            <div className="card-header"><h4>Job</h4></div>
+            <div className="card-header">
+              <h4>Job</h4>
+            </div>
             <p>{subJobParam.subJobDetail}</p>
           </div>
           <div className="component-section">
-            <div className="card-header"><h4>Notes</h4></div>
+            <div className="card-header">
+              <h4>Notes</h4>
+            </div>
             <p>{subJobParam.note}</p>
           </div>
           <div className="component-section">
-            <div className="card-header"><h4>Links</h4></div>
+            <div className="card-header">
+              <h4>Links</h4>
+            </div>
             {subJobParam.file && subJobParam.file.length > 0 ? (
               subJobParam.file.map((url, i) => (
                 <div className="links-container" key={i}>
@@ -130,7 +135,12 @@ const SubJobTableRow: React.FC<SubJobTableRowProps> = ({
                     onClick={() => onEditFrameClick(frame)}
                   />
                 </div>
-                <p><strong>Supplier:</strong> {frame.supplier}</p>
+                <p>
+                  <strong>Supplier:</strong> {frame.supplier}
+                </p>
+                <p>
+                  <strong>Description:</strong> {frame.description}
+                </p>
                 <p>
                   <strong>Ordered:</strong>{" "}
                   {frame.orderedDate
@@ -177,6 +187,12 @@ const SubJobTableRow: React.FC<SubJobTableRowProps> = ({
                   />
                 </div>
                 <p>
+                  <strong>Type:</strong> {cushion.type}
+                </p>
+                <p>
+                  <strong>Description:</strong> {cushion.description}
+                </p>
+                <p>
                   <strong>Ordered:</strong>{" "}
                   {cushion.orderedDate
                     ? new Date(cushion.orderedDate).toLocaleDateString("en-GB")
@@ -207,13 +223,9 @@ const SubJobTableRow: React.FC<SubJobTableRowProps> = ({
         {/* UPHOLSTERY COLUMN */}
         <div className="component-card">
           {upholstery.map((u, idx) => {
-            const statusClass =
-              STATUS_CLASS[(u.status ?? "") as string] ?? "";
+            const statusClass = STATUS_CLASS[(u.status ?? "") as string] ?? "";
             return (
-              <div
-                key={u._id}
-                className={`component-section ${statusClass}`}
-              >
+              <div key={u._id} className={`component-section ${statusClass}`}>
                 <div className="card-header">
                   <h4>Upholstery {idx + 1}</h4>
                   <Pencil
@@ -221,8 +233,12 @@ const SubJobTableRow: React.FC<SubJobTableRowProps> = ({
                     onClick={() => onEditUpholsteryClick(u)}
                   />
                 </div>
-                <p><strong>Type:</strong> {u.type}</p>
-                <p><strong>Description:</strong> {u.description}</p>
+                <p>
+                  <strong>Type:</strong> {u.type}
+                </p>
+                <p>
+                  <strong>Description:</strong> {u.description}
+                </p>
                 <p>
                   <strong>Ordered:</strong>{" "}
                   {u.orderedDate

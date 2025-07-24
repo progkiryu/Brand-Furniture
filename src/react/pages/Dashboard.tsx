@@ -32,9 +32,8 @@ export type TypeInfoDash = {
 };
 
 function Dashboard() {
-  const [reloader, setReloader] = useState<boolean>(false);
   const [isAddJobModelOpen, setIsAddJobModelOpen] = useState<boolean>(false);
-
+  const [reloader, setReloader] = useState<boolean>(false);
   const [organisedJobs, setOrganisedJobs] = useState<Job[]>([]);
   const [notifs, setNotifs] = useState<Notif[]>([]);
 
@@ -44,22 +43,49 @@ function Dashboard() {
   const reload = () => {
     // Reloads since tracked in useEffect
     reloader === true ? setReloader(false) : setReloader(true);
+  }
+
+  const getFinancialYearRange = () => {
+    const todayDate = new Date();
+    let startDate = new Date();
+    let endDate = new Date();
+
+    // Set start date
+    startDate.setDate(1); // First day of July
+    startDate.setMonth(6); // Set to July
+    // Set end date
+    endDate.setDate(30); // Last day of June
+    endDate.setMonth(5); // Set to June
+
+    if (todayDate.getMonth() <= 5) {
+      // set startDate to prev year
+      startDate.setFullYear(startDate.getFullYear() - 1);
+    } else if (todayDate.getMonth() >= 6) {
+      // set endDate to next year
+      endDate.setFullYear(endDate.getFullYear() + 1);
+    } else {
+      console.error("Error: Invalid month.");
+    }
+
+    return {
+      startDate,
+      endDate,
+    };
   };
 
   const getJobMetrics = async (jobTypes: string[]) => {
     if (jobTypes.length < 1) {
       return;
     }
-    const endDate = new Date();
-    let startDate = new Date();
-    startDate.setFullYear(startDate.getFullYear() - 1);
+    // Get date range of FY
+    const dateRange = getFinancialYearRange();
     // Get list of jobs within criteria
     for (let i = 0; i < jobTypes.length; i++) {
       try {
         let jobData: Job[] = await getJobsByTypeByDate(
           jobTypes[i],
-          startDate,
-          endDate
+          dateRange.startDate,
+          dateRange.endDate
         );
         if (!jobData) {
           jobData = [];
@@ -115,8 +141,18 @@ function Dashboard() {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      // setIsLoading(true);
+    const root = document.getElementById("dashboard-first-container")!;
+    const checkZoom = () =>
+      window.devicePixelRatio > 2.05
+        ? root.classList.add("zoomed")
+        : root.classList.remove("zoomed");
+    window.addEventListener("resize", checkZoom);
+    checkZoom();
+    return () => window.removeEventListener("resize", checkZoom);
+  }, []);
+  useEffect(() => {
+  const fetchData = async () => {
+    // setIsLoading(true);
 
       const [
         pinnedJobData,
@@ -222,8 +258,8 @@ function Dashboard() {
 
       getJobMetrics(jobTypes);
 
-      // setIsLoading(false);
-    };
+    // setIsLoading(false);
+  };
     fetchData();
   }, [reloader]);
 

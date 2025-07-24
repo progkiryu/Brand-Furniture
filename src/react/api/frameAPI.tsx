@@ -33,17 +33,14 @@ export const getFramesBySubJobId = async (subJobId: String) => {
   return frames;
 };
 
-// Create a new frame
-// export const createFrame = async (data: Frame) => {
-//   fetch(`${DBLink}/frame/postCreateFrame`, {
-//     method: "POST",
-//     mode: "cors",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify(data),
-//   })
-//     .then((res) => res.json())
-//     .catch((err) => console.error(err));
-// };
+// Get list of frames by status
+export const getFramesByStatus = async (status: String) => {
+  const frames = fetch(`${DBLink}/frame/getFramesByStatus/${status}`)
+    .then((res) => res.json())
+    .catch((err) => console.error(err));
+  if (!frames) return;
+  return frames;
+}
 
 export const createFrame = async (data: Frame) => {
   try {
@@ -67,17 +64,6 @@ export const createFrame = async (data: Frame) => {
 };
 
 // Delete a frame by ID
-// export const deleteFrameById = async (id: String) => {
-//   fetch(`${DBLink}/frame/deleteFrameById/${id}`, {
-//     method: "DELETE",
-//     mode: "cors",
-//     headers: { "Content-Type": "application/json" },
-//   })
-//     .then((res) => res.json())
-//     .catch((err) => console.error(err));
-// };
-
-// Delete a frame by ID
 export const deleteFrameById = async (id: String) => {
   try {
     const res = await fetch(`${DBLink}/frame/deleteFrameById/${id}`, {
@@ -95,18 +81,6 @@ export const deleteFrameById = async (id: String) => {
     return false; // Indicate failure
   }
 };
-
-// Update a frame
-// export const updateFrame = async (data: Frame) => {
-//   fetch(`${DBLink}/frame/putUpdateFrame`, {
-//     method: "PUT",
-//     mode: "cors",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify(data),
-//   })
-//     .then((res) => res.json())
-//     .catch((err) => console.log(err));
-// };
 
 export const updateFrame = async (data: Frame) => {
   try {

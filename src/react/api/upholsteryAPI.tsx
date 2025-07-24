@@ -35,17 +35,14 @@ export const getUpholsteryBySubJobId = async (subJobId: String) => {
   return upholstery;
 };
 
-// Create a new upholstery
-// export const createUpholstery = async (data: Upholstery) => {
-//   fetch(`${DBLink}/upholstery/postCreateUpholstery`, {
-//     method: "POST",
-//     mode: "cors",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify(data),
-//   })
-//     .then((res) => res.json())
-//     .catch((err) => console.error(err));
-// };
+// Get list of upholstery by status
+export const getUpholsteryByStatus = async (status: string) => {
+  const upholstery = fetch(`${DBLink}/upholstery/getUpholsteryByStatus/${status}`)
+    .then((res) => res.json())
+    .catch((err) => console.error(err));
+  if (!upholstery) return;
+  return upholstery;
+}
 
 export const createUpholstery = async (data: Upholstery) => {
   try {
@@ -69,17 +66,6 @@ export const createUpholstery = async (data: Upholstery) => {
 };
 
 // Delete a upholstery by ID
-// export const deleteUpholstery = async (id: String) => {
-//   fetch(`${DBLink}/upholstery/deleteUpholsteryById/${id}`, {
-//     method: "DELETE",
-//     mode: "cors",
-//     headers: { "Content-Type": "application/json" },
-//   })
-//     .then((res) => res.json())
-//     .catch((err) => console.error(err));
-// };
-
-// Delete a upholstery by ID
 export const deleteUpholstery = async (id: String) => {
   try {
     const res = await fetch(`${DBLink}/upholstery/deleteUpholsteryById/${id}`, {
@@ -97,18 +83,6 @@ export const deleteUpholstery = async (id: String) => {
     return false; // Indicate failure
   }
 };
-
-// // Update a upholstery
-// export const updateUpholstery = async (data: Upholstery) => {
-//   fetch(`${DBLink}/upholstery/putUpdateUpholstery`, {
-//     method: "PUT",
-//     mode: "cors",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify(data),
-//   })
-//     .then((res) => res.json())
-//     .catch((err) => console.error(err));
-// };
 
 // Update a upholstery
 export const updateUpholstery = async (data: Upholstery) => {
