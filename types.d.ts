@@ -69,6 +69,7 @@ type Notif = {
   notifTitle: string;
   notifDesc: string;
   time: Date;
+  jobId: string;
 };
 
 type DateRange = {

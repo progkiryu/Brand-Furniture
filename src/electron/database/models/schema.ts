@@ -90,6 +90,7 @@ const notifSchema = new mongoose.Schema(
     notifTitle: { type: String, required: true },
     notifDesc: { type: String, required: true },
     time: { type: Date, required: true },
+    jobId: { type: String, required: true },
   },
   {
     timestamps: true,

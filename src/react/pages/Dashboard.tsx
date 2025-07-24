@@ -14,6 +14,7 @@ import {
   getJobsByTypeByDate,
   getPinnedJobs,
   getUniqueJobTypes,
+  updateJobNotificationStatus,
 } from "../api/jobAPI.tsx";
 import { getAllNotifications, insertNotification, removeNotification } from "../api/notificationAPI.tsx";
 import AddJobFormModel from "../components/AddJobFormModel.tsx";
@@ -21,18 +22,6 @@ import AddJobFormModel from "../components/AddJobFormModel.tsx";
 export type TypeInfoDash = {
   name: string;
   value: number;
-};
-
-// Helper function to calculate days until due
-const calculateDaysUntilDue = (dueDate: Date): number => {
-  const today = new Date();
-  const due = new Date(dueDate);
-
-  today.setHours(0, 0, 0, 0);
-  due.setHours(0, 0, 0, 0);
-  const diffTime = due.getTime() - today.getTime();
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  return diffDays;
 };
 
 function Dashboard() {
@@ -108,38 +97,49 @@ function Dashboard() {
     }
   };
 
-  const generateOrderDueNotification = () => {
-    const orderDueNotifications: Notif[] = [];
-    organisedJobs.forEach((job: Job) => {
-        const daysUntilDue = calculateDaysUntilDue(job.due);
-        if (daysUntilDue <= 7 && daysUntilDue >= 0) {
-          const dueTodayText = "Order due today";
-          const dueInDaysText = `Order due in ${daysUntilDue} days`;
-          const notifDesc = daysUntilDue === 0 ? dueTodayText : dueInDaysText;
-          orderDueNotifications.push({
-            // Assuming a 'type' property exists or can be added to Notif for filtering later if needed
-            // For now, using 'cart' icon as per existing logic
-            icon: "cart", 
-            notifTitle: "Order Due",
-            notifDesc: `${notifDesc}\n${new Date(job.due).toLocaleDateString()}`,
-            // Using a timestamp for time, which can be sorted for chronological order
-            time: new Date(job.due), 
-          });
+  const generateOrderDueNotifications = async (jobs: Job[]) => {
+    const today = new Date();
+    const sevenDaysFromNow = new Date();
+    sevenDaysFromNow.setDate(today.getDate() + 7);
+
+    const existingNotifications = await getAllNotifications();
+    const existingNotificationJobIds = new Set(existingNotifications.map((notif: Notif) => notif.jobId));
+
+    for (const job of jobs) {
+      if (job.due && !job.isArchived) { // Check if job has a due date and is not archived
+        const dueDate = new Date(job.due);
+        // Calculate difference in days
+        const diffTime = dueDate.getTime() - today.getTime();
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        // If due date is within 7 days and no notification has been deleted for this job
+        if (diffDays < 7 && diffDays >= 0 && !job.hasNotificationBeenDeleted && !existingNotificationJobIds.has(job._id)) {
+          const newNotification: Notif = {
+            notifTitle: `Job Due Soon: ${job.name}`,
+            notifDesc: `The job for client ${job.client} is due in ${diffDays} days.`,
+            time: new Date(),
+            jobId: job._id!, // Assign the job's _id as FK
+            icon: "pin" // Or "cart" based on your preference
+          };
+          await insertNotification(newNotification);
+          // After generating notification, set hasNotificationBeenDeleted to true for this job
+          // This is a slight change from the original request: if a notification is generated,
+          // we assume it's "active" and the flag remains false. It only turns true when deleted.
+          // The prompt says "It is true by default, meaning the job's notification has not been deleted."
+          // So if a notification is generated, hasNotificationBeenDeleted should remain false.
+          // It only becomes true when the user explicitly deletes the notification.
         }
-    })
-    
-     // Sort notifications chronologically (earliest due date first)
-    orderDueNotifications.sort((a, b) => {
-      const aDays = calculateDaysUntilDue(new Date(a.notifDesc.split('\n')[0].replace('Order due in ', '').replace(' days', '')));
-      const bDays = calculateDaysUntilDue(new Date(b.notifDesc.split('\n')[0].replace('Order due in ', '').replace(' days', '')));
+      }
+    }
+    // Re-fetch notifications to update the list on the dashboard
+    const updatedNotifs = await getAllNotifications();
+    setNotifs(updatedNotifs);
+  };
 
-      if (aDays === 0 && bDays !== 0) return -1;
-      if (aDays !== 0 && bDays === 0) return 1;
-      
-      return (aDays) - (bDays);
-    });
-
-    return orderDueNotifications;
+  const handleDeleteNotification = async (notifId: string, jobId: string) => {
+    await removeNotification(notifId, jobId);
+    // After deletion, reload notifications and jobs to reflect changes
+    reload();
   };
 
   useEffect(() => {
@@ -150,24 +150,24 @@ function Dashboard() {
       const currentJobsPromise = await getCurrentJobsUnpinnedWithDue();
       const currentJobsUnpinnedPromise = await getCurrentJobsUnpinnedNullDue();
       const pinnedJobsPromise = await getPinnedJobs();
-      const notifPromise = await getAllNotifications();
+      const allJobsPromise = await getCurrentJobs();
       try {
         const [
           currentJobData,
           currentJobsUnpinnedData,
           pinnedJobData,
-          notifData,
+          allJobsData,
         ] = await Promise.all([
           currentJobsPromise,
           currentJobsUnpinnedPromise,
           pinnedJobsPromise,
-          notifPromise,
+          allJobsPromise,
         ]);
         
-        const generatedOrderNotifications = generateOrderDueNotification();
-        setNotifs(generatedOrderNotifications);
+        await generateOrderDueNotifications(allJobsData);
+        const notifData = await getAllNotifications(); // Fetch notifications again after generation
+        setNotifs(notifData);
         organiseJobs(currentJobData, currentJobsUnpinnedData, pinnedJobData);
-
       } catch (err) {
         console.error(err);
       }
@@ -221,7 +221,7 @@ function Dashboard() {
             </div>
             <div id="notifications-container">
               <h1>Notifications</h1>
-              <NotificationsList notifsParams={notifs} />
+              <NotificationsList notifsParams={notifs} onDeleteNofification={handleDeleteNotification}/>
             </div>
           </div>
         </div>

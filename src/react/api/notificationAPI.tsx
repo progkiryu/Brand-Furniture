@@ -1,4 +1,5 @@
 import { DBLink } from "../App";
+import { updateJobNotificationStatus } from "./jobAPI";
 
 export const getAllNotifications = async () => {
   const notifications = fetch(`${DBLink}/notification/getAllNotifications`)
@@ -21,12 +22,18 @@ export const insertNotification = async (data: Notif) => {
     .catch((err) => console.log(err));
 };
 
-export const removeNotification = async (id: String) => {
+export const removeNotification = async (id: String, jobId: String) => {
   fetch(`${DBLink}/notification/removeNotification/${id}`, {
     method: "DELETE",
     mode: "cors",
     headers: { "Content-Type": "application/json" },
   })
     .then((res) => res.json())
+    .then(async (data) => {
+      // If notification is successfully removed, update the job's notification status
+      if (data) {
+        await updateJobNotificationStatus(jobId, true); // Set to true as notification has been deleted
+      }
+    })
     .catch((err) => console.log(err));
 };

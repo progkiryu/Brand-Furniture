@@ -48,12 +48,14 @@ export const removeNotification = async (
 
         if (!id) {
             res.status(404).json({ message: "Failed to provide notification ID!"});
+            return;
         }
 
         const result = await schemas.Notif.findByIdAndDelete<Notif>();
 
         if (!result) {
             res.status(404).json({ message: `Failed to find job with ID: ${id}! Or could not process request.` });
+            return;
         }
 
         res.status(200).json(result).end();

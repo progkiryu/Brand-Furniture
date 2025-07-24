@@ -203,6 +203,22 @@ export const deleteJob = async (id: String) => {
   }
 };
 
+export const updateJobNotificationStatus = async (jobId: String, status: boolean) => {
+  try {
+    const response = await fetch(`${DBLink}/job/updateJobNotificationStatus`, {
+      method: "PUT", // Or POST, depending on your API design
+      mode: "cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ jobId, status }),
+    });
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+};
+
 // Update a job
 export const updateJob = async (data: Job): Promise<Job | null> => {
   try {

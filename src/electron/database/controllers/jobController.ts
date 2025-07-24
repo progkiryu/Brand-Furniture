@@ -281,6 +281,32 @@ export const updateJob = async (
   }
 };
 
+export const updateJobNotificationStatus = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  try {
+    const { jobID, status } = req.body;
+    if (!jobID || typeof status !== 'boolean') {
+      res.status(400).json({ message: "Error: Missing jobId or invalid status." });
+      return;
+    }
+    const result = await schemas.Job.findByIdAndUpdate(
+      jobID,
+      { hasNotificationBeenDeleted: status },
+      { new: true }
+    );
+    if (!result) {
+      res.status(404).json({ message: `Error: Failed to find job with ID: ${jobID} or update status.` });
+      return;
+    }
+    res.status(200).json(result);
+  } catch (err) {
+    console.error(err);
+    res.status(400).json(err);
+  }
+};
+
 export const removeJob = async (
   req: express.Request,
   res: express.Response
