@@ -116,6 +116,18 @@ function Dashboard() {
     }
   };
 
+  // in Dashboard.tsx (or any script that runs once on page load)
+useEffect(() => {
+  const root = document.getElementById("dashboard-first-container")!;
+  const checkZoom = () =>
+    window.devicePixelRatio > 2.05
+      ? root.classList.add("zoomed")
+      : root.classList.remove("zoomed");
+  window.addEventListener("resize", checkZoom);
+  checkZoom();
+  return () => window.removeEventListener("resize", checkZoom);
+}, []);
+
   const fetchData = async () => {
     // setIsLoading(true);
     const jobTypes = await getUniqueJobTypes();
