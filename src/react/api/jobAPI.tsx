@@ -117,6 +117,29 @@ export const createJob = async (data: Job) => {
   }
 };
 
+// Get list of jobs with fall within a specific month and year
+export const getJobsByMonthAndYearNumber = async (
+  monthNumber: number,
+  yearNumber: number
+) => {
+  const data = {
+    monthNumber: monthNumber,
+    yearNumber: yearNumber,
+  };
+  const jobs = fetch(`${DBLink}/job/getJobsByMonthAndYearNumber`, {
+    method: "POST",
+    mode: "cors",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  })
+    .then((res) => res.json())
+    .catch((err) => console.error(err));
+  if (!jobs) {
+    return;
+  }
+  return jobs;
+};
+
 // Get list of jobs specific type within date range
 export const getJobsByTypeByDate = async (
   type: string,

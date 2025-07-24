@@ -4,6 +4,7 @@ import {
   getAllCushions,
   getCushionById,
   getCushionsBySubJobId,
+  getCushionsByStatus,
   postCreateCushion,
   putUpdateCushion,
 } from "../controllers/cushionController.js";
@@ -13,6 +14,7 @@ export default (router: express.Router) => {
   router.get("/cushion/getAllCushions", getAllCushions);
   router.get("/cushion/getCushionById/:id", getCushionById);
   router.get("/cushion/getCushionsBySubJobId/:subjobid", getCushionsBySubJobId);
+  router.get("/cushion/getCushionsByStatus/:status", getCushionsByStatus);
   // Post Routes
   router.post("/cushion/postCreateCushion", postCreateCushion);
   // Delete Routes

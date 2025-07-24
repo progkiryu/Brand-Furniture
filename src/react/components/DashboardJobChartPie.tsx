@@ -21,10 +21,12 @@ export default function JobAnalyticsDash(Props: { data: TypeInfoDash[] }) {
           fontWeight: "600",
           color: "#1e293b",
           margin: 0,
+          textAlign: "center",
         }}
       >
-        Annual Job Type Distribution
+        Job-Type Distribution Of Current Financial Year
       </h3>
+
       <PieChart width={320} height={320}>
         <Pie
           data={Props.data}

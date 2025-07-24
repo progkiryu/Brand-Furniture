@@ -14,6 +14,7 @@ import {
   getJobByTypeByDate,
   getCurrentJobsUnpinnedNullDue,
   getCurrentJobsUnpinnedWithDue,
+  getJobsByMonthAndYearNumber,
 } from "../controllers/jobController.js";
 
 export default (router: express.Router) => {
@@ -35,6 +36,7 @@ export default (router: express.Router) => {
 
   // Post Routes
   router.post("/job/insertJob", insertJob);
+  router.post("/job/getJobsByMonthAndYearNumber", getJobsByMonthAndYearNumber);
   router.post("/job/getJobsByTypeByDate", getJobByTypeByDate);
   router.post("/job/getFilteredJobsByDate", getFilteredJobsByDate);
   router.post("/job/getFilteredJobsByType", getFilteredJobsByType);

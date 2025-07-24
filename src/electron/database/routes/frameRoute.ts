@@ -6,6 +6,7 @@ import {
   deleteFrameById,
   putUpdateFrame,
   getFramesBySubJobId,
+  getFramesByStatus,
 } from "../controllers/frameController.js";
 
 export default (router: express.Router) => {
@@ -13,6 +14,7 @@ export default (router: express.Router) => {
   router.get("/frame/getAllFrames", getAllFrames);
   router.get("/frame/getFrameById/:id", getFrameById);
   router.get("/frame/getFramesBySubJobId/:subjobid", getFramesBySubJobId);
+  router.get("/frame/getFramesByStatus/:status", getFramesByStatus);
   // Post Routes
   router.post("/frame/postCreateFrame", postCreateFrame);
   // Delete Routes

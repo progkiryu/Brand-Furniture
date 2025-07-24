@@ -63,6 +63,27 @@ export const getUpholsteryBySubJobId = async (
   }
 };
 
+export const getUpholsteryByStatus = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  try {
+    const status = req.params.status;
+    const upholstery = await schemas.Upholstery.find({
+      status: { $in: status }
+    });
+    if (!upholstery) {
+      res.status(404).json({ message: "Error: Failed to retrieve upholstery" });
+      return;
+    }
+    res.status(200).json(upholstery);
+  }
+  catch (err) {
+    console.error(err);
+    res.status(400).json(err);
+  }
+}
+
 // Create a new upholstery
 export const postCreateUpholstery = async (
   req: express.Request,

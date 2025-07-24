@@ -45,7 +45,7 @@ export const getCushionsBySubJobId = async (
 ) => {
   try {
     const subJobId = req.params.subjobid;
-    const cushions = await schemas.SubJob.find({
+    const cushions = await schemas.Cushion.find({
       subJobId: { $in: subJobId },
     });
     if (!cushions) {
@@ -59,6 +59,27 @@ export const getCushionsBySubJobId = async (
     res.status(400).json(err);
   }
 };
+
+export const getCushionsByStatus = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  try {
+    const status = req.params.status;
+    const cushions = await schemas.Cushion.find({
+      status: { $in: status }
+    });
+    if (!cushions) {
+      res.status(404).json({ message: "Error: Failed to retrieve cushions" });
+      return;
+    }
+    res.status(200).json(cushions);
+  }
+  catch (err) {
+    console.error(err);
+    res.status(400).json(err);
+  }
+}
 
 // Create new cushion
 export const postCreateCushion = async (
