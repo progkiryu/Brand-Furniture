@@ -76,6 +76,16 @@ type DateRange = {
   endDate: Date;
 };
 
+interface RequestProps {
+  searchTerm: string;
+  archiveTerm: string;
+  jobNameTerm?: string;
+  invoiceIdTerm?: string;
+  clientTerm?: string;
+  dueDateTerm?: string;
+  yearTerm?: string;
+}
+
 interface Window {
   electron: {
     greeting: () => void;

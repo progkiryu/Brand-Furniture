@@ -3,10 +3,16 @@ import { FaEdit, FaThumbtack } from "react-icons/fa";
 
 import "../styles/JobTable.css";
 import { FaThumbtackSlash } from "react-icons/fa6";
-import { updateJob } from "../api/jobAPI";
+
+import { updateJob, getJobById, multiFilterSearch } from "../api/jobAPI";
+import { getFramesByStatus } from "../api/frameAPI";
+import { getCushionsByStatus } from "../api/cushionAPI";
+import { getUpholsteryByStatus } from "../api/upholsteryAPI";
+import { getSubJobById } from "../api/subJobAPI";
 
 interface JobTableProps {
   searchTerm: string;
+  invoiceIDTerm?: "asc" | "desc";
   jobNameTerm?: "asc" | "desc";
   clientTerm?: "asc" | "desc";
   dueDateTerm?: "asc" | "desc";
@@ -43,6 +49,7 @@ function JobTable({
   productionTerm,
   archiveTerm,
   handleJobClick,
+  invoiceIDTerm,
   clientTerm,
   dueDateTerm,
   jobNameTerm,
@@ -57,340 +64,258 @@ function JobTable({
     setSelectedJobId(initialSelectedJobId || null);
   }, [initialSelectedJobId]);
 
-  const searchFilter = (searchTerm: String) => {
-    const lowerCaseSearchTerm = searchTerm.toLowerCase();
-    const filteredJobs = jobs.filter((job) => {
-      if (job.name.toLowerCase().includes(lowerCaseSearchTerm)) {
-        return true;
-      }
-    });
-    return filteredJobs;
-  };
-
-  const ascDescFilter = (
-    sortedJobs: Job[],
-    invoiceIDTerm?: "asc" | "desc",
-    jobNameTerm?: "asc" | "desc",
-    clientTerm?: "asc" | "desc",
-    dueDateTerm?: "asc" | "desc"
-  ) => {
+  const handleMultiFilter = async () => {
+    var filteredJobs: Job[] = [];
+    var props: RequestProps = { searchTerm: searchTerm, archiveTerm: String(archiveTerm) };
     if (invoiceIDTerm) {
-      if (invoiceIDTerm === "asc") {
-        sortedJobs.sort((a, b) => {
-          const invoiceIdA = a.invoiceId?.toLowerCase() || "";
-          const invoiceIdB = b.invoiceId?.toLowerCase() || "";
-          return invoiceIdA.localeCompare(invoiceIdB);
-        });
-      } else if (invoiceIDTerm === "desc") {
-        sortedJobs.sort((a, b) => {
-          const invoiceIdA = a.invoiceId?.toLowerCase() || "";
-          const invoiceIdB = b.invoiceId?.toLowerCase() || "";
-          return invoiceIdB.localeCompare(invoiceIdA);
-        });
-      }
-    }
-    if (jobNameTerm) {
-      if (jobNameTerm === "asc") {
-        sortedJobs.sort((a, b) => {
-          const jobNameA = a.name.toLowerCase();
-          const jobNameB = b.name.toLowerCase();
-          return jobNameA.localeCompare(jobNameB);
-        });
-      } else if (jobNameTerm === "desc") {
-        sortedJobs.sort((a, b) => {
-          const jobNameA = a.name.toLowerCase();
-          const jobNameB = b.name.toLowerCase();
-          return jobNameB.localeCompare(jobNameA);
-        });
-      }
+      invoiceIDTerm === "asc" ? props.invoiceIdTerm = "ascending" : props.invoiceIdTerm = "descending";
     }
     if (clientTerm) {
-      if (clientTerm === "asc") {
-        sortedJobs.sort((a, b) => {
-          const clientA = a.client.toLowerCase();
-          const clientB = b.client.toLowerCase();
-          return clientA.localeCompare(clientB);
-        });
-      } else if (clientTerm === "desc") {
-        sortedJobs.sort((a, b) => {
-          const clientA = a.client.toLowerCase();
-          const clientB = b.client.toLowerCase();
-          return clientB.localeCompare(clientA);
-        });
-      }
+      clientTerm === "asc" ? props.clientTerm = "ascending" : props.clientTerm = "descending";
+    }
+    if (jobNameTerm) {
+      jobNameTerm === "asc" ? props.jobNameTerm = "ascending" : props.jobNameTerm = "descending";
     }
     if (dueDateTerm) {
-      if (dueDateTerm === "asc") {
-        sortedJobs.sort((a, b) => {
-          const dueDateA = String(a.due).toLowerCase();
-          const dueDateB = String(b.due).toLowerCase();
-          return dueDateA.localeCompare(dueDateB);
-        });
-      } else if (dueDateTerm === "desc") {
-        sortedJobs.sort((a, b) => {
-          const dueDateA = String(a.due).toLowerCase();
-          const dueDateB = String(b.due).toLowerCase();
-          return dueDateB.localeCompare(dueDateA);
-        });
-      }
+      dueDateTerm === "asc" ? props.dueDateTerm = "ascending" : props.dueDateTerm = "descending";
     }
-    return sortedJobs;
-  };
+    if (yearTerm !== "--") {
+      props.yearTerm = yearTerm;
+    }
+    filteredJobs = await multiFilterSearch(props);
+    return filteredJobs;
+  }
 
-  const statusFilter = (
+  const statusFilter = async (
     sortedJobs: Job[],
-    cutTerm: boolean,
-    sewnTerm: boolean,
-    upholsterTerm: boolean,
-    foamedTerm: boolean,
-    completeTerm: boolean,
-    productionTerm: boolean
   ) => {
-    const statusJobSet = new Set<Job>();
+    var jobIdSet = new Set<string>();
     if (cutTerm === true) {
       const cutJobSet = new Set<Job>();
       const cutSubJobSet = new Set<SubJob>();
-      const cutCushions: Cushion[] = cushions.filter((cushion: Cushion) => {
-        if (cushion.status === "Upholstery Cut") return true;
-      });
-      cutCushions.map((cushion: Cushion) => {
-        const cutSubJob = subJobs.find(
-          (subJob: SubJob) => subJob._id === cushion.subJobId
-        );
+
+      const cutUpholstery: Cushion[] = await getCushionsByStatus("Upholstery Cut");
+      const cutCushionPromise = cutUpholstery.map(async (cushion: Cushion) => {
+        const cutSubJob = await getSubJobById(cushion.subJobId);
         if (cutSubJob) cutSubJobSet.add(cutSubJob);
       });
+
+      await Promise.all(cutCushionPromise);
+      
       if (cutSubJobSet.size > 0) {
         const cutSubJobArray = [...cutSubJobSet];
-        cutSubJobArray.map((subJob: SubJob) => {
-          const cutJob = jobs.find((job: Job) => job._id === subJob.jobId);
+        const cutSubJobPromise = cutSubJobArray.map(async (subJob: SubJob) => {
+          const cutJob = await getJobById(subJob.jobId);
           if (cutJob) cutJobSet.add(cutJob);
         });
+
+        await Promise.all(cutSubJobPromise);
+
         if (cutJobSet.size > 0) {
           const cutJobArray = [...cutJobSet];
           cutJobArray.map((job: Job) => {
-            statusJobSet.add(job);
+            if (job._id) jobIdSet.add(job._id);
           });
         }
-      } else {
-        sortedJobs = [];
       }
-      console.log(statusJobSet);
     }
     if (upholsterTerm === true) {
       const upholsterJobSet = new Set<Job>();
       const upholsterSubJobSet = new Set<SubJob>();
 
-      const upholsterUpholstery: Upholstery[] = upholstery.filter(
-        (upholster: Upholstery) => {
-          if (upholster.status === "Body Upholstered") return true;
-        }
-      );
-      upholsterUpholstery.map((upholster: Upholstery) => {
-        const upholsterSubJob = subJobs.find(
-          (subJob: SubJob) => subJob._id === upholster.subJobId
-        );
-        if (upholsterSubJob) upholsterSubJobSet.add(upholsterSubJob);
-      });
-      const upholsterCushions: Cushion[] = cushions.filter(
-        (cushion: Cushion) => {
-          if (cushion.status === "Body Upholstered") return true;
-        }
-      );
-      upholsterCushions.map((cushion: Cushion) => {
-        const upholsterSubJob = subJobs.find(
-          (subJob: SubJob) => subJob._id === cushion.subJobId
-        );
+      const upholsterUpholstery: Upholstery[] = await getUpholsteryByStatus("Body Upholstered");
+      const upholsterUpholsteryPromise = upholsterUpholstery.map(async (upholster: Upholstery) => {
+        const upholsterSubJob = await getSubJobById(upholster.subJobId);
         if (upholsterSubJob) upholsterSubJobSet.add(upholsterSubJob);
       });
 
+      await Promise.all(upholsterUpholsteryPromise);
+
+      const upholsterCushions: Cushion[] = await getCushionsByStatus("Body Upholstered");
+      const upholsterCushionPromise = upholsterCushions.map(async (cushion: Cushion) => {
+        const cushionSubJob = await getSubJobById(cushion.subJobId);
+        if (cushionSubJob) upholsterSubJobSet.add(cushionSubJob);
+      });
+
+      await Promise.all(upholsterCushionPromise);
+
       if (upholsterSubJobSet.size > 0) {
         const upholsterSubJobArray = [...upholsterSubJobSet];
-        upholsterSubJobArray.map((subJob: SubJob) => {
-          const upholsterJob = jobs.find(
-            (job: Job) => job._id === subJob.jobId
-          );
+        const upholsterSubJobPromise = upholsterSubJobArray.map(async (subJob: SubJob) => {
+          const upholsterJob = await getJobById(subJob.jobId);
           if (upholsterJob) upholsterJobSet.add(upholsterJob);
         });
+
+        await Promise.all(upholsterSubJobPromise);
+
         if (upholsterJobSet.size > 0) {
           const upholsterJobArray = [...upholsterJobSet];
           upholsterJobArray.map((job: Job) => {
-            statusJobSet.add(job);
+            if (job._id) jobIdSet.add(job._id);
           });
         }
-      } else {
-        sortedJobs = [];
       }
     }
+
     if (sewnTerm === true) {
       const sewnJobSet = new Set<Job>();
       const sewnSubJobSet = new Set<SubJob>();
 
-      const sewnCushions: Cushion[] = cushions.filter((cushion: Cushion) => {
-        if (cushion.status === "Upholstery Sewn") return true;
-      });
-      sewnCushions.map((cushion: Cushion) => {
-        const sewnSubJob = subJobs.find(
-          (subJob: SubJob) => subJob._id === cushion.subJobId
-        );
+      const sewnCushions: Cushion[] = await getCushionsByStatus("Upholstery Sewn");
+      const sewnCushionsPromise = sewnCushions.map(async (cushion: Cushion) => {
+        const sewnSubJob = await getSubJobById(cushion.subJobId);
         if (sewnSubJob) sewnSubJobSet.add(sewnSubJob);
       });
+
+      await Promise.all(sewnCushionsPromise);
+
       if (sewnSubJobSet.size > 0) {
         const sewnSubJobArray = [...sewnSubJobSet];
-        sewnSubJobArray.map((subJob: SubJob) => {
-          const sewnJob = jobs.find((job: Job) => job._id === subJob.jobId);
+        const sewnSubJobPromise = sewnSubJobArray.map(async (subJob: SubJob) => {
+          const sewnJob = await getJobById(subJob.jobId);
           if (sewnJob) sewnJobSet.add(sewnJob);
         });
+
+        await Promise.all(sewnSubJobPromise);
+
         if (sewnJobSet.size > 0) {
           const sewnJobArray = [...sewnJobSet];
-          sewnJobArray.map((job: Job) => {
-            statusJobSet.add(job);
+          sewnJobArray.map(async (job: Job) => {
+            if (job._id) jobIdSet.add(job._id);
           });
         }
-      } else {
-        sortedJobs = [];
       }
     }
     if (foamedTerm === true) {
       const foamedJobSet = new Set<Job>();
       const foamedSubJobSet = new Set<SubJob>();
 
-      const foamedFrames: Frame[] = frames.filter((frame: Frame) => {
-        if (frame.status === "Frame Foamed") return true;
+      const foamedFrames: Frame[] = await getFramesByStatus("Frame Foamed");
+      const foamedFramesPromise = foamedFrames.map(async (frame: Frame) => {
+        const frameSubJob = await getSubJobById(frame.subJobId);
+        if (frameSubJob) foamedSubJobSet.add(frameSubJob);
       });
-      foamedFrames.map((frame: Frame) => {
-        const foamedSubJob = subJobs.find(
-          (subJob: SubJob) => subJob._id === frame.subJobId
-        );
-        if (foamedSubJob) foamedSubJobSet.add(foamedSubJob);
-      });
+
+      await Promise.all(foamedFramesPromise);
+
       if (foamedSubJobSet.size > 0) {
         const foamedSubJobArray = [...foamedSubJobSet];
-        foamedSubJobArray.map((subJob: SubJob) => {
-          const foamedJob = jobs.find((job: Job) => job._id === subJob.jobId);
+        const foamedSubJobPromise = foamedSubJobArray.map(async (subJob: SubJob) => {
+          const foamedJob = await getJobById(subJob.jobId);
           if (foamedJob) foamedJobSet.add(foamedJob);
         });
+
+        await Promise.all(foamedSubJobPromise);
+
         if (foamedJobSet.size > 0) {
           const foamedJobArray = [...foamedJobSet];
           foamedJobArray.map((job: Job) => {
-            statusJobSet.add(job);
+            if (job._id) jobIdSet.add(job._id);
           });
         }
-      } else {
-        sortedJobs = [];
       }
     }
     if (completeTerm === true) {
       const completeJobSet = new Set<Job>();
       const completeSubJobSet = new Set<SubJob>();
 
-      const completeFrames: Frame[] = frames.filter((frame: Frame) => {
-        if (frame.status === "Complete") return true;
-      });
-      completeFrames.map((frame: Frame) => {
-        const completeSubJob = subJobs.find(
-          (subJob: SubJob) => subJob._id === frame.subJobId
-        );
-        if (completeSubJob) completeSubJobSet.add(completeSubJob);
+      const completeFrames: Frame[] = await getFramesByStatus("Complete");
+      const completeFramesPromise = completeFrames.map(async (frame: Frame) => {
+        const frameSubJob = await getSubJobById(frame.subJobId);
+        if (frameSubJob) completeSubJobSet.add(frameSubJob);
       });
 
-      const completeCushions: Cushion[] = cushions.filter(
-        (cushion: Cushion) => {
-          if (cushion.status === "Complete") return true;
-        }
-      );
-      completeCushions.map((cushion: Cushion) => {
-        const completeSubJob = subJobs.find(
-          (subJob: SubJob) => subJob._id === cushion.subJobId
-        );
-        if (completeSubJob) completeSubJobSet.add(completeSubJob);
+      await Promise.all(completeFramesPromise);
+
+      const completeCushions: Cushion[] = await getCushionsByStatus("Complete");
+      const completeCushionsPromise = completeCushions.map(async (cushion: Cushion) => {
+        const cushionSubJob = await getSubJobById(cushion.subJobId);
+        if (cushionSubJob) completeSubJobSet.add(cushionSubJob);
+      }); 
+
+      await Promise.all(completeCushionsPromise);
+
+      const completeUpholstery: Upholstery[] = await getUpholsteryByStatus("Complete");
+      const completeUpholsteryPromise = completeUpholstery.map(async (upholster: Upholstery) => {
+        const upholsterSubJob = await getSubJobById(upholster.subJobId);
+        if (upholsterSubJob) completeSubJobSet.add(upholsterSubJob);
       });
 
-      const completeUpholstery: Upholstery[] = upholstery.filter(
-        (upholster: Upholstery) => {
-          if (upholster.status === "Complete") return true;
-        }
-      );
-      completeUpholstery.map((upholster: Upholstery) => {
-        const completeSubJob = subJobs.find(
-          (subJob: SubJob) => subJob._id === upholster.subJobId
-        );
-        if (completeSubJob) completeSubJobSet.add(completeSubJob);
-      });
+      await Promise.all(completeUpholsteryPromise);
 
       if (completeSubJobSet.size > 0) {
         const completeSubJobArray = [...completeSubJobSet];
-        completeSubJobArray.map((subJob: SubJob) => {
-          const completeJob = jobs.find((job: Job) => job._id === subJob.jobId);
+        const completeSubJobPromise = completeSubJobArray.map(async (subJob: SubJob) => {
+          const completeJob = await getJobById(subJob.jobId);
           if (completeJob) completeJobSet.add(completeJob);
         });
+
+        await Promise.all(completeSubJobPromise);
+
         if (completeJobSet.size > 0) {
           const completeJobArray = [...completeJobSet];
-          completeJobArray.map((job: Job) => {
-            statusJobSet.add(job);
+          completeJobArray.map(async (job: Job) => {
+            if (job._id) jobIdSet.add(job._id);
           });
         }
-      } else {
-        sortedJobs = [];
       }
     }
     if (productionTerm === true) {
       const productionJobSet = new Set<Job>();
       const productionSubJobSet = new Set<SubJob>();
 
-      const productionFrames: Frame[] = frames.filter((frame: Frame) => {
-        if (frame.status === "In Production") return true;
+      const productionFrames: Frame[] = await getFramesByStatus("Complete");
+      const productionFramesPromise = productionFrames.map(async (frame: Frame) => {
+        const frameSubJob = await getSubJobById(frame.subJobId);
+        if (frameSubJob) productionSubJobSet.add(frameSubJob);
       });
-      productionFrames.map((frame: Frame) => {
-        const productionSubJob = subJobs.find(
-          (subJob: SubJob) => subJob._id === frame.subJobId
-        );
+
+      await Promise.all(productionFramesPromise);
+
+      const productionCushions: Cushion[] = await getCushionsByStatus("Complete");
+      const productionCushionsPromise = productionCushions.map(async (cushion: Cushion) => {
+        const productionSubJob = await getSubJobById(cushion.subJobId);
+        if (productionSubJob) productionSubJobSet.add(productionSubJob);
+      }); 
+
+      await Promise.all(productionCushionsPromise);
+
+      const productionUpholstery: Upholstery[] = await getUpholsteryByStatus("Complete");
+      const productionUpholsteryPromise = productionUpholstery.map(async (upholster: Upholstery) => {
+        const productionSubJob = await getSubJobById(upholster.subJobId);
         if (productionSubJob) productionSubJobSet.add(productionSubJob);
       });
 
-      const productionCushions: Cushion[] = cushions.filter(
-        (cushion: Cushion) => {
-          if (cushion.status === "In Production") return true;
-        }
-      );
-      productionCushions.map((cushion: Cushion) => {
-        const productionSubJob = subJobs.find(
-          (subJob: SubJob) => subJob._id === cushion.subJobId
-        );
-        if (productionSubJob) productionSubJobSet.add(productionSubJob);
-      });
-
-      const productionUpholstery: Upholstery[] = upholstery.filter(
-        (upholster: Upholstery) => {
-          if (upholster.status === "In Production") return true;
-        }
-      );
-      productionUpholstery.map((upholster: Upholstery) => {
-        const productionSubJob = subJobs.find(
-          (subJob: SubJob) => subJob._id === upholster.subJobId
-        );
-        if (productionSubJob) productionSubJobSet.add(productionSubJob);
-      });
+      await Promise.all(productionUpholsteryPromise);
 
       if (productionSubJobSet.size > 0) {
-        const productionSubJobArray = [...productionSubJobSet];
-        productionSubJobArray.map((subJob: SubJob) => {
-          const productionJob = jobs.find(
-            (job: Job) => job._id === subJob.jobId
-          );
-          if (productionJob) productionJobSet.add(productionJob);
+        const completeSubJobArray = [...productionSubJobSet];
+        const completeSubJobPromise = completeSubJobArray.map(async (subJob: SubJob) => {
+          const completeJob = await getJobById(subJob.jobId);
+          if (completeJob) productionJobSet.add(completeJob);
         });
+
+        await Promise.all(completeSubJobPromise);
+
         if (productionJobSet.size > 0) {
           const productionJobArray = [...productionJobSet];
-          productionJobArray.map((job: Job) => {
-            statusJobSet.add(job);
+          productionJobArray.map(async (job: Job) => {
+            if (job._id) jobIdSet.add(job._id);
           });
         }
-      } else {
-        sortedJobs = [];
       }
     }
-    if (statusJobSet.size > 0) {
-      sortedJobs = [...statusJobSet];
+    if (jobIdSet.size > 0) {
+      const jobIdArray = [...jobIdSet];
+      const newJobs: Job[] = [];
+      const jobsPromise = jobIdArray.map(async (id: string) => {
+        const newJob = await getJobById(id);
+        if (newJob) newJobs.push(newJob);
+      });
+
+      await Promise.all(jobsPromise);
+
+      sortedJobs = newJobs;
     }
     return sortedJobs;
   };
@@ -443,21 +368,15 @@ function JobTable({
   };
 
   useEffect(() => {
-    let filtered = [...jobs];
-    filtered = searchFilter(searchTerm);
-    filtered = ascDescFilter(filtered, jobNameTerm, clientTerm, dueDateTerm);
-    filtered = statusFilter(
-      filtered,
-      cutTerm,
-      sewnTerm,
-      upholsterTerm,
-      foamedTerm,
-      completeTerm,
-      productionTerm
-    );
-    filtered = archiveFilter(filtered, archiveTerm);
-    filtered = yearFilter(filtered, yearTerm);
-    setDisplayedJobs(filtered);
+    const filter = async () => {
+      let filtered = jobs;
+      filtered = await handleMultiFilter();
+      // filtered = await statusFilter(filtered);
+      // filtered = archiveFilter(filtered, archiveTerm);
+      // filtered = yearFilter(filtered, yearTerm);
+      setDisplayedJobs(filtered);
+    }
+    filter();
   }, [
     searchTerm,
     jobs,
@@ -465,6 +384,7 @@ function JobTable({
     frames,
     cushions,
     upholstery,
+    invoiceIDTerm,
     clientTerm,
     dueDateTerm,
     jobNameTerm,

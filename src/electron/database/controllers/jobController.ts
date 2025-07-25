@@ -428,3 +428,63 @@ export const removeJob = async (
     res.status(400).json(err);
   }
 };
+
+export const multiFilterSearch = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  try {
+    const {
+      searchTerm,
+      invoiceIdTerm,
+      jobNameTerm,
+      clientTerm,
+      dueDateTerm,
+      archiveTerm,
+      yearTerm
+    }: RequestProps = req.body;
+    
+    var search;
+    var isArchived = archiveTerm === "true" ? true : false;
+    if (yearTerm) {
+      search = { 
+        name: { $regex: new RegExp(searchTerm, "i") }, 
+        isArchived: isArchived,
+        due: {
+          $gte: new Date(yearTerm + "-01-01T00:00:00Z"),
+          $lt: new Date(String(parseInt(yearTerm) + 1) + "-01-01T00:00:00Z") 
+        }
+      }
+    }
+    else { 
+      search = { 
+        name: { $regex: new RegExp(searchTerm, "i") },
+        isArchived: isArchived
+      }
+    }
+
+    var sortCriteria = {};
+    if (invoiceIdTerm) {
+      sortCriteria = { invoiceId: invoiceIdTerm }
+    }
+    else if (clientTerm) {
+      sortCriteria = { client: clientTerm };
+    }
+    else if (dueDateTerm) {
+      sortCriteria = { due: dueDateTerm };
+    }
+    else if (jobNameTerm) {
+      sortCriteria = { name: jobNameTerm };
+    }
+
+    const filteredJobs = await schemas.Job.find(search).sort(sortCriteria).collation({ locale: "en", strength: 2 });
+    if (!filteredJobs) {
+      res.status(404).json({ message: "Could not fetch filtered Jobs!" });
+    }
+    res.status(200).json(filteredJobs);
+  }
+  catch (err) {
+    console.error(err);
+    res.sendStatus(400);
+  }
+}

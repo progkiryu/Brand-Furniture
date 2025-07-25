@@ -31,7 +31,7 @@ const subJobSchema = new mongoose.Schema(
     dueDate: { type: Date, required: false },
     frameList: { type: [String], default: [] },
     cushionList: { type: [String], default: [] },
-    upholsteryList: { type: [String], defailt: [] },
+    upholsteryList: { type: [String], default: [] },
   },
   {
     timestamps: true,
