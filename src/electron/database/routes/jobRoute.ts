@@ -14,11 +14,8 @@ import {
   getJobByTypeByDate,
   getCurrentJobsUnpinnedNullDue,
   getCurrentJobsUnpinnedWithDue,
-<<<<<<< HEAD
   multiFilterSearch,
-=======
   getJobsByMonthAndYearNumber,
->>>>>>> 995e311d9a68faf9e2aaa873589f308c23c0540f
 } from "../controllers/jobController.js";
 
 export default (router: express.Router) => {
