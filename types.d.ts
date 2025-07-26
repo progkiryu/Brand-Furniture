@@ -83,14 +83,14 @@ interface RequestProps {
   invoiceIdTerm?: string;
   clientTerm?: string;
   dueDateTerm?: string;
-  yearTerm?: string;
+  yearTerm: string;
 
-  cutTerm?: string;
-  sewnTerm?: string;
-  upholsterTerm?: string;
-  foamedTerm?: string;
-  completeTerm?: string;
-  productionTerm?: string;
+  cutTerm: string;
+  sewnTerm: string;
+  upholsterTerm: string;
+  foamedTerm: string;
+  completeTerm: string;
+  productionTerm: string;
 }
 
 interface Window {
