@@ -441,46 +441,52 @@ export const multiFilterSearch = async (
       clientTerm,
       dueDateTerm,
       archiveTerm,
-      yearTerm
+      yearTerm,
+
+      cutTerm,
+      sewnTerm,
+      upholsterTerm,
+      foamedTerm,
+      completeTerm,
+      productionTerm
     }: RequestProps = req.body;
+
+    var filteredJobs: Job[] = [];
     
-    var search;
-    var isArchived = archiveTerm === "true" ? true : false;
-    if (yearTerm) {
-      search = { 
-        name: { $regex: new RegExp(searchTerm, "i") }, 
-        isArchived: isArchived,
-        due: {
-          $gte: new Date(yearTerm + "-01-01T00:00:00Z"),
-          $lt: new Date(String(parseInt(yearTerm) + 1) + "-01-01T00:00:00Z") 
-        }
-      }
-    }
-    else { 
-      search = { 
-        name: { $regex: new RegExp(searchTerm, "i") },
-        isArchived: isArchived
-      }
+    // get unpinned and non-null due jobs
+    const jobsUnpinnedWithDue = await schemas.Job.find<Job[]>({
+      isArchived: { $in: false },
+      isPinned: { $in: false },
+      due: { $eq: null }
+    }).sort({ due: "ascending" });
+    if (!jobsUnpinnedWithDue) {
+      res.status(404).json({ message: "Error: Failed to retrieve unpinned non-null due jobs." });
+      return;
     }
 
-    var sortCriteria = {};
-    if (invoiceIdTerm) {
-      sortCriteria = { invoiceId: invoiceIdTerm }
-    }
-    else if (clientTerm) {
-      sortCriteria = { client: clientTerm };
-    }
-    else if (dueDateTerm) {
-      sortCriteria = { due: dueDateTerm };
-    }
-    else if (jobNameTerm) {
-      sortCriteria = { name: jobNameTerm };
+    // get unpinned and null due jobs
+    const jobsUnpinnedNullDue = await schemas.Job.find<Job[]>({
+      isArchived: { $in: false },
+      isPinned: { $in: false },
+      due: { $ne: null }
+    }).sort({ due: "ascending" });
+    if (!jobsUnpinnedNullDue) {
+      res.status(404).json({ message: "Error: Failed to retrieve unpinned null due jobs." });
+      return;
     }
 
-    const filteredJobs = await schemas.Job.find(search).sort(sortCriteria).collation({ locale: "en", strength: 2 });
-    if (!filteredJobs) {
-      res.status(404).json({ message: "Could not fetch filtered Jobs!" });
+    // get pinned jobs
+    const pinnedJobs = await schemas.Job
+      .find<Job[]>({ isPinned: { $in: true } })
+      .sort({ due: "ascending" });
+    if (!pinnedJobs) {
+      res.status(404).json({ message: "Error: Failed to retrieve pinned jobs." });
+      return;
     }
+
+    // organise jobs
+    filteredJobs = [...pinnedJobs, ...jobsUnpinnedNullDue, ...jobsUnpinnedWithDue];
+
     res.status(200).json(filteredJobs);
   }
   catch (err) {
@@ -488,3 +494,4 @@ export const multiFilterSearch = async (
     res.sendStatus(400);
   }
 }
+

@@ -84,6 +84,13 @@ interface RequestProps {
   clientTerm?: string;
   dueDateTerm?: string;
   yearTerm?: string;
+
+  cutTerm?: string;
+  sewnTerm?: string;
+  upholsterTerm?: string;
+  foamedTerm?: string;
+  completeTerm?: string;
+  productionTerm?: string;
 }
 
 interface Window {
