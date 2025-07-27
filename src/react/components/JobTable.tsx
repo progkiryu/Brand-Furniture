@@ -108,6 +108,7 @@ function JobTable({
       due: job.due,
       isPinned: isPinned,
       isArchived: job.isArchived,
+      hasNoDeletedNotification: job.hasNoDeletedNotification
     };
     updateJob(temp);
     window.location.reload();
