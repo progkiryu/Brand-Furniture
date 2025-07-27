@@ -8,13 +8,22 @@ import NotificationsList from "../components/NotificationsList";
 
 import {
   createJob,
+  updateJob, // Import updateJob
+  deleteJob, // Import deleteJob
+  getCurrentJobs,
   getCurrentJobsUnpinnedNullDue,
   getCurrentJobsUnpinnedWithDue,
   getJobsByTypeByDate,
   getPinnedJobs,
   getUniqueJobTypes,
 } from "../api/jobAPI.tsx";
-import { getAllNotifications } from "../api/notificationAPI.tsx";
+import { 
+  getAllNotifications,
+  insertNotification,
+  removeNotification,
+  getNotificationByJobId, // Import getNotificationByJobId
+  updateNotification,
+} from "../api/notificationAPI.tsx";
 import AddJobFormModel from "../components/AddJobFormModel.tsx";
 
 export type TypeInfoDash = {
@@ -24,12 +33,17 @@ export type TypeInfoDash = {
 
 function Dashboard() {
   const [isAddJobModelOpen, setIsAddJobModelOpen] = useState<boolean>(false);
-
+  const [reloader, setReloader] = useState<boolean>(false);
   const [organisedJobs, setOrganisedJobs] = useState<Job[]>([]);
   const [notifs, setNotifs] = useState<Notif[]>([]);
 
   let typeCounter: TypeInfoDash[] = [];
   const [JobAnalytics, setJobAnalytics] = useState<TypeInfoDash[]>([]);
+
+  const reload = () => {
+    // Reloads since tracked in useEffect
+    reloader === true ? setReloader(false) : setReloader(true);
+  }
 
   const getFinancialYearRange = () => {
     const todayDate = new Date();
@@ -110,13 +124,22 @@ function Dashboard() {
     const addedJob = await createJob(newJobData);
     if (addedJob) {
       setIsAddJobModelOpen(false);
-      fetchData();
+      reload();
     } else {
       console.error("Failed to create job.");
     }
   };
 
-  // in Dashboard.tsx (or any script that runs once on page load)
+  const handleDeleteNotification = async (notificationId: string, jobId: string) => {
+    const success = await removeNotification(notificationId, jobId);
+    if (success) {
+      console.log("Notification deleted and job updated.");
+      reload(); // Re-fetch notifications and jobs
+    } else {
+      console.error("Failed to delete notification.");
+    }
+  };
+
   useEffect(() => {
     const root = document.getElementById("dashboard-first-container")!;
     const checkZoom = () =>
@@ -127,40 +150,118 @@ function Dashboard() {
     checkZoom();
     return () => window.removeEventListener("resize", checkZoom);
   }, []);
-
+  useEffect(() => {
   const fetchData = async () => {
     // setIsLoading(true);
-    const jobTypes = await getUniqueJobTypes();
 
-    const currentJobsPromise = await getCurrentJobsUnpinnedWithDue();
-    const currentJobsUnpinnedPromise = await getCurrentJobsUnpinnedNullDue();
-    const pinnedJobsPromise = await getPinnedJobs();
-    const notifPromise = await getAllNotifications();
-    try {
       const [
+        pinnedJobData,
         currentJobData,
         currentJobsUnpinnedData,
-        pinnedJobData,
         notifData,
+        jobTypes,
       ] = await Promise.all([
-        currentJobsPromise,
-        currentJobsUnpinnedPromise,
-        pinnedJobsPromise,
-        notifPromise,
+        getPinnedJobs(),
+        getCurrentJobsUnpinnedWithDue(),
+        getCurrentJobsUnpinnedNullDue(),
+        getAllNotifications(),
+        getUniqueJobTypes(),
       ]);
-      setNotifs(notifData);
       organiseJobs(currentJobData, currentJobsUnpinnedData, pinnedJobData);
-    } catch (err) {
-      console.error(err);
-    }
-    getJobMetrics(jobTypes);
+
+      let combinedJobs: Job[] = [];
+      if (pinnedJobData) combinedJobs = combinedJobs.concat(pinnedJobData);
+      if (currentJobData) combinedJobs = combinedJobs.concat(currentJobData);
+      if (currentJobsUnpinnedData) combinedJobs = combinedJobs.concat(currentJobsUnpinnedData);
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // Normalize today's date to start of day
+
+      const activeNotifications: Notif[] = [];
+      const existingNotificationsMap = new Map<string, Notif>(); // Map jobId to Notif
+
+      if (notifData) {
+        notifData.forEach((notif) => {
+          existingNotificationsMap.set(notif.jobId, notif);
+        });
+      }
+
+      for (const job of combinedJobs) {
+        if (job.isArchived) continue; // Skip archived jobs
+
+        const existingNotif = existingNotificationsMap.get(job._id!);
+
+        if (job.due && job._id) {
+          const dueDate = new Date(job.due);
+          dueDate.setHours(0, 0, 0, 0); // Normalize due date to start of day
+
+          const diffTime = dueDate.getTime() - today.getTime();
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+          if (diffDays < 7 && diffDays >= 0 && job.hasNoDeletedNotification) {
+            // Condition met: generate/update notification
+            const notifTitle = "Upcoming Job Due!";
+            const notifDesc = `${job.name} for ${job.client} is due in ${diffDays} days!`;
+
+            if (existingNotif) {
+              // Check if existing notification needs update (e.g., due date changed, name changed)
+              if (
+                existingNotif.notifTitle !== notifTitle ||
+                existingNotif.notifDesc !== notifDesc
+              ) {
+                const updatedNotif: Notif = {
+                  ...existingNotif,
+                  notifTitle: notifTitle,
+                  notifDesc: notifDesc,
+                  time: new Date(), // Update time to now
+                };
+                await updateNotification(updatedNotif);
+                activeNotifications.push(updatedNotif);
+              } else {
+                activeNotifications.push(existingNotif); // No change needed, keep existing
+              }
+            } else {
+              // No existing notification, create a new one
+              const newNotif: Notif = {
+                jobId: job._id,
+                notifTitle: notifTitle,
+                notifDesc: notifDesc,
+                time: new Date(),
+                icon: "cart", // Default icon
+              };
+              const createdNotif = await insertNotification(newNotif);
+              if (createdNotif) {
+                activeNotifications.push(createdNotif);
+              }
+            }
+          } else {
+            // Condition not met: remove notification if it exists
+            if (existingNotif && existingNotif._id) {
+              await removeNotification(existingNotif._id, job._id);
+              // Note: removeNotification already sets hasNoDeletedNotification to false
+            }
+          }
+        } else {
+          // Job has no due date or _id, ensure no notification exists for it
+          if (existingNotif && existingNotif._id) {
+            await removeNotification(existingNotif._id, job._id);
+          }
+        }
+      }
+
+      // Filter out notifications that are no longer valid (e.g., associated job deleted or conditions no longer met)
+      const finalNotifications = activeNotifications.filter(notif =>
+        combinedJobs.some(job => job._id === notif.jobId && !job.isArchived)
+      );
+
+      setNotifs(finalNotifications);
+
+      getJobMetrics(jobTypes);
 
     // setIsLoading(false);
   };
-
-  useEffect(() => {
     fetchData();
-  }, []);
+  }, [reloader]);
 
   return (
     // isLoading ? (
@@ -197,7 +298,7 @@ function Dashboard() {
             </div>
             <div id="notifications-container">
               <h1>Notifications</h1>
-              <NotificationsList notifsParams={notifs} />
+              <NotificationsList notifsParams={notifs} onDeleteNotification={handleDeleteNotification}/>
             </div>
           </div>
         </div>

@@ -14,6 +14,7 @@ type Job = {
   subJobList?: string[];
   isPinned: boolean;
   isArchived: boolean;
+  hasNoDeletedNotification: boolean; // New attribute
 };
 
 type SubJob = {
@@ -65,6 +66,7 @@ type Upholstery = {
 
 type Notif = {
   _id?: string;
+  jobId: string; 
   icon?: "cart" | "pin";
   notifTitle: string;
   notifDesc: string;

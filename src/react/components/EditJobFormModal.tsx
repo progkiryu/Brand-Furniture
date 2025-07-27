@@ -29,6 +29,7 @@ function EditJobFormModal({
   const [liaison, setLiaison] = useState<string>("");
   const [paymentNote, setPaymentNote] = useState<string>("");
   const [isArchived, setIsArchived] = useState<boolean>(false);
+  const [hasNoDeletedNotification, setHasNoDeletedNotification] = useState<boolean>(true);
 
   /**
    * Formats a Date object or string into a 'YYYY-MM-DD' string for date input fields.
@@ -73,6 +74,7 @@ function EditJobFormModal({
       setLiaison(jobToEdit.liaison?.toString() || "");
       setPaymentNote(jobToEdit.paymentNote?.toString() || "");
       setIsArchived(jobToEdit.isArchived);
+      setHasNoDeletedNotification(jobToEdit.hasNoDeletedNotification || true);
     } else if (!isOpen) {
       // Reset form fields when modal closes
       setInvoiceId("");
@@ -105,6 +107,8 @@ function EditJobFormModal({
       return;
     }
 
+    const originalDueDate = jobToEdit.due ? new Date(jobToEdit.due).toISOString().split("T")[0] : "";
+    const newDueDateChanged = originalDueDate !== dueDate;
     // Construct the updated Job object
     const updatedData: Job = {
       _id: jobToEdit._id, // Ensure _id is included for update
@@ -122,6 +126,7 @@ function EditJobFormModal({
       subJobList: jobToEdit.subJobList, // Preserve existing subJobList
       isPinned: jobToEdit.isPinned,
       isArchived: isArchived,
+      hasNoDeletedNotification: newDueDateChanged ? true : hasNoDeletedNotification,
     };
 
     onUpdateJob(updatedData);
