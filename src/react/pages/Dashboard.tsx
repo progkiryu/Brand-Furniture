@@ -17,7 +17,7 @@ import {
   getPinnedJobs,
   getUniqueJobTypes,
 } from "../api/jobAPI.tsx";
-import { 
+import {
   getAllNotifications,
   insertNotification,
   removeNotification,
@@ -43,7 +43,7 @@ function Dashboard() {
   const reload = () => {
     // Reloads since tracked in useEffect
     reloader === true ? setReloader(false) : setReloader(true);
-  }
+  };
 
   const getFinancialYearRange = () => {
     const todayDate = new Date();
@@ -114,7 +114,7 @@ function Dashboard() {
       organisedArray.push(jobs[i]);
     }
     // Add the pinned jobs to new job array, accounted for due date
-    for (let i = pinnedJobs.length - 1; i >= 0; i--) {
+    for (let i = 0; i < pinnedJobs.length; i++) {
       organisedArray.unshift(pinnedJobs[i]);
     }
     setOrganisedJobs(organisedArray);
@@ -130,7 +130,10 @@ function Dashboard() {
     }
   };
 
-  const handleDeleteNotification = async (notificationId: string, jobId: string) => {
+  const handleDeleteNotification = async (
+    notificationId: string,
+    jobId: string
+  ) => {
     const success = await removeNotification(notificationId, jobId);
     if (success) {
       console.log("Notification deleted and job updated.");
@@ -151,8 +154,8 @@ function Dashboard() {
     return () => window.removeEventListener("resize", checkZoom);
   }, []);
   useEffect(() => {
-  const fetchData = async () => {
-    // setIsLoading(true);
+    const fetchData = async () => {
+      // setIsLoading(true);
 
       const [
         pinnedJobData,
@@ -172,7 +175,8 @@ function Dashboard() {
       let combinedJobs: Job[] = [];
       if (pinnedJobData) combinedJobs = combinedJobs.concat(pinnedJobData);
       if (currentJobData) combinedJobs = combinedJobs.concat(currentJobData);
-      if (currentJobsUnpinnedData) combinedJobs = combinedJobs.concat(currentJobsUnpinnedData);
+      if (currentJobsUnpinnedData)
+        combinedJobs = combinedJobs.concat(currentJobsUnpinnedData);
 
       const today = new Date();
       today.setHours(0, 0, 0, 0); // Normalize today's date to start of day
@@ -250,16 +254,16 @@ function Dashboard() {
       }
 
       // Filter out notifications that are no longer valid (e.g., associated job deleted or conditions no longer met)
-      const finalNotifications = activeNotifications.filter(notif =>
-        combinedJobs.some(job => job._id === notif.jobId && !job.isArchived)
+      const finalNotifications = activeNotifications.filter((notif) =>
+        combinedJobs.some((job) => job._id === notif.jobId && !job.isArchived)
       );
 
       setNotifs(finalNotifications);
 
       getJobMetrics(jobTypes);
 
-    // setIsLoading(false);
-  };
+      // setIsLoading(false);
+    };
     fetchData();
   }, [reloader]);
 
@@ -298,7 +302,10 @@ function Dashboard() {
             </div>
             <div id="notifications-container">
               <h1>Notifications</h1>
-              <NotificationsList notifsParams={notifs} onDeleteNotification={handleDeleteNotification}/>
+              <NotificationsList
+                notifsParams={notifs}
+                onDeleteNotification={handleDeleteNotification}
+              />
             </div>
           </div>
         </div>
