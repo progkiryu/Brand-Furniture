@@ -584,7 +584,7 @@ export const multiFilterSearch = async (
       if (cutSubJobSet.size > 0) {
         const cutSubJobArray = [...cutSubJobSet];
         cutSubJobArray.map((subJob: SubJob) => {
-          const cutJob = filteredJobs.find((job: Job) => job._id == subJob._id);
+          const cutJob = filteredJobs.find((job: Job) => job._id == subJob.jobId);
           if (cutJob) cutJobSet.add(cutJob);
         });
         if (cutJobSet.size > 0) {

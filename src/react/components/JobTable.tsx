@@ -118,9 +118,6 @@ function JobTable({
     const filter = async () => {
       let filtered = jobs;
       filtered = await handleMultiFilter();
-      // filtered = await statusFilter(filtered);
-      // filtered = archiveFilter(filtered, archiveTerm);
-      // filtered = yearFilter(filtered, yearTerm);
       setDisplayedJobs(filtered);
     }
     filter();
