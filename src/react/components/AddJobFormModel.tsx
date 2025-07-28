@@ -22,6 +22,7 @@ function AddJobFormModel({ isOpen, onClose, onAddJob }: AddJobFormModelProps) {
   const [paymentNote, setPaymentNote] = useState<string>("");
   const [isArchived, setIsArchived] = useState<boolean>(false);
   const [isPinned, setIsPinned] = useState<boolean>(false);
+  const [hasNoDeletedNotification, setHasNoDeletedNotification] = useState<boolean>(true);
 
   useEffect(() => {
     if (!isOpen) {
@@ -66,6 +67,7 @@ function AddJobFormModel({ isOpen, onClose, onAddJob }: AddJobFormModelProps) {
       paymentNote: paymentNote,
       isArchived: isArchived,
       isPinned: isPinned,
+      hasNoDeletedNotification: hasNoDeletedNotification,
     };
 
     onAddJob(newJob);

@@ -14,6 +14,7 @@ import {
   getJobByTypeByDate,
   getCurrentJobsUnpinnedNullDue,
   getCurrentJobsUnpinnedWithDue,
+  multiFilterSearch,
   getJobsByMonthAndYearNumber,
   getPinnedJobsNullDue,
 } from "../controllers/jobController.js";
@@ -42,6 +43,7 @@ export default (router: express.Router) => {
   router.post("/job/getJobsByTypeByDate", getJobByTypeByDate);
   router.post("/job/getFilteredJobsByDate", getFilteredJobsByDate);
   router.post("/job/getFilteredJobsByType", getFilteredJobsByType);
+  router.post("/job/multiFilterSearch", multiFilterSearch);
 
   // Put Routes
   router.put("/job/updateJob/:id", updateJob);
