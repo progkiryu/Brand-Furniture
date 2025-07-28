@@ -8,9 +8,6 @@ import NotificationsList from "../components/NotificationsList";
 
 import {
   createJob,
-  updateJob, // Import updateJob
-  deleteJob, // Import deleteJob
-  getCurrentJobs,
   getCurrentJobsUnpinnedNullDue,
   getCurrentJobsUnpinnedWithDue,
   getJobsByTypeByDate,
@@ -21,7 +18,6 @@ import {
   getAllNotifications,
   insertNotification,
   removeNotification,
-  getNotificationByJobId, // Import getNotificationByJobId
   updateNotification,
 } from "../api/notificationAPI.tsx";
 import AddJobFormModel from "../components/AddJobFormModel.tsx";
