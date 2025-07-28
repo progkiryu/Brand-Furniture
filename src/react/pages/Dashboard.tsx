@@ -15,6 +15,7 @@ import {
   getCurrentJobsUnpinnedWithDue,
   getJobsByTypeByDate,
   getPinnedJobs,
+  getPinnedJobsNullDue,
   getUniqueJobTypes,
 } from "../api/jobAPI.tsx";
 import { 
@@ -103,18 +104,23 @@ function Dashboard() {
     setJobAnalytics(uniqueTypeCounter);
   };
 
-  const organiseJobs = (jobs: Job[], jobsNoDue: Job[], pinnedJobs: Job[]) => {
+  const organiseJobs = (
+    unpinnedJobs: Job[],
+    unpinnedJobsNoDue: Job[],
+    pinnedJobs: Job[]
+  ) => {
     const organisedArray: Job[] = [];
+
     // Push unpinned jobs without due dates
-    for (let i = 0; i < jobsNoDue.length; i++) {
-      organisedArray.push(jobsNoDue[i]);
+    for (let i = 0; i < unpinnedJobsNoDue.length; i++) {
+      organisedArray.push(unpinnedJobsNoDue[i]);
     }
     // Push unpinned jobs with due dates
-    for (let i = 0; i < jobs.length; i++) {
-      organisedArray.push(jobs[i]);
+    for (let i = 0; i < unpinnedJobs.length; i++) {
+      organisedArray.push(unpinnedJobs[i]);
     }
-    // Add the pinned jobs to new job array, accounted for due date
-    for (let i = pinnedJobs.length - 1; i >= 0; i--) {
+    // Put pinned jobs at the beginning
+    for (let i = 0; i < pinnedJobs.length; i++) {
       organisedArray.unshift(pinnedJobs[i]);
     }
     setOrganisedJobs(organisedArray);
@@ -158,6 +164,16 @@ function Dashboard() {
         pinnedJobData,
         currentJobData,
         currentJobsUnpinnedData,
+<!--     const currentJobsUnpinnedPromise = await getCurrentJobsUnpinnedWithDue();
+    const currentJobsUnpinnedNoDuePromise =
+      await getCurrentJobsUnpinnedNullDue();
+    const pinnedJobsPromise = await getPinnedJobs();
+    const notifPromise = await getAllNotifications();
+    try {
+      const [
+        currentJobsUnpinnedData,
+        currentJobsUnpinnedNoDueData,
+        pinnedJobData, -->
         notifData,
         jobTypes,
       ] = await Promise.all([
@@ -257,6 +273,21 @@ function Dashboard() {
       setNotifs(finalNotifications);
 
       getJobMetrics(jobTypes);
+<!--         currentJobsUnpinnedPromise,
+        currentJobsUnpinnedNoDuePromise,
+        pinnedJobsPromise,
+        notifPromise,
+      ]);
+      setNotifs(notifData);
+      organiseJobs(
+        currentJobsUnpinnedData,
+        currentJobsUnpinnedNoDueData,
+        pinnedJobData
+      );
+    } catch (err) {
+      console.error(err);
+    }
+    getJobMetrics(jobTypes); -->
 
     // setIsLoading(false);
   };

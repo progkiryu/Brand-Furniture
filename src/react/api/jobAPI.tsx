@@ -78,6 +78,17 @@ export const getPinnedJobs = async () => {
   return pinnedJobs;
 };
 
+// Get pinned jobs with null due dates
+export const getPinnedJobsNullDue = async () => {
+  const jobs = fetch(`${DBLink}/job/get/getPinnedJobsNullDue`)
+    .then((res) => res.json())
+    .catch((err) => console.error(err));
+  if (!jobs) {
+    return;
+  }
+  return jobs;
+};
+
 // Get unique job types
 export const getUniqueJobTypes = async () => {
   const uniqueJobTypes = fetch(`${DBLink}/job/getUniqueTypes`)

@@ -16,6 +16,7 @@ import {
   getCurrentJobsUnpinnedWithDue,
   multiFilterSearch,
   getJobsByMonthAndYearNumber,
+  getPinnedJobsNullDue,
 } from "../controllers/jobController.js";
 
 export default (router: express.Router) => {
@@ -33,6 +34,7 @@ export default (router: express.Router) => {
   );
   router.get("/job/getArchivedJobs", getArchivedJobs);
   router.get("/job/getPinnedJobs", getPinnedJobs);
+  router.get("/job/getPinnedJobsNullDue", getPinnedJobsNullDue);
   router.get("/job/getUniqueTypes", getUniqueTypes);
 
   // Post Routes

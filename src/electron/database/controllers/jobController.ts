@@ -138,6 +138,26 @@ export const getPinnedJobs = async (
   }
 };
 
+export const getPinnedJobsNullDue = async (
+  _: express.Request,
+  res: express.Response
+) => {
+  try {
+    const jobs = await schemas.Job.find({
+      isPinned: { $in: true },
+      due: { $eq: null },
+    }).sort({ due: "ascending" });
+    if (!jobs) {
+      res.status(404).json({ message: "Error: Failed to retrived jobs." });
+      return;
+    }
+    res.status(200).json(jobs);
+  } catch (err) {
+    console.error(err);
+    res.status(400).json(err);
+  }
+};
+
 export const getUniqueTypes = async (
   _: express.Request,
   res: express.Response
