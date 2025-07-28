@@ -1,9 +1,7 @@
 import { FaShoppingCart, FaThumbtack } from "react-icons/fa";
-import { FaTimes } from "react-icons/fa";
 
 interface Props {
   notifsParams: Notif[];
-  onDeleteNotification: (notificationId: string, jobId: string) => void
 }
 
 const iconMap = {
@@ -11,7 +9,7 @@ const iconMap = {
   pin: <FaThumbtack className="notif-icon-svg" />,
 };
 
-export default function NotificationsList({ notifsParams, onDeleteNotification }: Props) {
+export default function NotificationsList({ notifsParams }: Props) {
   return (
     <div className="notifications-list">
       {notifsParams.map((notif, index) => (
@@ -22,14 +20,6 @@ export default function NotificationsList({ notifsParams, onDeleteNotification }
             <div className="notif-desc">{notif.notifDesc}</div>
           </div>
           <div className="notif-time">{String(notif.time)}</div>
-          {notif._id && notif.jobId && ( // Only show delete button if _id and jobId exist
-            <button
-              className="delete-notif-button"
-              onClick={() => onDeleteNotification(notif._id!, notif.jobId)}
-            >
-              <FaTimes />
-            </button>
-          )}
         </div>
       ))}
     </div>
