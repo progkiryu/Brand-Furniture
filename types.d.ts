@@ -14,7 +14,6 @@ type Job = {
   subJobList?: string[];
   isPinned: boolean;
   isArchived: boolean;
-  hasNoDeletedNotification: boolean; // New attribute
 };
 
 type SubJob = {
@@ -66,7 +65,6 @@ type Upholstery = {
 
 type Notif = {
   _id?: string;
-  jobId: string; 
   icon?: "cart" | "pin";
   notifTitle: string;
   notifDesc: string;
@@ -77,23 +75,6 @@ type DateRange = {
   startDate: Date;
   endDate: Date;
 };
-
-interface RequestProps {
-  searchTerm: string;
-  archiveTerm: string;
-  jobNameTerm?: string;
-  invoiceIdTerm?: string;
-  clientTerm?: string;
-  dueDateTerm?: string;
-  yearTerm: string;
-
-  cutTerm: string;
-  sewnTerm: string;
-  upholsterTerm: string;
-  foamedTerm: string;
-  completeTerm: string;
-  productionTerm: string;
-}
 
 interface Window {
   electron: {

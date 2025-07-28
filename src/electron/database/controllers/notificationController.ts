@@ -50,7 +50,7 @@ export const removeNotification = async (
             res.status(404).json({ message: "Failed to provide notification ID!"});
         }
 
-        const result = await schemas.Notif.findByIdAndDelete<Notif>(id);
+        const result = await schemas.Notif.findByIdAndDelete<Notif>();
 
         if (!result) {
             res.status(404).json({ message: `Failed to find job with ID: ${id}! Or could not process request.` });
@@ -59,59 +59,6 @@ export const removeNotification = async (
         res.status(200).json(result).end();
     }
     catch (err) {
-        res.status(400).json(err).end();
-    }
-}
-
-export const getNotificationByJobId = async (
-    req: express.Request,
-    res: express.Response
-): Promise<void> => {
-    try {
-        const jobId = req.params.jobId;
-
-        if (!jobId) {
-            res.status(400).json({ message: "Job ID not provided!" }).end();
-            return;
-        }
-
-        const notification = await schemas.Notif.findOne<Notif>({ jobId: jobId });
-
-        if (!notification) {
-            res.status(404).json({ message: `No notification found for Job ID: ${jobId}` }).end();
-            return;
-        }
-
-        res.status(200).json(notification).end();
-    } catch (err) {
-        console.error("Error in getNotificationByJobId:", err);
-        res.status(400).json(err).end();
-    }
-}
-
-export const updateNotification = async (
-    req: express.Request,
-    res: express.Response
-): Promise<void> => {
-    try {
-        const id = req.params.id;
-        const updatedData = req.body;
-
-        if (!id) {
-            res.status(400).json({ message: "Notification ID not provided!" }).end();
-            return;
-        }
-
-        const result = await schemas.Notif.findByIdAndUpdate<Notif>(id, updatedData, { new: true });
-
-        if (!result) {
-            res.status(404).json({ message: `Failed to find notification with ID: ${id} or could not update.` }).end();
-            return;
-        }
-
-        res.status(200).json(result).end();
-    } catch (err) {
-        console.error("Error in updateNotification:", err);
         res.status(400).json(err).end();
     }
 }

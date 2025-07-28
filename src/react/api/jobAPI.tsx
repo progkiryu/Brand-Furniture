@@ -1,5 +1,4 @@
 import { DBLink } from "../App";
-import { removeNotification, getNotificationByJobId } from "./notificationAPI"; // Import notification API functions
 
 // Get all jobs
 export const getAllJobs = async () => {
@@ -99,28 +98,6 @@ export const getUniqueJobTypes = async () => {
   }
   return uniqueJobTypes;
 };
-
-export const multiFilterSearch = async (props: RequestProps) => {
-  try {
-    const res = await fetch(`${DBLink}/job/multiFilterSearch`, {
-      method: "POST",
-      mode: "cors",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(props)
-    });
-    if (res.ok) {
-      const filteredJobs = await res.json();
-      return filteredJobs;
-    }
-    else {
-      return null;
-    }
-  }
-  catch (err) {
-    console.error(err);
-    return null;
-  }
-}
 
 // Create a new job
 export const createJob = async (data: Job) => {
@@ -234,11 +211,6 @@ export const getFilteredJobsByType = async (type: String) => {
 // Delete a job by ID
 export const deleteJob = async (id: String) => {
   try {
-    // First, try to get and delete the associated notification
-    const notification = await getNotificationByJobId(id.toString());
-    if (notification && notification._id) {
-      await removeNotification(notification._id, id); // Pass job ID as well
-    }
     const res = await fetch(`${DBLink}/job/removeJob/${id}`, {
       method: "DELETE",
       mode: "cors",
