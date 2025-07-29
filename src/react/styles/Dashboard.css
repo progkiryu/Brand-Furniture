@@ -1,9 +1,9 @@
 #dashboard-first-container {
   display: flex;
   gap: 20px;
-  padding: 2rem;
+  /* padding: 2rem; */
   box-sizing: border-box;
-  flex-grow: 1;
+  /* flex-grow: 1; */
 }
 
 #dashboard-second-container {
@@ -20,17 +20,24 @@
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  overflow-y: auto;
+  /* overflow-y: auto; */
   flex-grow: 1;
   min-height: 0;
+  max-height: 100vh;
   max-width: 360px;
+  overflow: auto;
 }
 
 .schedule-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1rem;
+  margin: 1rem 0px;
+
+}
+
+.schedule-header h1 {
+  margin-left: 10px;
 }
 
 .color-key {
@@ -58,12 +65,14 @@
 #analytics-container,
 #notifications-container {
   background-color: #FFFFFF;
-  border-radius: 12px;
-  padding: 1rem;
+  border-radius: 5px;
+  /* padding: 1rem; */
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   min-height: 0;
   display: flex;
   flex-direction: column;
+  max-height: 100vh;
+  overflow: auto;
 }
 
 #schedule-container {
@@ -72,57 +81,24 @@
 
 #analytics-container {
   background-color: #fff;
-  border-radius: 12px;
-  padding: 1.25rem 1rem 6 rem;
+  /* padding: 1.25rem 1rem 6 rem; */
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
   min-height: 240px;
+  height: 400px;
   flex-shrink: 0;
-}
-
-.zoomed #analytics-container {
-  padding-bottom: 6rem;
+  overflow:visible;
 }
 
 
-#notifications-container {
-  flex: 1;
-}
 
 .upcoming-orders-scroll-container {
   overflow-y: auto;
   flex-grow: 1;
   margin-top: 1rem;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th,
-td {
-  border-bottom: 1px solid #E0E1DD;
-  text-align: left;
-  padding: 0.75rem 1rem;
-  font-size: 14px;
-}
-
-th {
-  background-color: #F8F9FA;
-  color: #415A77;
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
-
-.upcoming-orders-table {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;
 }
 
 .upcoming-orders-scroll-container::-webkit-scrollbar {
@@ -139,9 +115,20 @@ th {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1rem;
+  /* height: 100%; */
   height: 100%;
   box-sizing: border-box;
+  justify-content: space-between;
+  
+}
+
+.job-analytics h3 {
+  padding-top: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+  text-align: center;
 }
 
 .analytics-title {
@@ -286,6 +273,11 @@ th {
   background-color: #c2c5c7;
   color: #1e293b;
   font-size: 0.95rem;
+  grid-column: 1 / -1;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  
 }
 
 .job-list-header span::after {
@@ -315,21 +307,6 @@ th {
   white-space: normal;
 }
 
-.upcoming-orders-table td { /* Combined the similar CSS from th and td */
-  padding: 1rem;
-  font-size: 0.95rem;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
-  vertical-align: middle;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  white-space: normal;
-}
-
-.upcoming-orders-table tr:hover {
-  background-color: #f5f5f5;
-  transition: background-color 0.2s ease;
-}
 
 .icon-wrapper {
   display: flex;
@@ -360,20 +337,27 @@ th {
 }
 
 /* Notifications */
+#notifications-container h3 {
+  padding: 5px 0px;
+  text-align: center;
+}
+
 .notifications-list {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  overflow-y: auto;
 }
 
 .notification-card {
   display: flex;
   align-items: center;
+  justify-content: center;
   background-color: #f4f4f4;
   border-radius: 12px;
   padding: 0.8rem 1rem;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.08);
-  justify-content: space-between;
+  max-width: 100%;
 }
 
 .notif-icon {
@@ -405,6 +389,11 @@ th {
 .notif-desc {
   font-size: 0.85rem;
   color: #6b6b6b;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 210px;
+  
 }
 
 .notif-time {
@@ -413,12 +402,35 @@ th {
   white-space: nowrap;
 }
 
+.delete-notif-button {
+  background-color: #f44336; /* A distinct red background */
+  color: white; /* White 'x' for contrast */
+  border: none;
+  /* border-radius: 50%; <--- REMOVE OR CHANGE THIS LINE */
+  border-radius: 4px; /* Optional: A small border-radius for slightly rounded corners */
+  width: 20px; /* Fixed width */
+  height: 20px; /* Fixed height to make it a perfect square */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1em; /* Adjust font size as needed */
+  cursor: pointer;
+  margin-left: 10px; /* Add some space from the notification content */
+  flex-shrink: 0; /* Prevent the button from shrinking */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+}
+
+.delete-notif-button:hover {
+  background-color: #d32f2f; /* Darker red on hover */
+}
+
 .add-job-button {
   background-color: #1E293B;
   color: white;
   font-weight: 500;
   border: none;
   padding: 0.5rem 1rem;
+  margin-right: 10px;
   border-radius: 8px;
   font-size: 0.9rem;
   cursor: pointer;

@@ -1,7 +1,7 @@
 import "../styles/Dashboard.css";
 import "../styles/Global.css";
 import Navbar from "../components/Navbar";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import DashboardTable from "../components/DashboardTable.tsx";
 import DashboardJobChartPie from "../components/DashboardJobChartPie.tsx";
 import NotificationsList from "../components/NotificationsList";
@@ -14,7 +14,6 @@ import {
   getPinnedJobs,
   getUniqueJobTypes,
 } from "../api/jobAPI.tsx";
-import {
 import {
   getAllNotifications,
   insertNotification,
@@ -36,11 +35,6 @@ function Dashboard() {
 
   let typeCounter: TypeInfoDash[] = [];
   const [JobAnalytics, setJobAnalytics] = useState<TypeInfoDash[]>([]);
-
-  // const reload = () => {
-  //   // Reloads since tracked in useEffect
-  //   reloader === true ? setReloader(false) : setReloader(true);
-  // }
 
   const reload = () => {
     // Reloads since tracked in useEffect
@@ -155,20 +149,21 @@ function Dashboard() {
     checkZoom();
     return () => window.removeEventListener("resize", checkZoom);
   }, []);
-
   useEffect(() => {
     const fetchData = async () => {
+      // setIsLoading(true);
+
       const [
         pinnedJobData,
         currentJobData,
         currentJobsUnpinnedData,
-        initialNotifData, // Renamed for clarity: this is the state *before* this run modifies anything
+        notifData,
         jobTypes,
       ] = await Promise.all([
         getPinnedJobs(),
         getCurrentJobsUnpinnedWithDue(),
         getCurrentJobsUnpinnedNullDue(),
-        getAllNotifications(), // Get all existing notifications
+        getAllNotifications(),
         getUniqueJobTypes(),
       ]);
       organiseJobs(currentJobData, currentJobsUnpinnedData, pinnedJobData);
@@ -180,98 +175,84 @@ function Dashboard() {
         combinedJobs = combinedJobs.concat(currentJobsUnpinnedData);
 
       const today = new Date();
-      today.setHours(0, 0, 0, 0);
+      today.setHours(0, 0, 0, 0); // Normalize today's date to start of day
 
-      // Use a Set for job IDs that currently have notifications.
-      // This is a snapshot at the start of this useEffect run.
-      const existingJobNotificationIds = new Set(initialNotifData.map(notif => notif.jobId));
+      const activeNotifications: Notif[] = [];
+      const existingNotificationsMap = new Map<string, Notif>(); // Map jobId to Notif
 
-      // Use a temporary list to build up notifications for this render
-      const notificationsToDisplay: Notif[] = [];
+      if (notifData) {
+        notifData.forEach((notif) => {
+          existingNotificationsMap.set(notif.jobId, notif);
+        });
+      }
 
       for (const job of combinedJobs) {
-        if (job.isArchived) continue;
+        if (job.isArchived) continue; // Skip archived jobs
 
-        const hasExistingNotifInDB = existingJobNotificationIds.has(job._id!);
-        let currentNotificationForJob: Notif | undefined;
-
-        // If a notification for this job existed at the start of this useEffect run,
-        // find it to potentially update it.
-        if (hasExistingNotifInDB) {
-          currentNotificationForJob = initialNotifData.find(notif => notif.jobId === job._id);
-        }
+        const existingNotif = existingNotificationsMap.get(job._id!);
 
         if (job.due && job._id) {
           const dueDate = new Date(job.due);
-          dueDate.setHours(0, 0, 0, 0);
+          dueDate.setHours(0, 0, 0, 0); // Normalize due date to start of day
 
           const diffTime = dueDate.getTime() - today.getTime();
           const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-          // Condition for notification generation
-          const shouldGenerateNotification = diffDays < 7 && diffDays >= 0;
-
-          if (shouldGenerateNotification && job.hasNoDeletedNotification) {
+          if (diffDays < 7 && diffDays >= 0 && job.hasNoDeletedNotification) {
+            // Condition met: generate/update notification
             const notifTitle = "Upcoming Job Due!";
-            const notifDesc = `${job.name} is due in ${diffDays} days!`;
+            const notifDesc = `${job.name} for ${job.client} is due in ${diffDays} days!`;
+            
 
-            if (currentNotificationForJob) {
-              // Notification exists, check if update is neededs
+            if (existingNotif) {
+              // Check if existing notification needs update (e.g., due date changed, name changed)
               if (
-                currentNotificationForJob.notifTitle !== notifTitle ||
-                currentNotificationForJob.notifDesc !== notifDesc
+                existingNotif.notifTitle !== notifTitle ||
+                existingNotif.notifDesc !== notifDesc
               ) {
                 const updatedNotif: Notif = {
-                  ...currentNotificationForJob,
+                  ...existingNotif,
                   notifTitle: notifTitle,
                   notifDesc: notifDesc,
-                  time: new Date(),
+                  time: new Date(), // Update time to now
                 };
                 await updateNotification(updatedNotif);
-                notificationsToDisplay.push(updatedNotif);
+                activeNotifications.push(updatedNotif);
               } else {
-                // No change needed, keep existing for display
-                notificationsToDisplay.push(currentNotificationForJob);
+                activeNotifications.push(existingNotif); // No change needed, keep existing
               }
             } else {
-              // No existing notification found for this job by getAllNotifications at the start of this run.
-              // Attempt to insert.
+              // No existing notification, create a new one
               const newNotif: Notif = {
                 jobId: job._id,
                 notifTitle: notifTitle,
                 notifDesc: notifDesc,
                 time: new Date(),
-                icon: "cart",
+                icon: "cart", // Default icon
               };
-              // THIS IS THE CRITICAL CHANGE: Make insertNotification idempotent if possible,
-              // or handle the successful creation by marking it locally right away.
-              const createdNotif = await insertNotification(newNotif); // Call your API
+              const createdNotif = await insertNotification(newNotif);
               if (createdNotif) {
-                notificationsToDisplay.push(createdNotif);
-                // Also immediately mark this job ID as having a notification *for this current loop*
-                // This doesn't help with double useEffect runs, but helps with single run consistency
-                // existingJobNotificationIds.add(createdNotif.jobId); // Keep this in mind, but the main fix is server-side for true idempotency
+                activeNotifications.push(createdNotif);
               }
             }
           } else {
-            // Condition not met OR hasNoDeletedNotification is false: remove notification if it exists
-            if (currentNotificationForJob && currentNotificationForJob._id) {
-              await removeNotification(currentNotificationForJob._id, job._id);
+            // Condition not met: remove notification if it exists
+            if (existingNotif && existingNotif._id) {
+              await removeNotification(existingNotif._id, job._id);
+              // Note: removeNotification already sets hasNoDeletedNotification to false
             }
           }
         } else {
           // Job has no due date or _id, ensure no notification exists for it
-          if (currentNotificationForJob && currentNotificationForJob._id) {
-            await removeNotification(currentNotificationForJob._id, job._id);
+          if (existingNotif && existingNotif._id) {
+            await removeNotification(existingNotif._id, job._id);
           }
         }
       }
 
-      
-
       // Filter out notifications that are no longer valid (e.g., associated job deleted or conditions no longer met)
-      const finalNotifications = notificationsToDisplay.filter(notif =>
-        combinedJobs.some(job => job._id === notif.jobId && !job.isArchived)
+      const finalNotifications = activeNotifications.filter((notif) =>
+        combinedJobs.some((job) => job._id === notif.jobId && !job.isArchived)
       );
 
       setNotifs(finalNotifications);
@@ -283,25 +264,8 @@ function Dashboard() {
     fetchData();
   }, [reloader]);
 
-  const handleDeleteNotification = async (notificationId: string, jobId: string) => {
-    const success = await removeNotification(notificationId, jobId);
-    if (success) {
-      console.log("Notification deleted and job updated.");
-      reload(); // Re-fetch notifications and jobs
-    } else {
-      console.error("Failed to delete notification.");
-    }
-  };
-
   return (
-    // isLoading ? (
-    //   <>
-    //     <Navbar />
-    //     <div>
-    //       <h1>Loading...</h1>
-    //     </div>
-    //   </>
-    // ) :
+
     <>
       <Navbar />
       <div id="first-container">
@@ -327,7 +291,7 @@ function Dashboard() {
               <DashboardJobChartPie data={JobAnalytics} />
             </div>
             <div id="notifications-container">
-              <h1>Notifications</h1>
+              <h3>Notifications</h3>
               <NotificationsList
                 notifsParams={notifs}
                 onDeleteNotification={handleDeleteNotification}

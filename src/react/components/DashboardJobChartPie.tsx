@@ -6,28 +6,12 @@ export default function JobAnalyticsDash(Props: { data: TypeInfoDash[] }) {
   const colours = randomColourGen(Props.data.length);
 
   return (
-    <div
-      className="job-analytics"
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: "1rem",
-      }}
-    >
-      <h3
-        style={{
-          fontSize: "1rem",
-          fontWeight: "600",
-          color: "#1e293b",
-          margin: 0,
-          textAlign: "center",
-        }}
-      >
+    <div className="job-analytics">
+      <h3>
         Job-Type Distribution Of Current Financial Year
       </h3>
 
-      <PieChart width={320} height={320}>
+      <PieChart width={320} height={350}>
         <Pie
           data={Props.data}
           cx="50%"
