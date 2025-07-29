@@ -15,6 +15,7 @@ import {
   getUniqueJobTypes,
 } from "../api/jobAPI.tsx";
 import {
+import {
   getAllNotifications,
   insertNotification,
   removeNotification,
@@ -44,7 +45,7 @@ function Dashboard() {
   const reload = () => {
     // Reloads since tracked in useEffect
     reloader === true ? setReloader(false) : setReloader(true);
-  }
+  };
 
   const getFinancialYearRange = () => {
     const todayDate = new Date();
@@ -115,7 +116,7 @@ function Dashboard() {
       organisedArray.push(jobs[i]);
     }
     // Add the pinned jobs to new job array, accounted for due date
-    for (let i = pinnedJobs.length - 1; i >= 0; i--) {
+    for (let i = 0; i < pinnedJobs.length; i++) {
       organisedArray.unshift(pinnedJobs[i]);
     }
     setOrganisedJobs(organisedArray);
@@ -128,6 +129,19 @@ function Dashboard() {
       reload();
     } else {
       console.error("Failed to create job.");
+    }
+  };
+
+  const handleDeleteNotification = async (
+    notificationId: string,
+    jobId: string
+  ) => {
+    const success = await removeNotification(notificationId, jobId);
+    if (success) {
+      console.log("Notification deleted and job updated.");
+      reload(); // Re-fetch notifications and jobs
+    } else {
+      console.error("Failed to delete notification.");
     }
   };
 
@@ -162,7 +176,8 @@ function Dashboard() {
       let combinedJobs: Job[] = [];
       if (pinnedJobData) combinedJobs = combinedJobs.concat(pinnedJobData);
       if (currentJobData) combinedJobs = combinedJobs.concat(currentJobData);
-      if (currentJobsUnpinnedData) combinedJobs = combinedJobs.concat(currentJobsUnpinnedData);
+      if (currentJobsUnpinnedData)
+        combinedJobs = combinedJobs.concat(currentJobsUnpinnedData);
 
       const today = new Date();
       today.setHours(0, 0, 0, 0);
@@ -265,7 +280,6 @@ function Dashboard() {
 
       // setIsLoading(false);
     };
-    console.log("test");
     fetchData();
   }, [reloader]);
 
@@ -314,7 +328,10 @@ function Dashboard() {
             </div>
             <div id="notifications-container">
               <h1>Notifications</h1>
-              <NotificationsList notifsParams={notifs} onDeleteNotification={handleDeleteNotification} />
+              <NotificationsList
+                notifsParams={notifs}
+                onDeleteNotification={handleDeleteNotification}
+              />
             </div>
           </div>
         </div>

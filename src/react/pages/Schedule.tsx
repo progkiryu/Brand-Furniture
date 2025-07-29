@@ -162,14 +162,11 @@ function Schedule() {
 
       const fetchJobs = async () => {
         const jobsPromise = getAllJobs();
-        const pinnedJobsPromise = getPinnedJobs();
         try {
-          const [fetchJobs, fetchPinnedJobs] = await Promise.all([
+          const [fetchJobs] = await Promise.all([
             jobsPromise,
-            pinnedJobsPromise,
           ]);
           setJobs(fetchJobs);
-          organiseJobs(fetchJobs, fetchPinnedJobs);
         } catch (err) {
           console.error("Could not fetch Jobs!");
         }
@@ -189,7 +186,6 @@ function Schedule() {
         try {
           const [
             fetchJobs,
-            fetchPinnedJobs,
             fetchSubJobs,
             fetchCushions,
             fetchFrames,
@@ -207,7 +203,6 @@ function Schedule() {
           setCushions(fetchCushions);
           setFrames(fetchFrames);
           setUpholstery(fetchUpholstery);
-          organiseJobs(fetchJobs, fetchPinnedJobs);
         } catch (err) {
           console.error("Could not fetch Jobs!");
         }
@@ -234,29 +229,6 @@ function Schedule() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [dropdownOpen]);
-
-  // Organise job list to push pinned jobs to top
-  const organiseJobs = (allJobs: Job[], pinnedJobs: Job[]) => {
-    const organisedArray: Job[] = [];
-    let match = false;
-    // Create a new array without pinned Jobs
-    for (let i = 0; i < allJobs.length; i++) {
-      for (let j = 0; j < pinnedJobs.length; j++) {
-        if (allJobs[i]._id === pinnedJobs[j]._id) {
-          match = true;
-        }
-      }
-      if (match === false) {
-        organisedArray.push(allJobs[i]);
-      }
-      match = false;
-    }
-    // Add the pinned jobs to new job array, accounted for due date
-    for (let i = pinnedJobs.length - 1; i >= 0; i--) {
-      organisedArray.unshift(pinnedJobs[i]);
-    }
-    setJobs(organisedArray);
-  };
 
   // Handler for when the search input changes
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
