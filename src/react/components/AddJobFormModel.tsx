@@ -40,6 +40,7 @@ function AddJobFormModel({ isOpen, onClose, onAddJob }: AddJobFormModelProps) {
       setPaymentNote("");
       setIsArchived(false);
       setIsPinned(false);
+      setHasNoDeletedNotification(true);
     }
   }, [isOpen]);
 
@@ -67,7 +68,7 @@ function AddJobFormModel({ isOpen, onClose, onAddJob }: AddJobFormModelProps) {
       paymentNote: paymentNote,
       isArchived: isArchived,
       isPinned: isPinned,
-      hasNoDeletedNotification: hasNoDeletedNotification,
+      hasNoDeletedNotification: true,
     };
 
     onAddJob(newJob);

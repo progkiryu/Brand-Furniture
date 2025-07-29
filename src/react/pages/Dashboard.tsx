@@ -202,6 +202,7 @@ function Dashboard() {
             // Condition met: generate/update notification
             const notifTitle = "Upcoming Job Due!";
             const notifDesc = `${job.name} for ${job.client} is due in ${diffDays} days!`;
+            
 
             if (existingNotif) {
               // Check if existing notification needs update (e.g., due date changed, name changed)
@@ -264,14 +265,7 @@ function Dashboard() {
   }, [reloader]);
 
   return (
-    // isLoading ? (
-    //   <>
-    //     <Navbar />
-    //     <div>
-    //       <h1>Loading...</h1>
-    //     </div>
-    //   </>
-    // ) :
+
     <>
       <Navbar />
       <div id="first-container">
@@ -297,7 +291,7 @@ function Dashboard() {
               <DashboardJobChartPie data={JobAnalytics} />
             </div>
             <div id="notifications-container">
-              <h1>Notifications</h1>
+              <h3>Notifications</h3>
               <NotificationsList
                 notifsParams={notifs}
                 onDeleteNotification={handleDeleteNotification}
@@ -316,3 +310,4 @@ function Dashboard() {
 }
 
 export default Dashboard;
+
