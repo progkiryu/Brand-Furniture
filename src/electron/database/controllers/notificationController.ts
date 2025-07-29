@@ -1,22 +1,25 @@
+// backend/controllers/notificationController.js
+
 import express from "express";
 import schemas from "../models/schema.js";
+
 
 export const getAllNotifications = async (
     _: express.Request,
     res: express.Response
-) => {
+): Promise<void> => { // <--- Change return type to Promise<void>
     try {
         const notifs = await schemas.Notif.find<Array<Notif>>();
         
-        if (!notifs) {
-            res
-                .status(404)
-                .json({ message: "Error finding 'Notifications' MongoDB collection!" });
+        if (!notifs) { // As noted before, find() returns an empty array, not null/undefined for no docs.
+            res.status(404).json({ message: "Error finding 'Notifications' MongoDB collection!" });
+            return; // Ensure the function exits after sending a response
         }
 
         res.status(200).json(notifs).end();
     }
     catch (err) {
+        console.error("Error in getAllNotifications:", err);
         res.status(400).json(err).end();
     }
 }
@@ -24,17 +27,53 @@ export const getAllNotifications = async (
 export const insertNotification = async (
     req: express.Request,
     res: express.Response
-) => {
+): Promise<void> => { // <--- Change return type to Promise<void>
     try {
-        const result = await schemas.Notif.create<Notif>(req.body);
+        const { jobId, notifTitle, notifDesc, time, icon } = req.body;
 
-        if (!result) {
-            throw new Error("Could not insert new Notification!");
+        let existingNotif = await schemas.Notif.findOne<Notif>({ jobId: jobId });
+
+        if (existingNotif) {
+            const newTime = new Date(time);
+            const existingTime = existingNotif.time instanceof Date ? existingNotif.time : new Date(existingNotif.time);
+
+            if (existingNotif.notifTitle !== notifTitle ||
+                existingNotif.notifDesc !== notifDesc ||
+                existingTime.getTime() !== newTime.getTime() ||
+                existingNotif.icon !== icon)
+            {
+                existingNotif.notifTitle = notifTitle;
+                existingNotif.notifDesc = notifDesc;
+                existingNotif.time = newTime;
+                existingNotif.icon = icon;
+                
+                const updatedResult = await (existingNotif as any).save(); 
+                res.status(200).json(updatedResult).end(); // <--- Remove 'return' here
+                return; // Ensure the function exits
+            } else {
+                res.status(200).json(existingNotif).end(); // <--- Remove 'return' here
+                return; // Ensure the function exits
+            }
+        } else {
+            const newNotifData = {
+                jobId,
+                notifTitle,
+                notifDesc,
+                time: new Date(time),
+                icon
+            };
+            const result = await schemas.Notif.create<Notif>(newNotifData);
+
+            if (!result) {
+                res.status(500).json({ message: "Could not insert new Notification!" }).end();
+                return; // Ensure the function exits
+            }
+
+            res.status(201).json(result).end(); // <--- Remove 'return' here
         }
-
-        res.status(200).json(result).end();
     }
     catch (err) {
+        console.error("Error in insertNotification (idempotent logic):", err);
         res.status(400).json(err).end();
     }
 }
@@ -42,23 +81,26 @@ export const insertNotification = async (
 export const removeNotification = async (
     req: express.Request,
     res: express.Response
-) => {
+): Promise<void> => { // <--- Change return type to Promise<void>
     try {
         const id = req.params.id;
 
         if (!id) {
             res.status(404).json({ message: "Failed to provide notification ID!"});
+            return; // Ensure the function exits
         }
 
         const result = await schemas.Notif.findByIdAndDelete<Notif>(id);
 
         if (!result) {
             res.status(404).json({ message: `Failed to find job with ID: ${id}! Or could not process request.` });
+            return; // Ensure the function exits
         }
 
         res.status(200).json(result).end();
     }
     catch (err) {
+        console.error("Error in removeNotification:", err);
         res.status(400).json(err).end();
     }
 }
@@ -66,7 +108,7 @@ export const removeNotification = async (
 export const getNotificationByJobId = async (
     req: express.Request,
     res: express.Response
-): Promise<void> => {
+): Promise<void> => { // <--- Already correct, just for consistency check
     try {
         const jobId = req.params.jobId;
 
@@ -92,7 +134,7 @@ export const getNotificationByJobId = async (
 export const updateNotification = async (
     req: express.Request,
     res: express.Response
-): Promise<void> => {
+): Promise<void> => { // <--- Already correct, just for consistency check
     try {
         const id = req.params.id;
         const updatedData = req.body;

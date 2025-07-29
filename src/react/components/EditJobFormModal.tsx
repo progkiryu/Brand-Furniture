@@ -1,12 +1,11 @@
-// EditJobFormModal.tsx
 import React, { useState, useEffect } from "react";
 
 interface EditJobFormModalProps {
   isOpen: boolean;
   onClose: () => void;
-  jobToEdit: Job | null; // The job object to be edited, or null if not editing
+  jobToEdit: Job | null;
   onUpdateJob: (updatedData: Job) => void;
-  onDeleteJob: (jobId: string) => void; // Add onDeleteJob prop
+  onDeleteJob: (jobId: string) => void;
 }
 
 function EditJobFormModal({
@@ -22,14 +21,17 @@ function EditJobFormModal({
   const [clientName, setClientName] = useState<string>("");
   const [jobName, setJobName] = useState<string>("");
   const [jobType, setJobType] = useState<string>("Commercial");
-  const [dueDate, setDueDate] = useState<string>(""); // Keep as string for input type="date"
+  const [dueDate, setDueDate] = useState<string>("");
   const [depositAmount, setDepositAmount] = useState<string>("");
   const [depositDate, setDepositDate] = useState<string>("");
-  const [paidInFull, setPaidInFull] = useState<string>(""); // Boolean for checkbox
+  const [paidInFull, setPaidInFull] = useState<string>("");
   const [liaison, setLiaison] = useState<string>("");
   const [paymentNote, setPaymentNote] = useState<string>("");
   const [isArchived, setIsArchived] = useState<boolean>(false);
   const [hasNoDeletedNotification, setHasNoDeletedNotification] = useState<boolean>(true);
+
+  // State to track if any field has been changed
+  const [hasChanged, setHasChanged] = useState<boolean>(false);
 
   /**
    * Formats a Date object or string into a 'YYYY-MM-DD' string for date input fields.
@@ -75,8 +77,9 @@ function EditJobFormModal({
       setPaymentNote(jobToEdit.paymentNote?.toString() || "");
       setIsArchived(jobToEdit.isArchived);
       setHasNoDeletedNotification(jobToEdit.hasNoDeletedNotification || true);
+      setHasChanged(false); // Reset hasChanged when modal opens or jobToEdit changes
     } else if (!isOpen) {
-      // Reset form fields when modal closes
+      // Reset form fields and hasChanged when modal closes
       setInvoiceId("");
       setPONumber("");
       setClientName("");
@@ -88,45 +91,117 @@ function EditJobFormModal({
       setPaidInFull("");
       setLiaison("");
       setPaymentNote("");
+      setIsArchived(false);
+      setHasNoDeletedNotification(true);
+      setHasChanged(false);
     }
-    if (jobToEdit) console.log(jobToEdit.isArchived);
   }, [isOpen, jobToEdit]);
+
+  // Effect to check for changes whenever form fields update
+  useEffect(() => {
+    if (jobToEdit) {
+      const currentInvoiceId = invoiceId;
+      const currentPONumber = poNumber;
+      const currentClientName = clientName;
+      const currentJobName = jobName;
+      const currentJobType = jobType;
+      const currentDueDate = dueDate;
+      const currentDepositAmount = depositAmount;
+      const currentDepositDate = depositDate;
+      const currentPaidInFull = paidInFull;
+      const currentLiaison = liaison;
+      const currentPaymentNote = paymentNote;
+      const currentIsArchived = isArchived;
+      const currentHasNoDeletedNotification = hasNoDeletedNotification;
+
+      const originalInvoiceId = jobToEdit.invoiceId?.toString() || "";
+      const originalPONumber = jobToEdit.poNumber?.toString() || "";
+      const originalClientName = jobToEdit.client?.toString() || "";
+      const originalJobName = jobToEdit.name?.toString() || "";
+      const originalJobType = jobToEdit.type?.toString() || "";
+      const originalDueDate = formatDateForInput(jobToEdit.due);
+      const originalDepositAmount = jobToEdit.depositAmount?.toString() || "";
+      const originalDepositDate = formatDateForInput(jobToEdit.depositDate);
+      const originalPaidInFull = formatDateForInput(jobToEdit.paidInFull);
+      const originalLiaison = jobToEdit.liaison?.toString() || "";
+      const originalPaymentNote = jobToEdit.paymentNote?.toString() || "";
+      const originalIsArchived = jobToEdit.isArchived;
+      const originalHasNoDeletedNotification = jobToEdit.hasNoDeletedNotification || true;
+
+      const changed =
+        currentInvoiceId !== originalInvoiceId ||
+        currentPONumber !== originalPONumber ||
+        currentClientName !== originalClientName ||
+        currentJobName !== originalJobName ||
+        currentJobType !== originalJobType ||
+        currentDueDate !== originalDueDate ||
+        currentDepositAmount !== originalDepositAmount ||
+        currentDepositDate !== originalDepositDate ||
+        currentPaidInFull !== originalPaidInFull ||
+        currentLiaison !== originalLiaison ||
+        currentPaymentNote !== originalPaymentNote ||
+        currentIsArchived !== originalIsArchived ||
+        currentHasNoDeletedNotification !== originalHasNoDeletedNotification;
+
+      setHasChanged(changed);
+    }
+  }, [
+    invoiceId,
+    poNumber,
+    clientName,
+    jobName,
+    jobType,
+    dueDate,
+    depositAmount,
+    depositDate,
+    paidInFull,
+    liaison,
+    paymentNote,
+    isArchived,
+    hasNoDeletedNotification,
+    jobToEdit,
+  ]);
 
   // If modal is not open, return null to not render anything
   if (!isOpen) return null;
 
   /**
    * Handles the form submission for updating a job.
+   * If no changes are detected, it simply closes the modal.
    * @param event The form submission event.
    */
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
+
+    if (!hasChanged) {
+      // If no changes, just close the modal
+      onClose();
+      return;
+    }
 
     if (!jobToEdit?._id) {
       console.error("Job ID is missing for update.");
       return;
     }
 
-    const originalDueDate = jobToEdit.due ? new Date(jobToEdit.due).toISOString().split("T")[0] : "";
-    const newDueDateChanged = originalDueDate !== dueDate;
     // Construct the updated Job object
     const updatedData: Job = {
-      _id: jobToEdit._id, // Ensure _id is included for update
+      _id: jobToEdit._id,
       invoiceId: invoiceId,
       poNumber: poNumber,
       client: clientName,
       name: jobName,
       type: jobType,
-      due: new Date(dueDate),
-      depositAmount: depositAmount ? new Number(depositAmount) : new Number(),
-      depositDate: depositDate ? new Date(depositDate) : new Date(),
+      due: new Date(dueDate), // Set to undefined if empty string
+      depositAmount: depositAmount ? new Number(depositAmount) : new Number(0),
+      depositDate: depositDate ? new Date(depositDate) : undefined,
       paidInFull: paidInFull ? new Date(paidInFull) : undefined,
       liaison: liaison,
       paymentNote: paymentNote,
-      subJobList: jobToEdit.subJobList, // Preserve existing subJobList
+      subJobList: jobToEdit.subJobList,
       isPinned: jobToEdit.isPinned,
       isArchived: isArchived,
-      hasNoDeletedNotification: newDueDateChanged ? true : hasNoDeletedNotification,
+      hasNoDeletedNotification: hasNoDeletedNotification,
     };
 
     onUpdateJob(updatedData);
@@ -138,7 +213,6 @@ function EditJobFormModal({
    */
   const handleDelete = () => {
     if (jobToEdit?._id) {
-      // In a real application, you might add a confirmation dialog here
       onDeleteJob(jobToEdit._id.toString());
       onClose(); // Close modal after delete
     } else {
@@ -249,7 +323,6 @@ function EditJobFormModal({
 
           <div className="form-group">
             <label htmlFor="jobType">Job Type:</label>
-
             <select
               id="jobType"
               value={jobType}
