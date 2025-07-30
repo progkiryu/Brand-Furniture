@@ -33,6 +33,78 @@ export const getJobById = async (
   }
 };
 
+export const getOrganisedJobs = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  try {
+    const organisedJobs = [];
+
+    // Unpinned, No Due
+    const unpinnedJobsNullDue = await schemas.Job.find({
+      isArchived: { $in: false },
+      isPinned: { $in: false },
+      due: { $eq: null },
+    }).sort({ due: "descending" });
+    if (!unpinnedJobsNullDue) {
+      res.status(404).json({ message: "ErrorL Failed to retrieve jobs." });
+      return;
+    }
+    for (let i = 0; i < unpinnedJobsNullDue.length; i++) {
+      organisedJobs.unshift(unpinnedJobsNullDue[i]);
+    }
+
+    // Unpinned, w/ Due
+    const unpinnedJobsDue = await schemas.Job.find({
+      isArchived: { $in: false },
+      isPinned: { $in: false },
+      due: { $ne: null },
+    }).sort({ due: "descending" });
+    if (!unpinnedJobsDue) {
+      res.status(404).json({ message: "ErrorL Failed to retrieve jobs." });
+      return;
+    }
+    for (let i = 0; i < unpinnedJobsDue.length; i++) {
+      organisedJobs.unshift(unpinnedJobsDue[i]);
+    }
+
+    // Pinned No Due
+    const pinnedJobsNullDue = await schemas.Job.find({
+      isPinned: { $in: true },
+      due: { $eq: null },
+    }).sort({ due: "descending" });
+    if (!pinnedJobsNullDue) {
+      res
+        .status(404)
+        .json({ message: "Error: Failed to retrieve pinned jobs." });
+      return;
+    }
+    for (let i = 0; i < pinnedJobsNullDue.length; i++) {
+      organisedJobs.unshift(pinnedJobsNullDue[i]);
+    }
+
+    // Pinned w/ Due
+    const pinnedJobsDue = await schemas.Job.find({
+      isPinned: { $in: true },
+      due: { $ne: null },
+    }).sort({ due: "descending" });
+    if (!pinnedJobsDue) {
+      res
+        .status(404)
+        .json({ message: "Error: Failed to retrieve pinned jobs." });
+      return;
+    }
+    for (let i = 0; i < pinnedJobsDue.length; i++) {
+      organisedJobs.unshift(pinnedJobsDue[i]);
+    }
+
+    res.status(200).json(organisedJobs);
+  } catch (err) {
+    console.error(err);
+    res.status(400).json(err);
+  }
+};
+
 export const getCurrentJobs = async (
   _: express.Request,
   res: express.Response
@@ -62,7 +134,7 @@ export const getCurrentJobsUnpinnedNullDue = async (
     const jobs = await schemas.Job.find({
       isArchived: { $in: false },
       isPinned: { $in: false },
-      due: { $ne: null },
+      due: { $eq: null },
     }).sort({ due: "ascending" });
     if (!jobs) {
       res.status(404).json({ message: "ErrorL Failed to retrieve jobs." });
@@ -83,7 +155,7 @@ export const getCurrentJobsUnpinnedWithDue = async (
     const jobs = await schemas.Job.find({
       isArchived: { $in: false },
       isPinned: { $in: false },
-      due: { $eq: null },
+      due: { $ne: null },
     }).sort({ due: "ascending" });
     if (!jobs) {
       res.status(404).json({ message: "ErrorL Failed to retrieve jobs." });
@@ -447,19 +519,21 @@ export const multiFilterSearch = async (
       upholsterTerm,
       foamedTerm,
       completeTerm,
-      productionTerm
+      productionTerm,
     }: RequestProps = req.body;
 
     var filteredJobs: Job[] = [];
-    
+
     // get unpinned and non-null due jobs
     const jobsUnpinnedWithDue = await schemas.Job.find<Job>({
       isArchived: { $in: false },
       isPinned: { $in: false },
-      due: { $eq: null }
+      due: { $eq: null },
     }).sort({ due: "ascending" });
     if (!jobsUnpinnedWithDue) {
-      res.status(404).json({ message: "Error: Failed to retrieve unpinned non-null due jobs." });
+      res.status(404).json({
+        message: "Error: Failed to retrieve unpinned non-null due jobs.",
+      });
       return;
     }
 
@@ -467,29 +541,39 @@ export const multiFilterSearch = async (
     const jobsUnpinnedNullDue = await schemas.Job.find<Job>({
       isArchived: { $in: false },
       isPinned: { $in: false },
-      due: { $ne: null }
+      due: { $ne: null },
     }).sort({ due: "ascending" });
     if (!jobsUnpinnedNullDue) {
-      res.status(404).json({ message: "Error: Failed to retrieve unpinned null due jobs." });
+      res
+        .status(404)
+        .json({ message: "Error: Failed to retrieve unpinned null due jobs." });
       return;
     }
 
     // get pinned jobs
-    const pinnedJobs = await schemas.Job
-      .find<Job>({ isPinned: { $in: true } })
-      .sort({ due: "ascending" });
+    const pinnedJobs = await schemas.Job.find<Job>({
+      isPinned: { $in: true },
+    }).sort({ due: "ascending" });
     if (!pinnedJobs) {
-      res.status(404).json({ message: "Error: Failed to retrieve pinned jobs." });
+      res
+        .status(404)
+        .json({ message: "Error: Failed to retrieve pinned jobs." });
       return;
     }
 
     // organise jobs
-    filteredJobs = [...pinnedJobs, ...jobsUnpinnedNullDue, ...jobsUnpinnedWithDue];
+    filteredJobs = [
+      ...pinnedJobs,
+      ...jobsUnpinnedNullDue,
+      ...jobsUnpinnedWithDue,
+    ];
 
     //---ARCHIVE FILTER---//
 
     if (archiveTerm === "true") {
-      filteredJobs = await schemas.Job.find<Job>({ isArchived: true }).sort({ due: "ascending" });
+      filteredJobs = await schemas.Job.find<Job>({ isArchived: true }).sort({
+        due: "ascending",
+      });
     }
 
     //---END ARCHIVE FILTER---//
@@ -497,7 +581,8 @@ export const multiFilterSearch = async (
     //---SEARCH FILTER---//
 
     filteredJobs = filteredJobs.filter((job: Job) => {
-      if (job.name.toLowerCase().includes(searchTerm.toLowerCase())) return true;
+      if (job.name.toLowerCase().includes(searchTerm.toLowerCase()))
+        return true;
     });
 
     //---END SEARCH FILTER---//
@@ -513,7 +598,6 @@ export const multiFilterSearch = async (
 
     //---END YEAR FILTER---//
 
-
     //---ASC/DSC FILTER---//
 
     if (invoiceIdTerm) {
@@ -525,8 +609,7 @@ export const multiFilterSearch = async (
         }
         return invoiceIdB.localeCompare(invoiceIdA);
       });
-    }
-    else if (jobNameTerm) {
+    } else if (jobNameTerm) {
       filteredJobs.sort((a, b) => {
         const nameA = a.name.toLowerCase();
         const nameB = b.name.toLowerCase();
@@ -535,8 +618,7 @@ export const multiFilterSearch = async (
         }
         return nameB.localeCompare(nameA);
       });
-    }
-    else if (clientTerm) {
+    } else if (clientTerm) {
       filteredJobs.sort((a, b) => {
         const clientA = a.client.toLowerCase();
         const clientB = b.client.toLowerCase();
@@ -545,8 +627,7 @@ export const multiFilterSearch = async (
         }
         return clientB.localeCompare(clientA);
       });
-    }
-    else if (dueDateTerm) {
+    } else if (dueDateTerm) {
       filteredJobs.sort((a, b) => {
         const dueDateA = String(a.due).toLowerCase();
         const dueDateB = String(b.due).toLowerCase();
@@ -559,15 +640,13 @@ export const multiFilterSearch = async (
 
     //---END ASC/DSC FILTER---//
 
-
-
     //---STATUS FILTER---//
 
     const subJobs = await schemas.SubJob.find<SubJob>({});
     const frames = await schemas.Frame.find<Frame>({});
     const cushions = await schemas.Cushion.find<Cushion>({});
     const upholstery = await schemas.Upholstery.find<Upholstery>({});
-    
+
     const statusJobSet = new Set<Job>();
     if (cutTerm === "true") {
       const cutJobSet = new Set<Job>();
@@ -584,7 +663,9 @@ export const multiFilterSearch = async (
       if (cutSubJobSet.size > 0) {
         const cutSubJobArray = [...cutSubJobSet];
         cutSubJobArray.map((subJob: SubJob) => {
-          const cutJob = filteredJobs.find((job: Job) => job._id == subJob.jobId);
+          const cutJob = filteredJobs.find(
+            (job: Job) => job._id == subJob.jobId
+          );
           if (cutJob) cutJobSet.add(cutJob);
         });
         if (cutJobSet.size > 0) {
@@ -593,15 +674,14 @@ export const multiFilterSearch = async (
             statusJobSet.add(job);
           });
         }
-      }
-      else {
+      } else {
         filteredJobs = [];
       }
     }
     if (upholsterTerm === "true") {
       const upholsterJobSet = new Set<Job>();
       const upholsterSubJobSet = new Set<SubJob>();
- 
+
       const upholsterUpholstery: Upholstery[] = upholstery.filter(
         (upholster: Upholstery) => {
           if (upholster.status === "Body Upholstered") return true;
@@ -624,7 +704,7 @@ export const multiFilterSearch = async (
         );
         if (upholsterSubJob) upholsterSubJobSet.add(upholsterSubJob);
       });
- 
+
       if (upholsterSubJobSet.size > 0) {
         const upholsterSubJobArray = [...upholsterSubJobSet];
         upholsterSubJobArray.map((subJob: SubJob) => {
@@ -639,15 +719,14 @@ export const multiFilterSearch = async (
             statusJobSet.add(job);
           });
         }
-      }
-      else {
+      } else {
         filteredJobs = [];
       }
     }
     if (sewnTerm === "true") {
       const sewnJobSet = new Set<Job>();
       const sewnSubJobSet = new Set<SubJob>();
- 
+
       const sewnCushions: Cushion[] = cushions.filter((cushion: Cushion) => {
         if (cushion.status === "Upholstery Sewn") return true;
       });
@@ -660,7 +739,9 @@ export const multiFilterSearch = async (
       if (sewnSubJobSet.size > 0) {
         const sewnSubJobArray = [...sewnSubJobSet];
         sewnSubJobArray.map((subJob: SubJob) => {
-          const sewnJob = filteredJobs.find((job: Job) => job._id == subJob.jobId);
+          const sewnJob = filteredJobs.find(
+            (job: Job) => job._id == subJob.jobId
+          );
           if (sewnJob) sewnJobSet.add(sewnJob);
         });
         if (sewnJobSet.size > 0) {
@@ -669,15 +750,14 @@ export const multiFilterSearch = async (
             statusJobSet.add(job);
           });
         }
-      }
-      else {
+      } else {
         filteredJobs = [];
       }
     }
     if (foamedTerm === "true") {
       const foamedJobSet = new Set<Job>();
       const foamedSubJobSet = new Set<SubJob>();
- 
+
       const foamedFrames: Frame[] = frames.filter((frame: Frame) => {
         if (frame.status === "Frame Foamed") return true;
       });
@@ -690,7 +770,9 @@ export const multiFilterSearch = async (
       if (foamedSubJobSet.size > 0) {
         const foamedSubJobArray = [...foamedSubJobSet];
         foamedSubJobArray.map((subJob: SubJob) => {
-          const foamedJob = filteredJobs.find((job: Job) => job._id == subJob.jobId);
+          const foamedJob = filteredJobs.find(
+            (job: Job) => job._id == subJob.jobId
+          );
           if (foamedJob) foamedJobSet.add(foamedJob);
         });
         if (foamedJobSet.size > 0) {
@@ -699,15 +781,14 @@ export const multiFilterSearch = async (
             statusJobSet.add(job);
           });
         }
-      }
-      else {
+      } else {
         filteredJobs = [];
       }
     }
     if (completeTerm === "true") {
       const completeJobSet = new Set<Job>();
       const completeSubJobSet = new Set<SubJob>();
- 
+
       const completeFrames: Frame[] = frames.filter((frame: Frame) => {
         if (frame.status === "Complete") return true;
       });
@@ -717,7 +798,7 @@ export const multiFilterSearch = async (
         );
         if (completeSubJob) completeSubJobSet.add(completeSubJob);
       });
- 
+
       const completeCushions: Cushion[] = cushions.filter(
         (cushion: Cushion) => {
           if (cushion.status === "Complete") return true;
@@ -729,7 +810,7 @@ export const multiFilterSearch = async (
         );
         if (completeSubJob) completeSubJobSet.add(completeSubJob);
       });
- 
+
       const completeUpholstery: Upholstery[] = upholstery.filter(
         (upholster: Upholstery) => {
           if (upholster.status === "Complete") return true;
@@ -741,11 +822,13 @@ export const multiFilterSearch = async (
         );
         if (completeSubJob) completeSubJobSet.add(completeSubJob);
       });
- 
+
       if (completeSubJobSet.size > 0) {
         const completeSubJobArray = [...completeSubJobSet];
         completeSubJobArray.map((subJob: SubJob) => {
-          const completeJob = filteredJobs.find((job: Job) => job._id == subJob.jobId);
+          const completeJob = filteredJobs.find(
+            (job: Job) => job._id == subJob.jobId
+          );
           if (completeJob) completeJobSet.add(completeJob);
         });
         if (completeJobSet.size > 0) {
@@ -754,15 +837,14 @@ export const multiFilterSearch = async (
             statusJobSet.add(job);
           });
         }
-      }
-      else {
+      } else {
         filteredJobs = [];
       }
     }
     if (productionTerm === "true") {
       const productionJobSet = new Set<Job>();
       const productionSubJobSet = new Set<SubJob>();
- 
+
       const productionFrames: Frame[] = frames.filter((frame: Frame) => {
         if (frame.status === "In Production") return true;
       });
@@ -772,7 +854,7 @@ export const multiFilterSearch = async (
         );
         if (productionSubJob) productionSubJobSet.add(productionSubJob);
       });
- 
+
       const productionCushions: Cushion[] = cushions.filter(
         (cushion: Cushion) => {
           if (cushion.status === "In Production") return true;
@@ -784,7 +866,7 @@ export const multiFilterSearch = async (
         );
         if (productionSubJob) productionSubJobSet.add(productionSubJob);
       });
- 
+
       const productionUpholstery: Upholstery[] = upholstery.filter(
         (upholster: Upholstery) => {
           if (upholster.status === "In Production") return true;
@@ -796,7 +878,7 @@ export const multiFilterSearch = async (
         );
         if (productionSubJob) productionSubJobSet.add(productionSubJob);
       });
- 
+
       if (productionSubJobSet.size > 0) {
         const productionSubJobArray = [...productionSubJobSet];
         productionSubJobArray.map((subJob: SubJob) => {
@@ -811,8 +893,7 @@ export const multiFilterSearch = async (
             statusJobSet.add(job);
           });
         }
-      }
-      else {
+      } else {
         filteredJobs = [];
       }
     }
@@ -823,9 +904,8 @@ export const multiFilterSearch = async (
     //---END STATUS FILTER---//
 
     res.status(200).json(filteredJobs);
-  }
-  catch (err) {
+  } catch (err) {
     console.error(err);
     res.sendStatus(400);
   }
-}
+};

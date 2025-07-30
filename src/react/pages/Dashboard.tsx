@@ -8,10 +8,11 @@ import NotificationsList from "../components/NotificationsList";
 
 import {
   createJob,
-  getCurrentJobsUnpinnedNullDue,
-  getCurrentJobsUnpinnedWithDue,
+  // getCurrentJobsUnpinnedNullDue,
+  // getCurrentJobsUnpinnedWithDue,
   getJobsByTypeByDate,
-  getPinnedJobs,
+  getOrganisedJobs,
+  // getPinnedJobs,
   getUniqueJobTypes,
 } from "../api/jobAPI.tsx";
 import {
@@ -99,22 +100,22 @@ function Dashboard() {
     setJobAnalytics(uniqueTypeCounter);
   };
 
-  const organiseJobs = (jobs: Job[], jobsNoDue: Job[], pinnedJobs: Job[]) => {
-    const organisedArray: Job[] = [];
-    // Push unpinned jobs without due dates
-    for (let i = 0; i < jobsNoDue.length; i++) {
-      organisedArray.push(jobsNoDue[i]);
-    }
-    // Push unpinned jobs with due dates
-    for (let i = 0; i < jobs.length; i++) {
-      organisedArray.push(jobs[i]);
-    }
-    // Add the pinned jobs to new job array, accounted for due date
-    for (let i = 0; i < pinnedJobs.length; i++) {
-      organisedArray.unshift(pinnedJobs[i]);
-    }
-    setOrganisedJobs(organisedArray);
-  };
+  // const organiseJobs = (jobs: Job[], jobsNoDue: Job[], pinnedJobs: Job[]) => {
+  //   const organisedArray: Job[] = [];
+  //   // Push unpinned jobs without due dates
+  //   for (let i = 0; i < jobsNoDue.length; i++) {
+  //     organisedArray.push(jobsNoDue[i]);
+  //   }
+  //   // Push unpinned jobs with due dates
+  //   for (let i = 0; i < jobs.length; i++) {
+  //     organisedArray.push(jobs[i]);
+  //   }
+  //   // Add the pinned jobs to new job array, accounted for due date
+  //   for (let i = 0; i < pinnedJobs.length; i++) {
+  //     organisedArray.unshift(pinnedJobs[i]);
+  //   }
+  //   setOrganisedJobs(organisedArray);
+  // };
 
   const handleAddJob = async (newJobData: Job) => {
     const addedJob = await createJob(newJobData);
@@ -154,25 +155,29 @@ function Dashboard() {
       // setIsLoading(true);
 
       const [
-        pinnedJobData,
-        currentJobData,
-        currentJobsUnpinnedData,
+        // pinnedJobData,
+        // currentJobData,
+        // currentJobsUnpinnedData,
+        organisedJobsData,
         notifData,
         jobTypes,
       ] = await Promise.all([
-        getPinnedJobs(),
-        getCurrentJobsUnpinnedWithDue(),
-        getCurrentJobsUnpinnedNullDue(),
+        // getPinnedJobs(),
+        // getCurrentJobsUnpinnedWithDue(),
+        // getCurrentJobsUnpinnedNullDue(),
+        getOrganisedJobs(),
         getAllNotifications(),
         getUniqueJobTypes(),
       ]);
-      organiseJobs(currentJobData, currentJobsUnpinnedData, pinnedJobData);
+      // organiseJobs(currentJobData, currentJobsUnpinnedData, pinnedJobData);
+      setOrganisedJobs(organisedJobsData);
 
       let combinedJobs: Job[] = [];
-      if (pinnedJobData) combinedJobs = combinedJobs.concat(pinnedJobData);
-      if (currentJobData) combinedJobs = combinedJobs.concat(currentJobData);
-      if (currentJobsUnpinnedData)
-        combinedJobs = combinedJobs.concat(currentJobsUnpinnedData);
+      if (organisedJobsData)
+        combinedJobs = combinedJobs.concat(organisedJobsData);
+      // if (currentJobData) combinedJobs = combinedJobs.concat(currentJobData);
+      // if (currentJobsUnpinnedData)
+      //   combinedJobs = combinedJobs.concat(currentJobsUnpinnedData);
 
       const today = new Date();
       today.setHours(0, 0, 0, 0); // Normalize today's date to start of day
@@ -202,7 +207,6 @@ function Dashboard() {
             // Condition met: generate/update notification
             const notifTitle = "Upcoming Job Due!";
             const notifDesc = `${job.name} for ${job.client} is due in ${diffDays} days!`;
-            
 
             if (existingNotif) {
               // Check if existing notification needs update (e.g., due date changed, name changed)
@@ -265,7 +269,6 @@ function Dashboard() {
   }, [reloader]);
 
   return (
-
     <>
       <Navbar />
       <div id="first-container">
@@ -310,4 +313,3 @@ function Dashboard() {
 }
 
 export default Dashboard;
-
