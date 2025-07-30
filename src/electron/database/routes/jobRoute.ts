@@ -16,12 +16,14 @@ import {
   getCurrentJobsUnpinnedWithDue,
   multiFilterSearch,
   getJobsByMonthAndYearNumber,
+  getOrganisedJobs,
 } from "../controllers/jobController.js";
 
 export default (router: express.Router) => {
   // Get Routes
   router.get("/job/getAllJobs", getAllJobs);
   router.get("/job/getJobById/:id", getJobById);
+  router.get("/job/getOrganisedJobs", getOrganisedJobs);
   router.get("/job/getCurrentJobs", getCurrentJobs);
   router.get(
     "/job/getCurrentJobsUnpinnedNullDue",

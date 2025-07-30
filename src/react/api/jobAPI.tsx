@@ -23,6 +23,18 @@ export const getJobById = async (id: String) => {
   return job;
 };
 
+// get jobs list current jobs organised
+// Pinned first, then unpinned
+export const getOrganisedJobs = async () => {
+  const jobs = fetch(`${DBLink}/job/getOrganisedJobs`)
+    .then((res) => res.json())
+    .catch((err) => console.error(err));
+  if (!jobs) {
+    return;
+  }
+  return jobs;
+};
+
 // Get current jobs
 export const getCurrentJobs = async () => {
   const currentJobs = fetch(`${DBLink}/job/getCurrentJobs`)
@@ -95,21 +107,19 @@ export const multiFilterSearch = async (props: RequestProps) => {
       method: "POST",
       mode: "cors",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(props)
+      body: JSON.stringify(props),
     });
     if (res.ok) {
       const filteredJobs = await res.json();
       return filteredJobs;
-    }
-    else {
+    } else {
       return null;
     }
-  }
-  catch (err) {
+  } catch (err) {
     console.error(err);
     return null;
   }
-}
+};
 
 // Create a new job
 export const createJob = async (data: Job) => {
