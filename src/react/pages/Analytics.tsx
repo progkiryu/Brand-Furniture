@@ -88,34 +88,33 @@ function Analytics() {
     const endDate = new Date();
     let startDate = new Date();
 
+    console.log(endDate);
+    console.log(startDate);
+
     if (dateRange === "currentmonth") {
       startDate.setDate(1);
       endDate.setMonth(endDate.getMonth() + 1);
       endDate.setDate(1);
-      endDate.setDate(endDate.getDate() - 1);
     } else if (dateRange === "last6months") {
       startDate.setDate(1);
       startDate.setMonth(startDate.getMonth() - 6);
       endDate.setMonth(endDate.getMonth() + 1);
       endDate.setDate(1);
-      endDate.setDate(endDate.getDate() - 1);
     } else if (dateRange === "last12months") {
       startDate.setDate(1);
       startDate.setFullYear(startDate.getFullYear() - 1);
       endDate.setMonth(endDate.getMonth() + 1);
       endDate.setDate(1);
-      endDate.setDate(endDate.getDate() - 1);
     } else if (dateRange === "last2years") {
       startDate.setDate(1);
       startDate.setFullYear(startDate.getFullYear() - 2);
       endDate.setMonth(endDate.getMonth() + 1);
       endDate.setDate(1);
-      endDate.setDate(endDate.getDate() - 1);
     } else {
       startDate.setDate(0);
       endDate.setMonth(endDate.getMonth() + 1);
       endDate.setDate(0);
-      endDate.setDate(endDate.getDate() - 1);
+
     }
     return {
       startDate: startDate,

@@ -1,5 +1,3 @@
-import { FaTimes } from "react-icons/fa";
-
 interface Props {
   notifsParams: Notif[];
   onDeleteNotification: (notificationId: string, jobId: string) => void

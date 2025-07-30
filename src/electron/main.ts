@@ -80,6 +80,6 @@ app.on("window-all-closed", () => {
 });
 
 // --- NEW CODE: IPC Listener for opening external links ---
-ipcMain.on('open-external-link', (event, url) => {
+ipcMain.on('open-external-link', (_, url) => {
   shell.openExternal(url);
 });
