@@ -2,7 +2,7 @@
   "appId": "bf.brand-furniture.erp",
   "files": ["dist-electron", "dist-react"],
   "extraResources": ["dist-electron/preload.cjs"],
-  "icon": "./flower.jpg",
+  "icon": "./logo.png",
   "mac": {
     "target": "dmg"
   },
