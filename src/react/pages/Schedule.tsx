@@ -202,7 +202,6 @@ function Schedule() {
       fetchJobs();
     }
   }, []);
-  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
