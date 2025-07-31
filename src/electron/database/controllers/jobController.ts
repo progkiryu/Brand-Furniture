@@ -550,11 +550,20 @@ export const multiFilterSearch = async (
       return;
     }
 
-    // get pinned jobs
-    const pinnedJobs = await schemas.Job.find<Job>({
+    // get pinned jobs with due
+    const pinnedJobsWithDue = await schemas.Job.find<Job>({
       isPinned: { $in: true },
+      isArchived: { $in: false },
+      due: { $ne: null }
     }).sort({ due: "ascending" });
-    if (!pinnedJobs) {
+
+    // get pinned jobs with null due
+    const pinnedJobsNullDue = await schemas.Job.find<Job>({
+      isPinned: { $in: true },
+      isArchived: { $in: false },
+      due: { $eq: null }
+    }).sort({ due: "ascending" });
+    if (!pinnedJobsNullDue) {
       res
         .status(404)
         .json({ message: "Error: Failed to retrieve pinned jobs." });
@@ -563,9 +572,10 @@ export const multiFilterSearch = async (
 
     // organise jobs
     filteredJobs = [
-      ...pinnedJobs,
-      ...jobsUnpinnedNullDue,
+      ...pinnedJobsWithDue,
+      ...pinnedJobsNullDue,
       ...jobsUnpinnedWithDue,
+      ...jobsUnpinnedNullDue,
     ];
 
     //---ARCHIVE FILTER---//

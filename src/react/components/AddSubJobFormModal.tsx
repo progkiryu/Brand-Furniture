@@ -41,12 +41,6 @@ function AddSubJobFormModal({
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
-    // Basic validation for sub-job detail (the minimum required field)
-    if (!subJobDetail.trim()) {
-      alert("Please fill in the Sub-Job Detail field.");
-      return;
-    }
-
     const nonEmptyFiles = files.filter((f) => f.trim() !== "");
 
     // Construct the new sub-job data
@@ -98,7 +92,7 @@ function AddSubJobFormModal({
           {/* Only the Detail Section */}
           <div className="detail-section">
             <div className="form-group">
-              <label htmlFor="subJobDetail">Sub-Job Detail:</label>
+              <label htmlFor="subJobDetail">Sub-Job Detail:<span className="required">*</span></label>
               <textarea
                 id="subJobDetail"
                 value={subJobDetail}
@@ -116,15 +110,6 @@ function AddSubJobFormModal({
                 rows={2}
               ></textarea>
             </div>
-            {/* <div className="form-group">
-                            <label htmlFor="file">File:</label>
-                            <input
-                                type="url"
-                                id="file"
-                                value={file}
-                                onChange={(e) => setFile(e.target.value)}
-                            />
-                        </div> */}
             <div className="form-group">
               <label>Files:</label>
               {files.map((fileUrl, index) => (

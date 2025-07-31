@@ -132,12 +132,13 @@ function EditSubJobFormModal({
         <form onSubmit={handleSubmit} className="modal-form">
           <h2>Edit Sub-Job: {subJobToEdit?.subJobDetail}</h2>
           <div className="form-group">
-            <label htmlFor="subJobDetail">Component Detail:</label>
+            <label htmlFor="subJobDetail">Component Detail:<span className="required">*</span></label>
             <textarea
               id="subJobDetail"
               value={subJobDetail}
               onChange={(e) => setSubJobDetail(e.target.value)}
               rows={4}
+              required
             ></textarea>
           </div>
           <div className="form-group">
@@ -149,16 +150,6 @@ function EditSubJobFormModal({
               rows={2}
             ></textarea>
           </div>
-          {/* <div className="form-group">
-                        <label htmlFor="file">File:</label>
-                        <input
-                            type="url"
-                            id="file"
-                            value={file}
-                            onChange={(e) => setFile(e.target.value)}
-                        />
-                    </div> */}
-
           <div className="form-group">
             <label>Files:</label>
             {files.map((fileUrl, index) => (

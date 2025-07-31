@@ -41,12 +41,6 @@ function AddCushionFormModal({
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
-    // Validate 'type' field is filled (required)
-    if (!type.trim()) {
-      alert("Please fill in the Type field.");
-      return;
-    }
-
     const newCushionData: Cushion = {
       subJobId: subJobId,
       type: type, // Required, convert to String object
@@ -71,7 +65,7 @@ function AddCushionFormModal({
         <form onSubmit={handleSubmit} className="modal-form">
           <h2>Add Cushion for Sub-Job: {subJobDetail}</h2>
           <div className="form-group">
-            <label htmlFor="type">Type: *</label>
+            <label htmlFor="type">Type:<span className="required">*</span></label>
             <input
               type="text"
               id="type"

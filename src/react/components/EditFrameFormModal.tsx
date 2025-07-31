@@ -116,21 +116,23 @@ function EditFrameFormModal({
         <form onSubmit={handleSubmit} className="modal-form">
           <h2>Edit Frame: {frameToEdit?.description}</h2>
           <div className="form-group">
-            <label htmlFor="supplier">Supplier:</label>
+            <label htmlFor="supplier">Supplier:<span className="required">*</span></label>
             <input
               type="text"
               id="supplier"
               value={supplier}
               onChange={(e) => setSupplier(e.target.value)}
+              required
             />
           </div>
           <div className="form-group">
-            <label htmlFor="description">Description:</label>
+            <label htmlFor="description">Description:<span className="required">*</span></label>
             <textarea
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={2}
+              required
             ></textarea>
           </div>
           <div className="form-group">
