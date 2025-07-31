@@ -34,7 +34,7 @@ export const getJobById = async (
 };
 
 export const getOrganisedJobs = async (
-  req: express.Request,
+  _: express.Request,
   res: express.Response
 ) => {
   try {
