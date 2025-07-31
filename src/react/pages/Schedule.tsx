@@ -157,9 +157,7 @@ function Schedule() {
       const fetchJobs = async () => {
         const jobsPromise = getAllJobs();
         try {
-          const [fetchJobs] = await Promise.all([
-            jobsPromise,
-          ]);
+          const [fetchJobs] = await Promise.all([jobsPromise]);
           setJobs(fetchJobs);
         } catch (err) {
           console.error("Could not fetch Jobs!");
@@ -203,6 +201,7 @@ function Schedule() {
       };
       fetchJobs();
     }
+  }, []);
   }, []);
 
   useEffect(() => {
