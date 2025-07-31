@@ -59,7 +59,7 @@ import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 
 function Schedule() {
-  const [reloadState, setReloadState] = useState<boolean>(false);
+  // const [reloadState, setReloadState] = useState<boolean>(false);
 
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [cushions, setCushions] = useState<Array<Cushion>>([]);
@@ -149,9 +149,9 @@ function Schedule() {
   const location = useLocation();
   const initialSelectedJob = location.state?.selectedJob;
 
-  const reload = () => {
-    reloadState === true ? setReloadState(false) : setReloadState(true);
-  };
+  // const reload = () => {
+  //   reloadState === true ? setReloadState(false) : setReloadState(true);
+  // };
 
   useEffect(() => {
     if (location.state !== null) {
@@ -207,7 +207,7 @@ function Schedule() {
       };
       fetchJobs();
     }
-  }, [reloadState]);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
