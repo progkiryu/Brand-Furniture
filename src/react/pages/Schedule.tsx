@@ -270,7 +270,6 @@ function Schedule() {
           await displayJobDetails(updatedJobFromServer); // Ensure sub-jobs are re-fetched and updated
           setIsAddSubJobModalOpen(false);
           setSelectedJobForSubJob(updatedJobFromServer); // Update the selected job to reflect changes
-          unconditionalReload();
         }
       }
     } catch (err) {
@@ -288,7 +287,6 @@ function Schedule() {
       // --- END NEW APPROACH ---
       setIsEditSubJobModalOpen(false);
       setSubJobToEdit(null);
-      unconditionalReload();
     } else {
       console.error("Failed to update sub-job.");
     }
@@ -310,7 +308,6 @@ function Schedule() {
         };
         await updateJob(updatedJob);
         setSelectedJobForSubJob(updatedJob);
-        unconditionalReload();
       }
       setIsEditSubJobModalOpen(false);
       setSubJobToEdit(null);
@@ -336,7 +333,6 @@ function Schedule() {
       );
       setIsAddCushionModalOpen(false); // Close modal
       setSelectedSubJobInfoForCushion(null); // Clear selected subjob info
-      unconditionalReload();
     } else {
       console.error("Failed to create cushion.");
     }
@@ -353,7 +349,6 @@ function Schedule() {
       }
       setIsEditCushionModalOpen(false);
       setCushionToEdit(null);
-      unconditionalReload();
     } else {
       console.error("Failed to update cushion.");
     }
@@ -411,7 +406,6 @@ function Schedule() {
         displayJobDetails(selectedJobForSubJob); // Re-fetch all subjobs for the current job
       }
       setIsEditFrameModalOpen(false);
-      unconditionalReload();`1`
       setFrameToEdit(null);
     } else {
       console.error("Failed to update frame.");
