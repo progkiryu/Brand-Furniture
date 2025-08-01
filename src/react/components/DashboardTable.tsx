@@ -71,7 +71,7 @@ function DashboardTable({ jobsParams }: DashboardTableProps) {
         <div key={String(job._id)} className="job-list-row">
           <span>{job.client}</span>
           <span>{job.poNumber || "—"}</span>
-          <span>{job.invoiceId}</span>
+          <span>{job.invoiceId || "—"}</span>
           <span>{job.name}</span>
           <span>{job.type}</span>
           <span
