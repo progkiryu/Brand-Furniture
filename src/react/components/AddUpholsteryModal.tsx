@@ -78,43 +78,39 @@ function AddUpholsteryFormModal({
             />
           </div>
           <div className="form-group">
-            <label htmlFor="supplier">Supplier:<span className="required">*</span></label>
+            <label htmlFor="supplier">Supplier:</label>
             <input
               type="text"
               id="supplier"
               value={supplier}
               onChange={(e) => setSupplier(e.target.value)}
-              required
             />
           </div>
           <div className="form-group">
-            <label htmlFor="description">Description:<span className="required">*</span></label>
+            <label htmlFor="description">Description:</label>
             <textarea
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={2}
-              required
             ></textarea>
           </div>
           <div className="form-group">
-            <label htmlFor="orderedDate">Ordered Date:<span className="required">*</span></label>
+            <label htmlFor="orderedDate">Ordered Date:</label>
             <input
               type="date"
               id="orderedDate"
               value={orderedDate}
               onChange={(e) => setOrderedDate(e.target.value)}
-              required
             />
           </div>
           <div className="form-group">
-            <label htmlFor="expectedDate">Expected Date:<span className="required">*</span></label>
+            <label htmlFor="expectedDate">Expected Date:</label>
             <input
               type="date"
               id="expectedDate"
               value={expectedDate}
               onChange={(e) => setExpectedDate(e.target.value)}
-              required
             />
           </div>
           <div className="form-group">

@@ -92,7 +92,7 @@ function AddSubJobFormModal({
           {/* Only the Detail Section */}
           <div className="detail-section">
             <div className="form-group">
-              <label htmlFor="subJobDetail">Sub-Job Detail:<span className="required">*</span></label>
+              <label htmlFor="subJobDetail">Component Detail:<span className="required">*</span></label>
               <textarea
                 id="subJobDetail"
                 value={subJobDetail}
