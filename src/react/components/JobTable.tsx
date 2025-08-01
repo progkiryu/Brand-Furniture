@@ -13,11 +13,6 @@ interface JobTableProps {
   clientTerm?: "asc" | "desc";
   dueDateTerm?: "asc" | "desc";
   yearTerm: string;
-  jobs: Job[];
-  subJobs: SubJob[];
-  frames: Frame[];
-  cushions: Cushion[];
-  upholstery: Upholstery[];
   cutTerm: boolean;
   sewnTerm: boolean;
   upholsterTerm: boolean;
@@ -25,6 +20,7 @@ interface JobTableProps {
   completeTerm: boolean;
   productionTerm: boolean;
   archiveTerm: boolean;
+  reload: boolean;
   handleJobClick: (job: Job) => Promise<void>;
   onEditJobClick: (job: Job) => void;
   initialSelectedJobId?: string | null;
@@ -32,11 +28,6 @@ interface JobTableProps {
 
 function JobTable({
   searchTerm,
-  jobs,
-  subJobs,
-  frames,
-  cushions,
-  upholstery,
   cutTerm,
   sewnTerm,
   upholsterTerm,
@@ -50,10 +41,11 @@ function JobTable({
   dueDateTerm,
   jobNameTerm,
   yearTerm,
+  reload,
   onEditJobClick,
   initialSelectedJobId,
 }: JobTableProps) {
-  const [displayedJobs, setDisplayedJobs] = useState<Job[]>(jobs);
+  const [displayedJobs, setDisplayedJobs] = useState<Job[]>([]);
   // State to hold both jobId and invoiceId for the selected job
 
   useEffect(() => {
@@ -116,18 +108,12 @@ function JobTable({
 
   useEffect(() => {
     const filter = async () => {
-      let filtered = jobs;
-      filtered = await handleMultiFilter();
+      const filtered = await handleMultiFilter();
       setDisplayedJobs(filtered);
     }
     filter();
   }, [
     searchTerm,
-    jobs,
-    subJobs,
-    frames,
-    cushions,
-    upholstery,
     invoiceIDTerm,
     clientTerm,
     dueDateTerm,
@@ -140,6 +126,7 @@ function JobTable({
     completeTerm,
     productionTerm,
     archiveTerm,
+    reload
   ]);
 
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);

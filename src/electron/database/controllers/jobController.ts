@@ -528,7 +528,7 @@ export const multiFilterSearch = async (
     const jobsUnpinnedWithDue = await schemas.Job.find<Job>({
       isArchived: { $in: false },
       isPinned: { $in: false },
-      due: { $eq: null },
+      due: { $ne: null },
     }).sort({ due: "ascending" });
     if (!jobsUnpinnedWithDue) {
       res.status(404).json({
@@ -541,7 +541,7 @@ export const multiFilterSearch = async (
     const jobsUnpinnedNullDue = await schemas.Job.find<Job>({
       isArchived: { $in: false },
       isPinned: { $in: false },
-      due: { $ne: null },
+      due: { $eq: null },
     }).sort({ due: "ascending" });
     if (!jobsUnpinnedNullDue) {
       res
@@ -684,6 +684,9 @@ export const multiFilterSearch = async (
             statusJobSet.add(job);
           });
         }
+        else {
+          filteredJobs = [];
+        }
       } else {
         filteredJobs = [];
       }
@@ -729,6 +732,9 @@ export const multiFilterSearch = async (
             statusJobSet.add(job);
           });
         }
+        else {
+          filteredJobs = [];
+        }
       } else {
         filteredJobs = [];
       }
@@ -760,6 +766,9 @@ export const multiFilterSearch = async (
             statusJobSet.add(job);
           });
         }
+        else {
+          filteredJobs = [];
+        }
       } else {
         filteredJobs = [];
       }
@@ -790,6 +799,9 @@ export const multiFilterSearch = async (
           foamedJobArray.map((job: Job) => {
             statusJobSet.add(job);
           });
+        }
+        else {
+          filteredJobs = [];
         }
       } else {
         filteredJobs = [];
@@ -847,6 +859,9 @@ export const multiFilterSearch = async (
             statusJobSet.add(job);
           });
         }
+        else {
+          filteredJobs = [];
+        }
       } else {
         filteredJobs = [];
       }
@@ -902,6 +917,9 @@ export const multiFilterSearch = async (
           productionJobArray.map((job: Job) => {
             statusJobSet.add(job);
           });
+        }
+        else {
+          filteredJobs = [];
         }
       } else {
         filteredJobs = [];
