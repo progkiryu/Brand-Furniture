@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import path from 'path-browserify'; // Import path-browserify
 
 interface EditSubJobFormModalProps {
   isOpen: boolean;
@@ -47,11 +48,7 @@ function EditSubJobFormModal({
     if (isOpen && subJobToEdit) {
       setSubJobDetail(subJobToEdit.subJobDetail?.toString() || "");
       setNote(subJobToEdit.note?.toString() || "");
-      setFiles(
-        subJobToEdit.file && subJobToEdit.file.length > 0
-          ? subJobToEdit.file
-          : [""]
-      );
+      setFiles(subJobToEdit.file && subJobToEdit.file.length > 0 ? subJobToEdit.file : [""]);
       setDueDate(formatDateForInput(subJobToEdit.dueDate));
     } else if (!isOpen) {
       // Reset form fields when modal closes
@@ -106,21 +103,32 @@ function EditSubJobFormModal({
     }
   };
 
+  const handleFileChange = async (index: number) => {
+    const filePath = await window.electron.openFileDialog();
+    if (filePath) {
+      const newFiles = [...files];
+      newFiles[index] = filePath;
+      setFiles(newFiles);
+    }
+  };
+
   const handleAddFile = () => {
-    setFiles([...files, ""]);
+    setFiles([...files, ""]); // Add a new empty string for a new file input
   };
 
-  // --- Helper function to handle file input changes ---
-  const handleFileChange = (index: number, value: string) => {
-    const newFiles = [...files];
-    newFiles[index] = value;
-    setFiles(newFiles);
-  };
-
-  // --- Helper function to remove a file input ---
   const handleRemoveFile = (index: number) => {
     const newFiles = files.filter((_, i) => i !== index);
-    setFiles(newFiles);
+    // Ensure there's always at least one input field
+    setFiles(newFiles.length === 0 ? [""] : newFiles);
+  };
+
+  const getFileName = (filePath: string) => {
+    try {
+      return path.basename(filePath);
+    } catch (e) {
+      console.error("Error getting filename from path:", filePath, e);
+      return filePath; // Fallback to full path if path-browserify fails
+    }
   };
 
   return (
@@ -149,25 +157,25 @@ function EditSubJobFormModal({
               rows={2}
             ></textarea>
           </div>
-          {/* <div className="form-group">
-                        <label htmlFor="file">File:</label>
-                        <input
-                            type="url"
-                            id="file"
-                            value={file}
-                            onChange={(e) => setFile(e.target.value)}
-                        />
-                    </div> */}
 
           <div className="form-group">
             <label>Files:</label>
-            {files.map((fileUrl, index) => (
+            {files.map((filePath, index) => (
               <div key={index} className="file-input-wrapper">
                 <input
-                  type="url"
-                  value={fileUrl}
-                  onChange={(e) => handleFileChange(index, e.target.value)}
+                  type="text"
+                  value={filePath ? getFileName(filePath) : ""}
+                  placeholder="No file chosen"
+                  readOnly
+                  className="file-path-display"
                 />
+                <button
+                  type="button"
+                  onClick={() => handleFileChange(index)}
+                  className="browse-file-btn"
+                >
+                  Browse
+                </button>
                 {files.length > 1 && (
                   <button
                     type="button"

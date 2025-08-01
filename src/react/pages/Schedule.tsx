@@ -80,7 +80,7 @@ function Schedule() {
   const [dueDateDesc, setDueDateDesc] = useState<boolean>(false);
 
   const [jobs, setJobs] = useState<Job[]>([]);
-  const [subJobs, setSubJobs] = useState<SubJob[]>([]);
+  // const [subJobs, setSubJobs] = useState<SubJob[]>([]);
 
   const [selectedSubJobs, setSelectedSubJobs] = useState<SubJob[]>([]);
   const [isAddJobModelOpen, setIsAddJobModelOpen] = useState<boolean>(false);
@@ -197,7 +197,7 @@ function Schedule() {
             upholsteryPromise,
           ]);
           setJobs(fetchJobs);
-          setSubJobs(fetchSubJobs);
+          setSelectedSubJobs(fetchSubJobs);
           setCushions(fetchCushions);
           setFrames(fetchFrames);
           setUpholstery(fetchUpholstery);
@@ -280,7 +280,7 @@ function Schedule() {
         setJobs((prevJobs) => prevJobs.filter((job) => job._id !== jobId));
         setIsEditJobModalOpen(false);
         setJobToEdit(null);
-        setSubJobs([]); // Clear subjobs as well
+        setSelectedSubJobs([]); // Clear subjobs as well
         // reload();
       } else {
         console.error("Failed to delete job.");
@@ -968,7 +968,7 @@ function Schedule() {
             key="job-table"
             searchTerm={searchTerm}
             jobs={jobs}
-            subJobs={subJobs}
+            subJobs={selectedSubJobs}
             frames={frames}
             cushions={cushions}
             upholstery={upholstery}

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import path from 'path-browserify'; // Import path-browserify for path.basename
 
 // --- Props Interface ---
 interface AddSubJobFormModalProps {
@@ -47,15 +48,13 @@ function AddSubJobFormModal({
       return;
     }
 
-    const nonEmptyFiles = files.filter((f) => f.trim() !== "");
-
     // Construct the new sub-job data
     // Ensure all string properties are `String` objects as per your types.d.ts
     const newSubJobData: SubJob = {
       jobId: jobId, // Convert primitive string `jobId` to `String` object
       subJobDetail: subJobDetail,
       note: note ? note : undefined,
-      file: nonEmptyFiles,
+      file: files.filter(filePath => filePath.trim() !== ""),
       dueDate: subJobDueDate ? new Date(subJobDueDate) : undefined,
       frameList: [], // Empty lists as no components are added via this simplified form
       cushionList: [],
@@ -66,21 +65,32 @@ function AddSubJobFormModal({
     onClose(); // Close the modal after submission
   };
 
+  const handleFileChange = async (index: number) => {
+    const filePath = await window.electron.openFileDialog();
+    if (filePath) {
+      const newFiles = [...files];
+      newFiles[index] = filePath;
+      setFiles(newFiles);
+    }
+  };
+
   const handleAddFile = () => {
-    setFiles([...files, ""]);
+    setFiles([...files, ""]); // Add a new empty string for a new file input
   };
 
-  // --- Helper function to handle file input changes ---
-  const handleFileChange = (index: number, value: string) => {
-    const newFiles = [...files];
-    newFiles[index] = value;
-    setFiles(newFiles);
-  };
-
-  // --- Helper function to remove a file input ---
   const handleRemoveFile = (index: number) => {
     const newFiles = files.filter((_, i) => i !== index);
-    setFiles(newFiles);
+    // Ensure there's always at least one input field
+    setFiles(newFiles.length === 0 ? [""] : newFiles);
+  };
+
+  const getFileName = (filePath: string) => {
+    try {
+      return path.basename(filePath);
+    } catch (e) {
+      console.error("Error getting filename from path:", filePath, e);
+      return filePath; // Fallback to full path if path-browserify fails
+    }
   };
 
   return (
@@ -116,44 +126,43 @@ function AddSubJobFormModal({
                 rows={2}
               ></textarea>
             </div>
-            {/* <div className="form-group">
-                            <label htmlFor="file">File:</label>
-                            <input
-                                type="url"
-                                id="file"
-                                value={file}
-                                onChange={(e) => setFile(e.target.value)}
-                            />
-                        </div> */}
             <div className="form-group">
-              <label>Files:</label>
-              {files.map((fileUrl, index) => (
-                <div key={index} className="file-input-wrapper">
-                  <input
-                    type="url"
-                    value={fileUrl}
-                    onChange={(e) => handleFileChange(index, e.target.value)}
-                  />
-                  {/* Only show the remove button if there's more than one input */}
-                  {files.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveFile(index)}
-                      className="remove-file-btn"
-                    >
-                      -
-                    </button>
-                  )}
-                </div>
-              ))}
-              <button
-                type="button"
-                onClick={handleAddFile}
-                className="add-file-btn"
-              >
-                + Add Another File
-              </button>
-            </div>
+            <label>Files:</label>
+            {files.map((filePath, index) => (
+              <div key={index} className="file-input-wrapper">
+                <input
+                  type="text"
+                  value={filePath ? getFileName(filePath) : ""}
+                  placeholder="No file chosen"
+                  readOnly
+                  className="file-path-display"
+                />
+                <button
+                  type="button"
+                  onClick={() => handleFileChange(index)}
+                  className="browse-file-btn"
+                >
+                  Browse
+                </button>
+                {files.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveFile(index)}
+                    className="remove-file-btn"
+                  >
+                    -
+                  </button>
+                )}
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={handleAddFile}
+              className="add-file-btn"
+            >
+              + Add Another File
+            </button>
+          </div>
             <div className="form-group">
               <label htmlFor="subJobDueDate">Due Date:</label>
               <input

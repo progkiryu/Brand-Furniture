@@ -1,5 +1,6 @@
 // src/react/components/SubJobTableRow.tsx
 import React, { useState, useEffect } from "react";
+import path from 'path-browserify'; // Import path-browserify
 import { Pencil } from "lucide-react";
 import { getFrameById } from "../api/frameAPI";
 import { getCushionById } from "../api/cushionAPI";
@@ -11,7 +12,7 @@ const STATUS_CLASS: Record<string, string> = {
   "Body Upholstered": "status-upholstered",
   "Upholstery Sewn": "status-sewn",
   "Frame Foamed": "status-foamed",
-  Complete: "status-complete",
+  "Complete": "status-complete",
   "In Production": "status-production",
 };
 
@@ -61,15 +62,20 @@ const SubJobTableRow: React.FC<SubJobTableRowProps> = ({
     subJobParam._id,
   ]);
 
-  const handleLinkClick =
-    (url: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
-      e.preventDefault();
-      if (window.electron) {
-        window.electron.openExternalLink(url);
-      } else {
-        window.open(url, "_blank");
-      }
-    };
+
+  
+  const getFileName = (filePath: string) => {
+    try {
+      return path.basename(filePath);
+    } catch (e) {
+      console.error("Error getting filename from path:", filePath, e);
+      return filePath; // Fallback to full path
+    }
+  };
+
+  const handleFileClick = (filePath: string) => {
+    window.electron.openFilePath(filePath);
+  };
 
   return (
     <>
@@ -103,12 +109,8 @@ const SubJobTableRow: React.FC<SubJobTableRowProps> = ({
             {subJobParam.file && subJobParam.file.length > 0 ? (
               subJobParam.file.map((url, i) => (
                 <div className="links-container" key={i}>
-                  <a
-                    href={url}
-                    onClick={handleLinkClick(url)}
-                    className="file-link"
-                  >
-                    {url}
+                  <a href="#" onClick={() => handleFileClick(url)} className="file-link">
+                    {getFileName(url)}
                   </a>
                 </div>
               ))

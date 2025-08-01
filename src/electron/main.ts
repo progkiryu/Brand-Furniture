@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, shell }  from "electron";
+import { app, BrowserWindow, ipcMain, shell, dialog } from "electron";
 import path from "path";
 import { isDev } from "./util.js";
 import { getPreloadPath } from "./pathResolver.js";
@@ -71,6 +71,31 @@ app.on("ready", () => {
     // Open HTML file when app is built
     mainWindow.loadFile(path.join(app.getAppPath(), "/dist-react/index.html"));
   }
+
+  ipcMain.on('open-external-link', (event, url) => {
+    shell.openExternal(url);
+  });
+
+  // New: Handle open-file-path from renderer
+  ipcMain.on('open-file-path', (event, filePath) => {
+    shell.openPath(filePath)
+      .catch(err => {
+        console.error("Failed to open file path:", filePath, err);
+        dialog.showErrorBox('Error Opening File', `Could not open file: ${filePath}\n\nError: ${err.message}`);
+      });
+  });
+
+  // New: Handle open-file-dialog from renderer
+  ipcMain.handle('open-file-dialog', async (event) => {
+    const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
+      properties: ['openFile']
+    });
+    if (canceled) {
+      return undefined; // No file selected
+    } else {
+      return filePaths[0]; // Return the first selected file path
+    }
+  });
 });
 
 app.on("window-all-closed", () => {
@@ -79,7 +104,10 @@ app.on("window-all-closed", () => {
   }
 });
 
-// --- NEW CODE: IPC Listener for opening external links ---
-ipcMain.on('open-external-link', (_, url) => {
-  shell.openExternal(url);
+app.on("activate", () => {
+  if (BrowserWindow.getAllWindows().length === 0) {
+    // createBrowserWindow();
+  }
 });
+
+
