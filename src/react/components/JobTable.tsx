@@ -21,6 +21,7 @@ interface JobTableProps {
   productionTerm: boolean;
   archiveTerm: boolean;
   reload: boolean;
+  checkedJobs: Job[];
   handleJobClick: (job: Job) => Promise<void>;
   onEditJobClick: (job: Job) => void;
   jobDeleteClick: (checked: boolean, job: Job) => void;
@@ -28,6 +29,7 @@ interface JobTableProps {
 }
 
 function JobTable({
+  checkedJobs,
   searchTerm,
   cutTerm,
   sewnTerm,
@@ -49,10 +51,6 @@ function JobTable({
 }: JobTableProps) {
   const [displayedJobs, setDisplayedJobs] = useState<Job[]>([]);
   // State to hold both jobId and invoiceId for the selected job
-
-  useEffect(() => {
-    setSelectedJobId(initialSelectedJobId || null);
-  }, [initialSelectedJobId]);
 
   const handleMultiFilter = async () => {
     var filteredJobs: Job[] = [];
@@ -131,6 +129,10 @@ function JobTable({
     reload
   ]);
 
+  useEffect(() => {
+    setSelectedJobId(initialSelectedJobId || null);
+  }, [initialSelectedJobId]);
+
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
 
   const onRowClick = async (job: Job) => {
@@ -176,7 +178,10 @@ function JobTable({
                   }}
                 />
               </div>
-              <input type="checkbox" onChange={(e) => jobDeleteClick(e.target.checked, job)}></input>
+              <input 
+              type="checkbox" 
+              onChange={(e) => jobDeleteClick(e.target.checked, job)}
+              checked={checkedJobs.includes(job)}></input>
             </div>
           ))}
         </div>

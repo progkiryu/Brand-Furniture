@@ -181,6 +181,7 @@ function Schedule() {
     if (addedJob) {
       setIsAddJobModelOpen(false);
       unconditionalReload();
+      setSelectedDeleteJobs([]);
     } else {
       console.error("Failed to create job.");
     }
@@ -206,6 +207,7 @@ function Schedule() {
         setJobToEdit(null);
         setSelected(false);
         unconditionalReload();
+        setSelectedDeleteJobs([]);
       } else {
         console.error("Failed to delete job.");
       }
@@ -220,6 +222,7 @@ function Schedule() {
       setIsEditJobModalOpen(false);
       setJobToEdit(null);
       unconditionalReload();
+      setSelectedDeleteJobs([]);
     } else {
       console.error("Failed to update job.");
     }
@@ -659,7 +662,13 @@ function Schedule() {
     });
 
     await Promise.all(selectedDeletePromise);
-    window.location.reload();
+    unconditionalReload();
+    setSelectedDeleteJobs([]);
+  }
+
+  const clearSelectedJobs = () => {
+    unconditionalReload();
+    setSelectedDeleteJobs([]);
   }
 
   return (
@@ -879,7 +888,7 @@ function Schedule() {
             Delete Jobs
             </button>
             <button
-              onClick={() => window.location.reload()}
+              onClick={clearSelectedJobs}
               className="deselect-btn"
             > 
             De-select All
@@ -891,6 +900,7 @@ function Schedule() {
           {/* Left Column - Job Name */}
           <JobTable
             key="job-table"
+            checkedJobs={selectedDeleteJobs}
             searchTerm={searchTerm}
             reload={reloadState}
             handleJobClick={displayJobDetails}
