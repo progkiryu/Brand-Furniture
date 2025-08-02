@@ -128,7 +128,7 @@ function EditCushionFormModal({
             Edit Cushion: {cushionToEdit?.description || cushionToEdit?.type}
           </h2>
           <div className="form-group">
-            <label htmlFor="type">Type:</label>
+            <label htmlFor="type">Type:<span className="required">*</span></label>
             <input
               type="text"
               id="type"

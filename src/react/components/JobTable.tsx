@@ -13,11 +13,6 @@ interface JobTableProps {
   clientTerm?: "asc" | "desc";
   dueDateTerm?: "asc" | "desc";
   yearTerm: string;
-  jobs: Job[];
-  subJobs: SubJob[];
-  frames: Frame[];
-  cushions: Cushion[];
-  upholstery: Upholstery[];
   cutTerm: boolean;
   sewnTerm: boolean;
   upholsterTerm: boolean;
@@ -25,18 +20,17 @@ interface JobTableProps {
   completeTerm: boolean;
   productionTerm: boolean;
   archiveTerm: boolean;
+  reload: boolean;
+  checkedJobs: Job[];
   handleJobClick: (job: Job) => Promise<void>;
   onEditJobClick: (job: Job) => void;
+  jobDeleteClick: (checked: boolean, job: Job) => void;
   initialSelectedJobId?: string | null;
 }
 
 function JobTable({
+  checkedJobs,
   searchTerm,
-  jobs,
-  subJobs,
-  frames,
-  cushions,
-  upholstery,
   cutTerm,
   sewnTerm,
   upholsterTerm,
@@ -50,15 +44,13 @@ function JobTable({
   dueDateTerm,
   jobNameTerm,
   yearTerm,
+  reload,
   onEditJobClick,
+  jobDeleteClick,
   initialSelectedJobId,
 }: JobTableProps) {
-  const [displayedJobs, setDisplayedJobs] = useState<Job[]>(jobs);
+  const [displayedJobs, setDisplayedJobs] = useState<Job[]>([]);
   // State to hold both jobId and invoiceId for the selected job
-
-  useEffect(() => {
-    setSelectedJobId(initialSelectedJobId || null);
-  }, [initialSelectedJobId]);
 
   const handleMultiFilter = async () => {
     var filteredJobs: Job[] = [];
@@ -116,18 +108,12 @@ function JobTable({
 
   useEffect(() => {
     const filter = async () => {
-      let filtered = jobs;
-      filtered = await handleMultiFilter();
+      const filtered = await handleMultiFilter();
       setDisplayedJobs(filtered);
     }
     filter();
   }, [
     searchTerm,
-    jobs,
-    subJobs,
-    frames,
-    cushions,
-    upholstery,
     invoiceIDTerm,
     clientTerm,
     dueDateTerm,
@@ -140,7 +126,12 @@ function JobTable({
     completeTerm,
     productionTerm,
     archiveTerm,
+    reload
   ]);
+
+  useEffect(() => {
+    setSelectedJobId(initialSelectedJobId || null);
+  }, [initialSelectedJobId]);
 
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
 
@@ -187,6 +178,10 @@ function JobTable({
                   }}
                 />
               </div>
+              <input 
+              type="checkbox" 
+              onChange={(e) => jobDeleteClick(e.target.checked, job)}
+              checked={checkedJobs.includes(job)}></input>
             </div>
           ))}
         </div>

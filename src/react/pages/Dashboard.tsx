@@ -100,23 +100,6 @@ function Dashboard() {
     setJobAnalytics(uniqueTypeCounter);
   };
 
-  // const organiseJobs = (jobs: Job[], jobsNoDue: Job[], pinnedJobs: Job[]) => {
-  //   const organisedArray: Job[] = [];
-  //   // Push unpinned jobs without due dates
-  //   for (let i = 0; i < jobsNoDue.length; i++) {
-  //     organisedArray.push(jobsNoDue[i]);
-  //   }
-  //   // Push unpinned jobs with due dates
-  //   for (let i = 0; i < jobs.length; i++) {
-  //     organisedArray.push(jobs[i]);
-  //   }
-  //   // Add the pinned jobs to new job array, accounted for due date
-  //   for (let i = 0; i < pinnedJobs.length; i++) {
-  //     organisedArray.unshift(pinnedJobs[i]);
-  //   }
-  //   setOrganisedJobs(organisedArray);
-  // };
-
   const handleAddJob = async (newJobData: Job) => {
     const addedJob = await createJob(newJobData);
     if (addedJob) {
@@ -285,7 +268,11 @@ function Dashboard() {
                 </button>
               </div>
               <div className="upcoming-orders-scroll-container">
-                <DashboardTable jobsParams={organisedJobs} />
+                {organisedJobs.length > 0 ? (
+                  <DashboardTable jobsParams={organisedJobs} />
+                ) : (
+                  <p><i>No jobs!</i></p>
+                )}
               </div>
             </div>
           </div>
