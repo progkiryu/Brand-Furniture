@@ -23,6 +23,7 @@ interface JobTableProps {
   reload: boolean;
   handleJobClick: (job: Job) => Promise<void>;
   onEditJobClick: (job: Job) => void;
+  jobDeleteClick: (checked: boolean, job: Job) => void;
   initialSelectedJobId?: string | null;
 }
 
@@ -43,6 +44,7 @@ function JobTable({
   yearTerm,
   reload,
   onEditJobClick,
+  jobDeleteClick,
   initialSelectedJobId,
 }: JobTableProps) {
   const [displayedJobs, setDisplayedJobs] = useState<Job[]>([]);
@@ -174,6 +176,7 @@ function JobTable({
                   }}
                 />
               </div>
+              <input type="checkbox" onChange={(e) => jobDeleteClick(e.target.checked, job)}></input>
             </div>
           ))}
         </div>

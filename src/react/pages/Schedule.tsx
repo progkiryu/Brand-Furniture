@@ -115,6 +115,8 @@ function Schedule() {
       null
     );
 
+  const [selectedDeleteJobs, setSelectedDeleteJobs] = useState<Job[]>([]);
+
   // State for Edit Modals
   const [isEditSubJobModalOpen, setIsEditSubJobModalOpen] = useState(false);
   const [subJobToEdit, setSubJobToEdit] = useState<SubJob | null>(null);
@@ -645,6 +647,21 @@ function Schedule() {
     setIsEditUpholsteryModalOpen(true);
   };
 
+  const addJobForDeletion = (checked: boolean, job: Job) => {
+    checked === true ? 
+    setSelectedDeleteJobs(prevJobs => [...prevJobs, job]) :
+    setSelectedDeleteJobs(prevJobs => prevJobs.filter((prevJob: Job) => prevJob != job));
+  }
+
+  const deleteSelectedJobs = async () => {
+    const selectedDeletePromise = selectedDeleteJobs.map(async (job: Job) => {
+      if (job._id) await deleteJob(job._id);
+    });
+
+    await Promise.all(selectedDeletePromise);
+    window.location.reload();
+  }
+
   return (
     <>
       <Navbar />
@@ -852,6 +869,23 @@ function Schedule() {
             </div>
           </div>
         </div>{" "}
+        { selectedDeleteJobs.length > 0 &&
+          <div id="select-delete-container">
+            <p id="delete-paragraph">{selectedDeleteJobs.length} selected!</p>
+            <button
+              onClick={deleteSelectedJobs}
+              className="delete-job-btn"
+            >
+            Delete Jobs
+            </button>
+            <button
+              onClick={() => window.location.reload()}
+              className="deselect-btn"
+            > 
+            De-select All
+            </button>
+          </div>
+        } 
         {/* This closes the #filter-container div */}
         <div id="order-container">
           {/* Left Column - Job Name */}
@@ -872,6 +906,7 @@ function Schedule() {
             productionTerm={filterProduction}
             archiveTerm={filterArchive}
             onEditJobClick={handleEditJobClick}
+            jobDeleteClick={addJobForDeletion}
             initialSelectedJobId={initialSelectedJob?._id || null}
           />
 
