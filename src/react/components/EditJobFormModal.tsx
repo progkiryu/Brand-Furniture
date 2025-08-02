@@ -28,7 +28,8 @@ function EditJobFormModal({
   const [liaison, setLiaison] = useState<string>("");
   const [paymentNote, setPaymentNote] = useState<string>("");
   const [isArchived, setIsArchived] = useState<boolean>(false);
-  const [hasNoDeletedNotification, setHasNoDeletedNotification] = useState<boolean>(true);
+  const [hasNoDeletedNotification, setHasNoDeletedNotification] =
+    useState<boolean>(true);
 
   // State to track if any field has been changed
   const [hasChanged, setHasChanged] = useState<boolean>(false);
@@ -126,7 +127,8 @@ function EditJobFormModal({
       const originalLiaison = jobToEdit.liaison?.toString() || "";
       const originalPaymentNote = jobToEdit.paymentNote?.toString() || "";
       const originalIsArchived = jobToEdit.isArchived;
-      const originalHasNoDeletedNotification = jobToEdit.hasNoDeletedNotification || true;
+      const originalHasNoDeletedNotification =
+        jobToEdit.hasNoDeletedNotification || true;
 
       const changed =
         currentInvoiceId !== originalInvoiceId ||

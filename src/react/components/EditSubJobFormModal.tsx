@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import path from 'path-browserify'; // Import path-browserify
+import path from "path-browserify"; // Import path-browserify
 
 interface EditSubJobFormModalProps {
   isOpen: boolean;
@@ -50,16 +50,20 @@ function EditSubJobFormModal({
     if (isOpen && subJobToEdit) {
       setSubJobDetail(subJobToEdit.subJobDetail?.toString() || "");
       setNote(subJobToEdit.note?.toString() || "");
-      setFiles(subJobToEdit.file && subJobToEdit.file.length > 0 ? subJobToEdit.file : [""]);
+      setFiles(
+        subJobToEdit.file && subJobToEdit.file.length > 0
+          ? subJobToEdit.file
+          : [""]
+      );
       setDueDate(formatDateForInput(subJobToEdit.dueDate));
-      setHasChanged(false); 
+      setHasChanged(false);
     } else if (!isOpen) {
       // Reset form fields when modal closes
       setSubJobDetail("");
       setNote("");
       setFiles([""]);
       setDueDate("");
-      setHasChanged(false); 
+      setHasChanged(false);
     }
   }, [isOpen, subJobToEdit]);
 
@@ -72,11 +76,15 @@ function EditSubJobFormModal({
 
       const originalSubJobDetail = subJobToEdit.subJobDetail?.toString() || "";
       const originalNote = subJobToEdit.note?.toString() || "";
-      const originalFiles = subJobToEdit.file && subJobToEdit.file.length > 0 ? subJobToEdit.file : [""];
+      const originalFiles =
+        subJobToEdit.file && subJobToEdit.file.length > 0
+          ? subJobToEdit.file
+          : [""];
       const originalDueDate = formatDateForInput(subJobToEdit.dueDate);
 
       // Deep compare files array
-      const filesChanged = currentFiles.length !== originalFiles.length ||
+      const filesChanged =
+        currentFiles.length !== originalFiles.length ||
         currentFiles.some((file, index) => file !== originalFiles[index]);
 
       const changed =
@@ -87,13 +95,7 @@ function EditSubJobFormModal({
 
       setHasChanged(changed);
     }
-  }, [
-    subJobDetail,
-    note,
-    files,
-    dueDate,
-    subJobToEdit,
-  ]);
+  }, [subJobDetail, note, files, dueDate, subJobToEdit]);
 
   if (!isOpen) return null;
 
@@ -210,7 +212,6 @@ function EditSubJobFormModal({
               />
             </div>
           </div>
-
 
           <div className="form-group">
             <label>Files:</label>

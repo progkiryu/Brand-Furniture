@@ -43,12 +43,6 @@ function AddUpholsteryFormModal({
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
-    // Validate 'type' field is filled (required)
-    if (!type.trim()) {
-      alert("Please fill in the Type field.");
-      return;
-    }
-
     const newUpholsteryData: Upholstery = {
       subJobId: subJobId,
       type: type, // Required, convert to String object

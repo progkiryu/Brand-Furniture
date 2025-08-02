@@ -39,12 +39,6 @@ function AddFrameFormModal({
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
-    // Validate at least one non-date field is filled
-    if (!supplier.trim() && !description.trim()) {
-      alert("Please fill in at least the Supplier or Description field.");
-      return;
-    }
-
     const newFrameData: Frame = {
       subJobId: subJobId, // Convert primitive string to String object
       supplier: supplier ? supplier : undefined,

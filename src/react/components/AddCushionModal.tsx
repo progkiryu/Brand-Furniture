@@ -41,12 +41,6 @@ function AddCushionFormModal({
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
-    // Validate 'type' field is filled (required)
-    if (!type.trim()) {
-      alert("Please fill in the Type field.");
-      return;
-    }
-
     const newCushionData: Cushion = {
       subJobId: subJobId,
       type: type, // Required, convert to String object
@@ -144,7 +138,6 @@ function AddCushionFormModal({
                 />
               </div>
             </div>
-
           </div>
 
           <button type="submit">Add Cushion</button>

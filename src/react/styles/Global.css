@@ -123,4 +123,7 @@ p {
     overflow-x: hidden;
 }
 
+.required {
+    color: red;
+}
 

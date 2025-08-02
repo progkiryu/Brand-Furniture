@@ -57,7 +57,7 @@ function EditCushionFormModal({
       setExpectedDate(formatDateForInput(cushionToEdit.expectedDate));
       setReceivedDate(formatDateForInput(cushionToEdit.receivedDate));
       setStatus(cushionToEdit.status?.toString() || "In Production");
-      setHasChanged(false); 
+      setHasChanged(false);
     } else if (!isOpen) {
       // Reset form fields when modal closes
       setType("");
@@ -67,7 +67,7 @@ function EditCushionFormModal({
       setExpectedDate("");
       setReceivedDate("");
       setStatus("In Production");
-      setHasChanged(false); 
+      setHasChanged(false);
     }
   }, [isOpen, cushionToEdit]);
 
@@ -85,9 +85,14 @@ function EditCushionFormModal({
       const originalSupplier = cushionToEdit.supplier?.toString() || "";
       const originalDescription = cushionToEdit.description?.toString() || "";
       const originalOrderedDate = formatDateForInput(cushionToEdit.orderedDate);
-      const originalExpectedDate = formatDateForInput(cushionToEdit.expectedDate);
-      const originalReceivedDate = formatDateForInput(cushionToEdit.receivedDate);
-      const originalStatus = cushionToEdit.status?.toString() || "In Production";
+      const originalExpectedDate = formatDateForInput(
+        cushionToEdit.expectedDate
+      );
+      const originalReceivedDate = formatDateForInput(
+        cushionToEdit.receivedDate
+      );
+      const originalStatus =
+        cushionToEdit.status?.toString() || "In Production";
 
       const changed =
         currentType !== originalType ||
@@ -251,7 +256,6 @@ function EditCushionFormModal({
                 />
               </div>
             </div>
-
           </div>
           <div className="buttons-container">
             <button type="submit">Update</button>

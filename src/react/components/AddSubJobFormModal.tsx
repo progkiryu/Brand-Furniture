@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import path from 'path-browserify'; // Import path-browserify for path.basename
+import path from "path-browserify"; // Import path-browserify for path.basename
 
 // --- Props Interface ---
 interface AddSubJobFormModalProps {
@@ -42,11 +42,7 @@ function AddSubJobFormModal({
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
-    // Basic validation for sub-job detail (the minimum required field)
-    if (!subJobDetail.trim()) {
-      alert("Please fill in the Sub-Job Detail field.");
-      return;
-    }
+    const nonEmptyFiles = files.filter((f) => f.trim() !== "");
 
     // Construct the new sub-job data
     // Ensure all string properties are `String` objects as per your types.d.ts
@@ -54,7 +50,7 @@ function AddSubJobFormModal({
       jobId: jobId, // Convert primitive string `jobId` to `String` object
       subJobDetail: subJobDetail,
       note: note ? note : undefined,
-      file: files.filter(filePath => filePath.trim() !== ""),
+      file: files.filter((filePath) => filePath.trim() !== ""),
       dueDate: subJobDueDate ? new Date(subJobDueDate) : undefined,
       frameList: [], // Empty lists as no components are added via this simplified form
       cushionList: [],
@@ -106,7 +102,9 @@ function AddSubJobFormModal({
           <h2>Add Sub-Job for Invoice #{invoiceId}</h2>
           <div className="detail-note-due-container">
             <div className="form-group">
-              <label htmlFor="subJobDetail">Sub-Job Detail:</label>
+              <label htmlFor="subJobDetail">
+                Component Detail:<span className="required">*</span>
+              </label>
               <textarea
                 id="subJobDetail"
                 value={subJobDetail}

@@ -83,11 +83,19 @@ function EditUpholsteryFormModal({
 
       const originalType = upholsteryToEdit.type?.toString() || "";
       const originalSupplier = upholsteryToEdit.supplier?.toString() || "";
-      const originalDescription = upholsteryToEdit.description?.toString() || "";
-      const originalOrderedDate = formatDateForInput(upholsteryToEdit.orderedDate);
-      const originalExpectedDate = formatDateForInput(upholsteryToEdit.expectedDate);
-      const originalReceivedDate = formatDateForInput(upholsteryToEdit.receivedDate);
-      const originalStatus = upholsteryToEdit.status?.toString() || "In Production";
+      const originalDescription =
+        upholsteryToEdit.description?.toString() || "";
+      const originalOrderedDate = formatDateForInput(
+        upholsteryToEdit.orderedDate
+      );
+      const originalExpectedDate = formatDateForInput(
+        upholsteryToEdit.expectedDate
+      );
+      const originalReceivedDate = formatDateForInput(
+        upholsteryToEdit.receivedDate
+      );
+      const originalStatus =
+        upholsteryToEdit.status?.toString() || "In Production";
 
       const changed =
         currentType !== originalType ||

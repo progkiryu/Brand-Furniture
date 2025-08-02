@@ -40,7 +40,7 @@
 
 #job-detail-container,
 #job-list-container {
-  overflow: scroll;
+  overflow-y: scroll;
 }
 
 .sp-jobs-container {
@@ -201,6 +201,44 @@
 
 #add-job-container .add-job-btn:hover {
   opacity: 0.8;
+}
+
+#select-delete-container {
+  background-color: #1B263B;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 5vh;
+}
+
+.delete-job-btn {
+  padding: 10px 20px;
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.delete-job-btn:hover {
+  opacity: 0.8;
+}
+
+.deselect-btn {
+  padding: 10px 20px;
+  background-color: green;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.deselect-btn:hover {
+  opacity: 0.8;
+}
+
+#delete-paragraph {
+  color: white;
 }
 
 #search-and-dropdown-container {
