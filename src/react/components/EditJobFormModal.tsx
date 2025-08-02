@@ -28,7 +28,8 @@ function EditJobFormModal({
   const [liaison, setLiaison] = useState<string>("");
   const [paymentNote, setPaymentNote] = useState<string>("");
   const [isArchived, setIsArchived] = useState<boolean>(false);
-  const [hasNoDeletedNotification, setHasNoDeletedNotification] = useState<boolean>(true);
+  const [hasNoDeletedNotification, setHasNoDeletedNotification] =
+    useState<boolean>(true);
 
   // State to track if any field has been changed
   const [hasChanged, setHasChanged] = useState<boolean>(false);
@@ -126,7 +127,8 @@ function EditJobFormModal({
       const originalLiaison = jobToEdit.liaison?.toString() || "";
       const originalPaymentNote = jobToEdit.paymentNote?.toString() || "";
       const originalIsArchived = jobToEdit.isArchived;
-      const originalHasNoDeletedNotification = jobToEdit.hasNoDeletedNotification || true;
+      const originalHasNoDeletedNotification =
+        jobToEdit.hasNoDeletedNotification || true;
 
       const changed =
         currentInvoiceId !== originalInvoiceId ||
@@ -228,97 +230,106 @@ function EditJobFormModal({
         </button>
         <form onSubmit={handleSubmit} className="modal-form">
           <h2>Edit Job: {jobToEdit?.name}</h2>
-          <div className="form-group">
-            <label htmlFor="invoiceId">Invoice ID:</label>
-            <textarea
-              rows={1}
-              id="invoiceId"
-              value={invoiceId}
-              onChange={(e) => setInvoiceId(e.target.value)}
-            />
+          <div className="id-po-due-container">
+            <div className="form-group">
+              <label htmlFor="invoiceId">Invoice ID:</label>
+              <textarea
+                rows={1}
+                id="invoiceId"
+                value={invoiceId}
+                onChange={(e) => setInvoiceId(e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="poNumber">Purchase Order No:</label>
+              <textarea
+                id="poNumber"
+                value={poNumber}
+                onChange={(e) => setPONumber(e.target.value)}
+                rows={1}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="dueDate">Due Date:</label>
+              <input
+                type="date"
+                id="dueDate"
+                value={dueDate}
+                onChange={(e) => setDueDate(e.target.value)}
+              />
+            </div>
           </div>
-          <div className="form-group">
-            <label htmlFor="poNumber">Purchase Order No:</label>
-            <textarea
-              id="poNumber"
-              value={poNumber}
-              onChange={(e) => setPONumber(e.target.value)}
-              rows={1}
-            />
+          <div className="client-job-container">
+            <div className="form-group">
+              <label htmlFor="clientName">Client Name:</label>
+              <textarea
+                id="clientName"
+                value={clientName}
+                onChange={(e) => setClientName(e.target.value)}
+                rows={4}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="jobName">Job Name:</label>
+              <textarea
+                id="jobName"
+                value={jobName}
+                onChange={(e) => setJobName(e.target.value)}
+                rows={4}
+                required
+              ></textarea>
+            </div>
           </div>
-          <div className="form-group">
-            <label htmlFor="clientName">Client Name:<span className="required">*</span></label>
-            <textarea
-              id="clientName"
-              value={clientName}
-              onChange={(e) => setClientName(e.target.value)}
-              rows={1}
-              required
-            />
+          <div className="payment-container">
+            <div className="form-group">
+              <label htmlFor="depositAmount">Deposit Amount:</label>
+              <input
+                type="number"
+                id="depositAmount"
+                value={depositAmount}
+                onChange={(e) => setDepositAmount(e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="depositDate">Deposit Date:</label>
+              <input
+                type="date"
+                id="depositDate"
+                value={depositDate}
+                onChange={(e) => setDepositDate(e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="paidInFull">Paid In Full:</label>
+              <input
+                type="date"
+                id="paidInFull"
+                value={paidInFull}
+                onChange={(e) => setPaidInFull(e.target.value)}
+              />
+            </div>
           </div>
-          <div className="form-group">
-            <label htmlFor="jobName">Job Name:<span className="required">*</span></label>
-            <textarea
-              id="jobName"
-              value={jobName}
-              onChange={(e) => setJobName(e.target.value)}
-              rows={4}
-              required
-            ></textarea>
-          </div>
-          <div className="form-group">
-            <label htmlFor="dueDate">Due Date:</label>
-            <input
-              type="date"
-              id="dueDate"
-              value={dueDate}
-              onChange={(e) => setDueDate(e.target.value)}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="depositAmount">Deposit Amount:</label>
-            <input
-              type="number"
-              id="depositAmount"
-              value={depositAmount}
-              onChange={(e) => setDepositAmount(e.target.value)}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="depositDate">Deposit Date:</label>
-            <input
-              type="date"
-              id="depositDate"
-              value={depositDate}
-              onChange={(e) => setDepositDate(e.target.value)}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="paidInFull">Paid In Full:</label>
-            <input
-              type="date"
-              id="paidInFull"
-              value={paidInFull}
-              onChange={(e) => setPaidInFull(e.target.value)}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="liaison">Liaison:</label>
-            <input
-              type="text"
-              id="liaison"
-              value={liaison}
-              onChange={(e) => setLiaison(e.target.value)}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="paymentNote">Payment Notes:</label>
-            <input
-              type="text"
-              id="paymentNote"
-              value={paymentNote}
-              onChange={(e) => setPaymentNote(e.target.value)}
-            />
+
+          <div className="liason-payment-container">
+            <div className="form-group">
+              <label htmlFor="liaison">Liaison:</label>
+              <input
+                type="text"
+                id="liaison"
+                value={liaison}
+                onChange={(e) => setLiaison(e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="paymentNote">Payment Notes:</label>
+              <input
+                type="text"
+                id="paymentNote"
+                value={paymentNote}
+                onChange={(e) => setPaymentNote(e.target.value)}
+              />
+            </div>
           </div>
 
           <div className="form-group">
@@ -345,10 +356,12 @@ function EditJobFormModal({
               onChange={(e) => setIsArchived(e.target.checked)}
             />
           </div>
-          <button type="submit">Update Job</button>
-          <button id="delete-button" type="button" onClick={handleDelete}>
-            Delete Job
-          </button>
+          <div className="buttons-container">
+            <button type="submit">Update Job</button>
+            <button id="delete-button" type="button" onClick={handleDelete}>
+              Delete Job
+            </button>
+          </div>
         </form>
       </div>
     </div>

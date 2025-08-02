@@ -114,7 +114,6 @@ function Analytics() {
       startDate.setDate(0);
       endDate.setMonth(endDate.getMonth() + 1);
       endDate.setDate(0);
-
     }
     return {
       startDate: startDate,

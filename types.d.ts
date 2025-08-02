@@ -99,5 +99,7 @@ interface Window {
   electron: {
     greeting: () => void;
     openExternalLink: (url: string) => void;
+    openFilePath: (filePath: string) => void;
+    openFileDialog: () => Promise<string | undefined>;
   };
 }

@@ -47,7 +47,7 @@ function DashboardTable({ jobsParams }: DashboardTableProps) {
       due: job.due,
       isPinned: isPinned,
       isArchived: job.isArchived,
-      hasNoDeletedNotification: job.hasNoDeletedNotification
+      hasNoDeletedNotification: job.hasNoDeletedNotification,
     };
     updateJob(temp);
     window.location.reload();

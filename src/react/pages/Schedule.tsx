@@ -1,19 +1,13 @@
 import "../styles/Schedule.css";
 import "../styles/Global.css";
-import "../styles/ModalForm.css";
 import "../styles/SubJobModalForm.css"; // Ensure this CSS file exists or create it if needed
 
-import {
-  createJob,
-  updateJob,
-  deleteJob
-} from "../api/jobAPI"; // Import deleteJobById
+import { createJob, updateJob, deleteJob } from "../api/jobAPI"; // Import deleteJobById
 import {
   createSubJob,
   getSubJobById,
   updateSubJob,
   deleteSubJob,
-  getSubJobsByJobId,
 } from "../api/subJobAPI"; // Import deleteSubJob
 
 import Navbar from "../components/Navbar";
@@ -33,11 +27,7 @@ import EditFrameFormModal from "../components/EditFrameFormModal";
 import EditCushionFormModal from "../components/EditCushionFormModal";
 import EditUpholsteryFormModal from "../components/EditUpholsteryFormModal";
 
-import {
-  createFrame,
-  updateFrame,
-  deleteFrameById,
-} from "../api/frameAPI"; // Import updateFrame, deleteFrameById
+import { createFrame, updateFrame, deleteFrameById } from "../api/frameAPI"; // Import updateFrame, deleteFrameById
 import {
   createCushion,
   updateCushion,
@@ -140,7 +130,7 @@ function Schedule() {
 
   const unconditionalReload = () => {
     reloadState === false ? setReloadState(true) : setReloadState(false);
-  }
+  };
 
   useEffect(() => {
     if (location.state !== null) {
@@ -149,7 +139,7 @@ function Schedule() {
       setSelectedJobForSubJob(selectedJob);
       setSelected(true);
       location.state === null;
-    } 
+    }
   }, []);
 
   useEffect(() => {
@@ -194,12 +184,6 @@ function Schedule() {
 
   const handleDeleteJob = async (jobId: string) => {
     try {
-      const jobs = await getSubJobsByJobId(jobId);
-      if (jobs) {
-        for (const job of jobs) {
-          await deleteSubJob(job._id);
-        }
-      }
       const success = await deleteJob(jobId);
       if (success) {
         setSelectedSubJobs([]);
@@ -233,7 +217,6 @@ function Schedule() {
       var arr = [];
       setSelectedJobForSubJob(job);
       if (job.subJobList && job.subJobList.length > 0) {
-
         //   const subJobs = job.subJobList.map((subJobId: String) => {
         //   return getSubJobById(subJobId);
         // });
@@ -651,10 +634,12 @@ function Schedule() {
   };
 
   const addJobForDeletion = (checked: boolean, job: Job) => {
-    checked === true ? 
-    setSelectedDeleteJobs(prevJobs => [...prevJobs, job]) :
-    setSelectedDeleteJobs(prevJobs => prevJobs.filter((prevJob: Job) => prevJob != job));
-  }
+    checked === true
+      ? setSelectedDeleteJobs((prevJobs) => [...prevJobs, job])
+      : setSelectedDeleteJobs((prevJobs) =>
+          prevJobs.filter((prevJob: Job) => prevJob != job)
+        );
+  };
 
   const deleteSelectedJobs = async () => {
     const selectedDeletePromise = selectedDeleteJobs.map(async (job: Job) => {
@@ -664,12 +649,12 @@ function Schedule() {
     await Promise.all(selectedDeletePromise);
     unconditionalReload();
     setSelectedDeleteJobs([]);
-  }
+  };
 
   const clearSelectedJobs = () => {
     unconditionalReload();
     setSelectedDeleteJobs([]);
-  }
+  };
 
   return (
     <>
@@ -878,23 +863,17 @@ function Schedule() {
             </div>
           </div>
         </div>{" "}
-        { selectedDeleteJobs.length > 0 &&
+        {selectedDeleteJobs.length > 0 && (
           <div id="select-delete-container">
             <p id="delete-paragraph">{selectedDeleteJobs.length} selected!</p>
-            <button
-              onClick={deleteSelectedJobs}
-              className="delete-job-btn"
-            >
-            Delete Jobs
+            <button onClick={deleteSelectedJobs} className="delete-job-btn">
+              Delete Jobs
             </button>
-            <button
-              onClick={clearSelectedJobs}
-              className="deselect-btn"
-            > 
-            De-select All
+            <button onClick={clearSelectedJobs} className="deselect-btn">
+              De-select All
             </button>
           </div>
-        } 
+        )}
         {/* This closes the #filter-container div */}
         <div id="order-container">
           {/* Left Column - Job Name */}

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import path from "path-browserify"; // Import path-browserify for path.basename
 
 // --- Props Interface ---
 interface AddSubJobFormModalProps {
@@ -41,15 +42,13 @@ function AddSubJobFormModal({
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
-    const nonEmptyFiles = files.filter((f) => f.trim() !== "");
-
     // Construct the new sub-job data
     // Ensure all string properties are `String` objects as per your types.d.ts
     const newSubJobData: SubJob = {
       jobId: jobId, // Convert primitive string `jobId` to `String` object
       subJobDetail: subJobDetail,
       note: note ? note : undefined,
-      file: nonEmptyFiles,
+      file: files.filter((filePath) => filePath.trim() !== ""),
       dueDate: subJobDueDate ? new Date(subJobDueDate) : undefined,
       frameList: [], // Empty lists as no components are added via this simplified form
       cushionList: [],
@@ -60,25 +59,36 @@ function AddSubJobFormModal({
     onClose(); // Close the modal after submission
   };
 
+  const handleFileChange = async (index: number) => {
+    const filePath = await window.electron.openFileDialog();
+    if (filePath) {
+      const newFiles = [...files];
+      newFiles[index] = filePath;
+      setFiles(newFiles);
+    }
+  };
+
   const handleAddFile = () => {
-    setFiles([...files, ""]);
+    setFiles([...files, ""]); // Add a new empty string for a new file input
   };
 
-  // --- Helper function to handle file input changes ---
-  const handleFileChange = (index: number, value: string) => {
-    const newFiles = [...files];
-    newFiles[index] = value;
-    setFiles(newFiles);
-  };
-
-  // --- Helper function to remove a file input ---
   const handleRemoveFile = (index: number) => {
     const newFiles = files.filter((_, i) => i !== index);
-    setFiles(newFiles);
+    // Ensure there's always at least one input field
+    setFiles(newFiles.length === 0 ? [""] : newFiles);
+  };
+
+  const getFileName = (filePath: string) => {
+    try {
+      return path.basename(filePath);
+    } catch (e) {
+      console.error("Error getting filename from path:", filePath, e);
+      return filePath; // Fallback to full path if path-browserify fails
+    }
   };
 
   return (
-    <div className="sub-job-modal-overlay" onClick={onClose}>
+    <div className="sub-job-modal-overlay">
       <div
         className="sub-job-modal-content"
         onClick={(e) => e.stopPropagation()}
@@ -88,11 +98,11 @@ function AddSubJobFormModal({
         </button>
         <form onSubmit={handleSubmit} className="sub-job-modal-form">
           <h2>Add Sub-Job for Invoice #{invoiceId}</h2>
-
-          {/* Only the Detail Section */}
-          <div className="detail-section">
+          <div className="detail-note-due-container">
             <div className="form-group">
-              <label htmlFor="subJobDetail">Component Detail:<span className="required">*</span></label>
+              <label htmlFor="subJobDetail">
+                Component Detail:<span className="required">*</span>
+              </label>
               <textarea
                 id="subJobDetail"
                 value={subJobDetail}
@@ -107,37 +117,8 @@ function AddSubJobFormModal({
                 id="note"
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
-                rows={2}
+                rows={4}
               ></textarea>
-            </div>
-            <div className="form-group">
-              <label>Files:</label>
-              {files.map((fileUrl, index) => (
-                <div key={index} className="file-input-wrapper">
-                  <input
-                    type="url"
-                    value={fileUrl}
-                    onChange={(e) => handleFileChange(index, e.target.value)}
-                  />
-                  {/* Only show the remove button if there's more than one input */}
-                  {files.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveFile(index)}
-                      className="remove-file-btn"
-                    >
-                      -
-                    </button>
-                  )}
-                </div>
-              ))}
-              <button
-                type="button"
-                onClick={handleAddFile}
-                className="add-file-btn"
-              >
-                + Add Another File
-              </button>
             </div>
             <div className="form-group">
               <label htmlFor="subJobDueDate">Due Date:</label>
@@ -150,7 +131,45 @@ function AddSubJobFormModal({
             </div>
           </div>
 
-          <button type="submit">Add Sub-Job</button>
+          <div className="form-group">
+            <label>Files:</label>
+            {files.map((filePath, index) => (
+              <div key={index} className="file-input-wrapper">
+                <input
+                  type="text"
+                  value={filePath ? getFileName(filePath) : ""}
+                  placeholder="No file chosen"
+                  readOnly
+                  className="file-path-display"
+                />
+                <button
+                  type="button"
+                  onClick={() => handleFileChange(index)}
+                  className="browse-file-btn"
+                >
+                  Browse
+                </button>
+                {files.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveFile(index)}
+                    className="remove-file-btn"
+                  >
+                    -
+                  </button>
+                )}
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={handleAddFile}
+              className="add-file-btn"
+            >
+              + Add Another File
+            </button>
+          </div>
+
+          <button type="submit">Add Component</button>
         </form>
       </div>
     </div>

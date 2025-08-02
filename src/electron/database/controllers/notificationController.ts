@@ -77,11 +77,6 @@ export const getNotificationByJobId = async (
 
         const notification = await schemas.Notif.findOne<Notif>({ jobId: jobId });
 
-        if (!notification) {
-            res.status(404).json({ message: `No notification found for Job ID: ${jobId}` }).end();
-            return;
-        }
-
         res.status(200).json(notification).end();
     } catch (err) {
         console.error("Error in getNotificationByJobId:", err);

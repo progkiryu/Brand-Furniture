@@ -7,9 +7,7 @@ export default function JobAnalyticsDash(Props: { data: TypeInfoDash[] }) {
 
   return (
     <div className="job-analytics">
-      <h3>
-        Job-Type Distribution Of Current Financial Year
-      </h3>
+      <h3>Job-Type Distribution Of Current Financial Year</h3>
 
       <PieChart width={320} height={350}>
         <Pie
