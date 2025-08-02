@@ -65,7 +65,7 @@ function AddUpholsteryFormModal({
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div className="modal-overlay">
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <button onClick={onClose} className="modal-close-btn">
           &times;
@@ -73,75 +73,81 @@ function AddUpholsteryFormModal({
         <form onSubmit={handleSubmit} className="modal-form">
           <h2>Add Upholstery for Sub-Job: {subJobDetail}</h2>
 
-          <div className="form-group">
-            <label htmlFor="type">Type: *</label>
-            <input
-              type="text"
-              id="type"
-              value={type}
-              onChange={(e) => setType(e.target.value)}
-              required
-            />
+          <div className="supplier-description-status-dates-container">
+            <div className="supplier-description-status-container">
+              <div className="form-group">
+                <label htmlFor="supplier">Supplier:</label>
+                <input
+                  type="text"
+                  id="supplier"
+                  value={supplier}
+                  onChange={(e) => setSupplier(e.target.value)}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="description">Description:</label>
+                <textarea
+                  id="description"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  rows={2}
+                ></textarea>
+              </div>
+              <div className="form-group">
+                <label htmlFor="type">Type: *</label>
+                <input
+                  type="text"
+                  id="type"
+                  value={type}
+                  onChange={(e) => setType(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="status">Status:</label>
+                <select
+                  id="status"
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
+                >
+                  <option value="Upholstery Cut">Upholstery Cut</option>
+                  <option value="Upholstery Sewn">Upholstery Sewn</option>
+                  <option value="Body Upholstered">Body Upholstered</option>
+                  <option value="In Production">In Production</option>
+                  <option value="Complete">Complete</option>
+                </select>
+              </div>
+            </div>
+            <div className="dates-container">
+              <div className="form-group">
+                <label htmlFor="orderedDate">Ordered Date:</label>
+                <input
+                  type="date"
+                  id="orderedDate"
+                  value={orderedDate}
+                  onChange={(e) => setOrderedDate(e.target.value)}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="expectedDate">Expected Date:</label>
+                <input
+                  type="date"
+                  id="expectedDate"
+                  value={expectedDate}
+                  onChange={(e) => setExpectedDate(e.target.value)}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="receivedDate">Received Date:</label>
+                <input
+                  type="date"
+                  id="receivedDate"
+                  value={receivedDate}
+                  onChange={(e) => setReceivedDate(e.target.value)}
+                />
+              </div>
+            </div>
           </div>
-          <div className="form-group">
-            <label htmlFor="supplier">Supplier:</label>
-            <input
-              type="text"
-              id="supplier"
-              value={supplier}
-              onChange={(e) => setSupplier(e.target.value)}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="description">Description:</label>
-            <textarea
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              rows={2}
-            ></textarea>
-          </div>
-          <div className="form-group">
-            <label htmlFor="orderedDate">Ordered Date:</label>
-            <input
-              type="date"
-              id="orderedDate"
-              value={orderedDate}
-              onChange={(e) => setOrderedDate(e.target.value)}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="expectedDate">Expected Date:</label>
-            <input
-              type="date"
-              id="expectedDate"
-              value={expectedDate}
-              onChange={(e) => setExpectedDate(e.target.value)}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="receivedDate">Received Date:</label>
-            <input
-              type="date"
-              id="receivedDate"
-              value={receivedDate}
-              onChange={(e) => setReceivedDate(e.target.value)}
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="status">Status:</label>
-            <select
-              id="status"
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-            >
-              <option value="Body Upholstered">Body Upholstered</option>
-              <option value="In Production">In Production</option>
-              <option value="Complete">Complete</option>
-            </select>
-          </div>
-
           <button type="submit">Add Upholstery</button>
         </form>
       </div>

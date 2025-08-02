@@ -1,6 +1,5 @@
 import "../styles/Schedule.css";
 import "../styles/Global.css";
-import "../styles/ModalForm.css";
 import "../styles/SubJobModalForm.css"; // Ensure this CSS file exists or create it if needed
 
 import {
@@ -251,12 +250,6 @@ function Schedule() {
 
   const handleDeleteJob = async (jobId: string) => {
     try {
-      const jobs = await getSubJobsByJobId(jobId);
-      if (jobs) {
-        for (const job of jobs) {
-          await deleteSubJob(job._id);
-        }
-      }
       const success = await deleteJob(jobId);
       if (success) {
         const jobsPromise = getAllJobs();

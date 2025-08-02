@@ -23,6 +23,8 @@ function EditUpholsteryFormModal({
   const [receivedDate, setReceivedDate] = useState<string>("");
   const [status, setStatus] = useState<string>("In Production");
 
+  const [hasChanged, setHasChanged] = useState<boolean>(false);
+
   /**
    * Formats a Date object or string into a 'YYYY-MM-DD' string for date input fields.
    * @param dateValue The date to format, can be Date, string, null, or undefined.
@@ -55,6 +57,7 @@ function EditUpholsteryFormModal({
       setExpectedDate(formatDateForInput(upholsteryToEdit.expectedDate));
       setReceivedDate(formatDateForInput(upholsteryToEdit.receivedDate));
       setStatus(upholsteryToEdit.status?.toString() || "In Production");
+      setHasChanged(false);
     } else if (!isOpen) {
       // Reset form fields when modal closes
       setType("");
@@ -64,8 +67,49 @@ function EditUpholsteryFormModal({
       setExpectedDate("");
       setReceivedDate("");
       setStatus("In Production");
+      setHasChanged(false);
     }
   }, [isOpen, upholsteryToEdit]);
+
+  useEffect(() => {
+    if (upholsteryToEdit) {
+      const currentType = type;
+      const currentSupplier = supplier;
+      const currentDescription = description;
+      const currentOrderedDate = orderedDate;
+      const currentExpectedDate = expectedDate;
+      const currentReceivedDate = receivedDate;
+      const currentStatus = status;
+
+      const originalType = upholsteryToEdit.type?.toString() || "";
+      const originalSupplier = upholsteryToEdit.supplier?.toString() || "";
+      const originalDescription = upholsteryToEdit.description?.toString() || "";
+      const originalOrderedDate = formatDateForInput(upholsteryToEdit.orderedDate);
+      const originalExpectedDate = formatDateForInput(upholsteryToEdit.expectedDate);
+      const originalReceivedDate = formatDateForInput(upholsteryToEdit.receivedDate);
+      const originalStatus = upholsteryToEdit.status?.toString() || "In Production";
+
+      const changed =
+        currentType !== originalType ||
+        currentSupplier !== originalSupplier ||
+        currentDescription !== originalDescription ||
+        currentOrderedDate !== originalOrderedDate ||
+        currentExpectedDate !== originalExpectedDate ||
+        currentReceivedDate !== originalReceivedDate ||
+        currentStatus !== originalStatus;
+
+      setHasChanged(changed);
+    }
+  }, [
+    type,
+    supplier,
+    description,
+    orderedDate,
+    expectedDate,
+    receivedDate,
+    status,
+    upholsteryToEdit,
+  ]);
 
   if (!isOpen) return null;
 
@@ -75,6 +119,12 @@ function EditUpholsteryFormModal({
    */
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
+
+    if (!hasChanged) {
+      // If no changes, just close the modal
+      onClose();
+      return;
+    }
 
     if (!upholsteryToEdit?._id) {
       console.error("Upholstery ID is missing for update.");
@@ -127,77 +177,88 @@ function EditUpholsteryFormModal({
             Edit Upholstery:{" "}
             {upholsteryToEdit?.description || upholsteryToEdit?.type}
           </h2>
-          <div className="form-group">
-            <label htmlFor="type">Type:</label>
-            <input
-              type="text"
-              id="type"
-              value={type}
-              onChange={(e) => setType(e.target.value)}
-              required
-            />
+          <div className="supplier-description-status-dates-container">
+            <div className="supplier-description-status-container">
+              <div className="form-group">
+                <label htmlFor="supplier">Supplier:</label>
+                <input
+                  type="text"
+                  id="supplier"
+                  value={supplier}
+                  onChange={(e) => setSupplier(e.target.value)}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="description">Description:</label>
+                <textarea
+                  id="description"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  rows={2}
+                ></textarea>
+              </div>
+              <div className="form-group">
+                <label htmlFor="type">Type: *</label>
+                <input
+                  type="text"
+                  id="type"
+                  value={type}
+                  onChange={(e) => setType(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="status">Status:</label>
+                <select
+                  id="status"
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
+                >
+                  <option value="Upholstery Cut">Upholstery Cut</option>
+                  <option value="Upholstery Sewn">Upholstery Sewn</option>
+                  <option value="Body Upholstered">Body Upholstered</option>
+                  <option value="In Production">In Production</option>
+                  <option value="Complete">Complete</option>
+                </select>
+              </div>
+            </div>
+            <div className="dates-container">
+              <div className="form-group">
+                <label htmlFor="orderedDate">Ordered Date:</label>
+                <input
+                  type="date"
+                  id="orderedDate"
+                  value={orderedDate}
+                  onChange={(e) => setOrderedDate(e.target.value)}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="expectedDate">Expected Date:</label>
+                <input
+                  type="date"
+                  id="expectedDate"
+                  value={expectedDate}
+                  onChange={(e) => setExpectedDate(e.target.value)}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="receivedDate">Received Date:</label>
+                <input
+                  type="date"
+                  id="receivedDate"
+                  value={receivedDate}
+                  onChange={(e) => setReceivedDate(e.target.value)}
+                />
+              </div>
+            </div>
           </div>
-          <div className="form-group">
-            <label htmlFor="supplier">Supplier:</label>
-            <input
-              type="text"
-              id="supplier"
-              value={supplier}
-              onChange={(e) => setSupplier(e.target.value)}
-            />
+
+          <div className="buttons-container">
+            <button type="submit">Update</button>
+            <button id="delete-button" type="button" onClick={handleDelete}>
+              Delete
+            </button>
           </div>
-          <div className="form-group">
-            <label htmlFor="description">Description:</label>
-            <textarea
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              rows={2}
-            ></textarea>
-          </div>
-          <div className="form-group">
-            <label htmlFor="orderedDate">Ordered Date:</label>
-            <input
-              type="date"
-              id="orderedDate"
-              value={orderedDate}
-              onChange={(e) => setOrderedDate(e.target.value)}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="expectedDate">Expected Date:</label>
-            <input
-              type="date"
-              id="expectedDate"
-              value={expectedDate}
-              onChange={(e) => setExpectedDate(e.target.value)}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="receivedDate">Received Date:</label>
-            <input
-              type="date"
-              id="receivedDate"
-              value={receivedDate}
-              onChange={(e) => setReceivedDate(e.target.value)}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="status">Status:</label>
-            <select
-              id="status"
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-            >
-              <option value="Body Upholstered">Body Upholstered</option>
-              <option value="In Production">In Production</option>
-              <option value="Complete">Complete</option>
-            </select>
-          </div>
-          <button type="submit">Update Upholstery</button>
-          <button id="delete-button" type="button" onClick={handleDelete}>
-            Delete Upholstery
-          </button>
         </form>
       </div>
     </div>

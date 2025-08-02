@@ -74,105 +74,113 @@ function AddJobFormModel({ isOpen, onClose, onAddJob }: AddJobFormModelProps) {
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div className="modal-overlay">
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <button onClick={onClose} className="modal-close-btn">
           &times;
         </button>
         <form onSubmit={handleSubmit} className="modal-form">
           <h2>Add New Job</h2>
-          <div className="form-group">
-            <label htmlFor="invoiceId">Invoice ID:</label>
-            <textarea
-              rows={1}
-              id="invoiceId"
-              value={invoiceId}
-              onChange={(e) => setInvoiceId(e.target.value)}
-            />
+          <div className="id-po-due-container">
+            <div className="form-group">
+              <label htmlFor="invoiceId">Invoice ID:</label>
+              <textarea
+                rows={1}
+                id="invoiceId"
+                value={invoiceId}
+                onChange={(e) => setInvoiceId(e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="poNumber">Purchase Order No:</label>
+              <textarea
+                id="poNumber"
+                value={poNumber}
+                onChange={(e) => setPONumber(e.target.value)}
+                rows={1}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="dueDate">Due Date:</label>
+              <input
+                type="date"
+                id="dueDate"
+                value={dueDate}
+                onChange={(e) => setDueDate(e.target.value)}
+              />
+            </div>
           </div>
-          <div className="form-group">
-            <label htmlFor="poNumber">Purchase Order No:</label>
-            <textarea
-              id="poNumber"
-              value={poNumber}
-              onChange={(e) => setPONumber(e.target.value)}
-              rows={1}
-            />
+          <div className="client-job-container">
+            <div className="form-group">
+              <label htmlFor="clientName">Client Name:</label>
+              <textarea
+                id="clientName"
+                value={clientName}
+                onChange={(e) => setClientName(e.target.value)}
+                rows={4}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="jobName">Job Name:</label>
+              <textarea
+                id="jobName"
+                value={jobName}
+                onChange={(e) => setJobName(e.target.value)}
+                rows={4}
+                required
+              ></textarea>
+            </div>
           </div>
-          <div className="form-group">
-            <label htmlFor="clientName">Client Name:</label>
-            <textarea
-              id="clientName"
-              value={clientName}
-              onChange={(e) => setClientName(e.target.value)}
-              rows={1}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="jobName">Job Name:</label>
-            <textarea
-              id="jobName"
-              value={jobName}
-              onChange={(e) => setJobName(e.target.value)}
-              rows={4}
-              required
-            ></textarea>
+          <div className="payment-container">
+            <div className="form-group">
+              <label htmlFor="depositAmount">Deposit Amount:</label>
+              <input
+                type="number"
+                id="depositAmount"
+                value={depositAmount}
+                onChange={(e) => setDepositAmount(e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="depositDate">Deposit Date:</label>
+              <input
+                type="date"
+                id="depositDate"
+                value={depositDate}
+                onChange={(e) => setDepositDate(e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="paidInFull">Paid In Full:</label>
+              <input
+                type="date"
+                id="paidInFull"
+                value={paidInFull}
+                onChange={(e) => setPaidInFull(e.target.value)}
+              />
+            </div>
           </div>
 
-          <div className="form-group">
-            <label htmlFor="dueDate">Due Date:</label>
-            <input
-              type="date"
-              id="dueDate"
-              value={dueDate}
-              onChange={(e) => setDueDate(e.target.value)}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="depositAmount">Deposit Amount:</label>
-            <input
-              type="number"
-              id="depositAmount"
-              value={depositAmount}
-              onChange={(e) => setDepositAmount(e.target.value)}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="depositDate">Deposit Date:</label>
-            <input
-              type="date"
-              id="depositDate"
-              value={depositDate}
-              onChange={(e) => setDepositDate(e.target.value)}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="paidInFull">Paid In Full:</label>
-            <input
-              type="date"
-              id="paidInFull"
-              value={paidInFull}
-              onChange={(e) => setPaidInFull(e.target.value)}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="liaison">Liaison:</label>
-            <input
-              type="text"
-              id="liaison"
-              value={liaison}
-              onChange={(e) => setLiaison(e.target.value)}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="paymentNote">Payment Notes:</label>
-            <input
-              type="text"
-              id="paymentNote"
-              value={paymentNote}
-              onChange={(e) => setPaymentNote(e.target.value)}
-            />
+          <div className="liason-payment-container">
+            <div className="form-group">
+              <label htmlFor="liaison">Liaison:</label>
+              <input
+                type="text"
+                id="liaison"
+                value={liaison}
+                onChange={(e) => setLiaison(e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="paymentNote">Payment Notes:</label>
+              <input
+                type="text"
+                id="paymentNote"
+                value={paymentNote}
+                onChange={(e) => setPaymentNote(e.target.value)}
+              />
+            </div>
           </div>
 
           <div className="form-group">

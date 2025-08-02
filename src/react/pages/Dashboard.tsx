@@ -133,7 +133,6 @@ function Dashboard() {
   ) => {
     const success = await removeNotification(notificationId, jobId);
     if (success) {
-      console.log("Notification deleted and job updated.");
       reload(); // Re-fetch notifications and jobs
     } else {
       console.error("Failed to delete notification.");
@@ -203,7 +202,7 @@ function Dashboard() {
           const diffTime = dueDate.getTime() - today.getTime();
           const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-          if (diffDays < 7 && diffDays >= 0 && job.hasNoDeletedNotification) {
+          if (diffDays < 14 && diffDays >= 0 && job.hasNoDeletedNotification) {
             // Condition met: generate/update notification
             const notifTitle = "Upcoming Job Due!";
             const notifDesc = `${job.name} for ${job.client} is due in ${diffDays} days!`;

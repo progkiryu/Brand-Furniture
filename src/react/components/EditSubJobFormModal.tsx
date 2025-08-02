@@ -21,6 +21,8 @@ function EditSubJobFormModal({
   const [files, setFiles] = useState<string[]>([""]);
   const [dueDate, setDueDate] = useState<string>("");
 
+  const [hasChanged, setHasChanged] = useState<boolean>(false);
+
   /**
    * Formats a Date object or string into a 'YYYY-MM-DD' string for date input fields.
    * @param dateValue The date to format, can be Date, string, null, or undefined.
@@ -50,14 +52,48 @@ function EditSubJobFormModal({
       setNote(subJobToEdit.note?.toString() || "");
       setFiles(subJobToEdit.file && subJobToEdit.file.length > 0 ? subJobToEdit.file : [""]);
       setDueDate(formatDateForInput(subJobToEdit.dueDate));
+      setHasChanged(false); 
     } else if (!isOpen) {
       // Reset form fields when modal closes
       setSubJobDetail("");
       setNote("");
       setFiles([""]);
       setDueDate("");
+      setHasChanged(false); 
     }
   }, [isOpen, subJobToEdit]);
+
+  useEffect(() => {
+    if (subJobToEdit) {
+      const currentSubJobDetail = subJobDetail;
+      const currentNote = note;
+      const currentFiles = files;
+      const currentDueDate = dueDate;
+
+      const originalSubJobDetail = subJobToEdit.subJobDetail?.toString() || "";
+      const originalNote = subJobToEdit.note?.toString() || "";
+      const originalFiles = subJobToEdit.file && subJobToEdit.file.length > 0 ? subJobToEdit.file : [""];
+      const originalDueDate = formatDateForInput(subJobToEdit.dueDate);
+
+      // Deep compare files array
+      const filesChanged = currentFiles.length !== originalFiles.length ||
+        currentFiles.some((file, index) => file !== originalFiles[index]);
+
+      const changed =
+        currentSubJobDetail !== originalSubJobDetail ||
+        currentNote !== originalNote ||
+        filesChanged || // Use the filesChanged boolean
+        currentDueDate !== originalDueDate;
+
+      setHasChanged(changed);
+    }
+  }, [
+    subJobDetail,
+    note,
+    files,
+    dueDate,
+    subJobToEdit,
+  ]);
 
   if (!isOpen) return null;
 
@@ -67,6 +103,12 @@ function EditSubJobFormModal({
    */
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
+
+    if (!hasChanged) {
+      // If no changes, just close the modal
+      onClose();
+      return;
+    }
 
     if (!subJobToEdit?._id) {
       console.error("SubJob ID is missing for update.");
@@ -139,24 +181,36 @@ function EditSubJobFormModal({
         </button>
         <form onSubmit={handleSubmit} className="modal-form">
           <h2>Edit Sub-Job: {subJobToEdit?.subJobDetail}</h2>
-          <div className="form-group">
-            <label htmlFor="subJobDetail">Component Detail:</label>
-            <textarea
-              id="subJobDetail"
-              value={subJobDetail}
-              onChange={(e) => setSubJobDetail(e.target.value)}
-              rows={4}
-            ></textarea>
+          <div className="detail-note-due-container">
+            <div className="form-group">
+              <label htmlFor="subJobDetail">Component Detail:</label>
+              <textarea
+                id="subJobDetail"
+                value={subJobDetail}
+                onChange={(e) => setSubJobDetail(e.target.value)}
+                rows={4}
+              ></textarea>
+            </div>
+            <div className="form-group">
+              <label htmlFor="note">Note:</label>
+              <textarea
+                id="note"
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                rows={4}
+              ></textarea>
+            </div>
+            <div className="form-group">
+              <label htmlFor="dueDate">Due Date:</label>
+              <input
+                type="date"
+                id="dueDate"
+                value={dueDate}
+                onChange={(e) => setDueDate(e.target.value)}
+              />
+            </div>
           </div>
-          <div className="form-group">
-            <label htmlFor="note">Note:</label>
-            <textarea
-              id="note"
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              rows={2}
-            ></textarea>
-          </div>
+
 
           <div className="form-group">
             <label>Files:</label>
@@ -195,19 +249,12 @@ function EditSubJobFormModal({
               + Add Another File
             </button>
           </div>
-          <div className="form-group">
-            <label htmlFor="dueDate">Due Date:</label>
-            <input
-              type="date"
-              id="dueDate"
-              value={dueDate}
-              onChange={(e) => setDueDate(e.target.value)}
-            />
+          <div className="buttons-container">
+            <button type="submit">Update</button>
+            <button id="delete-button" type="button" onClick={handleDelete}>
+              Delete
+            </button>
           </div>
-          <button type="submit">Update Sub-Job</button>
-          <button id="delete-button" type="button" onClick={handleDelete}>
-            Delete Sub-Job
-          </button>
         </form>
       </div>
     </div>

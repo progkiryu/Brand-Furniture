@@ -94,7 +94,7 @@ function AddSubJobFormModal({
   };
 
   return (
-    <div className="sub-job-modal-overlay" onClick={onClose}>
+    <div className="sub-job-modal-overlay">
       <div
         className="sub-job-modal-content"
         onClick={(e) => e.stopPropagation()}
@@ -104,9 +104,7 @@ function AddSubJobFormModal({
         </button>
         <form onSubmit={handleSubmit} className="sub-job-modal-form">
           <h2>Add Sub-Job for Invoice #{invoiceId}</h2>
-
-          {/* Only the Detail Section */}
-          <div className="detail-section">
+          <div className="detail-note-due-container">
             <div className="form-group">
               <label htmlFor="subJobDetail">Sub-Job Detail:</label>
               <textarea
@@ -123,10 +121,21 @@ function AddSubJobFormModal({
                 id="note"
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
-                rows={2}
+                rows={4}
               ></textarea>
             </div>
             <div className="form-group">
+              <label htmlFor="subJobDueDate">Due Date:</label>
+              <input
+                type="date"
+                id="subJobDueDate"
+                value={subJobDueDate}
+                onChange={(e) => setSubJobDueDate(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="form-group">
             <label>Files:</label>
             {files.map((filePath, index) => (
               <div key={index} className="file-input-wrapper">
@@ -163,18 +172,8 @@ function AddSubJobFormModal({
               + Add Another File
             </button>
           </div>
-            <div className="form-group">
-              <label htmlFor="subJobDueDate">Due Date:</label>
-              <input
-                type="date"
-                id="subJobDueDate"
-                value={subJobDueDate}
-                onChange={(e) => setSubJobDueDate(e.target.value)}
-              />
-            </div>
-          </div>
 
-          <button type="submit">Add Sub-Job</button>
+          <button type="submit">Add Component</button>
         </form>
       </div>
     </div>
