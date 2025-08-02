@@ -8,7 +8,6 @@ import {
   getSubJobById,
   updateSubJob,
   deleteSubJob,
-  getSubJobsByJobId,
 } from "../api/subJobAPI"; // Import deleteSubJob
 
 import Navbar from "../components/Navbar";

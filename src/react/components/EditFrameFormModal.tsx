@@ -105,7 +105,6 @@ function EditFrameFormModal({
     frameToEdit,
   ]);
 
-
   if (!isOpen) return null;
 
   /**

@@ -270,7 +270,9 @@ function Dashboard() {
                 {organisedJobs.length > 0 ? (
                   <DashboardTable jobsParams={organisedJobs} />
                 ) : (
-                  <p><i>No jobs!</i></p>
+                  <p>
+                    <i>No jobs!</i>
+                  </p>
                 )}
               </div>
             </div>
@@ -287,7 +289,9 @@ function Dashboard() {
                   onDeleteNotification={handleDeleteNotification}
                 />
               ) : (
-                <p><i>No notifications!</i></p>
+                <p>
+                  <i>No notifications!</i>
+                </p>
               )}
             </div>
           </div>

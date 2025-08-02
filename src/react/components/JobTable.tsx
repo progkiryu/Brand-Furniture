@@ -54,9 +54,9 @@ function JobTable({
 
   const handleMultiFilter = async () => {
     var filteredJobs: Job[] = [];
-    var props: RequestProps = { 
-      searchTerm: searchTerm, 
-      archiveTerm: String(archiveTerm), 
+    var props: RequestProps = {
+      searchTerm: searchTerm,
+      archiveTerm: String(archiveTerm),
       yearTerm: yearTerm,
       cutTerm: String(cutTerm),
       sewnTerm: String(sewnTerm),
@@ -66,23 +66,31 @@ function JobTable({
       productionTerm: String(productionTerm),
     };
     if (invoiceIDTerm) {
-      invoiceIDTerm === "asc" ? props.invoiceIdTerm = "ascending" : props.invoiceIdTerm = "descending";
+      invoiceIDTerm === "asc"
+        ? (props.invoiceIdTerm = "ascending")
+        : (props.invoiceIdTerm = "descending");
     }
     if (clientTerm) {
-      clientTerm === "asc" ? props.clientTerm = "ascending" : props.clientTerm = "descending";
+      clientTerm === "asc"
+        ? (props.clientTerm = "ascending")
+        : (props.clientTerm = "descending");
     }
     if (jobNameTerm) {
-      jobNameTerm === "asc" ? props.jobNameTerm = "ascending" : props.jobNameTerm = "descending";
+      jobNameTerm === "asc"
+        ? (props.jobNameTerm = "ascending")
+        : (props.jobNameTerm = "descending");
     }
     if (dueDateTerm) {
-      dueDateTerm === "asc" ? props.dueDateTerm = "ascending" : props.dueDateTerm = "descending";
+      dueDateTerm === "asc"
+        ? (props.dueDateTerm = "ascending")
+        : (props.dueDateTerm = "descending");
     }
     if (yearTerm !== "--") {
       props.yearTerm = yearTerm;
     }
     filteredJobs = await multiFilterSearch(props);
     return filteredJobs;
-  }
+  };
 
   const handlePinIcon = (job: Job) => {
     if (!job._id) {
@@ -100,7 +108,7 @@ function JobTable({
       due: job.due,
       isPinned: isPinned,
       isArchived: job.isArchived,
-      hasNoDeletedNotification: job.hasNoDeletedNotification
+      hasNoDeletedNotification: job.hasNoDeletedNotification,
     };
     updateJob(temp);
     window.location.reload();
@@ -110,7 +118,7 @@ function JobTable({
     const filter = async () => {
       const filtered = await handleMultiFilter();
       setDisplayedJobs(filtered);
-    }
+    };
     filter();
   }, [
     searchTerm,
@@ -126,7 +134,7 @@ function JobTable({
     completeTerm,
     productionTerm,
     archiveTerm,
-    reload
+    reload,
   ]);
 
   useEffect(() => {
@@ -178,10 +186,11 @@ function JobTable({
                   }}
                 />
               </div>
-              <input 
-              type="checkbox" 
-              onChange={(e) => jobDeleteClick(e.target.checked, job)}
-              checked={checkedJobs.includes(job)}></input>
+              <input
+                type="checkbox"
+                onChange={(e) => jobDeleteClick(e.target.checked, job)}
+                checked={checkedJobs.includes(job)}
+              ></input>
             </div>
           ))}
         </div>

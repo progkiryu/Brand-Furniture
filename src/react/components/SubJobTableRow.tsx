@@ -1,6 +1,6 @@
 // src/react/components/SubJobTableRow.tsx
 import React, { useState, useEffect } from "react";
-import path from 'path-browserify'; // Import path-browserify
+import path from "path-browserify"; // Import path-browserify
 import { Pencil } from "lucide-react";
 import { getFrameById } from "../api/frameAPI";
 import { getCushionById } from "../api/cushionAPI";
@@ -12,7 +12,7 @@ const STATUS_CLASS: Record<string, string> = {
   "Body Upholstered": "status-upholstered",
   "Upholstery Sewn": "status-sewn",
   "Frame Foamed": "status-foamed",
-  "Complete": "status-complete",
+  Complete: "status-complete",
   "In Production": "status-production",
 };
 
@@ -62,8 +62,6 @@ const SubJobTableRow: React.FC<SubJobTableRowProps> = ({
     subJobParam._id,
   ]);
 
-
-  
   const getFileName = (filePath: string) => {
     try {
       return path.basename(filePath);
@@ -109,7 +107,11 @@ const SubJobTableRow: React.FC<SubJobTableRowProps> = ({
             {subJobParam.file && subJobParam.file.length > 0 ? (
               subJobParam.file.map((url, i) => (
                 <div className="links-container" key={i}>
-                  <a href="#" onClick={() => handleFileClick(url)} className="file-link">
+                  <a
+                    href="#"
+                    onClick={() => handleFileClick(url)}
+                    className="file-link"
+                  >
                     {getFileName(url)}
                   </a>
                 </div>

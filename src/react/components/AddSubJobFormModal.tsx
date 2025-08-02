@@ -42,8 +42,6 @@ function AddSubJobFormModal({
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
-    const nonEmptyFiles = files.filter((f) => f.trim() !== "");
-
     // Construct the new sub-job data
     // Ensure all string properties are `String` objects as per your types.d.ts
     const newSubJobData: SubJob = {
