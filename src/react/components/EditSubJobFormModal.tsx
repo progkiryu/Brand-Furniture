@@ -185,12 +185,13 @@ function EditSubJobFormModal({
           <h2>Edit Sub-Job: {subJobToEdit?.subJobDetail}</h2>
           <div className="detail-note-due-container">
             <div className="form-group">
-              <label htmlFor="subJobDetail">Component Detail:</label>
+              <label htmlFor="subJobDetail">Component Detail:<span className="required">*</span></label>
               <textarea
                 id="subJobDetail"
                 value={subJobDetail}
                 onChange={(e) => setSubJobDetail(e.target.value)}
                 rows={4}
+                required
               ></textarea>
             </div>
             <div className="form-group">
