@@ -110,7 +110,7 @@ function AddJobFormModel({ isOpen, onClose, onAddJob }: AddJobFormModelProps) {
           </div>
           <div className="client-job-container">
             <div className="form-group">
-              <label htmlFor="clientName">Client Name:</label>
+              <label htmlFor="clientName">Client Name:<span className="required">*</span></label>
               <textarea
                 id="clientName"
                 value={clientName}
@@ -120,7 +120,7 @@ function AddJobFormModel({ isOpen, onClose, onAddJob }: AddJobFormModelProps) {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="jobName">Job Name:</label>
+              <label htmlFor="jobName">Job Name:<span className="required">*</span></label>
               <textarea
                 id="jobName"
                 value={jobName}

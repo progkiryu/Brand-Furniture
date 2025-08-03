@@ -108,7 +108,7 @@ const SubJobTableRow: React.FC<SubJobTableRowProps> = ({
               subJobParam.file.map((url, i) => (
                 <div className="links-container" key={i}>
                   <a
-                    href="#"
+                    href="#/Schedule"
                     onClick={() => handleFileClick(url)}
                     className="file-link"
                   >
