@@ -45,19 +45,14 @@ appDB.listen(PORT, () => {
 app.on("ready", () => {
   // create browser window
   const mainWindow = new BrowserWindow({
-    // size of window upon opening
     width: 800,
     height: 700,
-    // min size of window
     minWidth: 800,
     minHeight: 700,
-    // max size of window
     maxWidth: 2880,
     maxHeight: 1880,
-    // hide top menu bar
     autoHideMenuBar: true,
     webPreferences: {
-      // security purposes
       nodeIntegration: false,
       contextIsolation: true,
       preload: getPreloadPath(),
@@ -65,34 +60,15 @@ app.on("ready", () => {
   });
 
   if (isDev()) {
-    // Open live server while in dev mode
     mainWindow.loadURL("http://localhost:5555");
   } else {
-    // Open HTML file when app is built
     mainWindow.loadFile(path.join(app.getAppPath(), "/dist-react/index.html"));
   }
 
-<<<<<<< HEAD
-  ipcMain.on('open-external-link', (_, url) => {
-=======
   ipcMain.on("open-external-link", (_, url) => {
->>>>>>> 6b34c37121490f7e217cbf8f70b1b09b5062e08c
     shell.openExternal(url);
   });
 
-  // New: Handle open-file-path from renderer
-<<<<<<< HEAD
-  ipcMain.on('open-file-path', (_, filePath) => {
-    shell.openPath(filePath)
-      .catch(err => {
-        console.error("Failed to open file path:", filePath, err);
-        dialog.showErrorBox('Error Opening File', `Could not open file: ${filePath}\n\nError: ${err.message}`);
-      });
-  });
-
-  // New: Handle open-file-dialog from renderer
-  ipcMain.handle('open-file-dialog', async (_) => {
-=======
   ipcMain.on("open-file-path", (_, filePath) => {
     shell.openPath(filePath).catch((err) => {
       console.error("Failed to open file path:", filePath, err);
@@ -103,17 +79,11 @@ app.on("ready", () => {
     });
   });
 
-  // New: Handle open-file-dialog from renderer
-  ipcMain.handle("open-file-dialog", async (_) => {
->>>>>>> 6b34c37121490f7e217cbf8f70b1b09b5062e08c
+  ipcMain.handle("open-file-dialog", async () => {
     const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
       properties: ["openFile"],
     });
-    if (canceled) {
-      return undefined; // No file selected
-    } else {
-      return filePaths[0]; // Return the first selected file path
-    }
+    return canceled ? undefined : filePaths[0];
   });
 });
 
