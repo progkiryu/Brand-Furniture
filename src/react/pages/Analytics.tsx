@@ -72,7 +72,7 @@ function Analytics() {
   const getLabelPrefix = (range: DateRange) => {
     switch (range) {
       case "currentmonth":
-        return "Over the current month";
+        return "Over the Current Month";
       case "last6months":
         return "Over the Last 6 Months";
       case "last12months":

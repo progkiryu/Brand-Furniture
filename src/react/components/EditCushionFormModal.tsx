@@ -203,7 +203,7 @@ function EditCushionFormModal({
                 ></textarea>
               </div>
               <div className="form-group">
-                <label htmlFor="type">Type:</label>
+                <label htmlFor="type">Type:<span className="required">*</span></label>
                 <input
                   type="text"
                   id="type"
