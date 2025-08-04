@@ -8,7 +8,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import type { TypeInfo } from "../pages/Analytics";
-import { randomColourGen } from "../Utility";
+import { fiveColours } from "../Utility";
 
 type Props = {
   data: TypeInfo[];
@@ -38,7 +38,7 @@ const CustomTooltip = ({ active, payload }: any) => {
 };
 
 const OrderTypeDistributionChart: React.FC<Props> = ({ data }) => {
-  const colours = randomColourGen(data.length);
+  const colours = fiveColours();
 
   return (
     <div

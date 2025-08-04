@@ -1,9 +1,9 @@
 import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
 import type { TypeInfoDash } from "../pages/Dashboard";
-import { randomColourGen } from "../Utility";
+import { fiveColours } from "../Utility";
 
 export default function JobAnalyticsDash(Props: { data: TypeInfoDash[] }) {
-  const colours = randomColourGen(Props.data.length);
+  const colours = fiveColours();
 
   return (
     <div className="job-analytics">

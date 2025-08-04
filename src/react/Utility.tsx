@@ -9,3 +9,10 @@ export const randomColourGen = (quantity: number) => {
   }
   return colourArray;
 };
+
+// Static colours
+export const fiveColours = () => {
+  //  Red, Yellow, Green, Blue, Purple
+  const colourArray = ["#FF595E", "#FFCA3A", "#8AC926", "#1982C4", "#6A4C93"];
+  return colourArray;
+};
