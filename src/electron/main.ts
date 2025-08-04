@@ -72,16 +72,11 @@ app.on("ready", () => {
     mainWindow.loadFile(path.join(app.getAppPath(), "/dist-react/index.html"));
   }
 
-<<<<<<< HEAD
   ipcMain.on('open-external-link', (_, url) => {
-=======
-  ipcMain.on("open-external-link", (_, url) => {
->>>>>>> 6b34c37121490f7e217cbf8f70b1b09b5062e08c
     shell.openExternal(url);
   });
 
   // New: Handle open-file-path from renderer
-<<<<<<< HEAD
   ipcMain.on('open-file-path', (_, filePath) => {
     shell.openPath(filePath)
       .catch(err => {
@@ -92,20 +87,6 @@ app.on("ready", () => {
 
   // New: Handle open-file-dialog from renderer
   ipcMain.handle('open-file-dialog', async (_) => {
-=======
-  ipcMain.on("open-file-path", (_, filePath) => {
-    shell.openPath(filePath).catch((err) => {
-      console.error("Failed to open file path:", filePath, err);
-      dialog.showErrorBox(
-        "Error Opening File",
-        `Could not open file: ${filePath}\n\nError: ${err.message}`
-      );
-    });
-  });
-
-  // New: Handle open-file-dialog from renderer
-  ipcMain.handle("open-file-dialog", async (_) => {
->>>>>>> 6b34c37121490f7e217cbf8f70b1b09b5062e08c
     const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
       properties: ["openFile"],
     });
