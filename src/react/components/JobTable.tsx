@@ -185,12 +185,12 @@ function JobTable({
                     onEditJobClick(job);
                   }}
                 />
-              </div>
-              <input
+                <input
                 type="checkbox"
                 onChange={(e) => jobDeleteClick(e.target.checked, job)}
                 checked={checkedJobs.includes(job)}
-              ></input>
+                ></input>
+              </div>
             </div>
           ))}
         </div>
