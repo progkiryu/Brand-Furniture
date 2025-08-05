@@ -55,7 +55,7 @@ function Schedule() {
   const [clientDesc, setClientDesc] = useState<boolean>(false);
   const [jobNameAsc, setJobNameAsc] = useState<boolean>(false);
   const [jobNameDesc, setJobNameDesc] = useState<boolean>(false);
-  const [dueDateAsc, setDueDateAsc] = useState<boolean>(false);
+  const [dueDateAsc, setDueDateDesc] = useState<boolean>(false);
 
   const [selectedSubJobs, setSelectedSubJobs] = useState<SubJob[]>([]);
   const [isAddJobModelOpen, setIsAddJobModelOpen] = useState<boolean>(false);
@@ -74,7 +74,7 @@ function Schedule() {
     "asc" | "desc" | undefined
   >();
   const [filterDueDate, setFilterDueDate] = useState<
-    "asc" | "desc" | undefined
+    "desc" | undefined
   >();
 
   const [filterCut, setFilterCut] = useState<boolean>(false);
@@ -529,7 +529,7 @@ function Schedule() {
 
       setJobNameAsc(false);
       setJobNameDesc(false);
-      setDueDateAsc(false);
+      setDueDateDesc(false);
     } else if (attribute === "jobName") {
       if (type === "asc") {
         setFilterJobName("asc");
@@ -545,15 +545,9 @@ function Schedule() {
 
       setClientAsc(false);
       setClientDesc(false);
-      setDueDateAsc(false);
+      setDueDateDesc(false);
     } else if (attribute === "dueDate") {
-      if (type === "asc") {
-        setFilterDueDate("asc");
-        setDueDateAsc(true);
-      } else {
-        setFilterDueDate("desc");
-        setDueDateAsc(false);
-      }
+      setFilterDueDate("desc");
       setFilterClient(undefined);
       setFilterJobName(undefined);
 
@@ -574,7 +568,7 @@ function Schedule() {
     setClientDesc(false);
     setJobNameAsc(false);
     setJobNameDesc(false);
-    setDueDateAsc(false);
+    setDueDateDesc(false);
   };
 
   const handleSelectYear = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -776,7 +770,7 @@ function Schedule() {
                         }
                         defaultChecked={dueDateAsc}
                       />{" "}
-                      Oldest
+                      Earliest
                     </label>
                   </div>
 

@@ -641,9 +641,6 @@ export const multiFilterSearch = async (
       filteredJobs.sort((a, b) => {
         const dueDateA = String(a.due).toLowerCase();
         const dueDateB = String(b.due).toLowerCase();
-        if (dueDateTerm === "ascending") {
-          return dueDateA.localeCompare(dueDateB);
-        }
         return dueDateB.localeCompare(dueDateA);
       });
     }
@@ -670,6 +667,18 @@ export const multiFilterSearch = async (
         );
         if (cutSubJob) cutSubJobSet.add(cutSubJob);
       });
+
+      const cutUpholstery: Upholstery[] = upholstery.filter((upholster: Upholstery) => {
+        if (upholster.status === "Upholstery Cut") return true;
+      })
+      cutUpholstery.map((upholster: Upholstery) => {
+        const cutSubJob = subJobs.find(
+          (subJob: SubJob) => subJob._id == upholster.subJobId
+        )
+        if (cutSubJob) cutSubJobSet.add(cutSubJob);
+      })
+      
+
       if (cutSubJobSet.size > 0) {
         const cutSubJobArray = [...cutSubJobSet];
         cutSubJobArray.map((subJob: SubJob) => {
@@ -752,6 +761,17 @@ export const multiFilterSearch = async (
         );
         if (sewnSubJob) sewnSubJobSet.add(sewnSubJob);
       });
+
+      const sewnUpholstery: Upholstery[] = upholstery.filter((upholster: Upholstery) => {
+        if (upholster.status === "Upholstery Sewn") return true;
+      });
+      sewnUpholstery.map((upholster: Upholstery) => {
+        const sewnSubJob = subJobs.find(
+          (subJob: SubJob) => subJob._id == upholster.subJobId
+        )
+        if (sewnSubJob) sewnSubJobSet.add(sewnSubJob);
+      })
+
       if (sewnSubJobSet.size > 0) {
         const sewnSubJobArray = [...sewnSubJobSet];
         sewnSubJobArray.map((subJob: SubJob) => {
