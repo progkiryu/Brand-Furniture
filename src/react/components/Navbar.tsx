@@ -17,7 +17,6 @@ function Navbar() {
       <NavLink to="/Dashboard">Dashboard</NavLink>
       <NavLink to="/Schedule">Schedule</NavLink>
       <NavLink to="/Analytics">Analytics</NavLink>
-      <NavLink to="/Help">Help</NavLink>
     </div>
   );
 }
