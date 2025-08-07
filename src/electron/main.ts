@@ -21,7 +21,7 @@ dotenv.config();
 
 const MONGO_URI = process.env.MONGO_URI
   ? process.env.MONGO_URI
-  : "mongodb+srv://nicolettek28:cJf6qbZ7JMPoHHuF@threadline.rjozakm.mongodb.net/?"
+  : "mongodb+srv://admin2:Password123@cluster0.8t2fxy9.mongodb.net/?";
 const PORT = process.env.port || 5050;
 
 // Connect to mongoDB

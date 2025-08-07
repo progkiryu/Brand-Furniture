@@ -88,9 +88,6 @@ function Analytics() {
     const endDate = new Date();
     let startDate = new Date();
 
-    console.log(endDate);
-    console.log(startDate);
-
     if (dateRange === "currentmonth") {
       startDate.setDate(1);
       endDate.setMonth(endDate.getMonth() + 1);
